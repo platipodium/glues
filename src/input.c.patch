@@ -1,0 +1,74 @@
+/*
+
+    Patch for input.c for the region package
+    Insert the code below into input.c
+
+    Add  the gbinary.o object file at link time
+*/
+
+
+/******************************************/
+/*     read gluesclimate.bin file     */
+/******************************************/
+void read_gluesclimate_bin(char* filename, int binout) {
+
+  extern int read_binary_record(const char*,int,int,int**,int*,int);
+
+  int  sizes[4]={10,9,7,6};
+  int* data[4];
+  float *lat,*lon,*npp,*gdd;
+  int  numrecords=180/8;
+  int  numvars=4;
+  int  nparts;
+  FILE *file;
+  int  i,j,k,ix,iy;
+  char fbinname[255];
+
+  /* set background (sea) value */
+  for(i=0;i<DIMW1;i++) for(j=0;j<DIMW2;j++) domap[i][j]=0; 
+
+  /* get nparts and other file info */
+  file=fopen(filename,"r");
+  fseek(file,0,SEEK_END);
+  nparts=ftell(file)/numrecords;
+  fclose(file);
+  for (i=0; i<numvars; i++) data[i]=(int*)calloc(nparts,sizeof(int)); 
+  lon=(float*)calloc(nparts,sizeof(float));
+  lat=(float*)calloc(nparts,sizeof(float));
+  npp=(float*)calloc(nparts,sizeof(float));
+  gdd=(float*)calloc(nparts,sizeof(float));
+
+  read_binary_record(filename,numvars,nparts,data,sizes,0);
+  
+  for (i=0; i<nparts; i++) {
+    lon[i]=(data[0])[i]/2.0-180.;
+    lat[i]=(data[1])[i]/2.0-60.;
+    npp[i]=(data[2])[i]*10.0;
+    gdd[i]=(data[2])[i]*6.0;
+    iy=(int)(lat[i]*2+360);   /* coordinates -> memory address */
+    ix=(int)(180-lon[i]*2);
+
+    domap[ix%DIMW1][iy%DIMW2]=1+(unsigned int)npp;
+  }
+
+  /***********************************************/
+  /*  write selected region data to binary file  */
+  /***********************************************/
+  if(binout==1) {
+    strcpy(fbinname,filename);
+    strcat(fbinname,".map");
+    printf("Writing %s  ...\t",fbinname);
+    
+    file=fopen(fbinname,"w");
+    fwrite(domap,DIMW1*DIMW2,sizeof(unsigned int),file);
+    fclose(file);
+  }
+
+  for (i=0; i<numvars; i++) free(data[i]);
+  free(lon);
+  free(lat);
+  free(npp);
+  free(gdd);
+
+  printf("done\n");
+}

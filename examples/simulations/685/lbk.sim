@@ -1,0 +1,151 @@
+# Simulation file written by XSiSi 2.0
+# Last modified at Mon Jan 28 12:21:30 MET 2008
+
+string	SimulationName	"Neolithic Transition in Europe"
+				\d (Only for information!)
+
+string	ModelName	"GLUES v1.1.2"
+				\d (Only for information!)
+string	ModelPath	"/h/lemmen/projects/glues/glues/glues-1.1.2/bin/glues.prg"
+				\d The path of the executable model.
+
+float	Time     	0.0	\d Actual simulated Time.
+	     	         	\u calendar years
+	     	         	\o # This is an output variable.
+float	TimeStart	-9500.0	\d Start of simulation.
+float	TimeEnd    	2000.0	\d End of simulation time.
+float	TimeStep   	5.0	\d TimeStep of simulation.
+float	OutputStep 	20.0	\d TimeStep of output (results).
+
+int	RandomInit 	100	\d Initializer for a random generator.
+
+list	IncludeFiles		\d List of all included files.
+	type	string
+data
+	"lbk.ctl"
+	"lbk.init"
+	"lbk.opar"
+	"lbk.par"
+	"lbk.dat"
+	"lbk.sce"
+end
+
+list	OutputVariables
+	type	parameter
+data
+	result	Technology
+		type	float
+		active	true
+		precision	1
+	result	Agricultures
+		type	float
+		active	true
+		precision	1
+	result	Farming
+		type	float
+		active	true
+		precision	1
+	result	Resistance
+		type	float
+		active	true
+		precision	1
+	result	Density
+		type	float
+		active	true
+		precision	1
+	result	Migration
+		type	float
+		active	true
+		precision	1
+	result	Climate
+		type	float
+		active	true
+		precision	1
+	result	CivStart
+		type	float
+		active	true
+		precision	1
+	result	NetDisease
+		type	float
+		active	false
+		precision	1
+	result	Dummy
+		type	float
+		active	false
+		precision	1
+end
+
+list	VariationVariables
+	type	parameter
+data
+	result	InitNdomast
+		type	float
+		\r 0.1000:0.3000
+		active	false
+		precision	3
+	result	InitQfarm
+		type	float
+		\r 0.0200:0.0600
+		active	false
+		precision	3
+	result	InitDensity
+		type	float
+		\r 0.0400:0.1200
+		active	false
+		precision	3
+	result	InitGerms
+		type	float
+		\r 0.0300:0.0900
+		active	false
+		precision	3
+	result	deltat
+		type	float
+		\r 0.0500:0.1500
+		active	false
+		precision	3
+	result	overexp
+		type	float
+		\r 0.000:0.8
+		active	false
+		precision	101
+	result	kappa
+		type	float
+		\r 225.0000:675.0000
+		active	false
+		precision	3
+	result	omega
+		type	float
+		\r 0.0500:0.1500
+		active	false
+		precision	3
+	result	gammab
+		type	float
+		\r 0.0020:0.0060
+		active	false
+		precision	3
+	result	spreadm
+		type	float
+		\r 0.5000:1.5000
+		active	false
+		precision	3
+	result	ndommaxmean
+		type	float
+		\r 9.5000:28.5000
+		active	false
+		precision	3
+	result	flucampl
+		type	float
+		\r 0.000:1.000
+		active	false
+		precision	3
+	result	flucperiod
+		type	float
+		\r 750.0000:2250.0000
+		active	false
+		precision	3
+	result	regenerate
+		type	float
+		\r 0.000:0.800
+		active	false
+		precision	3
+end
