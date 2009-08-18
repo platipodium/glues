@@ -169,6 +169,7 @@ AC_CHECK_HEADER(list, , GLUES_ERROR([The standard <list> header file could not b
 AC_CHECK_HEADER(map, , GLUES_ERROR([The standard <map> header file could not be found.]))
 AC_CHECK_HEADER(string, , GLUES_ERROR([The standard <string> header file could not be found.]))
 AC_CHECK_HEADER(algorithm, , GLUES_ERROR([The standard <algorithm> header file could not be found.]))
+AC_CHECK_HEADER(cstring, , GLUES_ERROR([The standard <cstring> header file could not be found.]))
 
 # Checks for typedefs, structures, and compiler characteristics.
 #AC_HEADER_STDBOOL
@@ -200,12 +201,6 @@ if test "x$DOXYGEN" = "xno" ; then
 else
   AC_DEFINE(WITH_DOXYGEN,"$DOXYGEN")
 fi
-
-
-
-
-
-
 
 
 

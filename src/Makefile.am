@@ -17,7 +17,7 @@
 ## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 ## 02110-1301, USA.
 
-SUBDIRS=region sisi  test
+SUBDIRS=region sisi  test variation
 
 bin_PROGRAMS = glues
 
