@@ -1,0 +1,3 @@
+Binary format: ieee-le uint32
+Land info: 57079 land cells in 938 regions
+Version info: 7.7.0.471 (R2008b) lemmen@grpsrv05 GLNXA64 L linux 11-Dec-2008 14:56:58 /h/lemmen/projects/glues/glues/glues-1.1.2/visual/matlab write_mapping.m write_mapping 11-Dez-2008 14:56:58 (c)2008 lemmen

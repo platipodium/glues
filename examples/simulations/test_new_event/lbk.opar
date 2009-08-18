@@ -1,0 +1,25 @@
+comment Parameter values not used (or varied) in v2
+comment specific adaptation constants
+float	deltan	1.0
+	\d Specific adaptation constant for number of agricultural economies 
+float	deltaq	1.0
+	\d Specific adaptation constant for farming ratio
+float	deltar	0.0
+	\d Specific adaptation constant for resistance to diseases
+comment regional dynamics
+float	regenerate	0.80
+	\d rate of natural regneration after
+comment Spreading and trait exchange
+float	spreadm	1.0
+	\d Ratio of trait to population spread
+float	ndommaxvar	0.0
+	\d rearranges variances of ndommaxcont
+comment RGR constants
+float	gammad	0.0E-6
+	\u 1/y
+	\d Specific increase in diseases
+float	gammam	0.0
+	\d not used in v2
+float	NPPCROP	900.0
+	\d NPP of vegetation after conversion to farmland
+	

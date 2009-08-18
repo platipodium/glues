@@ -1,0 +1,120 @@
+%GET_FILES  gets file names and directories
+%   [DIR,FILE] = GET_FILES returns the setup, plot and result
+%   directories in the DIR object, and the mapping file and 
+%   mapping file length file names in the FILE object.
+%
+%   If any of the directories does not exist, the function
+%   returns.  If any of the mapping files do not exist, the
+%   function returns.
+
+% Copyright (C) 2007, 2008, 2009 
+% Carsten Lemmen and Kai Wirtz
+% GKSS-Forschungszentrum Geesthacht GmbH
+
+% This program is free software; you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation; either version 3, or (at your option
+% any later version.
+
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+
+% You should have received a copy of the GNU General Public License
+% along with this program; if not, write to the Free Software
+% Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+% 02110-1301, USA.
+
+function [dir,file] = get_files(nreg)
+
+cl_register_function;
+
+    if ~exist('nreg','var') nreg=685; end
+
+    user=getenv('USER');
+    host=getenv('HOST');
+    home=getenv('HOME');
+    [status,hostname]=system('hostname');
+    
+    dir.data='/h/koedata01/data';
+    dir.paper='/h/koedata01/paper';
+    
+    if strcmp(user,'lemmen')
+
+      if strcmp(hostname(1:end-1),'possum.local')
+          basepath=fullfile(home,'Development','Eclipse','glues-1.1.2');
+      else        
+        basepath=fullfile('/h/lemmen','projects','glues','glues','glues');
+      end
+        
+      dir.setup=fullfile(basepath,'examples','setup',num2str(nreg));
+      dir.plot=fullfile(basepath,'visual','plots');
+      dir.result=fullfile(basepath,'examples','setup',num2str(nreg));
+      dir.proxies=fullfile('/h/lemmen','projects','glues','m','holocene');
+      
+      
+      
+      
+    elseif strcmp(user,'wirtz')
+      dir.setup=['/home/wirtz/glues/setup_' num2str(nreg)]; 
+      dir.result=['/home/wirtz/glues/setup_' num2str(nreg)]; 
+      fprintf('Please complete your user/path preferences in get_files.m (l.43)\n');
+      return;
+    else
+      fprintf('Please set up your user/path preferences in get_files.m (l.44)\n');
+      return;
+    end;
+      
+      
+    infix=['80_' num2str(nreg)];
+
+    if ~isdir(dir.data)
+        warning('Directory %s does not exist. \n',dir.data);
+        clear dir.data;
+    end;        
+
+    if ~isdir(dir.paper)
+        warning('Directory %s does not exist. \n',dir.paper);
+        clear dir.paper;
+    end;        
+
+    if ~isdir(dir.setup)
+        warning('Directory %s does not exist\n',dir.setup);
+        clear dir.setup;
+    end;        
+
+     if ~isdir(dir.plot)
+        warning('Directory %s does not exist\n',dir.plot);
+        clear dir.plot;
+        
+     end;        
+    
+    if ~isdir(dir.result)
+        error('Directory  setup does not exist\n');
+    end;        
+  
+   % [SUCCESS,MESSAGE,MESSAGEID] = MKDIR(NEWDIR) 
+   
+    file.mapping=[dir.setup '/mapping_' infix '.dat'];
+    file.mappinglen=[file.mapping '.len'];
+
+    fid = fopen(file.mapping,'r');
+    if (fid < 0)
+        %warning('The mapping file %s does not exist',file.mapping);
+        clear file.mapping file.mappinglen;
+        return;
+    end;    
+    fclose(fid);
+    
+    fid = fopen(file.mappinglen,'r');
+    if (fid < 0)
+        %warning('The mapping length file %s does not exist',file.mappinglen);
+        clear file.mapping file.mappinglen;
+        return;
+    end;
+    fclose(fid);
+        
+return;
+%EOF
+

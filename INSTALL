@@ -1,0 +1,19 @@
+Installation instructions for the GLUES simulator
+==================================================
+
+Run the usual 
+
+./configure && make
+
+to generate the executable program (located locally in the ./bin 
+directory).  For options to the configuration utility, run 
+
+./configure --help
+
+Run 
+
+make install
+
+ONLY if you want the executable in your installation 
+directory (default /usr/bin).  We do not recommend this at the
+time being.

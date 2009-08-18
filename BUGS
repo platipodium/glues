@@ -1,0 +1,11 @@
+20090814
+ * wrong results on grpsrv05
+
+20090807:
+ * FIXED No functionality on grpsrv07
+ * Test automation incomplete
+ * Data integrity check missing
+ * Netcdf support missing
+ * SiSi automated variation broken
+ * FIXED NETCDF broken
+   
