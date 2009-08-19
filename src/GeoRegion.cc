@@ -212,7 +212,7 @@ std::ostream& glues::operator<<(std::ostream& os, const glues::GeoRegion& gr) {
 double glues::GeoRegion::x2lon(unsigned int index) const {
   return index/2.0-180.;
 }
-
+*/
 /*
 int glues::GeoRegion::Mapping(unsigned int num, unsigned int* ids) {
 
