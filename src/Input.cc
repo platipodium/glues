@@ -196,7 +196,8 @@ int read_dim_SiteRegfile()
       This method reads only the columns of the first line */
   
   const static unsigned int BUFSIZE=1024;
-  static char fname[199],charbuffer[BUFSIZE];
+  static char fname[199];
+  //static char charbuffer[BUFSIZE];
  
   ifstream ifs;
   string line;
@@ -680,7 +681,7 @@ int read_neighbours1() {
 
   unsigned int selfid,numneigh;
   int neighid;
-  float neigh_boundary,neigh_dist;
+	float neigh_boundary;//,neigh_dist;
  
 
   cout << "Reading neighbor info from file " << regionstring << " ... ";

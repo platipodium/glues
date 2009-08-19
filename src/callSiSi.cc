@@ -124,7 +124,7 @@ bool SiSi::parseSimulation(const char* simulationFile, const char* program)
   TwoWayList list;                   // List of parameters and variables.
   TwoWayList tempList;               // List of all output variables in list.
   TwoWayListElement* el;             // Pointer to TwoWayListElement.
-  Parameter* par;                    // Pointer to Parameter.
+  //Parameter* par;                    // Pointer to Parameter.
   ResultElement* resultElement;      // Pointer to ResultElement.
   SiSiParser parser;                 // The SiSi parser.
   String message;                    // For messages.

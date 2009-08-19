@@ -93,7 +93,7 @@ int *DISTANCEMATRIX ;
 
 double IceFac(double lat,double lon)
 {
-    double lat0=50,lat2=75;
+    //double lat0=50,lat2=75;
     double fac2 = hypot(IceExtent[2]-lat,IceExtent[3]+lon)/IceExtent[1];
     double fac = (90-lat)/IceExtent[0];
     if(fac2<fac) fac=fac2;

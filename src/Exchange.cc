@@ -106,6 +106,7 @@ double Exchange::Twoway(RegionalPopulation& source, RegionalPopulation& target) 
        immigration (force>0).  */
     
     emigration   = force;
+	// TODO: iarea and jarea should be sarea or tarea
     immigration = -iarea/jarea * force;
     
     /* Identify source and target for unidirectional transport and

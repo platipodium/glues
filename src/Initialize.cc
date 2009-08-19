@@ -48,7 +48,9 @@ std::ofstream ofs;
 int set_events()
 {
     signed int loop=1,num_ev,num_prox,i,j,pe,iall=0,jj,n,pj,EventSeriesLen;
-    double evfreq_avg,evfreq_avg_all=0,omt,TotDist,HalfDist=100.,SimInit=12,RecWeight[22];
+    double evfreq_avg,evfreq_avg_all=0;
+	//double omt;
+	double TotDist,HalfDist=100.,SimInit=12,RecWeight[22];
     double mintime,wsum,sermax,sermin,*EventSeries,*EventWeight ;
     
 /*----------------------------------------------------------------------*/
@@ -815,6 +817,8 @@ int set_logparvector(unsigned long dv, FILE *sp) {
 double random2()
 {
 
+	// The comparison below is pointless, since l0 is unsigned
+	// is this correct behaviour?
 if((l0=l0*65539)<0)
 	l0+=l1;
 return (double)(l0)*(double)2.3283064369E-10;

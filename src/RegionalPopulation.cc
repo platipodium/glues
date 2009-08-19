@@ -141,10 +141,12 @@ double RegionalPopulation::RatesOfChange(double *da)
 */
 int RegionalPopulation::Develop(double step) {
   static double changerate[N_POPVARS];
-  static double traitvector[N_POPVARS];
+  //static double traitvector[N_POPVARS];
 
-  double time=0,change,ch,rt,literacy,loss_red,nnew;
-  unsigned long i,i0=0,ri,nrec=1,reccount;
+	double change,nnew;
+  //double time=0,change,ch,rt,literacy,loss_red,nnew;
+	unsigned long i;
+	//unsigned long i0=0,ri,nrec=1,reccount;
   
   /**  save old values  */
   CreateVector();
@@ -193,7 +195,8 @@ int RegionalPopulation::Develop(double step) {
    split up into fertilty and food productivity
 */
 double RegionalPopulation::RelativeGrowthrate() {
-  double tlm,tl1=0.7,literacy;
+	//double tlm;
+	double tl1=0.7,literacy;
   double expo;
   
   nrat = ndomesticated/(ndomesticated+1);
