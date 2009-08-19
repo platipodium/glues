@@ -1,0 +1,423 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXApplicationTarget section */
+		35B2AACC0D05EAB9009227C6 /* glues */ = {
+			isa = PBXApplicationTarget;
+			buildConfigurationList = 35B2AACF0D05EAD7009227C6 /* Build configuration list for PBXApplicationTarget "glues" */;
+			buildPhases = (
+				35B2AAC70D05EAB9009227C6 /* Headers */,
+				35B2AAC80D05EAB9009227C6 /* Resources */,
+				35B2AAC90D05EAB9009227C6 /* Sources */,
+				35B2AACA0D05EAB9009227C6 /* Frameworks */,
+				35B2AACB0D05EAB9009227C6 /* Rez */,
+			);
+			dependencies = (
+			);
+			name = glues;
+			productInstallPath = "$(USER_APPS_DIR)";
+			productName = glues.prg;
+			productReference = 35B2AACD0D05EAB9009227C6 /* glues.app */;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+</dict>
+</plist>
+";
+		};
+/* End PBXApplicationTarget section */
+
+/* Begin PBXBuildFile section */
+		358763880D2D16DD007FFDDA /* libSiSi2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 358763870D2D16DD007FFDDA /* libSiSi2.0.a */; };
+		35B2AAD30D05EB67009227C6 /* callSiSi.cc in Sources */ = {isa = PBXBuildFile; fileRef = 35B2A9F00D05DA5D009227C6 /* callSiSi.cc */; };
+		35B2AAD40D05EB67009227C6 /* GeographicalNeighbour.cc in Sources */ = {isa = PBXBuildFile; fileRef = 35B2A9FA0D05DA5D009227C6 /* GeographicalNeighbour.cc */; };
+		35B2AAD50D05EB67009227C6 /* GeographicalRegion.cc in Sources */ = {isa = PBXBuildFile; fileRef = 35B2A9FC0D05DA5D009227C6 /* GeographicalRegion.cc */; };
+		35B2AAD60D05EB67009227C6 /* GlobalClimate.cc in Sources */ = {isa = PBXBuildFile; fileRef = 35B2A9FF0D05DA5D009227C6 /* GlobalClimate.cc */; };
+		35B2AAD70D05EB67009227C6 /* Globals.cc in Sources */ = {isa = PBXBuildFile; fileRef = 35B2AA010D05DA5D009227C6 /* Globals.cc */; };
+		35B2AAD80D05EB67009227C6 /* Glues.cc in Sources */ = {isa = PBXBuildFile; fileRef = 35B2AA030D05DA5D009227C6 /* Glues.cc */; };
+		35B2AAD90D05EB67009227C6 /* Initialize.cc in Sources */ = {isa = PBXBuildFile; fileRef = 35B2AA040D05DA5D009227C6 /* Initialize.cc */; };
+		35B2AADA0D05EB67009227C6 /* Input.cc in Sources */ = {isa = PBXBuildFile; fileRef = 35B2AA050D05DA5D009227C6 /* Input.cc */; };
+		35B2AADB0D05EB67009227C6 /* Messages.cc in Sources */ = {isa = PBXBuildFile; fileRef = 35B2AA080D05DA5D009227C6 /* Messages.cc */; };
+		35B2AADC0D05EB67009227C6 /* PopulatedRegion.cc in Sources */ = {isa = PBXBuildFile; fileRef = 35B2AA0B0D05DA5D009227C6 /* PopulatedRegion.cc */; };
+		35B2AADD0D05EB67009227C6 /* RegionalClimate.cc in Sources */ = {isa = PBXBuildFile; fileRef = 35B2AA0D0D05DA5D009227C6 /* RegionalClimate.cc */; };
+		35B2AADE0D05EB67009227C6 /* RegionalPopulation.cc in Sources */ = {isa = PBXBuildFile; fileRef = 35B2AA0F0D05DA5D009227C6 /* RegionalPopulation.cc */; };
+		35B2AADF0D05EB67009227C6 /* RegionMapping.cc in Sources */ = {isa = PBXBuildFile; fileRef = 35B2AA110D05DA5D009227C6 /* RegionMapping.cc */; };
+		35B2AAE00D05EB67009227C6 /* SeawardRegion.cc in Sources */ = {isa = PBXBuildFile; fileRef = 35B2AA130D05DA5D009227C6 /* SeawardRegion.cc */; };
+		35B2AAE10D05EB67009227C6 /* Spread.cc in Sources */ = {isa = PBXBuildFile; fileRef = 35B2AA150D05DA5D009227C6 /* Spread.cc */; };
+		35B2AAE20D05EB67009227C6 /* VegetatedRegion.cc in Sources */ = {isa = PBXBuildFile; fileRef = 35B2AA190D05DA5D009227C6 /* VegetatedRegion.cc */; };
+		35B2AAE30D05EB78009227C6 /* callSiSi.hh in Headers */ = {isa = PBXBuildFile; fileRef = 35B2A9F10D05DA5D009227C6 /* callSiSi.hh */; settings = {ATTRIBUTES = (Public, ); }; };
+		35B2AAE40D05EB78009227C6 /* Constants.h in Headers */ = {isa = PBXBuildFile; fileRef = 35B2A9F40D05DA5D009227C6 /* Constants.h */; };
+		35B2AAE50D05EB78009227C6 /* GeographicalNeighbour.h in Headers */ = {isa = PBXBuildFile; fileRef = 35B2A9FB0D05DA5D009227C6 /* GeographicalNeighbour.h */; };
+		35B2AAE60D05EB78009227C6 /* GeographicalRegion.h in Headers */ = {isa = PBXBuildFile; fileRef = 35B2A9FD0D05DA5D009227C6 /* GeographicalRegion.h */; };
+		35B2AAE70D05EB78009227C6 /* gettext.h in Headers */ = {isa = PBXBuildFile; fileRef = 35B2A9FE0D05DA5D009227C6 /* gettext.h */; };
+		35B2AAE80D05EB78009227C6 /* GlobalClimate.h in Headers */ = {isa = PBXBuildFile; fileRef = 35B2AA000D05DA5D009227C6 /* GlobalClimate.h */; };
+		35B2AAE90D05EB78009227C6 /* Globals.h in Headers */ = {isa = PBXBuildFile; fileRef = 35B2AA020D05DA5D009227C6 /* Globals.h */; };
+		35B2AAEA0D05EB78009227C6 /* Input.h in Headers */ = {isa = PBXBuildFile; fileRef = 35B2AA060D05DA5D009227C6 /* Input.h */; };
+		35B2AAEB0D05EB78009227C6 /* Messages.h in Headers */ = {isa = PBXBuildFile; fileRef = 35B2AA090D05DA5D009227C6 /* Messages.h */; };
+		35B2AAEC0D05EB78009227C6 /* MySiSi.hh in Headers */ = {isa = PBXBuildFile; fileRef = 35B2AA0A0D05DA5D009227C6 /* MySiSi.hh */; };
+		35B2AAED0D05EB78009227C6 /* PopulatedRegion.h in Headers */ = {isa = PBXBuildFile; fileRef = 35B2AA0C0D05DA5D009227C6 /* PopulatedRegion.h */; };
+		35B2AAEE0D05EB78009227C6 /* RegionalClimate.h in Headers */ = {isa = PBXBuildFile; fileRef = 35B2AA0E0D05DA5D009227C6 /* RegionalClimate.h */; };
+		35B2AAEF0D05EB78009227C6 /* RegionalPopulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 35B2AA100D05DA5D009227C6 /* RegionalPopulation.h */; };
+		35B2AAF00D05EB78009227C6 /* RegionMapping.h in Headers */ = {isa = PBXBuildFile; fileRef = 35B2AA120D05DA5D009227C6 /* RegionMapping.h */; };
+		35B2AAF10D05EB78009227C6 /* SeawardRegion.h in Headers */ = {isa = PBXBuildFile; fileRef = 35B2AA140D05DA5D009227C6 /* SeawardRegion.h */; };
+		35B2AAF20D05EB78009227C6 /* variables.h in Headers */ = {isa = PBXBuildFile; fileRef = 35B2AA180D05DA5D009227C6 /* variables.h */; };
+		35B2AAF30D05EB78009227C6 /* VegetatedRegion.h in Headers */ = {isa = PBXBuildFile; fileRef = 35B2AA1A0D05DA5D009227C6 /* VegetatedRegion.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		358763620D2D14D5007FFDDA /* attach.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = attach.c; sourceTree = "<group>"; };
+		358763650D2D14D5007FFDDA /* defines.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = defines.h; sourceTree = "<group>"; };
+		358763670D2D14D5007FFDDA /* gbinary.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = gbinary.c; sourceTree = "<group>"; };
+		358763690D2D14D5007FFDDA /* input.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = input.c; sourceTree = "<group>"; };
+		3587636C0D2D14D5007FFDDA /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		358763700D2D14D5007FFDDA /* random.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = random.h; sourceTree = "<group>"; };
+		358763720D2D14D5007FFDDA /* reg_eval.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = reg_eval.c; sourceTree = "<group>"; };
+		358763760D2D14D5007FFDDA /* region.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = region.c; sourceTree = "<group>"; };
+		358763780D2D14D5007FFDDA /* utils.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = utils.c; sourceTree = "<group>"; };
+		358763790D2D14D5007FFDDA /* vars.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = vars.h; sourceTree = "<group>"; };
+		358763870D2D16DD007FFDDA /* libSiSi2.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSiSi2.0.a; path = ../SiSi2.0/lib/libSiSi2.0.a; sourceTree = SOURCE_ROOT; };
+		35B2A9F00D05DA5D009227C6 /* callSiSi.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = callSiSi.cc; path = src/callSiSi.cc; sourceTree = "<group>"; };
+		35B2A9F10D05DA5D009227C6 /* callSiSi.hh */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; name = callSiSi.hh; path = src/callSiSi.hh; sourceTree = "<group>"; };
+		35B2A9F40D05DA5D009227C6 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Constants.h; path = src/Constants.h; sourceTree = "<group>"; };
+		35B2A9FA0D05DA5D009227C6 /* GeographicalNeighbour.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = GeographicalNeighbour.cc; path = src/GeographicalNeighbour.cc; sourceTree = "<group>"; };
+		35B2A9FB0D05DA5D009227C6 /* GeographicalNeighbour.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = GeographicalNeighbour.h; path = src/GeographicalNeighbour.h; sourceTree = "<group>"; };
+		35B2A9FC0D05DA5D009227C6 /* GeographicalRegion.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = GeographicalRegion.cc; path = src/GeographicalRegion.cc; sourceTree = "<group>"; };
+		35B2A9FD0D05DA5D009227C6 /* GeographicalRegion.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = GeographicalRegion.h; path = src/GeographicalRegion.h; sourceTree = "<group>"; };
+		35B2A9FE0D05DA5D009227C6 /* gettext.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = gettext.h; path = src/gettext.h; sourceTree = "<group>"; };
+		35B2A9FF0D05DA5D009227C6 /* GlobalClimate.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = GlobalClimate.cc; path = src/GlobalClimate.cc; sourceTree = "<group>"; };
+		35B2AA000D05DA5D009227C6 /* GlobalClimate.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = GlobalClimate.h; path = src/GlobalClimate.h; sourceTree = "<group>"; };
+		35B2AA010D05DA5D009227C6 /* Globals.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Globals.cc; path = src/Globals.cc; sourceTree = "<group>"; };
+		35B2AA020D05DA5D009227C6 /* Globals.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Globals.h; path = src/Globals.h; sourceTree = "<group>"; };
+		35B2AA030D05DA5D009227C6 /* Glues.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Glues.cc; path = src/Glues.cc; sourceTree = "<group>"; };
+		35B2AA040D05DA5D009227C6 /* Initialize.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Initialize.cc; path = src/Initialize.cc; sourceTree = "<group>"; };
+		35B2AA050D05DA5D009227C6 /* Input.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Input.cc; path = src/Input.cc; sourceTree = "<group>"; };
+		35B2AA060D05DA5D009227C6 /* Input.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Input.h; path = src/Input.h; sourceTree = "<group>"; };
+		35B2AA070D05DA5D009227C6 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = Makefile.am; path = src/Makefile.am; sourceTree = "<group>"; };
+		35B2AA080D05DA5D009227C6 /* Messages.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Messages.cc; path = src/Messages.cc; sourceTree = "<group>"; };
+		35B2AA090D05DA5D009227C6 /* Messages.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Messages.h; path = src/Messages.h; sourceTree = "<group>"; };
+		35B2AA0A0D05DA5D009227C6 /* MySiSi.hh */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; name = MySiSi.hh; path = src/MySiSi.hh; sourceTree = "<group>"; };
+		35B2AA0B0D05DA5D009227C6 /* PopulatedRegion.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = PopulatedRegion.cc; path = src/PopulatedRegion.cc; sourceTree = "<group>"; };
+		35B2AA0C0D05DA5D009227C6 /* PopulatedRegion.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PopulatedRegion.h; path = src/PopulatedRegion.h; sourceTree = "<group>"; };
+		35B2AA0D0D05DA5D009227C6 /* RegionalClimate.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = RegionalClimate.cc; path = src/RegionalClimate.cc; sourceTree = "<group>"; };
+		35B2AA0E0D05DA5D009227C6 /* RegionalClimate.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = RegionalClimate.h; path = src/RegionalClimate.h; sourceTree = "<group>"; };
+		35B2AA0F0D05DA5D009227C6 /* RegionalPopulation.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = RegionalPopulation.cc; path = src/RegionalPopulation.cc; sourceTree = "<group>"; };
+		35B2AA100D05DA5D009227C6 /* RegionalPopulation.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = RegionalPopulation.h; path = src/RegionalPopulation.h; sourceTree = "<group>"; };
+		35B2AA110D05DA5D009227C6 /* RegionMapping.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = RegionMapping.cc; path = src/RegionMapping.cc; sourceTree = "<group>"; };
+		35B2AA120D05DA5D009227C6 /* RegionMapping.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = RegionMapping.h; path = src/RegionMapping.h; sourceTree = "<group>"; };
+		35B2AA130D05DA5D009227C6 /* SeawardRegion.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = SeawardRegion.cc; path = src/SeawardRegion.cc; sourceTree = "<group>"; };
+		35B2AA140D05DA5D009227C6 /* SeawardRegion.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SeawardRegion.h; path = src/SeawardRegion.h; sourceTree = "<group>"; };
+		35B2AA150D05DA5D009227C6 /* Spread.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Spread.cc; path = src/Spread.cc; sourceTree = "<group>"; };
+		35B2AA160D05DA5D009227C6 /* Tracer.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Tracer.cc; path = src/Tracer.cc; sourceTree = "<group>"; };
+		35B2AA170D05DA5D009227C6 /* Tracer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Tracer.h; path = src/Tracer.h; sourceTree = "<group>"; };
+		35B2AA180D05DA5D009227C6 /* variables.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = variables.h; path = src/variables.h; sourceTree = "<group>"; };
+		35B2AA190D05DA5D009227C6 /* VegetatedRegion.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = VegetatedRegion.cc; path = src/VegetatedRegion.cc; sourceTree = "<group>"; };
+		35B2AA1A0D05DA5D009227C6 /* VegetatedRegion.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = VegetatedRegion.h; path = src/VegetatedRegion.h; sourceTree = "<group>"; };
+		35B2AACD0D05EAB9009227C6 /* glues.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = glues.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		35B2AACA0D05EAB9009227C6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				358763880D2D16DD007FFDDA /* libSiSi2.0.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* glues */ = {
+			isa = PBXGroup;
+			children = (
+				358763870D2D16DD007FFDDA /* libSiSi2.0.a */,
+				08FB7795FE84155DC02AAC07 /* Source */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+			);
+			name = glues;
+			sourceTree = "<group>";
+		};
+		08FB7795FE84155DC02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				3587635A0D2D14D5007FFDDA /* region */,
+				35B2A9F00D05DA5D009227C6 /* callSiSi.cc */,
+				35B2A9F10D05DA5D009227C6 /* callSiSi.hh */,
+				35B2A9F40D05DA5D009227C6 /* Constants.h */,
+				35B2A9FA0D05DA5D009227C6 /* GeographicalNeighbour.cc */,
+				35B2A9FB0D05DA5D009227C6 /* GeographicalNeighbour.h */,
+				35B2A9FC0D05DA5D009227C6 /* GeographicalRegion.cc */,
+				35B2A9FD0D05DA5D009227C6 /* GeographicalRegion.h */,
+				35B2A9FE0D05DA5D009227C6 /* gettext.h */,
+				35B2A9FF0D05DA5D009227C6 /* GlobalClimate.cc */,
+				35B2AA000D05DA5D009227C6 /* GlobalClimate.h */,
+				35B2AA010D05DA5D009227C6 /* Globals.cc */,
+				35B2AA020D05DA5D009227C6 /* Globals.h */,
+				35B2AA030D05DA5D009227C6 /* Glues.cc */,
+				35B2AA040D05DA5D009227C6 /* Initialize.cc */,
+				35B2AA050D05DA5D009227C6 /* Input.cc */,
+				35B2AA060D05DA5D009227C6 /* Input.h */,
+				35B2AA070D05DA5D009227C6 /* Makefile.am */,
+				35B2AA080D05DA5D009227C6 /* Messages.cc */,
+				35B2AA090D05DA5D009227C6 /* Messages.h */,
+				35B2AA0A0D05DA5D009227C6 /* MySiSi.hh */,
+				35B2AA0B0D05DA5D009227C6 /* PopulatedRegion.cc */,
+				35B2AA0C0D05DA5D009227C6 /* PopulatedRegion.h */,
+				35B2AA0D0D05DA5D009227C6 /* RegionalClimate.cc */,
+				35B2AA0E0D05DA5D009227C6 /* RegionalClimate.h */,
+				35B2AA0F0D05DA5D009227C6 /* RegionalPopulation.cc */,
+				35B2AA100D05DA5D009227C6 /* RegionalPopulation.h */,
+				35B2AA110D05DA5D009227C6 /* RegionMapping.cc */,
+				35B2AA120D05DA5D009227C6 /* RegionMapping.h */,
+				35B2AA130D05DA5D009227C6 /* SeawardRegion.cc */,
+				35B2AA140D05DA5D009227C6 /* SeawardRegion.h */,
+				35B2AA150D05DA5D009227C6 /* Spread.cc */,
+				35B2AA160D05DA5D009227C6 /* Tracer.cc */,
+				35B2AA170D05DA5D009227C6 /* Tracer.h */,
+				35B2AA180D05DA5D009227C6 /* variables.h */,
+				35B2AA190D05DA5D009227C6 /* VegetatedRegion.cc */,
+				35B2AA1A0D05DA5D009227C6 /* VegetatedRegion.h */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				35B2AACD0D05EAB9009227C6 /* glues.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3587635A0D2D14D5007FFDDA /* region */ = {
+			isa = PBXGroup;
+			children = (
+				358763620D2D14D5007FFDDA /* attach.c */,
+				358763650D2D14D5007FFDDA /* defines.h */,
+				358763670D2D14D5007FFDDA /* gbinary.c */,
+				358763690D2D14D5007FFDDA /* input.c */,
+				3587636C0D2D14D5007FFDDA /* Makefile.am */,
+				358763700D2D14D5007FFDDA /* random.h */,
+				358763720D2D14D5007FFDDA /* reg_eval.c */,
+				358763760D2D14D5007FFDDA /* region.c */,
+				358763780D2D14D5007FFDDA /* utils.c */,
+				358763790D2D14D5007FFDDA /* vars.h */,
+			);
+			name = region;
+			path = src/region;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		35B2AAC70D05EAB9009227C6 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				35B2AAE30D05EB78009227C6 /* callSiSi.hh in Headers */,
+				35B2AAE40D05EB78009227C6 /* Constants.h in Headers */,
+				35B2AAE50D05EB78009227C6 /* GeographicalNeighbour.h in Headers */,
+				35B2AAE60D05EB78009227C6 /* GeographicalRegion.h in Headers */,
+				35B2AAE70D05EB78009227C6 /* gettext.h in Headers */,
+				35B2AAE80D05EB78009227C6 /* GlobalClimate.h in Headers */,
+				35B2AAE90D05EB78009227C6 /* Globals.h in Headers */,
+				35B2AAEA0D05EB78009227C6 /* Input.h in Headers */,
+				35B2AAEB0D05EB78009227C6 /* Messages.h in Headers */,
+				35B2AAEC0D05EB78009227C6 /* MySiSi.hh in Headers */,
+				35B2AAED0D05EB78009227C6 /* PopulatedRegion.h in Headers */,
+				35B2AAEE0D05EB78009227C6 /* RegionalClimate.h in Headers */,
+				35B2AAEF0D05EB78009227C6 /* RegionalPopulation.h in Headers */,
+				35B2AAF00D05EB78009227C6 /* RegionMapping.h in Headers */,
+				35B2AAF10D05EB78009227C6 /* SeawardRegion.h in Headers */,
+				35B2AAF20D05EB78009227C6 /* variables.h in Headers */,
+				35B2AAF30D05EB78009227C6 /* VegetatedRegion.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB923508733DC60010E9CD /* Build configuration list for PBXProject "glues" */;
+			hasScannedForEncodings = 1;
+			mainGroup = 08FB7794FE84155DC02AAC07 /* glues */;
+			projectDirPath = "";
+			targets = (
+				35B2AACC0D05EAB9009227C6 /* glues */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		35B2AAC80D05EAB9009227C6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXRezBuildPhase section */
+		35B2AACB0D05EAB9009227C6 /* Rez */ = {
+			isa = PBXRezBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXRezBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		35B2AAC90D05EAB9009227C6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				35B2AAD30D05EB67009227C6 /* callSiSi.cc in Sources */,
+				35B2AAD40D05EB67009227C6 /* GeographicalNeighbour.cc in Sources */,
+				35B2AAD50D05EB67009227C6 /* GeographicalRegion.cc in Sources */,
+				35B2AAD60D05EB67009227C6 /* GlobalClimate.cc in Sources */,
+				35B2AAD70D05EB67009227C6 /* Globals.cc in Sources */,
+				35B2AAD80D05EB67009227C6 /* Glues.cc in Sources */,
+				35B2AAD90D05EB67009227C6 /* Initialize.cc in Sources */,
+				35B2AADA0D05EB67009227C6 /* Input.cc in Sources */,
+				35B2AADB0D05EB67009227C6 /* Messages.cc in Sources */,
+				35B2AADC0D05EB67009227C6 /* PopulatedRegion.cc in Sources */,
+				35B2AADD0D05EB67009227C6 /* RegionalClimate.cc in Sources */,
+				35B2AADE0D05EB67009227C6 /* RegionalPopulation.cc in Sources */,
+				35B2AADF0D05EB67009227C6 /* RegionMapping.cc in Sources */,
+				35B2AAE00D05EB67009227C6 /* SeawardRegion.cc in Sources */,
+				35B2AAE10D05EB67009227C6 /* Spread.cc in Sources */,
+				35B2AAE20D05EB67009227C6 /* VegetatedRegion.cc in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB923608733DC60010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Debug;
+		};
+		1DEB923708733DC60010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Release;
+		};
+		35B2AAD00D05EAD7009227C6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../SiSi2.0/lib",
+				);
+				OPTIMIZATION_CFLAGS = "-O2";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRECOMPILE_PREFIX_HEADER = YES;
+				PRODUCT_NAME = glues;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		35B2AAD10D05EAD7009227C6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				HEADER_SEARCH_PATHS = /home11/icg126/projects/glues/glues/SiSi2.0/include;
+				LIBRARY_SEARCH_PATHS = /home11/icg126/projects/glues/glues/SiSi2.0/lib;
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = glues.prg;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB923508733DC60010E9CD /* Build configuration list for PBXProject "glues" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB923608733DC60010E9CD /* Debug */,
+				1DEB923708733DC60010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		35B2AACF0D05EAD7009227C6 /* Build configuration list for PBXApplicationTarget "glues" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				35B2AAD00D05EAD7009227C6 /* Debug */,
+				35B2AAD10D05EAD7009227C6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}

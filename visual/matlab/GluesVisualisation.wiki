@@ -1,0 +1,19 @@
+= How to visualise GLUES results =
+
+= Preparation =
+The general preparation is necessary for each setup with differing numbers of regions.
+
+= Preprocessing =
+Preprocessing reads the binary result file into a matlab structure and is
+necessary after each simulation / Change of parameters
+
+ * read_result;
+
+= Plotting =
+
+ * plot_farming_sites; plots a map of Europe with timing of threshold (default
+   is 30% agriculture), superimposed the timing of Neolithic cultures
+   according to Turney and Brown.
+
+   Requirements: regionpath.mat, neolithicsites.mat, results.mat
+   Products: farming_sites_<treshold>.fig

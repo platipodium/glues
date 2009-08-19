@@ -1,0 +1,146 @@
+= SISI variables =
+
+|| '''Name''' || '''sisi file''' || '''used by''' ||
+|| LocalSpread  || ctl ||
+|| RemoteSpread || ctl ||
+|| CultIndex    || ctl ||
+|| Space2Time	|| ctl ||
+|| MaxCivNum	|| ctl ||
+|| DataActive	|| ctl ||
+|| err_data_weights   || ctl ||
+|| RunVarInd	|| ctl ||
+|| VarActive	|| ctl ||
+|| NumDice	|| ctl ||
+|| MonteCarlo	|| ctl ||
+|| VarOutputStep|| ctl ||
+|| varresfile	|| ctl ||
+|| storetime	|| ctl ||
+|| RelChange	|| ctl ||
+|| data_agri_start_old || dat ||
+|| data_agri_start || dat ||
+|| flucampl	   || dat ||
+|| flucperiod	   || dat ||
+|| deltat	   || par ||
+|| spreadv	   || par ||
+|| overexp	   || par ||
+|| kappa	   || par ||
+|| gdd_opt	   || par ||
+|| omega	   || par ||
+|| gammab	   || par ||
+|| ndommaxmean	   || par ||
+|| ndommaxcont	   || par ||
+|| LiterateTechnology || par ||
+|| KnowledgeLoss  || par ||
+|| SimulationName || sim ||
+|| ModelName	  || sim ||
+|| ModelPath	  || sim ||
+|| Time		  || sim ||
+|| TimeStart	  || sim ||
+|| TimeEnd	  || sim ||
+|| TimeStep	  || sim ||
+|| OutputStepRandomInit || sim ||
+|| IncludeFiles   || sim ||
+|| OutputVariables|| sim ||
+|| VariationVariables || sim ||
+|| InitTechnology || init ||
+|| InitNdomast	  || init ||
+|| InitQfarm	  || init ||
+|| InitDensity	  || init ||
+|| InitGerms	  || init ||
+|| deltan	  || opar ||
+|| deltaq	  || opar ||
+|| deltar	  || opar ||
+|| regenerate	  || opar ||
+|| spreadm	  || opar ||
+|| ndommaxvar	  || opar ||
+|| gammad	  || opar ||
+|| gammam	  || opar ||
+|| NPPCROP	  || opar ||
+|| CoastRegNo	  || sce ||
+|| datapath	  || sce ||
+|| regiondata	  || sce ||
+|| mappingdata	  || sce ||
+|| resultfilename || sce ||
+|| watchstring	  || sce ||
+|| spreadfile	  || sce ||
+|| ins		  || sce ||
+|| ClimUpdateTimes|| sce ||
+|| eventfile	  || sce ||
+|| SiteRegfile	  || sce ||
+|| SaharaDesert	  || sce ||
+|| LGMHoloTrans	  || sce ||
+|| IceExtent	  || sce ||
+|| IceRed	  || sce ||
+
+= Other globally known variables =
+
+|| NumDice || ||
+||VAR_VAL ||
+||VAR_NAMES||
+||num_variat_parser||
+||populations||
+||regions||
+||cropfertility||
+||s_error||
+||GlobDev||
+||fluc||
+||ice_fac||
+||minval[N_POPVARS]||
+||EventTime||
+||EventRegTime||
+||EventSerMax||
+||EventSerMin||
+||resultstring[156]||
+||climatestring[156]||
+||varrespath[156]||
+||spreadstring[156]||
+||inspectid||
+||GlobDevNum||
+||RegOn||
+||MaxEvent||
+||MaxProxyReg||
+||numberOfSites||
+||vstep||
+||RegSiteInd[MAXPROXY]||
+||RegSiteRad[MAXPROXY]||
+||num_total_variat||
+||num_variat||
+||climatedata||
+||timepoints||
+||civind||
+||DISTANCEMATRIX||
+||GlobCivStart||
+||tmax||
+||OutStep||
+||outfile||
+||watchfile[N_INSPECT]||
+||sprd||
+||sprdm||
+||ev[N_POPVARS]||
+||num_stores||
+||num_states||
+||num_others||
+||store_vector||
+||EventRegInd||
+||EventRegNum||
+||state_names[N_OUTVARS+1]||
+||variat_min[N_VARIAT]||
+||variat_delt[N_VARIAT]||
+||variat_steps[N_VARIAT]||
+||store_ind[N_OUTVARS] ||
+||NewCivInd||
+||OldCivHit||
+||NewCivMaxNum||
+||NewCivNum||
+||NewCivDist||
+||NewCivDev||
+||NewCivTime||
+||var_out[2][N_OUTVARS]||
+||var_out0[2][N_OUTVARS]||
+||par_val[N_VARIAT]||
+||RegPerf ||
+||tot_pop_t || Glues.cc ||
+||tot_spr|| Glues.cc Spread.cc ||
+||tot_pop|| Glues.cc ||
+||numberOfRegions|| Events.h GlobalClimate.h Events.cc Fileio.cc GlobalClimate.cc Glues.cc Initialize.cc Input.cc Spread.cc ||
+
