@@ -8,4 +8,4 @@ noinst_PROGRAMS = index.html
 index_html_SOURCES = glues.doxygen
 # ausfueren von Doxygen mit dem sourcefile
 index.html: glues.doxygen
-	if test -x doxygen; then doxygen $(srcdir)/glues.doxygen; fi
+	test -x doxygen && doxygen $(srcdir)/glues.doxygen
