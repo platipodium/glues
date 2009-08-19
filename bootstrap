@@ -3,3 +3,11 @@
 aclocal -I config && autoheader \
 && automake --gnu --add-missing  --copy \
 && autoconf
+
+# temporary bug fix for missing _LT_DECL macro
+if test -x ./configure ; then
+  sed '/_LT_DECL/d;/build shared libraries/d' configure > configure.tmp
+  mv ./configure.tmp ./configure
+  chmod +x ./configure
+fi
+

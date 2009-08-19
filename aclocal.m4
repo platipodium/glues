@@ -13,8 +13,8 @@
 
 m4_ifndef([AC_AUTOCONF_VERSION],
   [m4_copy([m4_PACKAGE_VERSION], [AC_AUTOCONF_VERSION])])dnl
-m4_if(m4_defn([AC_AUTOCONF_VERSION]), [2.63],,
-[m4_warning([this file was generated for autoconf 2.63.
+m4_if(m4_defn([AC_AUTOCONF_VERSION]), [2.64],,
+[m4_warning([this file was generated for autoconf 2.64.
 You have another version of autoconf.  It may work, but is not guaranteed to.
 If you have problems, you may need to regenerate the build system entirely.
 To do so, use the procedure documented by the package, typically `autoreconf'.])])
@@ -28,7 +28,7 @@ To do so, use the procedure documented by the package, typically `autoreconf'.])
 # unlimited permission to copy and/or distribute it, with or without
 # modifications, as long as this notice is preserved.
 
-# serial 6 ltoptions.m4
+# serial 4 ltoptions.m4
 
 # This is to help aclocal find these macros, as it can't see m4_define.
 AC_DEFUN([LTOPTIONS_VERSION], [m4_if([1])])
@@ -143,7 +143,7 @@ LT_OPTION_DEFINE([LT_INIT], [win32-dll],
 [enable_win32_dll=yes
 
 case $host in
-*-*-cygwin* | *-*-mingw* | *-*-pw32* | *-cegcc*)
+*-*-cygwin* | *-*-mingw* | *-*-pw32*)
   AC_CHECK_TOOL(AS, as, false)
   AC_CHECK_TOOL(DLLTOOL, dlltool, false)
   AC_CHECK_TOOL(OBJDUMP, objdump, false)
@@ -210,7 +210,7 @@ LT_OPTION_DEFINE([LT_INIT], [disable-shared], [_LT_ENABLE_SHARED([no])])
 
 # Old names:
 AC_DEFUN([AC_ENABLE_SHARED],
-[_LT_SET_OPTION([LT_INIT], m4_if([$1], [no], [disable-])[shared])
+[_LT_SET_OPTION([LT_INIT], [shared])
 ])
 
 AC_DEFUN([AC_DISABLE_SHARED],
@@ -264,7 +264,7 @@ LT_OPTION_DEFINE([LT_INIT], [disable-static], [_LT_ENABLE_STATIC([no])])
 
 # Old names:
 AC_DEFUN([AC_ENABLE_STATIC],
-[_LT_SET_OPTION([LT_INIT], m4_if([$1], [no], [disable-])[static])
+[_LT_SET_OPTION([LT_INIT], [static])
 ])
 
 AC_DEFUN([AC_DISABLE_STATIC],
@@ -318,7 +318,7 @@ LT_OPTION_DEFINE([LT_INIT], [disable-fast-install], [_LT_ENABLE_FAST_INSTALL([no
 
 # Old names:
 AU_DEFUN([AC_ENABLE_FAST_INSTALL],
-[_LT_SET_OPTION([LT_INIT], m4_if([$1], [no], [disable-])[fast-install])
+[_LT_SET_OPTION([LT_INIT], [fast-install])
 AC_DIAGNOSE([obsolete],
 [$0: Remove this warning and the call to _LT_SET_OPTION when you put
 the `fast-install' option into LT_INIT's first parameter.])

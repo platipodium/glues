@@ -1,0 +1,15 @@
+syntax:glob
+**Makefile
+**Makefile.in
+**.o
+**.Po
+**~
+**.bak
+stamp-h1
+autom4te.cache/*
+config.h
+config.log
+config.status
+src/glues
+src/region/region
+src/variation/random_variation
