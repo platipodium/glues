@@ -5,9 +5,10 @@ aclocal -I config && autoheader \
 && autoconf
 
 # temporary bug fix for missing _LT_DECL macro
-if test -x ./configure ; then
+if test -f configure ; then
   sed '/_LT_DECL/d;/build shared libraries/d' configure > configure.tmp
-  mv ./configure.tmp ./configure
-  chmod +x ./configure
+  mv configure.tmp configure
 fi
+
+test -x ./configure || chmod +x ./configure
 
