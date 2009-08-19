@@ -41,8 +41,12 @@ fi
 
 dnl Check for programs	
 AC_PROG_CXX
+#AX_GXX_VERSION
 AC_LANG_CPLUSPLUS
 AC_PROG_CC # for region package
+
+dnl Check for multiprocessing
+#AX_MPI from autoconf archive
 
 dnl Check for libraries
 AC_CHECK_LIB(m,cos) # for region package
