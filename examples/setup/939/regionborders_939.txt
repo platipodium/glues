@@ -1,0 +1,5 @@
+ASCII data info: columns
+1. region id 2. number of cells, 3. area in sqkm
+4. lon index 5. lat index 6. number of neighbours
+Further columns neighbour id:length of border (km)
+Version info: 7.7.0.471 (R2008b) lemmen@grpsrv05 GLNXA64 L linux 16-Dec-2008 10:22:34 /h/lemmen/projects/glues/glues/glues-1.1.2/visual/matlab write_region_properties.m write_region_properties 16-Dez-2008 00:43:38 (c)2008 lemmen
