@@ -56,14 +56,14 @@ GlobalClimate::~GlobalClimate() {
 int GlobalClimate::InitRead(char* filename) 
 {
   char *charoffset,gddname[299];
-  char c;
-  unsigned int regionid=0;
+  //char c;
+  //unsigned int regionid=0;
   unsigned int num_up=0,num=0,method=0;
   long unsigned int nrow=0,ncol=0,i=0,j=0;
   double** data;
 
-  static const unsigned int BUFSIZE=40024;
-  static char charbuffer [BUFSIZE];
+  //static const unsigned int BUFSIZE=40024;
+  //static char charbuffer [BUFSIZE];
   ifstream ififsc,ifs;
 
 
@@ -241,15 +241,16 @@ return 1;
 }
 
 int GlobalClimate::Update(double t) {
-    double tl,tlm=0.65;
-    int tt=0,ci,corrn=-13;
+    double tl;
+	//double tlm=0.65;
+    //int tt=0;
+	int ci,corrn=-13;
     int   corri[16]={89,55,39,124,85,150,104,114,179,74,73,75,175};
     double corrv[16]={-2,1 ,1 ,-1,-2.7,-1.3,2.7,-1,2 ,-2,6 ,6,2 };
 
     unsigned long int it;
     
     it=floor(t/ClimUpdateTimes[0]);
-    if (it<0) it=0;
     if (it>=ClimUpdateTimes[1]) it=ClimUpdateTimes[1]-1;
     
 

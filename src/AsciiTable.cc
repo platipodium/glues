@@ -44,6 +44,7 @@ int AsciiTable::splitRow() {
     j=j+1;
   }
   
+	// TODO: pgi complaines about unreachable statement here
   return ncol;
 }
 

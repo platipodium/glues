@@ -78,10 +78,10 @@ double spread_all() {
 double calc_spread_single(unsigned int iid) {
   unsigned int jid, i1;
   double length,exch,ptech,jrgr,force;
-  double jpop,ipop,ijpop,iarea,jarea,idommax,irgr;
+  double jpop,ipop,ijpop,iarea,jarea,irgr,idommax;
+	//double maxforce;
   double jtech,itech,dp0,dp1,indom,ndx,iqfarm,igerm,iresist;
   double iinfl,jinfl;
-  double maxforce;
   GeographicalNeighbour* neigh;
   
   /* ------------------------------------------------- */
