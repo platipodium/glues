@@ -13,3 +13,12 @@ config.status
 src/glues
 src/region/region
 src/variation/random_variation
+doc/**.html
+doc/**.css
+doc/**.png
+doc/**.gif
+doc/man/**
+doc/latex/*/**
+doc/latex/*[0-eg-z]
+
+
