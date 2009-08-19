@@ -10,6 +10,7 @@ autom4te.cache/*
 config.h
 config.log
 config.status
+configure
 src/glues
 src/region/region
 src/variation/random_variation
