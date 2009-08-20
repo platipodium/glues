@@ -9,11 +9,13 @@ syntax:glob
 **.old
 **.\#*
 **\#*\#
+**.swp
 **/.libs/*
 **/lib/*.so
 **/lib/*.la
 **/lib/*.a
 **/lib/*.dylib
+**DS_Store
 stamp-h1
 libtool
 make.log
@@ -24,6 +26,7 @@ config.status
 configure
 config/config.guess
 config/config.sub
+config/*.m4
 src/glues
 src/region/region
 src/variation/random_variation
