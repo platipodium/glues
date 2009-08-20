@@ -5,12 +5,25 @@ syntax:glob
 **.Po
 **~
 **.bak
+**.orig
+**.old
+**.\#*
+**\#*\#
+**/.libs/*
+**/lib/*.so
+**/lib/*.la
+**/lib/*.a
+**/lib/*.dylib
 stamp-h1
+libtool
+make.log
 autom4te.cache/*
 config.h
 config.log
 config.status
 configure
+config/config.guess
+config/config.sub
 src/glues
 src/region/region
 src/variation/random_variation
@@ -18,8 +31,9 @@ doc/**.html
 doc/**.css
 doc/**.png
 doc/**.gif
+doc/**.ttf
 doc/man/**
 doc/latex/*/**
 doc/latex/*[0-eg-z]
-
+examples/**.log
 
