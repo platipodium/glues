@@ -1,0 +1,199 @@
+
+              FileList.txt fuer SiSi, Version 2.0
+
+                 (SimululationSyStemInterface)
+
+                     Kassel, Juni 1998
+
+----------------------------------------------------------------------------
+
+------
+| ./ |
+------
+  ChangeLog    : Die letzten Aenderungen des Projekts (wird durch
+                 Versionskontrolle generiert).
+  FileList.txt : Dieser File.
+  History.txt  : Eine Geschichte durch die Versionen von SiSi.
+  LICENSE      : Gnu General Public Licence (Copyleft)
+  Makefile     : Gnu-Makefile zur Compilierung unter Unix.
+  Quirks.txt   : Bekannte Bugs.
+  README.txt   : Hinweise an AnwenderInnen und SimulationsprogrammiererInnen.
+  RCSHeader.txt: Header fuer RCS fuer alle Quelldateien
+  ToDo         : Was gibt's fuer die SiSi-ProgrammierInnen noch zu tun?
+  VERSION      : Die aktuelle Version von SiSi (Teil des Makefiles!).
+  deps         : Er wird erzeugt und erhaelt dann Abhaengigkeiten der
+                 source-Files.
+
+---------
+| ./bin |
+---------
+Hier werden/sollten die executables abgelegt werden.
+    SiSi2.0
+    grepdown
+    listunlockedfiles
+    preymod
+    toDos
+
+--------------
+| ./borland* |
+--------------
+Verschiedene Projektfiles (*.ide) fuer die verschiedenen Borland-Compiler.
+
+-------------
+| ./control |
+-------------
+Hier stehen vom Makefile eingebundene Dateien.
+  (platform).ctl: Anpassungen an die entsprechende Plattform (Wird durch
+                  die Variable $(OSTYPE) abgefragt!)
+
+----------
+| ./data |
+----------
+Einige Beispieldateien zum Testen von SiSi.
+
+--------------
+| ./examples |
+--------------
+Einige Beispielprogramme (Simulationen) zum Testen von (X)SiSi.
+
+-------------
+| ./include |
+-------------
+Hier befinden sich die Header-Dateien von sisi.
+    Version.hh    : Aktueller Programmname und aktuelle Versionsnummer.
+    platform.hh   : Plattformspezifische Anpassungen.
+  common/
+    CharacterHandler.hh
+    ClassObject.hh
+    FilenameHandling.hh
+    date.hh
+  datastructures/
+    ArrayParameter.hh
+    BooleanParameter.hh
+    CharParameter.hh
+    CommentParameter.hh
+    FloatParameter.hh
+    InfoType.hh
+    IntParameter.hh
+    ListParameter.hh
+    Parameter.hh
+    ParameterType.hh
+    ResultParameter.hh
+    String.hh
+    StringParameter.hh
+    TableParameter.hh
+  development/
+    EmitCxxCode.hh
+    LogFile.hh
+    MessageHandler.hh
+    ResultElement.hh
+    ResultReader.hh
+    ResultWriter.hh
+    SiSi.hh
+  iostreams/
+    FileParser.hh
+    SiSiParser.hh
+  math/
+    Math.hh
+    Random.hh
+    Round.hh
+  memory/
+    ArrayChecker.hh
+   MemoryHandler.hh
+  twowaylist/
+    TwoWayList.hh
+    TwoWayListElement.hh
+    TwoWayListFloatElement.hh
+    TwoWayListIntElement.hh
+    TwoWayListStringElement.hh
+
+---------
+| ./lib |
+---------
+Hier werden/sollten die Bibliotheken abgelegt werden.
+
+---------
+| ./src |
+---------
+Hier befinden sich die Quelldateien von sissi.
+    Main.cc
+    Version.cc
+    platform.cc
+  common/
+    date.cc
+  datastructures/
+    Parameter.cc
+    ParameterType.cc
+    String.cc
+  development/
+    EmitCxxCode.cc
+    MessageHandler.cc
+    ResultElement.cc
+    ResultReader.cc
+    ResultWriter.cc
+  iostreams/
+    FileParser.cc
+    SiSiParser.cc
+  math/
+    Random.cc
+
+----------
+|Hinweis:|
+----------
+Alle Ordner namens RCS enthalten Informationen fuer das
+rcs-Versionskontrollen System.
+
+----------------------------------------------------------------------------
+| Wissenschaftliches Zentrum fuer | Center for Environmental System        |
+| Umweltsystemforschung Kassel    | Research Kassel                        |
+----------------------------------------------------------------------------
+-----------------------------------
+| Umweltforschungszentrum Leipzig |
+-----------------------------------
+
+Kai Reinhard:
+  e-mail: reinhard@usf.uni-kassel.de
+  URL   : http://www.usf.uni-kassel.de/personal/reinhard.html
+  (Here you can find links to SiSSI's home page and to a ftp server
+   containing the whole SiSSI distribution.)
+
+----------------------------------------------------------------------------
+| Wissenschaftliches Zentrum fuer | Center for Environmental System        |
+| Umweltsystemforschung Kassel    | Research Kassel                        |
+----------------------------------------------------------------------------
+-----------------------------------
+| Umweltforschungszentrum Leipzig |
+-----------------------------------
+
+Kai Reinhard:
+  e-mail: reinhard@usf.uni-kassel.de
+  URL   : http://www.usf.uni-kassel.de/~reinhard/
+  (Here you can find links to SiSi's home page and to a ftp server
+   containing the whole SiSi distribution.)
+
+----------------------------------------------------------------------------
+| Copyright (C) 1997, 1998                                                 |
+|                                                                          |
+|  This program is free software; you can redistribute it and/or modify    |
+|  it under the terms of the GNU General Public License as published by    |
+|  the Free Software Foundation; either version 2 of the License, or       |
+|  (at your option) any later version.                                     |
+|                                                                          |
+|  This program is distributed in the hope that it will be useful,         |
+|  but WITHOUT ANY WARRANTY; without even the implied warranty of          |
+|  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
+|  GNU General Public License for more details.                            |
+|                                                                          |
+|  You should have received a copy of the GNU General Public License       |
+|  along with this program; if not, write to the Free Software             |
+|  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.               |
+----------------------------------------------------------------------------
+
+
+        ****************************************************
+        ****************************************************
+        **                                                **
+        ** SiSi grows up with its users and developers!!! **
+        **                                                **
+        ****************************************************
+        ****************************************************
