@@ -1,8 +1,3 @@
-# Die zu benutzende Shell
-SHELL       = /bin/bash
-
-# Processors
-CC          = g++
 
 # Target Operating System
 # Change this according to your needs
@@ -58,6 +53,7 @@ LNKLIB      = -lm
 #BACKUPFILES:=	$(addprefix $(APPNAME)/, $(BACKUPFILES))
 
 BU_SUFFIXES = "*.cc" "*.hh"
+SUFFIXES = .cc .o  # Define our suffix list.
 
 # Header-File, in der die Programmname und Versionsnummern definiert sind
 VERSIONFILE = ./src/Version.cc
@@ -70,8 +66,6 @@ SOURCEFILES =	$(addsuffix .cc, $(basename $(OBJECTS))) \
 		$(addsuffix .cc, $(basename $(MANIPOBJECTS))) \
 		$(addsuffix .cc, $(basename $(LIBOBJECTS)))
 
-.SUFFIXES:         # Delete the default suffixes.
-.SUFFIXES: .cc .o  # Define our suffix list.
 
 .cc.o:
 	$(CC) -c $(CCOPTS) $(CCINCLUDE) $(DEFINES) -o $*.o $*.cc
