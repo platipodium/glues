@@ -15,7 +15,7 @@ CC          = g++
 #	solaris2.5
 #	SunOS5
 #
-OSTYPE = linux-gnu
+OSTYPE = darwin-x64
 
 include ./VERSION
 
