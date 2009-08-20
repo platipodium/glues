@@ -49,20 +49,11 @@ AC_CHECK_LIB(m,min)
 AC_CHECK_LIB(m,max)
 #AC_CHECK_LIB(intl,bindtextdomain)
 	
-dnl Checking for SiSi 
-dnl SiSi default locations
-if test "x${SISIPATH}" != "x" ; then
-  sisi_path="${SISIPATH}"
-else
-  sisi_path="$HOME/projects/glues/glues/SiSi2.0"
-fi
-
-sisi_include_path="${sisi_path}/include"
-sisi_lib_path="${sisi_path}/lib"
+dnl Checking for SiSi in explicit configure setting
 
 AC_ARG_WITH(sisi,
 	[AS_HELP_STRING([with-sisi=DIR],
-                        [SISI install directory if not set by SISIPATH environment variable])],
+                        [SISI install directory (overrides SISIPATH and local SiSi)])],
         [
 	  sisi_path="$withval"
           sisi_lib_path="$withval/lib"
@@ -76,8 +67,20 @@ AC_ARG_WITH(sisi_lib,
    sisi_lib_path="$withval"]
 )
 
-LDFLAGS="$LDFLAGS -L$sisi_lib_path"
-CPPFLAGS="$CPPFLAGS -I$sisi_include_path"
+dnl SiSi default locations on SISIPATH or in local dir
+LOCALSISI=0
+test -z ${sisi_path} && sisi_path=${SISIPATH}
+test -z ${sisi_path} && ( sisi_path=$(pwd)/src; LOCALSISI=1)
+AC_SUBST(LOCALSISI)
+
+dnl SiSi include and libary paths
+test -z ${sisi_include_path} && sisi_include_path="${sisi_path}/include"
+test -z ${sisi_lib_path} && sisi_lib_path="${sisi_path}/lib"
+
+LDFLAGS="$LDFLAGS  -L${sisi_lib_path}"
+CPPFLAGS="$CPPFLAGS -I${sisi_include_path}"
+
+AC_MSG_CHECKING(Using Sisi from $sisi_path.)
 
 dnl Check SISI Header
 AC_MSG_CHECKING(for SiSi's Version.hh)
@@ -100,8 +103,6 @@ dnl AC_SEARCH_LIBS([SiSi::finalize()],[sisi,SiSi,SiSi2.0],
 
 # it is better to use ac_serach libs over ac_check_lib
 dnl AC_SEARCH_LIBS (function, search-libs, [action-if-found], [action-if-not-found], [other-libraries])
-
-
 
 dnl Checking for netcdf 
 netcdf_path=""
