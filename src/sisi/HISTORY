@@ -1,0 +1,119 @@
+
+              History.txt fuer SISSI, Version 0.9
+
+                   (SimulationSyStemInterface)
+
+                      Kassel, November 1997
+
+----------------------------------------------------------------------------
+
+Eine Kurze Geschichte durch sissi:
+----------------------------------
+	
+Version 0.2:	- Version, die bei Arbeitsbeginn vorlag.
+(Jun 97)
+
+Version 0.3:	- Umstrukturierung der Yacl-Komponenten.
+(Jun 97)
+
+Version 0.4:    - Umstrukturierung rund um die Klasse Parameter.
+(Jul 97)
+
+Version 0.5:    - Einsetzen eines neuen Parsers.
+(Jul 97)
+
+Version 0.6:    - Erste Version unter fucking Windows. BigstrView wurde
+(Jul 97)	  durch UI_StringViewSingleSel ersetzt.
+		  Dokumentation rausgeschmissen.
+		  (Liegt jetzt unter sissidoc*.tgz.)
+		- Anpassung an fucking Windows bullshit aufgegeben (hier
+		  liegen wohl ganz bloede Speichermanagement Fehler beim
+		  Compiler (Compiler-Optionen) oder so vor. Jedenfalls
+		  schmiert der Rechner dauernd an nicht reproduzierbaren
+		  Stellen ab. Das Debuggen ist voll rudimentaer. Wie kann
+		  mensch hier bloss vernuenftig arbeiten?
+		- Anzeigen und Editieren von Parametern designed.
+		- Erste Version, die Kassel "verlaesst" und nun in
+		  Leipzig vorliegt. Hier soll ein Graphik-Modul
+		  angekoppelt werden.
+
+Version 0.7:    - Makefile(parts) dahingehend verbessert, als dass die
+(Oct 97)	  Compilierung der Libraries unter Linux (shared
+		  libraries) UND Solaris klappt.
+		- Einfuegen einer neuen string-Klasse.
+		- Die neue S.u.S.E.-Linux Distribution 5.0 macht
+		  doof. Woher kommen zum Teufel die segmentation
+		  faults? Unter Solaris laeuft alles noch wie am
+		  Schnuerchen!
+		  Untersuchung aller Destructoren ...
+		- Unter S.u.S.E.-Linux Distribution 5.0 laeuft's jetzt auch
+		  wieder (war ein kleiner Fehler beim Entfernen der Endblanks
+		  bei description, unit und range, mangelhafte
+		  Speicherfreigabe!)
+		- Hierbei handelt es sich nun um eine stabile Version mit
+		  folgenden brauchbaren features:
+		   a) Manipulation eines Parameterfiles mittels xsissi0.7,
+		   b) Erzeugen von C++-Quellcode zum Einbinden in eigene
+		      Simulationsumgebungen,
+		   c) Einbindung der libsissi0.7 und des emitierten Quellcodes
+		      in eigene Simulationsumgebung.
+
+Version 0.8:	- Umbenennungen: MyComment->ParComment, MyFloat->ParFloat,
+(Nov 97)	  MyInt->ParInt, MyString->ParString, Table->ParTable
+		- Einfuehrung einer von Parameter unabhaengigen Tabellenklasse
+		  Table, die vom Simulationsprogrammierer eingebunden werden
+		  kann. (ParTable leitet sich von Table ab.)
+		- Aenderungen von Michael bezueglich Borland-Compiler aufgenom-
+		  men.
+		- Show Parameter durch Edit Parameter ersetzt.
+		- Tab eingefuehrt, damit auch unter Windows per Tab in den
+		  String-Editoren herumgehuepft werden kann.
+		- make depend durch gcc -MM ersetzt. Abhaengigkeiten werden im
+		  File "depend" erzeugt. Makefile unterliegt nun auch RCS.
+		- Nochmals Datenstrukturen geaendert. Was war das bloss fuer
+		  ein bloeder Denkfehler mit den ganzen viruellen get()- und
+		  set()-Funktionen in den Klassen Parameter und ColumnElement?
+		- Eine Menge Windows-Anpassungen wurden vollzogen.
+		- Endlich weiss ich, warum unter Borland5.0 nichts so richtig
+		  klappt (s. Quirks.txt).
+		- Destruktorausgaben vervollst"andigt (Werden in logFile
+		  geschrieben).
+		- xsissi.ini kann nun alternativ unter Windows mittels setzen
+		  von %SISSIPATH% unter diesem Pfad gespeichert werden.
+		- Alles generalueberholt und einiges neues eingefuehrt.
+		- *** Erste einigermassen stabile Windows-Version ***
+
+Version 0.9:	- *** XSiSSI Help System implementiert. ***
+(Nov 97)	- *** Tabellen und Listen sind nun editierbar. ***
+		- Neues Infofenster eingefuehrt.
+
+Version 0.10:   - Table* ParTable::get() eingefuehrt.
+(Dez 97)	- Parametertyp Array hinzugefuegt.
+		- Results werden nun semi-automatisch durch das Modul
+		  results.* geschrieben (siehe results.hh).
+		- Funktion Execute(...) im Modul misc/execute.* fuehrt
+		  unter windows spawn(...) und unter Unix fork(...)
+		  mit execute(...) aus. Mit dieser Funktion koennen
+		  binaries gestartet werden.
+		- *** Graphic Modul mit Gnuplot-Ausgaben hinzugefuegt ***
+		- *** Job Controlling hinzugefuegt. ***
+		- Log files werden nun semi-automatisch geschrieben,
+		  so dass mit XSiSSI Job Controlling die Simulation
+		  verfolgt werden kann.
+
+----------------------------------------------------------------------------
+
+Wissenschaftliches Zentrum fuer
+Umweltsystemforschung Kassel
+
+Umweltforschungszentrum Leipzig
+
+e-mail: reinhard@usf.uni-kassel.de
+
+(Bei bugs und Anregungen: Bitte eine e-mail an mich schicken)
+
+*************************************************************
+*                                                           *
+* Sissi waechst mit seinen EntwicklerInnen und UserInnen!!! *
+*                                                           *
+*************************************************************

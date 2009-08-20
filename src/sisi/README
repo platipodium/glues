@@ -1,0 +1,82 @@
+
+                README.txt for SiSi, Version 2.0
+
+                 (SimululationSyStemInterface)
+
+                      Kassel, Juni 1998
+
+----------------------------------------------------------------------------
+
+Installation:
+-------------
+
+Compilation:
+------------
+
+Availability:
+-------------
+
+Documentation:
+--------------
+Get the package sisidoc2.0.tgz. Following formats are available:
+
+    o   Html Documentation for your internet browser e.g. netscape©
+
+    o   Postscript Documentation:
+         - Documentation.ps for printing out in wasteful form or better
+         - Documentation_compact.ps for printing out in compact form.
+
+    o   Dvi Documentation for reading with e.g. xdvi,
+
+    o   ASCII Documentation just in case and
+
+    o   Online documentation XSiSi  HelpSystem.
+
+NOTE: Every format is automatically generated, so every format is
+      always up to date! Choose your format!
+
+
+
+
+
+
+----------------------------------------------------------------------------
+| Wissenschaftliches Zentrum fuer | Center for Environmental System        |
+| Umweltsystemforschung Kassel    | Research Kassel                        |
+----------------------------------------------------------------------------
+-----------------------------------
+| Umweltforschungszentrum Leipzig |
+-----------------------------------
+
+Kai Reinhard:
+  e-mail: reinhard@usf.uni-kassel.de
+  URL   : http://www.usf.uni-kassel.de/~reinhard/
+  (Here you can find links to SiSi's home page and to a ftp server
+   containing the whole SiSi distribution.)
+
+----------------------------------------------------------------------------
+| Copyright (C) 1997, 1998                                                 |
+|                                                                          |
+|  This program is free software; you can redistribute it and/or modify    |
+|  it under the terms of the GNU General Public License as published by    |
+|  the Free Software Foundation; either version 2 of the License, or       |
+|  (at your option) any later version.                                     |
+|                                                                          |
+|  This program is distributed in the hope that it will be useful,         |
+|  but WITHOUT ANY WARRANTY; without even the implied warranty of          |
+|  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
+|  GNU General Public License for more details.                            |
+|                                                                          |
+|  You should have received a copy of the GNU General Public License       |
+|  along with this program; if not, write to the Free Software             |
+|  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.               |
+----------------------------------------------------------------------------
+
+
+        ****************************************************
+        ****************************************************
+        **                                                **
+        ** SiSi grows up with its users and developers!!! **
+        **                                                **
+        ****************************************************
+        ****************************************************

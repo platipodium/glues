@@ -1,0 +1,762 @@
+Fri Aug 21 21:10:53 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* Member.cc, CodeParser.cc, Main.cc, Member.hh, CodeParser.hh:
+	Initial revision
+
+	* FileParser.cc, FileParser.hh: Method getFilename added.
+
+	* StringHandler.hh: Method convertToLaTeX added.
+
+	* TwoWayListStringElement.hh, TwoWayListFloatElement.hh, TwoWayListIntElement.hh:
+	Variable className must be set in all constructors!
+
+	* preymod.cc: Value of TimeStep will be checked automatically.
+
+Wed Aug 19 07:06:11 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* FileParser.cc: Method overreadCommentsAndWhiteSpaces modified.
+
+	* FileParser.hh:
+	Setting of _overreadComments and _overreadWhiteSpaces now possible.
+
+Tue Aug 18 14:40:37 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* FileParser.cc:
+	Now ignoring unkown escape sequences (e.g. "\e" will be unchanged).
+
+	* String.cc, String.hh: Conversion operator char* added.
+
+	* FileParser.cc: Using method FilenameHandling::convertToPlatform.
+
+	* FilenameHandling.hh: Method convertToPlatform added.
+
+	* SiSiParser.cc: Bugfix with absolute filenames.
+
+	* MemoryHandler.hh:
+	It was stupid to delete const char* _className in destructor...
+
+	* ResultWriter.hh, ResultWriter.cc:
+	Borland has problems with declaration of static members in class definition.
+
+	* String.cc:
+	Borland has problems with method trim: return (...) ? ... : ...
+
+Tue Aug 11 09:02:57 1998  kai  <kai@usf-ws10>
+
+	* ResultWriter.hh, ResultWriter.cc:
+	Bugfix: Timestart != 0 produces wrong output time steps.
+	Method setTimeStart added (emit C++ Code must be called for
+	simulations!!!)
+
+Mon Jul 27 18:56:53 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* ListParameter.hh, ResultReader.cc, TableParameter.hh, ResultReader.hh:
+	Method hasMoreElements added.
+
+	* preymod.cc:
+	for loop in simulation changed for long simulation times with short timesteps.
+
+Fri Jul 17 19:58:20 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* FunctionNode.cc: TRANSPOSE and STEP added.
+
+	* FunctionStep.hh, FunctionTranspose.hh: Initial revision
+
+	* FunctionExpand.hh: *** empty log message ***
+
+	* FunctionExpand.hh: getNodeInfo() changed.
+
+	* Node.hh: Methods supressDeletingChildsInDestructor() and
+	supressDeletingSistersInDestructor() added.
+
+	* FunctionNode.hh, FunctionNode.cc, Commands.cc, FunctionElement.hh, FunctionEqual.hh, FunctionExpand.hh, FunctionOnce.hh, FunctionSum.hh, FunctionSub.hh:
+	Lot of changes ...
+
+	* FunctionOnce.hh, FunctionNode.hh, FunctionElement.hh:
+	static member variable mode implemented.
+
+	* FunctionExpand.hh: Initial revision
+
+	* ArrayParameter.hh: Bugfix in setLength().
+
+	* FunctionEqual.hh: *** empty log message ***
+
+Thu Jul 16 16:35:39 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* FunctionEqual.hh: Initial revision
+
+	* FileParser.cc, ResultReader.cc: MessageHandler callings changed.
+
+	* MessageHandler.cc: *** empty log message ***
+
+	* MessageHandler.hh, MessageHandler.cc: SISI_***_PREFIX added.
+
+	* LogFile.hh: Useful error message added.
+
+	* ResultWriter.hh, ResultWriter.cc: MessageHandler callings changed.
+
+	* MessageHandler.cc, MessageHandler.hh:
+	DEBUG_PREFIX, ERROR_PREFIX, INFO_PREFIX and WARNING_PREFIX added.
+
+	* MessageHandler.cc: Added some usefull error messages.
+
+	* ResultWriter.cc: Method close shows message.
+
+	* MessageHandler.cc: Bugfix in finalize.
+
+	* ArrayParameter.hh: Bugfix in method copyFrom.
+
+	* ResultWriter.hh: Method setTimeStep added again as deprecated method.
+
+	* preymod.cc:
+	Method ResultWriter::output changed. Only one call needed!
+
+	* ResultWriter.hh:
+	Some member variables substituted. Method setTimeStep to setTimeSteps
+	changed.
+
+	* ResultWriter.cc:
+	Bugfix pointer _headerTable. Some error messages added. Method setTimeStep to
+	setTimeSteps changed. Method output modified.
+
+Sat Jul 11 18:50:58 1998  kai  <kai@usf-ws10>
+
+	* Commands.cc, Commands.hh: Command 'INFO' implemented.
+
+	* ColumnInfo.hh: Initial revision
+
+	* TableParameter.hh: Method setNameOfColumn added.
+
+	* ColumnInfo.cc: Initial revision
+
+	* Commands.cc: Parsing methods changed.
+
+	* FunctionNode.cc: Parse methods changed.
+
+	* FunctionElement.hh: Method parse changed.
+
+	* FunctionSub.hh: Parse methods changed.
+
+	* FunctionNode.hh: Parsing methods changed.
+
+	* FunctionOnce.hh, FunctionSum.hh: Method parse changed.
+
+	* FunctionElement.hh, FunctionOnce.hh:
+	Method initialize copies now InfoType from ResultReaders parameter.
+
+	* ResultReader.hh, ResultReader.cc, TableParameter.hh:
+	Method getHeadParameter(const char* name) added.
+
+Fri Jul 10 20:51:06 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* FunctionNode.cc: SUM and SUB added.
+
+	* Commands.cc:
+	Write must now be called for root node instead of calculate.
+
+	* FunctionElement.hh, FunctionNode.hh, FunctionOnce.hh:
+	Calculate was separated to calculate and write.
+
+	* FunctionSum.hh: Initial revision
+
+	* FunctionSub.hh: SUB is now for two dimensional arrays available!
+
+	* FunctionSub.hh: Initial revision
+
+	* ArrayParameter.hh:
+	Methods setNumberOfRows, setNumberOfColumns, setDimension and copyFrom added.
+
+	* FunctionElement.hh:
+	Arrays now supported. (Function Once supports only one dimensional arrays!)
+
+	* ResultReader.cc: Error message in method getTypeOfColumn added.
+
+	* TableParameter.hh: Bugfix in getTypeOfColumn.
+
+Thu Jul  9 23:25:34 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* FunctionNode.cc, Tree.hh, Node.hh, Commands.hh: Initial revision
+
+	* TableParameter.hh:
+	Method appendColumnHeader returns now pointer to appended ListParameter.
+
+	* Main.cc, Commands.cc: Initial revision
+
+	* ArrayParameter.hh: Methods setLength and setTypeOfArray added.
+
+	* FunctionNode.hh, FunctionElement.hh, FunctionOnce.hh:
+	Initial revision
+
+	* MessageHandler.cc, MessageHandler.hh: Method internalError added.
+
+	* ResultReader.cc:
+	getNameOfColumn produces now error message if out of range.
+
+	* ResultWriter.hh, ResultWriter.cc:
+	Method setHeaderTable added. _headerTable is now a pointer.
+
+Wed Jul  8 07:18:46 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* MessageHandler.cc:
+	Uses now SUFFIX_OUTPUT, SUFFIX_ERROR and SUFFIX_DEBUG.
+
+	* MessageHandler.hh: Method getNameOfErrorFile() added.
+
+	* FileParser.cc: Using now MessageHandler for error messages.
+
+	* ResultReader.hh, ResultReader.cc, TableParameter.hh:
+	Method increaseColumnIterators() returns now bool.
+
+	* ResultWriter.cc: // _resultFile->setf(ios::fixed, ios::floatfield);
+
+	* ResultReader.cc, ResultReader.hh, TableParameter.hh:
+	Method getNameOfColumn added.
+
+Wed Jul  1 14:25:52 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* ResultWriter.cc: Some informations in method open added.
+
+	* FilenameHandling.hh: Bugfix in getPathWithoutSuffix.
+
+	* ResultWriter.hh: Method getStream added.
+
+Wed Jun 17 06:04:13 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* preymod.cc: Use SiSi_String instead of String under DOSSiSi.
+
+Mon Jun 15 08:10:08 1998  kai  <kai@usf-ws10>
+
+	* ResultReader.cc: Bugfix in readTable.
+
+Fri Jun 12 10:56:56 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* InfoType.hh: In method readInfoType: Use now String::trim().
+
+	* String.cc, String.hh: Method trim added.
+
+Thu Jun 11 14:18:51 1998  kai  <kai@usf-ws10>
+
+	* FileParser.cc:
+	Method readString modified (considering escape seqences (see
+	StringHandler::insertEscapeSequences().
+
+	* TableParameter.hh: Bugfix in Constructor.
+	Using now method StringHandler.insertEscapeSequences.
+
+	* LogFile.hh, TwoWayListStringElement.hh, ArrayParameter.hh, StringParameter.hh:
+	Using now method StringHandler.insertEscapeSequences.
+
+	* String.cc, String.hh: Method indexOf(char ch, int fromIndex) added.
+
+	* StringHandler.hh: Initial revision
+
+Tue Jun  9 10:53:21 1998  kai  <kai@usf-ws10>
+
+	* ResultReader.cc, ResultReader.hh: Initial revision
+
+	* ResultWriter.hh, ResultWriter.cc:
+	Writing now header file (*.res) AND data file (*.rsd).
+
+	* TableParameter.hh: Updated with class TableParameter of Java Version.
+
+Fri Jun  5 11:22:40 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* Math.hh: Initial revision
+
+Tue Jun  2 16:41:16 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* MessageHandler.cc: Method finalize changed.
+
+Wed May 13 16:12:08 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* TableParameter.hh: Bugfix in getElement.
+
+	* TableParameter.hh:
+	Methods resetColumnIterators, increaseColumnIterators, getElement
+	and getTypeOfColumn added.
+
+Fri Apr 17 08:06:06 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* ResultElement.cc: Output of twodimensional arrays now implemented.
+
+Thu Apr 16 11:22:00 1998  kai  <kai@usf-ws10>
+
+	* ArrayParameter.hh: Two methods createNewArray added.
+
+	* ArrayParameter.hh, ResultParameter.hh: Adapted to java version.
+
+	* ResultWriter.cc, ResultWriter.hh, ResultElement.hh, ResultElement.cc:
+	Bugfix: Use long instead of int.
+
+Sun Apr 12 22:48:38 1998  kai  <kai@usf-ws10>
+
+	* preymod.cc: Using MessageHandler.
+
+Thu Apr  9 10:13:53 1998  kai  <kai@usf-ws10>
+
+	* LogFile.hh: Programm -> Program substituted.
+
+Wed Apr  8 13:17:41 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* preymod.cc: Method resultWriter.output changed.
+
+	* ResultWriter.cc, ResultWriter.hh:
+	output parameter testTimestep -> ignore Timestep changed.
+
+Tue Apr  7 10:48:55 1998  kai  <kai@usf-ws10>
+
+	* preymod.cc: Initial revision
+
+	* LogFile.hh:
+	MessageHandler::deleteAllFiles() instead of remove from stdio.h.
+
+	* MessageHandler.hh, MessageHandler.cc: deleteAllFiles added.
+
+	* MessageHandler.cc, MessageHandler.hh: Initial revision
+
+	* Parameter.hh: copyFrom and copyHeaderFrom changed.
+
+Mon Apr  6 20:26:42 1998  kai  <kai@usf-ws10>
+
+	* ResultElement.cc, ResultElement.hh, ResultWriter.hh, ResultWriter.cc:
+	Lot of changes (arrays now supported).
+
+	* ResultParameter.hh: readHeader and printHeader changed.
+
+	* ArrayParameter.hh: copyHeaderFrom changed.
+
+	* Parameter.hh: CopyFrom and CopyHeaderFrom are now virtual.
+
+	* CharacterHandler.hh: Initial revision
+
+	* Parameter.hh:
+	readName changed (readSpecifier instead of readIdentifier).
+
+	* FileParser.cc, FileParser.hh:
+	readSpecifier implemented (for reading name of parameters).
+
+	* TableParameter.hh, ArrayParameter.hh, ListParameter.hh:
+	Using CharacterHandler methods instead of Character methods
+	(isIdentifierStart).
+
+Fri Apr  3 12:14:51 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* FileParser.cc: Debug Zeile rausgeschmissen.
+
+Tue Mar 24 10:18:05 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* ArrayParameter.hh: Bugfix in deleteArrays.
+
+Mon Mar 23 16:21:32 1998  kai  <kai@usf-ws10>
+
+	* ResultParameter.hh: headParameter implemented.
+
+	* ArrayParameter.hh:
+	initialize() and unsigned int getLength() added, _type ->
+	_typeOfArray.
+
+	* ListParameter.hh: void copyHeaderFrom(ListParameter* source) and void
+	setHeadParameter(Parameter* headParameter) added.
+
+	* TableParameter.hh:
+	void appendColumnHeader(Parameter* headParameter) added.
+
+	* Parameter.hh: void copyHeaderFrom(Parameter* source) added.
+
+	* TableParameter.hh: Now ListParameter.hh included.
+
+Sun Mar 22 12:52:09 1998  kai  <kai@usf-ws10>
+
+	* Parameter.hh: void copyFrom(Parameter* source) added.
+
+	* InfoType.hh: void copyFrom(InfoType* source) added.
+
+Sat Mar 21 19:20:35 1998  kai  <kai@usf-ws10>
+
+	* SiSi.hh: Initial revision
+
+	* ListParameter.hh: print, printHeader and readHeader changed.
+
+	* TableParameter.hh: printHeader changed.
+
+	* ListParameter.hh: *** empty log message ***
+
+Fri Mar 20 13:32:54 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* ArrayParameter.hh, TableParameter.hh, ListParameter.hh:
+	HeadParameter, ArrayParameter added and read/print methods changed.
+
+Thu Mar 19 10:50:00 1998  kai  <kai@usf-ws10>
+
+	* ArrayParameter.hh:
+	ReadHeader reads no more keywords 'data' and 'end'. PrintValue
+	changed.
+
+	* Parameter.cc: Initial revision
+
+	* TwoWayListElement.hh: const char* getClassName() added.
+
+	* Parameter.hh:
+	static Parameter* newParameter(ParameterType* type) added.
+
+	* TwoWayListStringElement.hh: print -> printValue renamed.
+
+Wed Mar 18 13:49:34 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* TableParameter.hh:
+	TwoWayListElement::print TwoWayListElement::printValue renamed.
+
+	* TwoWayListElement.hh, TwoWayListIntElement.hh, TwoWayListFloatElement.hh:
+	print -> printValue renamed.
+
+	* SiSiParser.cc:
+	Now using the static function Parameter::newParameter( type ).
+
+	* SiSiParser.hh: includes at the end of file removed.
+
+	* String.cc, String.hh: Assigning of two Strings now possible.
+
+Tue Mar 17 09:03:32 1998  kai  <kai@usf-ws10>
+
+	* ArrayChecker.hh: Initial revision
+
+Mon Mar 16 13:56:25 1998  kai  <kai@usf-ws10>
+
+	* TwoWayListElement.hh:
+	virtual bool isFromClass(const char* name) and const char* className
+	added.
+
+	* TwoWayListFloatElement.hh, TwoWayListStringElement.hh, TwoWayListIntElement.hh, InfoType.hh, Parameter.hh, ResultParameter.hh, BooleanParameter.hh, CharParameter.hh, CommentParameter.hh, FloatParameter.hh, ArrayParameter.hh, IntParameter.hh, ListParameter.hh, StringParameter.hh, TableParameter.hh:
+	TwoWayListElement::className is now set.
+
+	* ListParameter.hh: bool _deleteListInDestructor added.
+
+	* FloatParameter.hh: *** empty log message ***
+
+Sun Mar 15 10:31:22 1998  kai  <kai@usf-ws10>
+
+	* ResultParameter.hh: Read... and print... structure changed.
+
+	* CommentParameter.hh: print, printHeader, read and readHeader added.
+
+	* Parameter.hh: Parameter::COMMENT in readName(...) removed.
+
+	* Parameter.hh: *** empty log message ***
+
+Sat Mar 14 17:59:00 1998  kai  <kai@usf-ws10>
+
+	* TableParameter.hh, StringParameter.hh, CommentParameter.hh, FloatParameter.hh, IntParameter.hh, CharParameter.hh, BooleanParameter.hh, Parameter.hh, ListParameter.hh, ArrayParameter.hh:
+	Read... and print... structure changed.
+
+	* InfoType.hh: END_OF_LINE inserted.
+
+	* SiSiParser.cc: Parameter::readFromFileParser -> Parameter::read
+
+Fri Mar 13 17:32:29 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* ListParameter.hh: setTypeOfElements added.
+
+	* TableParameter.hh: Initial revision
+
+	* SiSiParser.cc: Table now available.
+
+	* SiSiParser.cc: includeFiles is now pointer to TwoWayList.
+
+	* InfoType.hh: readInfoType is now public.
+
+	* ListParameter.hh: _elements is now pointer to TwoWayList;
+
+	* date.cc, platform.hh: Initial revision
+
+	* ArrayParameter.hh: head now implemented.
+
+	* ParameterType.hh, CommentParameter.hh, IntParameter.hh, ListParameter.hh, ResultParameter.hh, StringParameter.hh, CharParameter.hh, BooleanParameter.hh, ArrayParameter.hh, Parameter.hh:
+	static String getTypeAsString(ParameterType) sustituted by
+	String asString().
+
+	* FloatParameter.hh:
+	static String getTypeAsString(ParameterType) sustituted by String asString().
+
+	* FilenameHandling.hh: Bugfix in getParent.
+
+Thu Mar 12 16:26:05 1998  kai  <kai@usf-ws10>
+
+	* Round.hh: Bugfix in doubleToString.
+
+	* ResultParameter.hh: output changed.
+
+	* LogFile.hh: round changed to Round::doubleToLong.
+
+	* ResultParameter.hh:
+	DEFAULT_PRECISION is now -1 (meaning to ignore the precision).
+
+	* Round.hh:
+	Precision of zero or negative returns x as String ignoring any
+	precision.
+
+Thu Mar 12 15:54:48 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* ResultElement.cc:
+	DEFAULT_PRECISION added. Negative precision values means now ignoring
+	precision. Meaning of precision changed! (See Round::doubleToString!)
+
+Thu Mar 12 15:53:25 1998  kai  <kai@usf-ws10>
+
+	* ResultElement.hh: DEFAULT_PRECISION added.
+
+	* String.cc, String.hh:
+	int charAt(unsigned int index) const added and indexOf(char ch)
+	changed.
+
+	* Round.hh: doubleToString added and round->doubleToLong.
+
+	* String.hh: int indexOf(int ch) added.
+
+	* ResultParameter.hh: ResultParameter could now contain array.
+
+	* MemoryHandler.hh: Initial revision
+
+Wed Mar 11 15:51:59 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* Random.cc, Random.hh: Initial revision
+
+	* ArrayParameter.hh: One dimensional arrays are now available.
+
+	* String.cc, String.hh: operator+=(const String& s) added.
+
+	* LogFile.hh: round.hh moved to math/
+
+Tue Mar 10 14:17:52 1998  kai  <kai@usf-ws10>
+
+	* ResultParameter.hh: MAX_PRECISION and DEFAULT_PRECISION added.
+
+	* ResultElement.cc: _precision < 0 in constructor now impossible.
+
+	* ResultWriter.cc, ResultElement.cc:
+	Adaption to Borland C++ Compiler 4.02.
+
+Mon Mar  9 13:27:18 1998  kai  <kai@usf-ws10>
+
+	* toDos: Declared i and j as integers.
+
+	* toDos: Initial revision
+
+Sun Mar  8 00:27:53 1998  kai  <kai@usf-ws10>
+
+	* ResultWriter.hh, ResultWriter.cc, ResultElement.hh, ResultElement.cc:
+	*** empty log message ***
+
+Sat Mar  7 23:17:17 1998  kai  <kai@usf-ws10>
+
+	* ResultParameter.hh: String _name deleted.
+
+	* ResultParameter.hh: int getPrecision() and bool isActive() added.
+
+Fri Mar  6 10:41:13 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* ResultParameter.hh: bool _isActive added.
+
+Thu Mar  5 14:58:01 1998  kai  <kai@usf-ws10>
+
+	* date.hh: Initial revision
+
+	* SiSiParser.hh: Parameter* parseParameter(FileParser& parser) added.
+
+	* SiSiParser.cc: Initial revision
+
+	* ListParameter.hh: ListParameter can now contain Parameters.
+
+	* LogFile.hh, ResultElement.hh, ResultParameter.hh: Initial revision
+
+	* BooleanParameter.hh, CharParameter.hh, CommentParameter.hh, FloatParameter.hh, IntParameter.hh, StringParameter.hh, InfoType.hh, Parameter.hh, ArrayParameter.hh:
+	prefix in output routines added.
+
+	* TwoWayListStringElement.hh, TwoWayListFloatElement.hh, TwoWayListIntElement.hh, TwoWayListElement.hh:
+	Substituted printValue -> print.
+
+	* ParameterType.hh, ParameterType.cc: Types RESULT and PARAMETER added.
+
+	* ResultWriter.hh: ResultElement moved to ResultElement.*.
+
+	* ResultElement.cc: Initial revision
+
+	* ResultWriter.cc: ResultElement moved to ResultElement.*.
+
+	* InfoType.hh: _isOutputVariable added.
+
+	* ResultWriter.hh: Unit added.
+
+Fri Feb 27 09:06:34 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* FileParser.cc, EmitCxxCode.cc:
+	Borland doesn't aim redeclaration of function parameters ...
+
+	* TwoWayListElement.hh: Borland doesn't own stream.h...
+
+	* String.hh: Borland needs definition of bool (platform.hh)...
+
+	* platform.cc: Initial revision
+
+Thu Feb 26 18:13:33 1998  kai  <kai@usf-ws10>
+
+	* ResultWriter.hh, ResultWriter.cc: Initial revision
+
+	* FilenameHandling.hh: getPathWithoutSuffix added.
+
+	* FilenameHandling.hh:
+	Platform dependend method isAbsolute moved to platform.
+
+Wed Feb 25 16:37:21 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* EmitCxxCode.hh, EmitCxxCode.cc: Initial revision
+
+	* ArrayParameter.hh: Some includes added.
+
+	* FileParser.cc: Initial revision
+
+	* FileParser.hh: Move realization of methods to FileParser.hh.
+
+	* SiSiParser.hh: Initial revision
+
+	* String.cc: Realization of all methods added.
+
+	* String.hh: Move realization of methods to String.cc.
+
+	* FileParser.hh: Adapting to Borland compiler and include stdlib.h.
+
+Mon Feb 23 00:23:49 1998  kai  <kai@usf-ws10>
+
+	* CharParameter.hh: Wrong type in contstructors!
+
+Sun Feb 22 22:41:52 1998  kai  <kai@usf-ws10>
+
+	* FilenameHandling.hh: *** empty log message ***
+
+Fri Feb 20 12:40:40 1998  kai  <kai@usf-ws10>
+
+	* Makefile: Initial revision
+
+	* FilenameHandling.hh: getName() adapted to Java's File.getName(...).
+
+	* ArrayParameter.hh:
+	Array will only be deleted in destructor, if get...Array wasn't called
+	at least.
+
+	* ArrayParameter.hh:
+	Directory added. Files will be handled relative to directory or
+	absolute.
+
+	* FileParser.hh:
+	_directory and getDirectory added. All get... functions renamed to
+	read...
+
+	* FilenameHandling.hh:
+	isAbsolute adapted to Java's File.isAbsolute(...).
+
+	* ArrayParameter.hh, InfoType.hh, Parameter.hh, BooleanParameter.hh, CommentParameter.hh, CharParameter.hh, IntParameter.hh, FloatParameter.hh, ListParameter.hh, StringParameter.hh:
+	FileParser changed (get->read)!
+
+	* FilenameHandling.hh: bool isAbsolutePath(const char* path) added.
+
+	* ArrayParameter.hh:
+	getNumberOfRows(), getNumberOfColumns(), getFloatArray(...) and
+	getIntArray(...) added.
+
+	* FileParser.hh:
+	Bugfix in open (_line and _error counter must be resetted)!
+
+Thu Feb 19 14:28:13 1998  kai  <kai@usf-ws10>
+
+	* Round.hh: Initial revision
+
+	* String.hh: Operators ==, !=, <, <=, > and => added.
+
+	* String.hh: String& operator+=(const char c) added.
+
+	* TwoWayListStringElement.hh, TwoWayListFloatElement.hh, TwoWayListIntElement.hh:
+	*** empty log message ***
+
+	* ArrayParameter.hh: Some ints to unsigned ints changed.
+
+	* Parameter.hh: Some unused parameters removed.
+
+	* FileParser.hh:
+	getString adapted to java version, some unused variables removed, ...
+
+	* TwoWayListElement.hh: *** empty log message ***
+
+	* String.hh: Some ints to unsigned ints changed.
+
+	* FilenameHandling.hh:
+	String getFilenameWithoutSuffix(const char* path) added.
+
+	* ArrayParameter.hh: ParameterType* getTypeOfArray() added.
+
+	* Version.hh, ArrayParameter.hh: Initial revision
+
+	* FileParser.hh: '\r' added to '\n' (MSDOS-EndOfLine).
+
+Mon Feb 16 14:41:42 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* String.hh: operator+(const unsigned i) const added.
+
+Sun Feb 15 23:15:54 1998  kai  <kai@usf-ws10>
+
+	* String.hh:
+	replace(char oldChar, char newChar) added and defining most method as
+	const methods.
+
+	* FilenameHandling.hh: String getFilename(const char* path) added.
+
+	* String.hh: Bugfixes in operator+(...).
+
+	* FilenameHandling.hh: Initial revision
+
+	* String.hh:
+	lastIndexOf(char ch), substring(int beginIndex) and substring(int
+	beginIndex, int endIndex) added. Bugfix in operator+(const char c).
+
+	* FileParser.hh: open(const char* filename) changed.
+
+	* BooleanParameter.hh, CharParameter.hh, CommentParameter.hh, IntParameter.hh, ListParameter.hh, FloatParameter.hh, StringParameter.hh:
+	Destructor with debug message added.
+
+	* ListParameter.hh: Initial revision
+
+	* TwoWayListElement.hh: virtual ~TwoWayListElement() added.
+
+	* TwoWayListStringElement.hh:
+	Definining of TwoWayListElement's virtual destructor.
+
+	* String.hh: __STRING_DESTRUCTOR_DEBUG__ inserted.
+
+	* TwoWayListIntElement.hh, TwoWayListFloatElement.hh, TwoWayListStringElement.hh:
+	Initial revision
+
+	* TwoWayListElement.hh: virtual printValue(ostream& out) added.
+
+Sat Feb 14 23:41:44 1998  kai  <kai@usf-ws10>
+
+	* FileParser.hh: String::concate by String::operator+(...) substituted.
+
+	* String.hh: concate substituted by plus operators!
+
+	* CharParameter.hh: Initial revision
+
+	* ParameterType.hh, ParameterType.cc: CHAR and BOOLEAN added.
+
+	* FileParser.hh:
+	bool getSingleChar(char& cvalue) and bool getBoolean(bool& bvalue)
+	added.
+
+	* BooleanParameter.hh: Initial revision
+
+	* String.hh: String toLowerCase() added.
+
+	* FloatParameter.hh: *** empty log message ***
+
+Fri Feb 13 17:24:11 1998  Kai Reinhard  <reinhard@usf-ws10>
+
+	* String.cc, ParameterType.cc, FileParser.hh, TwoWayListElement.hh, TwoWayList.hh, InfoType.hh, ParameterType.hh, String.hh, StringParameter.hh, IntParameter.hh, FloatParameter.hh, Parameter.hh, CommentParameter.hh:
+	Initial revision
+
