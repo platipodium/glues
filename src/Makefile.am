@@ -86,4 +86,3 @@ glues_LDADD= \
 	 #/usr/local/netcdf/gcc-4.3.1/lib/libnetcdf_c++.a \
 	 #/usr/local/netcdf/gcc-4.3.1/lib/libnetcdf.a \
 	#-lintl
-
