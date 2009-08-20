@@ -1,0 +1,4 @@
+TODO:
+ - move VERSION and TIME targes from original Makefile to Makefile.am
+ - add static library creation
+ - clean up warnings
