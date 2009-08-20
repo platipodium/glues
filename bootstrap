@@ -1,14 +1,20 @@
 #! /bin/sh
 
-aclocal -I config && autoheader \
-&& automake --gnu --add-missing  --copy \
-&& autoconf
+AUTORECONF=none
+AUTORECONF=$(which autoreconf)
 
-# temporary bug fix for missing _LT_DECL macro
-if test -f configure ; then
-  sed '/_LT_DECL/d;/build shared libraries/d' configure > configure.tmp
-  mv configure.tmp configure
+if [[ $AUTORECONF == "none" ]]; then 
+  aclocal -I config && autoheader \
+  && automake --gnu --add-missing  --copy \
+  && autoconf
+
+  # temporary bug fix for missing _LT_DECL macro
+  if test -f configure ; then
+    sed '/_LT_DECL/d;/build shared libraries/d' configure > configure.tmp
+    mv configure.tmp configure
+  fi
+
+  test -x ./configure || chmod +x ./configure
+else
+  autoreconf --install --verbose
 fi
-
-test -x ./configure || chmod +x ./configure
-
