@@ -38,5 +38,5 @@ doc/**.ttf
 doc/man/**
 doc/latex/*/**
 doc/latex/*[0-eg-z]
+spread_glob.dat
 examples/**.log
-
