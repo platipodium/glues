@@ -70,7 +70,10 @@ AC_ARG_WITH(sisi_lib,
 dnl SiSi default locations on SISIPATH or in local dir
 LOCALSISI=0
 test -z ${sisi_path} && sisi_path=${SISIPATH}
-test -z ${sisi_path} && ( sisi_path=$(pwd)/src; LOCALSISI=1)
+if test -z ${sisi_path} ; then
+  sisi_path=$(pwd)/src/sisi
+  LOCALSISI=1
+fi
 AC_SUBST(LOCALSISI)
 
 dnl SiSi include and libary paths

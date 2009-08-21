@@ -23,16 +23,16 @@
 
 #include <ctype.h>
 #include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <time.h>
 
 #include <fstream>
 #include <iomanip>
 #include <iostream>
-#include <strstream> /* This causes a deprecated warning indicating that it should be replaced by <sstream> */
-
+//#include <strstream> /* This causes a deprecated warning indicating that it should be replaced by <sstream> */
+#include <sstream>
 using namespace std;
 
 #endif /* USE_DEPRECATED_STANDARD_LIBRARY_HEADERS */
