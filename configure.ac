@@ -34,7 +34,7 @@ else
 fi
 
 dnl Check for programs	
-AC_PROG_LIBTOOL
+#AC_PROG_LIBTOOL
 AC_PROG_CXX
 #AX_GXX_VERSION
 AC_LANG_CPLUSPLUS
@@ -80,7 +80,9 @@ test -z ${sisi_lib_path} && sisi_lib_path="${sisi_path}/lib"
 LDFLAGS="$LDFLAGS  -L${sisi_lib_path}"
 CPPFLAGS="$CPPFLAGS -I${sisi_include_path}"
 
-AC_MSG_CHECKING(Using Sisi from $sisi_path.)
+
+AC_MSG_NOTICE([Including SiSi headers from ${sisi_include_path}])
+AC_MSG_NOTICE([Linking to SiSi library in  ${sisi_lib_path}])
 
 dnl Check SISI Header
 AC_MSG_CHECKING(for SiSi's Version.hh)
