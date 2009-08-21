@@ -27,8 +27,7 @@ config.h
 config.log
 config.status
 configure
-config/config.guess
-config/config.sub
+config/config.*
 config/install-sh
 config/missing
 config/*.m4
