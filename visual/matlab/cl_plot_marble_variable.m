@@ -12,23 +12,8 @@ showsites=0;
 
 load(['regionpath_' num2str(nreg)]);
 
-%Europe
-regs=find_region_numbers('emea');
-
-
-% Chinese rice regions:
-%latlim=[18,40]; lonlim=[95,120];
-
-% Woeks regions:
-<<<<<<< cl_plot_marble_variable.m
-latlim=[-60,60];lonlim=[-180,180];
-regs=1:685
-=======
-latlim=[-60,60];lonlim=[-180,180];
-regs=1:685;
->>>>>>> 1.3
-
-%  regs=find_region_numbers_686('emea');
+% Choose 'emea' or 'China' or 'World'
+[regs,nreg,lonlim,latlim]=find_region_numbers('China');
 
 
 if ~exist('region','var')
@@ -39,13 +24,10 @@ region.path(:,:,1)=region.path(:,:,1)+0.5;
 region.path(:,:,2)=region.path(:,:,2)+1.0;
 
 figoffset=0;
-<<<<<<< cl_plot_marble_variable.m
+
 vars={'Farming'}
-vars={'Technology','Farming','Climate'};
-=======
-vars={'Farming'}
-%vars={'Technology','Farming','Density'};
->>>>>>> 1.3
+%vars={'Technology','Farming','Climate'};
+
 %vars={'Density'};
 %vars={'Migration','Agricultures','CivStart','Climate'};
 %vars={'Agricultures','Migration'};
@@ -286,7 +268,7 @@ data=eval(['r.' r.variables{ivar}]);
   pm=cl_plot_marble(lonlim,latlim,'TrueMarble.8km.5400x2700.tif');
   %pm=cl_plot_marble(lonlim,latlim,'visual_earth_8192.tiff');
   
-  alpha(pm,1.0)
+  if pm>0 alpha(pm,1.0); end
   
  % m_coast('patch',color_land);
   %set(gca,'Position',[0.06 0.0 0.85 1]);
@@ -412,16 +394,11 @@ end
     plotname=[plotname sprintf('%05d_%d',12000-t,t)];
    
     
-<<<<<<< cl_plot_marble_variable.m
-    %if mod(it,4)==1
-       % plot_multi_format(gcf,plotname);
-    %end
-=======
     if mod(t,500)==0
     %mod(it,4)==1
      % plot_multi_format(gcf,plotname);
     end
->>>>>>> 1.3
+    
     f=getframe(gcf);
      %if (abs(tend-tstart)>10*r.tstep) mov=addframe(mov,f); end;
     mov=addframe(mov,f);

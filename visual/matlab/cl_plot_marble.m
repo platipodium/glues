@@ -8,11 +8,23 @@ if nargin<1
     m_grid;
 end
 
-if ~exist('lonlim','var') return; end
-if ~exist('latlim','var') return; end
+if ~exist('lonlim','var') p=0;  return; end
+if ~exist('latlim','var') p=0; return; end
 
 if ~exist('filename','var') filename='TrueMarble.32km.1350x675.tif'; end
-if ~exist(filename,'file') return; end
+if ~exist(filename,'file') 
+    warning('File %s does not exist, trying to fetch from server (takes some time)',filename);
+    [f,status]=urlwrite(['http://ueod-globe.net/globe/TrueMarble_GeoTIFF/' filename '.gz'],[filename '.gz']);
+    %if  status==0
+      gunzip([filename '.gz']);
+    %end
+end
+
+if ~exist(filename,'file') 
+  p=0;
+  return
+end
+
 
 %[a,b,c,d]=geotiffread(filename);
 a=imread(filename);

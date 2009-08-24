@@ -1,4 +1,4 @@
-function [ifound,nfound]=find_region_numbers(varargin)
+function [ifound,nfound,lonlim,latlim]=find_region_numbers(varargin)
 
 cl_register_function();
 
