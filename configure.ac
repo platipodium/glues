@@ -34,7 +34,7 @@ else
 fi
 
 dnl Check for programs	
-#AC_PROG_LIBTOOL
+AC_PROG_LIBTOOL
 AC_PROG_CXX
 #AX_GXX_VERSION
 AC_LANG_CPLUSPLUS

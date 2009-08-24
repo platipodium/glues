@@ -21,7 +21,7 @@
 
 ACLOCAL_AMFLAGS = -I config
 
-EXTRA_DIST = config/config.rpath  ChangeLog configure.in run.sh bootstrap BUGS
+EXTRA_DIST = ChangeLog run.sh bootstrap BUGS
 
 SUBDIRS = src config examples variation visual doc #po intl
 
