@@ -56,6 +56,8 @@ resultfilename='results';
              lonlim=varargin{iarg+1};
         case 'yli'
              ylim=varargin{iarg+1};
+        case 'sce'
+            scenario=varargin{iarg+1};
      end
     iarg=iarg+2;
      end
@@ -65,6 +67,11 @@ if ~exist('lonlim','var') lonlim=[-15,42]; end
 if ~exist('latlim','var') latlim=[27,55]; end
 if ~exist('timelim','var') timelim=[11000,3100]; end;
 if ~exist('timeunit','var') timeunit='BP'; end;
+if exist('scenario','var')
+    resultfilename=[resultfilename '_' scenario];
+end
+
+
 
 latrange=abs(latlim(2)-latlim(1));
 lonrange=abs(lonlim(2)-lonlim(1));
@@ -290,7 +297,7 @@ data=eval(['r.' r.variables{ivar}]);
   
   titletext=r.variables{ivar};
   if length(infix)>0 titletext=[titletext '(' infix ')']; end
-  %ht=title(titletext); set(ht,'interpreter','none');
+  ht=title(titletext,'interpreter','none');
  
   
   t=time(itstart);
