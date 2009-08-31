@@ -42,11 +42,11 @@ cl_register_function;
     
     if strcmp(user,'lemmen')
 
-      if strcmp(hostname(1:end-1),'possum.local')
-          basepath=fullfile(home,'Development','Eclipse','glues-1.1.2');
-      else        
+      %if strcmp(hostname(1:end-1),'possum.local')
+      %    basepath=fullfile(home,'Development','Eclipse','glues-1.1.2');
+      %else        
         basepath=fullfile('/h/lemmen','projects','glues','glues','glues');
-      end
+      %end
         
       dir.setup=fullfile(basepath,'examples','setup',num2str(nreg));
       dir.plot=fullfile(basepath,'visual','plots');
@@ -70,12 +70,12 @@ cl_register_function;
     infix=['80_' num2str(nreg)];
 
     if ~isdir(dir.data)
-        warning('Directory %s does not exist. \n',dir.data);
+        %warning('Directory %s does not exist. \n',dir.data);
         clear dir.data;
     end;        
 
     if ~isdir(dir.paper)
-        warning('Directory %s does not exist. \n',dir.paper);
+        %warning('Directory %s does not exist. \n',dir.paper);
         clear dir.paper;
     end;        
 
