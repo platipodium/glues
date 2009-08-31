@@ -13,7 +13,7 @@ showsites=0;
 load(['regionpath_' num2str(nreg)]);
 
 % Choose 'emea' or 'China' or 'World'
-[regs,nreg,lonlim,latlim]=find_region_numbers('China');
+[regs,nreg,lonlim,latlim]=find_region_numbers('EMEA');
 
 
 if ~exist('region','var')
@@ -63,7 +63,7 @@ resultfilename='results';
   
 if ~exist('lonlim','var') lonlim=[-15,42]; end
 if ~exist('latlim','var') latlim=[27,55]; end
-if ~exist('timelim','var') timelim=[11000,0000]; end;
+if ~exist('timelim','var') timelim=[11000,3100]; end;
 if ~exist('timeunit','var') timeunit='BP'; end;
 
 latrange=abs(latlim(2)-latlim(1));
@@ -316,7 +316,7 @@ data=eval(['r.' r.variables{ivar}]);
   set(gca,'Position',pos,'box','off');
 
   cc='b' ; % base color for alpha fading
-  cchigh='r' ; % base color for highlighting
+  cchigh='c' ; % base color for highlighting
 
  for ireg=1:length(regs)
       reg=regs(ireg);
