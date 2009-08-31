@@ -17,7 +17,7 @@ else
 end
 
 if ~exist(file,'file') 
-  error('Result file does not exist');
+  warning('Result file %s does not exist',file);
   return; 
 end
 
