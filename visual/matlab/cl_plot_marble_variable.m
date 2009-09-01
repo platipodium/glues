@@ -1,4 +1,4 @@
-function cl_plot_marble_variable(varargin)
+function retdata=cl_plot_marble_variable(varargin)
 
 cl_register_function();
 
@@ -9,6 +9,7 @@ nreg=685;
 showsites=0;
 
 [d,f]=get_files;
+retdata=NaN;
 
 load(['regionpath_' num2str(nreg)]);
 
@@ -183,26 +184,24 @@ else
   isbp=0;
 end
 
-for idovar=1:nvar
-    
-    ivar=dovar(idovar);
-    
-    %if isstruct(vars) &  (  strcmp(vars{idovar},'Cropfraction') ... 
-    %    | strcmp(vars{idovar},'Pasturefraction') ... 
-    %    | strcmp(vars{idovar},'HydePopulationCount') ...
-    %        | strcmp(vars{idovar},'HydePopulationDensity') )
-    %    time=2000+[10000:-1000:1000];
-    %else
-        time=r.time;
-    %end
+
+ time=r.time;
     
 [tmax,itend]=min(abs(time-tend));
 [tmin,itstart]=min(abs(time-tstart));
 
+ntime=itend-itstart+1;
+
+retdata=zeros(nvar,ntime,length(regs))+NaN;
+
+for idovar=1:nvar
+    
+    ivar=dovar(idovar);
 
     
-data=eval(['r.' r.variables{ivar}]);
+   data=eval(['r.' r.variables{ivar}]);
 
+   retdata(idovar,:,:)=data(squeeze(regs),itstart:itend)';
     
    switch mode
       case 'absolute', ;
