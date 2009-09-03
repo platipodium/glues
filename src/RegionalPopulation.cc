@@ -1,7 +1,7 @@
 /* GLUES regional population class; this file is part of
    the Global Land Use and technological Evolution Simulator
    
-   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008
+   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008,2009
    Carsten Lemmen <carsten.lemmen@gkss.de>, Kai Wirtz <kai.wirtz@gkss.de>
 
    This program is free software; you can redistribute it and/or modify it
@@ -171,7 +171,9 @@ int RegionalPopulation::Develop(double step) {
   if (change > RelChange) {
     nnew=ceil(1.0+change/RelChange);
     step=step/nnew;
-    cout << "Iterating " << nnew << " times" << endl;
+    cout << "Adaptive change: iterating " << nnew << " times" << endl;
+    //cout << change << "/" << RelChange << "/" << step << "/" << changerate[1] << endl;
+    //for (i=0; i<6; i++) cout << changerate[i] << "/" ;
     for (i=0; i<nnew; i++) Develop(step);
     return 0; 
   }
