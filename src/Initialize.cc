@@ -690,7 +690,7 @@ int CalcContNdommax() {
   double area,MaxContAr,tl;
   /* ------------------------------------------- */
   /*    variant B: continental integration of
-	area weighed suitability    */
+	area weighted suitability    */
   /* ------------------------------------------- */
 
   for (i=0;i<=LengthOfndommaxcont;i++) cnd[i]=0;
