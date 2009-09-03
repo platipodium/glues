@@ -30,6 +30,7 @@
 #include "Globals.h"
 #include "GlobalClimate.h"        
 #include "Messages.h"
+#include "assert.h"
 #include <vector>
 
 extern unsigned int read_region_eventradius(const std::string&,int**);

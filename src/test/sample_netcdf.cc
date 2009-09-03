@@ -26,24 +26,61 @@
 
 #include "config.h"
 #include <iostream>
+#include <string>
+#include <fstream>
+#include <sstream>
 
 #ifdef HAVE_NETCDF_H
 #include "netcdfcpp.h"
 #endif
 
+using namespace std;
+
 int main(int argc, char* argv[]) 
 {
-    std::cout << "Testing NetCDF interface ... " ;
 
 #ifndef HAVE_NETCDF_H
-    std::cout << " FAIL" << std::endl;
+    std::cout << " No netcdf interface defined. FAIL" << std::endl;
     return 1;
+#else
+ 
+  string filename="../../examples/setup/685/results.out";
+   
+  ifstream ifs(filename.c_str(),ios::in | ios::binary);
+  ifs.seekg (0, ios::end);
+  int length = ifs.tellg();
+  ifs.seekg (0, ios::beg);
+
+  // First byte gives the number of variables as an unsigned char
+  unsigned char nvar;
+  ifs >> nvar;
+
+  int i=0;
+  
+  string *vars = new string[nvar];
+
+  for (i=0; i<nvar; i++) 
+  {
+    ifs >> vars[i];
+    //cout << vars[i] << endl;
+  }
+   
+  // Read float-32 data
+  char * buffer = new char [length-(int)ifs.tellg()];
+  ifs.read (buffer,length);
+  ifs.close();
+   
+  // Read uint32 value
+  float *nreg = (float*)buffer;
+  
+  // Read float32 values
+  float tstart,tend,tstep;
+
+  cout << (int)nvar << " x " << *nreg << " / " << tstart << ":"
+  << tend << " " << tstep << endl;
+
+
+  return 0;
 #endif
-
-    NcFile ncfile("test_netcdf.nc");
-
-
-    std::cout << " OK" << std::endl;    
-    return 0;
 }
 
