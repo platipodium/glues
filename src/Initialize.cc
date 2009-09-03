@@ -705,9 +705,29 @@ int CalcContNdommax() {
     cnd[ind]+=area*regions[i].SuitableSpecies()*tl;
   }
   
-  /** Introduced to avoid NaNs if no region is on Eurasia */
-  if ( MaxContAr<=0 ) MaxContAr=1.0;
+  /** Introduced to avoid NaNs if other region is larger than Eurasia
+    (e.g. in case of single region simulations) */
+    
+   /** TODO fix 1-based array size (see complications with SiSi */
+
+  unsigned int largestcontinentindex=1;
+  for (i=1; i<=LengthOfndommaxcont; i++) 
+  {
+    if ( cnd[i]>MaxContAr ) 
+    {
+      largestcontinentindex=i;
+      MaxContAr=cnd[i];
+    }
+  }
+  if (largestcontinentindex != 1 )
+  {   
+    cout << "Non-Eurasian MaxContAr is " << MaxContAr << " on continent " 
+     	<< largestcontinentindex << endl;
+  }
+
+  assert(MaxContAr>0);
   
+  /** Correct with correction factor in simulation setup */
   MaxContAr*=ndommaxcont[0];
   if (!VarActive ) printf("cont:ndomax\t");
   for (unsigned int i=1;i<=LengthOfndommaxcont;i++) {
