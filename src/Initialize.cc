@@ -704,6 +704,10 @@ int CalcContNdommax() {
     if(ind==1) MaxContAr+=area*regions[i].SuitableSpecies()*tl;
     cnd[ind]+=area*regions[i].SuitableSpecies()*tl;
   }
+  
+  /** Introduced to avoid NaNs if no region is on Eurasia */
+  if ( MaxContAr<=0 ) MaxContAr=1.0;
+  
   MaxContAr*=ndommaxcont[0];
   if (!VarActive ) printf("cont:ndomax\t");
   for (unsigned int i=1;i<=LengthOfndommaxcont;i++) {
