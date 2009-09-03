@@ -14,7 +14,7 @@ retdata=NaN;
 load(['regionpath_' num2str(nreg)]);
 
 % Choose 'emea' or 'China' or 'World'
-[regs,nreg,lonlim,latlim]=find_region_numbers('EMEA');
+[regs,nreg,lonlim,latlim]=find_region_numbers('all');
 
 
 if ~exist('region','var')

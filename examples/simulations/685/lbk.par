@@ -38,8 +38,12 @@ array	ndommaxcont
 	typeOfArray	float
 	dimension	9
 data
-	1.0	2.2	1.8	1.0	0.8	1.0	1.0	1.0	1.0
+	1.0	1.0	1.0	1.0	1.0	1.0	1.0	1.0	1.0
 end
+comment Kai's version with differential data (creates too fast South America)
+comment  1.0	2.2	1.8	1.0	0.8	1.0	1.0	1.0	1.0
+
+
 comment knowledge loss under stress 
 float	LiterateTechnology	12.0
 	\v 
