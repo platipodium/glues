@@ -65,18 +65,17 @@ int main(int argc, char* argv[])
     //cout << vars[i] << endl;
   }
    
+  float *nreg,*tstart,*tend,*tstep;
+  //ifs >> nreg; 
+   
   // Read float-32 data
   char * buffer = new char [length-(int)ifs.tellg()];
-  ifs.read (buffer,length);
+  ifs.read(buffer,length);
   ifs.close();
    
-  // Read uint32 value
-  float *nreg = (float*)buffer;
-  
-  // Read float32 values
-  float tstart,tend,tstep;
-
-  cout << (int)nvar << " x " << *nreg << " / " << tstart << ":"
+  nreg=(float*)buffer;tstart=(float*)(buffer+4);
+ 
+  cout << (int)nvar << " x " << *nreg << " / " << *tstart << ":"
   << tend << " " << tstep << endl;
 
 
