@@ -27,6 +27,10 @@ while iarg<=nargin
     case 'lon'
       lonlim=varargin{iarg+1};
       iarg=iarg+1;
+    case 'lbk'
+      lonlim=[6,42];
+      latlim=[31,50];
+      
     case 'eme'
       lonlim=[-15,42];
       latlim=[27,55];
@@ -55,8 +59,16 @@ while iarg<=nargin
     case 'fil'
           regionpathfile=varargin{iarg+1};
           iarg=iarg+1;
-    otherwise
-      fprintf('Unknown keyword %s.',varargin{iarg});    
+      
+      otherwise
+        arg=varargin{iarg}
+        switch arg
+            case 'WesternEurope' ;
+            otherwise
+                      fprintf('Unknown keyword %s.',varargin{iarg});    
+
+        end
+        
   end
   iarg=iarg+1;
 end

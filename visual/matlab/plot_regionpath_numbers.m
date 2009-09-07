@@ -4,11 +4,11 @@ cl_register_function();
 
 % Defaults
 mode='optimal';
-region='europe';
+reg='EMEA';
 %lat=[10 30];
 %lon=[-120 -90];
 
-regionpathfile='regionpath_939';
+regionpathfile='regionpath_685';
 %iselect=find_region_numbers('lat',lat,'lon',lon);
 itodo=[];
 
@@ -47,7 +47,7 @@ end
 if length(itodo)>0 varargin=varargin(itodo); else varargin=[]; end
 
 
-iselect=find_region_numbers(region,'file',regionpathfile);%[216, 279, 315, 170];
+iselect=find_region_numbers(reg,'file',regionpathfile);%[216, 279, 315, 170];
 load(regionpathfile);
 
 
@@ -55,14 +55,18 @@ if exist('region','var') & isstruct(region)
   nreg=region.nreg; 
   regionpath=region.path;
   
+else
+    region.path=regionpath;
+    region.nreg=nreg;
+    region.neighbourhood=regionneighbourhood;
+    region.neighbours=regionneighbours;
 end
 
 
 
 
-
 if mode=='optimal'
-    icolors=calc_regioncolors(regionpathfile);
+    icolors=calc_regioncolors(region);
     ncolors=max(icolors);
     colors=[0.9 0.2 0.9; 0.2 0.9 0.9; 0.9 0.9 0.2; 
             0.8 0.4 0.8; 0.4 0.8 0.8; 0.8 0.8 0.4;
