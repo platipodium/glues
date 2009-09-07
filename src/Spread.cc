@@ -165,48 +165,46 @@ double calc_spread_single(unsigned int iid) {
 	 TODO: add resist and germs
       */
 
-    int export_tech,export_qfarm,export_pop,import_pop;
-    int import_id,export_id,import_change,export_ndom;
-
+    int import_id,export_id;
+    
     if(force<0) {  // outward pressure
 	  dpr=dp1;  // area-scaled percentage of change
 	  ptech=itech;
       i1=jid; 
-      export_tech=itech;
-      export_qfarm=iqfarm;
-      export_ndom=indom;
-      export_pop=ipop;
-      import_pop=jpop;
       export_id=iid;
       import_id=jid;
-      import_change=dp1;
     }
     else { // inward pressure
 	  dpr=-dp0;
 	  ptech=jtech;
       i1=iid;
-      export_tech=jtech;
-      export_qfarm=populations[jid].Qfarming();
-      export_ndom=populations[jid].Ndomesticated();
-      export_pop=jpop;
       export_id=jid;
       import_id=iid;
-      import_change=-dp0;
-      import_pop=ipop;
     }
     
+    double export_tech  =populations[export_id].Technology();
+    double export_qfarm =populations[export_id].Qfarming();
+    double export_ndom  =populations[export_id].Ndomesticated();
+    double export_germ  =populations[export_id].Germs();
+    double export_resist=populations[export_id].Resist();
+    double export_pop   =populations[export_id].Density();;
+
+    double import_change=dpr;
+    double import_pop   =populations[import_id].Density();
     
     /** 
       Spread of traits with people
     */
-    assert(import_change>=0);
+    //assert(import_change>=0);
     
     /** TODO pop can be negative */
     //assert(import_pop>0);
-    if (import_pop>0) {
-      sprd[i1*N_POPVARS+2] += (export_qfarm*export_pop/import_pop)*import_change;
-      sprd[i1*N_POPVARS+0] += (export_tech*export_pop/import_pop)*import_change;
-      sprd[i1*N_POPVARS+0] += (export_ndom*export_pop/import_pop)*import_change;
+    if (import_pop*0>0) {
+      sprd[import_id*N_POPVARS+0] += (export_tech*export_pop/import_pop)*import_change;
+      sprd[import_id*N_POPVARS+1] += (export_ndom*export_pop/import_pop)*import_change;
+      sprd[import_id*N_POPVARS+2] += (export_qfarm*export_pop/import_pop)*import_change;
+      sprd[import_id*N_POPVARS+3] += (export_resist*export_pop/import_pop)*import_change;
+      sprd[import_id*N_POPVARS+5] += (export_germ*export_pop/import_pop)*import_change;
     }
 
       /*-------------------------------------------------------*/
@@ -214,8 +212,8 @@ double calc_spread_single(unsigned int iid) {
       /*-------------------------------------------------------*/
       //    printf("\t do spread\t%d\t%ld\n",iid,sprd);
 
-      sprd[i1*N_POPVARS+0]+=traitspread(itech,jtech);
-      sprd[i1*N_POPVARS+1]+=traitspread(indom,populations[jid].Ndomesticated());
+      sprd[import_id*N_POPVARS+0]+=traitspread(itech,jtech);
+      sprd[import_id*N_POPVARS+1]+=traitspread(indom,populations[jid].Ndomesticated());
       
       // TODO 
       /** Qfarming should not spread, should it? 
@@ -225,8 +223,8 @@ double calc_spread_single(unsigned int iid) {
 	  /** Actually, the trait should follow the movment of people since a
 	      migration would transport the farmers and hunters, possibly farmers could preferentially
 	      die */
-      sprd[i1*N_POPVARS+5]+=traitspread(igerm,populations[jid].Germs());
-      sprd[i1*N_POPVARS+3]+=genospread(iresist,populations[jid].Resist(),ptech);
+      sprd[import_id*N_POPVARS+5]+=traitspread(igerm,populations[jid].Germs());
+      sprd[import_id*N_POPVARS+3]+=genospread(iresist,populations[jid].Resist(),ptech);
 
       double ch;
       ch=TimeStep*sprd[iid*N_POPVARS+4];
@@ -241,6 +239,7 @@ double calc_spread_single(unsigned int iid) {
   if (0& (iid==211 || iid==271 || iid== 235))
      printf("%d %d\t%1.1f %1.1f\t%1.1f \n",iid,jid,dp0*1E3,dp1*1E3,ndx*1E3);
 
+    /** For diagnostic output calculate total migration activity */
   sprdm[iid]+=fabs(dp0*ipop);
   sprdm[jid]+=fabs(dp1*jpop);
 
