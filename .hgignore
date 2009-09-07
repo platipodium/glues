@@ -45,3 +45,6 @@ doc/latex/*[0-eg-z]
 spread_glob.dat
 examples/**.log
 examples/**.err
+visual/plots/**.*
+visual/matlab/result*mat
+visual/matlab/cl_journal.txt

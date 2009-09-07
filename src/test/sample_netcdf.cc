@@ -74,6 +74,12 @@ int main(int argc, char* argv[])
   ifs.close();
    
   nreg=(float*)buffer;tstart=(float*)(buffer+4);
+  
+  for (i=0; i<8; i++) 
+  {
+  nreg=(float*)(buffer+i);
+    cout << i << ": " << *nreg << endl;
+  }
  
   cout << (int)nvar << " x " << *nreg << " / " << *tstart << ":"
   << tend << " " << tstep << endl;
