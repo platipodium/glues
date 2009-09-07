@@ -66,7 +66,7 @@ resultfilename='results';
   
 if ~exist('lonlim','var') lonlim=[-15,42]; end
 if ~exist('latlim','var') latlim=[27,55]; end
-if ~exist('timelim','var') timelim=[11000,3100]; end;
+if ~exist('timelim','var') timelim=[11000,6000]; end;
 if ~exist('timeunit','var') timeunit='BP'; end;
 if exist('scenario','var')
     resultfilename=[resultfilename '_' scenario];
