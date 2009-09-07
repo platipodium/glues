@@ -13,6 +13,7 @@
 #include "Globals.h"
 #include "Symbols.h"
 #include "Exchange.h"
+#include <assert.h>
 
 class Exchange;
 
@@ -76,6 +77,7 @@ double spread_all() {
 /*   Calculates exchange of a single region with neighbours    */
 /* ----------------------------------------------------------- */
 double calc_spread_single(unsigned int iid) {
+
   unsigned int jid, i1;
   double length,exch,ptech,jrgr,force;
   double jpop,ipop,ijpop,iarea,jarea,irgr,idommax;
@@ -152,34 +154,77 @@ double calc_spread_single(unsigned int iid) {
       dp0=force;
       dp1=-iarea*dp0/jarea;
       
-      sprd[iid*N_POPVARS+4]+=dp0*ipop;
-      sprd[jid*N_POPVARS+4]+=dp1*jpop;
+    sprd[iid*N_POPVARS+4]+=dp0*ipop;
+    sprd[jid*N_POPVARS+4]+=dp1*jpop;
 
      /**
-	 For unidirectional transport of traits,
+	 For unidirectional transport of traits and traits in people,
 	 identify source and target. Change occurs in
-	 importing region only with technology of exporter 
+	 importing region only with traits of exporter 
+	 
+	 TODO: add resist and germs
       */
 
-      if(force<0) {  // outward pressure
-	dpr=dp1;
-	ptech=itech;
-        i1=jid; 
-      }
-      else { // inward pressure
-	dpr=-dp0;
-	ptech=jtech;
-        i1=iid;
-      }
+    int export_tech,export_qfarm,export_pop,import_pop;
+    int import_id,export_id,import_change,export_ndom;
+
+    if(force<0) {  // outward pressure
+	  dpr=dp1;  // area-scaled percentage of change
+	  ptech=itech;
+      i1=jid; 
+      export_tech=itech;
+      export_qfarm=iqfarm;
+      export_ndom=indom;
+      export_pop=ipop;
+      import_pop=jpop;
+      export_id=iid;
+      import_id=jid;
+      import_change=dp1;
+    }
+    else { // inward pressure
+	  dpr=-dp0;
+	  ptech=jtech;
+      i1=iid;
+      export_tech=jtech;
+      export_qfarm=populations[jid].Qfarming();
+      export_ndom=populations[jid].Ndomesticated();
+      export_pop=jpop;
+      export_id=jid;
+      import_id=iid;
+      import_change=-dp0;
+      import_pop=ipop;
+    }
+    
+    
+    /** 
+      Spread of traits with people
+    */
+    assert(import_change>=0);
+    
+    /** TODO pop can be negative */
+    //assert(import_pop>0);
+    if (import_pop>0) {
+      sprd[i1*N_POPVARS+2] += (export_qfarm*export_pop/import_pop)*import_change;
+      sprd[i1*N_POPVARS+0] += (export_tech*export_pop/import_pop)*import_change;
+      sprd[i1*N_POPVARS+0] += (export_ndom*export_pop/import_pop)*import_change;
+    }
 
       /*-------------------------------------------------------*/
-      /*   specifying single entries in global spread matrix   */
+      /*   Spread of traits with trade (see parameter spreadm)   */
       /*-------------------------------------------------------*/
       //    printf("\t do spread\t%d\t%ld\n",iid,sprd);
 
       sprd[i1*N_POPVARS+0]+=traitspread(itech,jtech);
       sprd[i1*N_POPVARS+1]+=traitspread(indom,populations[jid].Ndomesticated());
-      sprd[i1*N_POPVARS+2]+=traitspread(iqfarm,populations[jid].Qfarming());
+      
+      // TODO 
+      /** Qfarming should not spread, should it? 
+          Changed by cl 2009-09-06 */
+      //sprd[i1*N_POPVARS+2]+=traitspread(iqfarm,populations[jid].Qfarming());
+
+	  /** Actually, the trait should follow the movment of people since a
+	      migration would transport the farmers and hunters, possibly farmers could preferentially
+	      die */
       sprd[i1*N_POPVARS+5]+=traitspread(igerm,populations[jid].Germs());
       sprd[i1*N_POPVARS+3]+=genospread(iresist,populations[jid].Resist(),ptech);
 
