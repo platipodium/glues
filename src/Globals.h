@@ -97,7 +97,7 @@ int exchange(void);
 
 int  initialize();
 int  initialize_populations(double);
-double traitspread(double,double);
+//double traitspread(double,double);
 double genospread(double,double,double);
 int out_vegetation();
 int out_boxes();
