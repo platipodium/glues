@@ -171,13 +171,11 @@ double calc_spread_single(unsigned int iid) {
     double import_change=0;
     
     if(force<0) {  // outward pressure
-//	  dpr=dp1;  // area-scaled percentage of change
       export_id=iid;
       import_id=jid;
       import_change=dp1;
     }
     else { // inward pressure
-//	  dpr=-dp0;
       export_id=jid;
       import_id=iid;
       import_change=dp0;
@@ -191,46 +189,49 @@ double calc_spread_single(unsigned int iid) {
     double export_pop   =populations[export_id].Density();;
 
     double import_pop   =populations[import_id].Density();
-    double import_tech  =populations[import_id].Technology();
-    
-    /** 
-      Spread of traits with people
-    */
-    assert(import_change>=0);
+    double import_tech  =populations[import_id].Technology();   
     
     /** TODO pop can be negative */
     assert(import_pop>0);
+    assert(import_change>=0);
     if (import_change>0) {
-      //sprd[import_id*N_POPVARS+0] += (export_tech*export_pop/import_pop)*import_change;
-      //sprd[import_id*N_POPVARS+1] += (export_ndom*export_pop/import_pop)*import_change;
+   
+      /** 
+      Spread of traits with people (experimental opening for 0-1,3-4)
+      */
+   
+   
+      sprd[import_id*N_POPVARS+0] += (export_tech*export_pop/import_pop)*import_change;
+      sprd[import_id*N_POPVARS+1] += (export_ndom*export_pop/import_pop)*import_change;
       sprd[import_id*N_POPVARS+2] += (export_qfarm*export_pop/import_pop)*import_change;
-      //sprd[import_id*N_POPVARS+3] += (export_resist*export_pop/import_pop)*import_change;
-      //sprd[import_id*N_POPVARS+5] += (export_germ*export_pop/import_pop)*import_change;
-    }
-    else cerr << populations[import_id] << " rgr= " << populations[import_id].RelativeGrowthrate() 
-    	<< "/ import_change = " << import_change << endl
-    	<< force << " / " << dp0 << " / " << dp1  << endl
-    	<< ijpop << " / " << iinfl << " / " << jinfl << " / " << exch << endl
-    	<< populations[export_id] << endl;
-
+      sprd[import_id*N_POPVARS+3] += (export_resist*export_pop/import_pop)*import_change;
+      sprd[import_id*N_POPVARS+5] += (export_germ*export_pop/import_pop)*import_change;
+  
+  
       /*-------------------------------------------------------*/
       /*   Spread of traits with trade (see parameter spreadm)   */
       /*-------------------------------------------------------*/
       //    printf("\t do spread\t%d\t%ld\n",iid,sprd);
 
      sprd[import_id*N_POPVARS+0]+=traitspread(export_tech,import_tech,import_change);
-     //sprd[import_id*N_POPVARS+1]+=traitspread(indom,populations[jid].Ndomesticated(),import_change);
      sprd[import_id*N_POPVARS+1]+=traitspread(export_ndom,populations[import_id].Ndomesticated(),import_change);
        
-      // TODO 
-      /** Qfarming should not spread, should it? 
-          Changed by cl 2009-09-06 */
+      // Qfarming should not spread, thus next line commented
       //sprd[i1*N_POPVARS+2]+=traitspread(iqfarm,populations[jid].Qfarming());
 
 // TODO germs and resist
       //sprd[import_id*N_POPVARS+5]+=traitspread(igerm,populations[jid].Germs(),import_change);
       //sprd[import_id*N_POPVARS+3]+=genospread(iresist,populations[jid].Resist(),export_tech);
 
+  }
+    
+   /**cerr << populations[import_id] << " rgr= " << populations[import_id].RelativeGrowthrate() 
+    	<< "/ import_change = " << import_change << endl
+    	<< force << " / " << dp0 << " / " << dp1  << endl
+    	<< ijpop << " / " << iinfl << " / " << jinfl << " / " << exch << endl
+    	<< populations[export_id] << endl;*/
+
+  
       double ch;
       ch=TimeStep*sprd[iid*N_POPVARS+4];
       if(fabs(ch/(ipop+0.01))>RelChange)
