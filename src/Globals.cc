@@ -71,7 +71,7 @@ unsigned long num_variat;
 string state_names[N_OUTVARS+1]=
    {"Technology","Agricultures","Farming",
     "Resistance","Density","Migration","Climate",
-    "CivStart","NetDisease","Dummy","END"};
+    "CivStart","NetDisease","Birthrate","END"};
 float variat_min[N_VARIAT],variat_delt[N_VARIAT];
 int variat_steps[N_VARIAT],store_ind[N_OUTVARS],*EventRegInd,*EventRegNum;
 int *NewCivInd,*OldCivHit,NewCivMaxNum,NewCivNum,*RegSiteInd[MAXPROXY],

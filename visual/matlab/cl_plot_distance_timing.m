@@ -9,12 +9,13 @@ retdata=NaN;
 [regs,nreg,lonlim,latlim]=find_region_numbers('EMEA','lon',[0,36]);
 
 regs=regs(find(regs<300 & regs>120 & regs~=204));
-
+nreg=length(regs);
+hregs=[272,243,256,254,212,217,184,179,171,147,143,123,200]';
 
 
 figoffset=0;
 
-vars={'Farming'}
+vars={'Farming'};
 
 mode='absolute';
 resultfilename='results';
@@ -160,6 +161,7 @@ ntime=itend-itstart+1;
 
 retdata=zeros(nvar,ntime,length(regs))+NaN;
 
+nreg=length(regs);
 for idovar=1:nvar
     
     ivar=dovar(idovar);
@@ -195,7 +197,7 @@ for idovar=1:nvar
   
   end
   
-  % Plot timeseries
+  % Plot timing-distance scatter plot
   figure(ivar+nvar+figoffset); 
   clf reset;
    
@@ -205,13 +207,39 @@ for idovar=1:nvar
   y=dist; % distances to refreg
   x=threshtime;
   
-  plot(x,y,'r.');
-  
+  for ireg=1:nreg
+     
+     if isempty(find(regs(ireg)==hregs))
+       plot(x(ireg),y(ireg),'r.');
+     else
+       plot(x(ireg),y(ireg),'m.');
+     end
+  end
   text(x,y,num2str(regs));
   y0=threshtime(irefreg);
+  
   plot(y0:500:y0+4000,0:500:4000,'b-');
+ 
   
+  figure(ivar+nvar*2+figoffset);
+  clf reset;
+  hold on;
   
+  for ireg=1:length(regs)
+      for jreg=ireg+1:length(regs);
+        rdist(ireg,jreg)=m_lldist([regioncenter(regs(ireg),2),regioncenter(regs(jreg),2)],...
+          [regioncenter(regs(ireg),1),regioncenter(regs(jreg),1)]); 
+        tdist(ireg,jreg)=abs(threshtime(ireg)-threshtime(jreg));
+      end
+  end
+   
+  for ireg=1:length(regs)-1
+      plot(tdist(ireg,ireg+1:end),rdist(ireg,ireg+1:end),'b.');
+  end
 end
+
+
+
+
 return;
 end

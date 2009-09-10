@@ -268,7 +268,9 @@ double RegionalPopulation::RelativeGrowthrate() {
       product=si*art
       rgr = gammab*actualfertility*product-disease
   */
-  rgr = gammab*actualfertility*product-disease;
+  birthrate = gammab*actualfertility*product;
+  deathrate = disease;
+  rgr = birthrate - deathrate;
   
   return rgr;
 }
@@ -358,6 +360,7 @@ double sprp;
   case 6: return region->Npp();
   case 7: return region->CivStart();
   case 8: return germs-resist;
+  case 9: return birthrate;
   }
   return -1.0;
 }

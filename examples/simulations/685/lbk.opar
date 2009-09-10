@@ -10,8 +10,8 @@ comment regional dynamics
 float	regenerate	0.80
 	\d rate of natural regneration after
 comment Spreading and trait exchange
-float	spreadm	1.0
-	\d Ratio of trait to population spread
+float	spreadm 100
+	\d Ratio of trait to population spread default 5.0
 float	ndommaxvar	0.0
 	\d rearranges variances of ndommaxcont
 comment RGR constants

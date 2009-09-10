@@ -1,7 +1,7 @@
 /* GLUES population class; this file is part of
    the Global Land Use and technological Evolution Simulator
    
-   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008
+   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008,2009
    Carsten Lemmen <carsten.lemmen@gkss.de>, Kai Wirtz <kai.wirtz@gkss.de>
 
    This program is free software; you can redistribute it and/or modify it
@@ -37,6 +37,7 @@ namespace glues {
     protected:
 	double size;          /** Size of population */
 	double rgr;           /** relative growth rate */
+	double birthrate,deathrate; 
 
 	static double birthcoefficient;
 	static double deathcoefficient;
@@ -57,7 +58,8 @@ namespace glues {
 	static double Timestep() {return timestep;}
 	static double Timestep(const double);
 
-	
+	double Birthrate() const {return birthrate;}
+	double Deathrate() const {return deathrate;}
 	double Growthrate() const {return rgr*size;}
 	double Size() const { return size; }
 

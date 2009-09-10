@@ -5,9 +5,9 @@ float	deltat	0.15
 	\d Specific adaptation constant for technology exploitation
 	\v 
 comment Spreading and trait exchange
-float	spreadv	0.03
+float	spreadv 0.0002
 	\u km/y
-	\d Population migration velocity 0.3
+	\d Population migration velocity 0.006
 	\v 
 comment RGR constants
 float	overexp	0.01
