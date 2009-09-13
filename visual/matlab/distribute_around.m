@@ -1,4 +1,7 @@
 function [xc,yc]=distribute_around(x,y,n,dist)
+% [XOUT,YOUT]=DISTRIBUTE_AROUND(XIN,YIN,N,DISTANCE)
+%
+% distributes around a point (x,y) 
 
 cl_register_function();
 

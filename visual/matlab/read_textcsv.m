@@ -61,12 +61,16 @@ while 1
         end
         if strcmp(tok,'"NaN"')
              eval(['data.' fnames{ntok} ' = [data.' fnames{ntok} ' NaN ];'])
+        elseif strcmp(tok,'NaN')
+             eval(['data.' fnames{ntok} ' = [data.' fnames{ntok} ' NaN ];'])
         elseif strcmp(tok,'"---"')
              eval(['data.' fnames{ntok} ' = [data.' fnames{ntok} ' NaN ];'])
         elseif (tok(1)  == textdelim )
             eval(['data.' fnames{ntok} '{' num2str(nl) '} = strrep(''' tok ''',''' textdelim ''', '''');']);
             %        elseif ~isa(tok,'numeric')
            % eval(['data.' fnames{ntok} '{' num2str(nl) '} = ''' tok ''';']);
+        elseif (isempty(textdelim) & isnan(str2double(tok)))
+            eval(['data.' fnames{ntok} '{' num2str(nl) '} = tok;']);
         else          
 	      tok = strrep(tok,',','.');
           %fprintf('%s',tok);
