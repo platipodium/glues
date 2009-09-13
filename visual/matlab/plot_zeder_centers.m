@@ -5,8 +5,7 @@ function plot_zeder_centers
 cl_register_function();
 
 
-
-tz=[7300,7400,7700,7700,7700,7800,8100,7600,9000,10500,7000,7000];
+tz=2000-[7300,7400,7700,7700,7700,7800,8100,7600,9000,10500,7000,7000];
 nz=length(tz);
 z=zeros(nz,2,4);
 z1=zeros(nz,2,6);
@@ -30,5 +29,7 @@ for iz=1:nz
   end
   m_plot([zi(1,:),zi(1,1)],[zi(2,:),zi(2,1)],'g-');
 end
+
+return;
 
 end
