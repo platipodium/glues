@@ -66,7 +66,7 @@ resultfilename='results';
   
 if ~exist('lonlim','var') lonlim=[-15,42]; end
 if ~exist('latlim','var') latlim=[27,55]; end
-if ~exist('timelim','var') timelim=[11000,6000]; end;
+if ~exist('timelim','var') timelim=[9500,5000]; end;
 if ~exist('timeunit','var') timeunit='BP'; end;
 if exist('scenario','var')
     resultfilename=[resultfilename '_' scenario];
@@ -95,6 +95,11 @@ sage=Forenbaher.Median_age;
 n=length(slat);
 ntime=size(r.Density,2);
  
+
+load('Pinhasi-sites');
+slat=sites.Latitude;
+slon=sites.Longitude;
+sage=1950-sites.CALC14BP;
 
 if iscell(vars) 
     nvar=length(vars);
@@ -322,16 +327,39 @@ for idovar=1:nvar
   set(gca,'Position',pos,'box','off');
 
   cc='b' ; % base color for alpha fading
-  cchigh='c' ; % base color for highlighting
+  cchigh='b' ; % base color for highlighting
 
+  threshold=0.1;
+  
  for ireg=1:length(regs)
       reg=regs(ireg);
       hp(ireg)=m_patch(region.path(reg,1:pathlen(reg),1),region.path(reg,1:pathlen(reg),2),cc,'EdgeColor','none');
       h=hp(ireg);
       if (h<=0) continue; end
-      alpha(h,resvar(reg,itstart)./64/1.6);
+      %alpha(h,resvar(reg,itstart)./64/1.6);
+      alpha(h,0);
+      %alpha(h,0.4);
       set(h,'ButtonDownFcn',@onclick,'UserData',squeeze(data(reg,itstart:itend)));
+      ftime=find(data(reg,itstart:itend)>=threshold);
+      if isempty(ftime) timing(ireg)=NaN; else timing(ireg)=r.time(min(ftime)); end
+ 
  end
+ 
+ishow=find(regioncenter(regs,2)>lonlim(1) & regioncenter(regs,2)<lonlim(2) ...
+    & regioncenter(regs,1)>latlim(1) & regioncenter(regs,1)<latlim(2) ...
+   & isfinite(timing'));
+ 
+i5=find(timing(ishow)<-5000); 
+i6=find(timing(ishow)<-6000); 
+i7=find(timing(ishow)<-7000); 
+%i4=find(timing(ishow)<-7000); set(tt(i4),'backgroundcolor',[1 1 1]);
+
+ %&   set(hp(ishow),'FaceColor',[1 1 1],'FaceAlpha',0.1);
+  %  set(hp(ishow(i5)),'FaceColor',[1 1 0],'FaceAlpha',0.25);
+  %  set(hp(ishow(i6)),'FaceColor',[1 0.5 0],'FaceAlpha',0.25);
+  %  set(hp(ishow(i7)),'FaceColor',[1 0 0],'FaceAlpha',0.25);
+
+if (0) % colorbar
      
 cbw=0.4;  %  (relative width of colorbar)
 cbxo=0.15; %(x-offset of colorbar)
@@ -353,10 +381,11 @@ for i=0:16:64
     m_text(lonlim(1)+(cbxo+cbw/64*i)*(lonlim(2)-lonlim(1)),cby(end),num2str(cbtv(j)),...
         'horiz','center','vertical','bottom');
 end
+end
 
   ntime=itend-itstart+1;
 
-  for it=itstart:5:itend
+  for it=itstart:1:itend
     t=time(it);
     if ~isbp
       if (t==0) t=1; end
@@ -376,23 +405,31 @@ end
       ireg=ichanged(ir);
       reg=regs(ireg);
       if hp(ireg)==0 continue; end
-      h=hp(ireg);
-      greyval=resvar(reg,it)./64;
-      alpha(h,greyval/1.6);
+      if (resvar(reg,it)>1)
+        h=hp(ireg);
+        greyval=0.15+0.35*sqrt(resvar(reg,it)./64);
+       alpha(h,greyval);
+      
       if (abs(greyval-0.4)<0.1)
         set(hp(ireg),'FaceColor',cchigh);
       else  
        set(hp(ireg),'FaceColor',cc);
-        end
+      end
+      end
       %m_patch(region.path(reg,1:pathlen(reg),1),region.path(reg,1:pathlen(reg),2),cmap(resvar(reg,it),:));
      end
      
- 
+ showsites=1
     if showsites 
-     isite=find(sage>t & slat>latlim(1) & slat<latlim(2) & slon>lonlim(1) & slon<lonlim(2));
+     isite=find(sage<time(it) & slat>latlim(1) & slat<latlim(2) & slon>lonlim(1) & slon<lonlim(2));
      if ~isempty(isite)
-      m_line(slon(isite),slat(isite),'MarkerEdgeColor','k','MarkerFaceColor','y','LineStyle','none','Marker','o','MarkerSize',5.0);
+      m_line(slon(isite),slat(isite),'MarkerEdgeColor','k','MarkerFaceColor','w','LineStyle','none','Marker','o','MarkerSize',4.0);
      end
+     isite=find(abs(sage-time(it))<101 & slat>latlim(1) & slat<latlim(2) & slon>lonlim(1) & slon<lonlim(2));
+     if ~isempty(isite)
+      m_line(slon(isite),slat(isite),'MarkerEdgeColor','k','MarkerFaceColor','y','LineStyle','none','Marker','o','MarkerSize',4.0);
+     end
+    
     end
     
     plotname=fullfile(fd,['marble_variable_' strrep(r.variables{ivar},' ','') '_']);
@@ -400,9 +437,9 @@ end
     plotname=[plotname sprintf('%05d_%d',12000-t,t)];
    
     
-    if mod(t,500)==0
+    if mod(t,100)==0
     %mod(it,4)==1
-     % plot_multi_format(gcf,plotname);
+    plot_multi_format(gcf,plotname);
     end
     
     f=getframe(gcf);

@@ -1,4 +1,4 @@
-function retdata=cl_plot_distance_timing(varargin)
+function cl_plot_distance_timing(varargin)
 
 cl_register_function();
 
@@ -215,11 +215,17 @@ for idovar=1:nvar
        plot(x(ireg),y(ireg),'m.');
      end
   end
-  text(x,y,num2str(regs));
   y0=threshtime(irefreg);
   
-  plot(y0:500:y0+4000,0:500:4000,'b-');
- 
+  plot(y0:500:y0+4000,0:500:4000,'k-','color',[0.3 0.3 1.0],'linewidth',1.2);
+  [r,p]=corrcoef(x,y)
+  pol=polyfit(x,y,1);
+  fprintf('%f %f %f\n',r(2,1).*r(2,1),pol(:));
+  
+  text(x+20,y,num2str(regs));
+  xlabel('Time of agricultural onset (a BC)');
+  ylabel('Great circle distance from assumed center (km)');
+  set(gca,'Ylim',[-20,3800]);
   
   figure(ivar+nvar*2+figoffset);
   clf reset;
@@ -237,9 +243,9 @@ for idovar=1:nvar
       plot(tdist(ireg,ireg+1:end),rdist(ireg,ireg+1:end),'b.');
   end
 end
+close(gcf);
 
-
-
+plot_multi_format(gcf,'distance_timing');
 
 return;
 end
