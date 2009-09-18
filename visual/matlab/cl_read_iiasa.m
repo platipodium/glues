@@ -25,13 +25,15 @@ for ip=1:np
   end
   
   eval([par '=load(filename,''-ascii'');']);
-  eval([par '= ' par '(:,3:end);']);
   
   if (ip==1)
     % Data is lower-left coded, change to center
     eval(['lon=' par '(:,1)+0.25;']); 
     eval(['lat=' par '(:,2)+0.25;']); 
   end
+  
+  eval([par '= ' par '(:,3:end);']);
+  
 end
   
 save('-v6','iiasa',parameters{:},'lon','lat');

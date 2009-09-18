@@ -117,7 +117,7 @@ rainbow.m \
 cl_def_clustervalue.m \
 cl_get_iiasa \
 cl_npp_lieth.m \
-cl_read_iiasa 
-
+cl_read_iiasa  \
+clp_iiasa 
 
 
