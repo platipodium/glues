@@ -2,13 +2,17 @@ function [lon,lat,npp,gdd]=read_gluesclimate(filename)
 
 cl_register_function();
 
-if ~exist('filename','var') filename='../../src/region/gluesclimate.bin'; end;
-if ~exist(filename,'file') return; end;
+if ~exist('filename','var') filename='/h/lemmen/projects/glues/glues/data/gluesclimate.bin'; end;
+if ~exist(filename,'file')
+    error('File does not exist');
+end
+
 
 nvar=4; % Number of variables (lon,lat,npp,gdd)
 nrec=23; % Number of records (23 years in climber)
 
 sizes=[10,9,7,6];
+
 
 fprintf('Reading file %s..\n',filename);
 fid=fopen(filename,'r','b');
