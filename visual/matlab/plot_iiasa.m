@@ -12,7 +12,7 @@ iiasa=load(matfile);
 prec=sum(iiasa.prec,2);
 temp=mean(iiasa.tmean,2);
 gdd=30*sum(iiasa.tmean>0,2);
-npp=vecode_npp_lieth(temp,prec);
+npp=cl_npp_lieth(temp,prec);
 
 ilon=(iiasa.lon+0.25)/0.5+360;
 ilat=(iiasa.lat+0.25)/0.5+180;
