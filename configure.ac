@@ -3,7 +3,7 @@ AC_PREREQ(2.59)
 
 dnl Versioning: please increase micro version at each running version
 
-m4_define(GLUES_MICRO_VERSION,3)
+m4_define(GLUES_MICRO_VERSION,4)
 m4_define(GLUES_MINOR_VERSION,1)
 m4_define(GLUES_MAJOR_VERSION,1)
 m4_define(GLUES_VERSION,GLUES_MAJOR_VERSION.GLUES_MINOR_VERSION.GLUES_MICRO_VERSION)

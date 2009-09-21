@@ -115,9 +115,12 @@ neolithicsites.mat \
 regionpath.mat\
 rainbow.m \
 cl_def_clustervalue.m \
-cl_get_iiasa \
+cl_calc_cluster.m \
+cl_get_iiasa.m \
 cl_npp_lieth.m \
-cl_read_iiasa  \
-clp_iiasa 
+cl_read_iiasa.m  \
+clp_cluster.m \
+clp_iiasa.m
+
 
 

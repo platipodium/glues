@@ -20,7 +20,7 @@ APPNAME     = $(PRG)$(VERSION)
 PRGNAME     = $(PRG)
 
 # Current directory (under which the sisi distribution lies):
-SISIPATH   = $(shell pwd)
+SISIPATH   = `pwd`
 
 SRCDIR      = src
 
