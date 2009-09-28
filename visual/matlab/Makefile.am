@@ -27,9 +27,9 @@ calc_regioncolors.m \
 calc_regionmap_borders.m \
 calc_regionmap_coasts.m \
 calc_regionmap_outline.m \
-calc_regionpath.m \
+cl_calc_regionpath.m \
 calc_replacemany.m \
-calc_seas.m \
+cl_calc_seas.m \
 cprism.m \
 create_regions.m\
 db.m \
