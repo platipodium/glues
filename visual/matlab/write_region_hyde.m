@@ -39,7 +39,13 @@ popdfile=[strrep(prefix,'map','_hyde_popd') '.tsv'];
 climatefile=[strrep(prefix,'map','_hyde') '.mat'];
 
 load(matfile);
+region.length=regionlength;
+land.map=regionindex;
+land.region=regionnumber;
+land.lon=lon;
+land.lat=lat;
 nreg=length(region.length);
+map.region=regionmap;
 [cols,rows]=size(map.region);
 
 nclim=length(hyde.cropfraction);
