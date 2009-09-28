@@ -40,7 +40,7 @@ timelim=[3800 3700];
 %vars={'Agricultures','Migration'};
 mode='absolute';
 resultfilename='result_iiasaclimber_ref_all';
-resultfilename='result';
+resultfilename='results';
 
   for iarg=1:nargin 
     if all(isletter(varargin{iarg}))

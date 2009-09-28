@@ -11,7 +11,7 @@ cl_register_function();
 
 colors='rgbcym';
 
-clusterfile='cluster_-65_085_-180_0180_0100_0200_01017.mat';
+clusterfile='cluster_-65_085_-180_0180_0100_0200_02068.mat';
 
 [tok,rem]=strtok(clusterfile,'_');
 [tok,rem]=strtok(rem,'_'),latlim(1)=str2num(tok);
