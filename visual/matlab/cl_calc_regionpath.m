@@ -25,38 +25,41 @@ lon=land.lon;
 
 nland=length(land.map);
 nreg=length(region.length);
-border=zeros(nland,4);
 
 region.path=zeros(nreg,400,3)-NaN;
 region.neighbourhood=zeros(nreg,100)-NaN;
 
-for iland=1:nland
-  me=land.region(iland);
-  [ilon,ilat]=regidx2geoidx(land.map(iland),cols);
-  if (map.region(ilon,ilat) ~= me) 
-    fprintf('%f %f\n',map.region(ilon,ilat),me); 
-   error('Map and region information do not match');
-  end
+tmpfile='tmp_calc_regionpath_border.mat';
+if exist(tmpfile,'file')
+  load(tmpfile);
+else
 
-  ilonl=mod(ilon+720-2,720)+1;
-  ilonr=mod(ilon,720)+1;%plot_path('file','regionpath_686','var','id');
-%plot_path('file','regionpath_686','var','neighbours');
+  border=zeros(nland,4);
+  for iland=1:nland
+    me=land.region(iland);
+    [ilon,ilat]=regidx2geoidx(land.map(iland),cols);
+    if (map.region(ilon,ilat) ~= me) 
+      fprintf('%f %f\n',map.region(ilon,ilat),me); 
+      error('Map and region information do not match');
+    end
 
-%plot_path('file','regionpath_938','var','id');
-%plot_path('file','regionpath_938','var','neighbours');
-%plot_path('file','regionpath_938','var','area');
+    ilonl=mod(ilon+720-2,720)+1;
+    ilonr=mod(ilon,720)+1;
 
-
-  border(iland,:)=[map.region(ilonl,ilat) ~= me,map.region(ilon,ilat-1) ~= me,...
+    if mod(iland,1000)==0 fprintf('.'); end
+    border(iland,:)=[map.region(ilonl,ilat) ~= me,map.region(ilon,ilat-1) ~= me,...
                    map.region(ilonr,ilat) ~= me,map.region(ilon,ilat+1) ~= me];
+  end
+  save('-v6',tmpfile,'border');
 end
+
 
 % border is size (nland,4)
 nborder=sum(border,2);
 iborder=find(nborder > 0);
 nborderland=length(iborder);
 
-debug=0;
+debug=3;
  
 latgrid=map.latgrid;
 longrid=map.longrid;
