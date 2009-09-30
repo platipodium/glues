@@ -6,7 +6,7 @@ cl_register_function();
 %map=fullfile(dir,'mapping_80_686.mat');
 
 % Need mapping file enriched with sea information by calc_seas.m
-map='regionmap_sea_685.mat';
+map='regionmap_sea_1439.mat';
 %map='regionmap.mat';
 
 if ~exist(map,'file')
