@@ -6,7 +6,7 @@ cl_register_function();
 %map=fullfile(dir,'mapping_80_686.mat');
 
 % Need mapping file enriched with sea information by calc_seas.m
-mapfile='regionmap_sea_1439.mat';
+mapfile='regionmap_sea_685.mat';
 %map='regionmap.mat';
 
 if ~exist(mapfile,'file')
@@ -20,8 +20,6 @@ load(mapfile);
 
 [cols,rows]=size(map.region);
 
-lat=land.lat;
-lon=land.lon;
 
 nland=length(land.map);
 nreg=length(region.length);
@@ -30,9 +28,29 @@ region.path=zeros(nreg,400,3)-NaN;
 region.neighbourhood=zeros(nreg,100)-NaN;
 
 [land.ilon,land.ilat]=regidx2geoidx(land.map,cols);
+
+% fix 685 file
+if (nreg==685)
+  if (map.latgrid(1)==-89.75) 
+    map.latgrid=fliplr(map.latgrid);
+  end
+  land.ilat=land.ilat-1;
+  land.ilon=land.ilon+1;
+end
+
+
+lat=land.lat;
+lon=land.lon;
+
 % Sanity check for ilon/ilat
 ok=all(map.latgrid(land.ilat)==land.lat')
 ok=all(map.longrid(land.ilon)==land.lon')
+
+f=find(land.region==272);
+fl=land.lat(f(1:10));
+fm=map.latgrid(land.ilat(f(1:10)));
+
+
 
 border=zeros(nland,4);
 
@@ -48,6 +66,14 @@ nnd=geoidx2regidx(ilon,ilat+1,cols);
 nnl=geoidx2regidx(ilonl,ilat,cols);
 nnr=geoidx2regidx(ilonr,ilat,cols);
 nni=geoidx2regidx(ilon,ilat,cols);
+
+if nreg==685
+  nnu=geoidx2regidx(ilon-1,ilat,cols);
+  nnd=geoidx2regidx(ilon-1,ilat+2,cols);
+  nnl=geoidx2regidx(ilonl-1,ilat+1,cols);
+  nnr=geoidx2regidx(ilonr-1,ilat+1,cols);
+  nni=geoidx2regidx(ilon-1,ilat+1,cols);
+end
 
 ok=all(map.region(nni)==land.region)
 
@@ -107,7 +133,7 @@ if ~isfield(region,'center')
 end
 
   
-for ireg=10:nreg %:nreg 
+for ireg=1:nreg %:nreg 
 %    for ireg=400:400
   me=ireg;  
   % select all cells of this region
@@ -227,7 +253,8 @@ for ireg=10:nreg %:nreg
     isort=mod([0:3]+idir,4)+1;
     %ibord=find((border(iselect(isel),isort)));
     ibord=find(rborder(isel,isort));
-    if isempty(ibord) 
+    if isempty(ibord)
+        break;
         % This happens when a region is not contiguous
         path(ipath,:)=path(1+pathoffset,:); % close prior ring
         path(ipath+1,:)=[NaN,NaN,NaN]; % create break in path
@@ -244,7 +271,7 @@ for ireg=10:nreg %:nreg
         if (map.region(ilol,ilac-1) == me) idir=3; ineigh=1;
         elseif (map.region(iloc,ilac-1) == me) idir=0; ineigh=2;
         else ineigh=8; idir=1; end
-        if ipath>1 & path(ipath-1,3)~=path(ipath,3)
+        if 0&ipath>1 & path(ipath-1,3)~=path(ipath,3)
            path(ipath+1,:)=path(ipath,:);
            path(ipath,:)=[lonc-0.25,latc-0.25,NaN];
            ipath=ipath+1;
@@ -255,7 +282,7 @@ for ireg=10:nreg %:nreg
         if (map.region(ilor,ilac-1) == me) idir=0; ineigh=3; 
         elseif (map.region(ilor,ilac) == me) idir=1; ineigh=4; 
         else idir=2; ineigh=8; end
-        if ipath>1 & path(ipath-1,3)~=path(ipath,3)
+        if 0&ipath>1 & path(ipath-1,3)~=path(ipath,3)
            path(ipath+1,:)=path(ipath,:);
            path(ipath,:)=[lonc-0.25,latc+0.25,NaN];
            ipath=ipath+1;
@@ -265,7 +292,7 @@ for ireg=10:nreg %:nreg
         if (map.region(ilor,ilac+1) == me) idir=1; ineigh=5;
         elseif (map.region(iloc,ilac+1) == me) idir=2; ineigh=6; 
         else idir=3; ineigh=8; end
-        if ipath>1 & path(ipath-1,3)~=path(ipath,3)
+        if 0&ipath>1 & path(ipath-1,3)~=path(ipath,3)
            path(ipath+1,:)=path(ipath,:);
            path(ipath,:)=[lonc+0.25,latc+0.25,NaN];
            ipath=ipath+1;
