@@ -31,7 +31,7 @@ iwater=find(tmpmap < 0);
 nwater=length(iwater);
 map.region(iwater)=-10;
 
-latmap=ones(720,1) * -map.latgrid;
+latmap=ones(720,1) * map.latgrid;
 lonmap=map.longrid' * ones(1,360);
  
 imedi=find( (lonmap >= -5.3 & lonmap <= 37) ...

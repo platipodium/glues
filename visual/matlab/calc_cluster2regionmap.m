@@ -1,8 +1,6 @@
 function calc_cluster2regionmap(varargin)
 
 
-
-
 % regionlength(nreg,1) number of cells in region
 % regionnumber(nland,1) region id of cell
 % regionarray(nreg,maxlength) geo id (1:nlat*nlon) of region and cell)
@@ -56,11 +54,12 @@ region.land=zeros(nreg,maxlength)+NaN;
 % Establish half-degree grid
 nlat=360; nlon=720;
 [latgrid,longrid]=calc_geogrid(nlat,nlon);
+latgrid=fliplr(latgrid);
 
-ilon=calc_lon2ilon(clon,nlon);
-ilat=361-calc_lat2ilat(clat,nlat);
+land.ilon=calc_lon2ilon(clon,nlon);
+land.ilat=calc_lat2ilat(clat,nlat);
 
-land.map=geoidx2regidx(ilon,ilat,nlon);
+land.map=geoidx2regidx(land.ilon,land.ilat,nlon);
 map.region=zeros(nlon,nlat);
 map.region(land.map)=land.region;
 
