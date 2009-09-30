@@ -12,7 +12,7 @@ function calc_cluster2regionmap(varargin)
 cl_register_function();
 
 
-clusterfile='cluster_-65_085_-180_0180_0686.mat';
+clusterfile='cluster_-65_085_-180_0180_0100_0200_02068_clean_9';
 
 load(clusterfile);
 nland=length(cluster.cid);
@@ -40,7 +40,7 @@ iiasa=load('iiasa');
  gdd=sum(tmean>0,2)*30.;
  prec=sum(prec,2);
  tmean=mean(tmean,2);
- npp=vecode_npp_lieth(tmean,prec);
+ npp=cl_npp_lieth(tmean,prec);
 
  
 
@@ -86,7 +86,7 @@ map.longrid=longrid;
 region.latlim=latlim;
 region.lonlim=lonlim;
 
-save('-v6',regionmapfile,'region','gridcell');
+save('-v6',regionmapfile,'region','map','land');
 
 return
 end

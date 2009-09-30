@@ -2,7 +2,7 @@ function cl_calc_seas(varargin)
 
 cl_register_function();
 
-regionmapfile='regionmap_685.mat';
+regionmapfile='regionmap_1439.mat';
 load(regionmapfile);
 
 %load('/h/lemmen/projects/glues/glues/glues/examples/setup/686/mapping_80_685.mat');

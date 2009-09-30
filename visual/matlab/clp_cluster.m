@@ -11,13 +11,13 @@ cl_register_function();
 
 colors='rgbcym';
 
-clusterfile='cluster_-65_085_-180_0180_0100_0200_02068.mat';
+clusterfile='cluster_-65_085_-180_0180_0100_0200_02068_clean_9.mat';
 
 [tok,rem]=strtok(clusterfile,'_');
-[tok,rem]=strtok(rem,'_'),latlim(1)=str2num(tok);
-[tok,rem]=strtok(rem,'_'),latlim(2)=str2num(tok);
-[tok,rem]=strtok(rem,'_'),lonlim(1)=str2num(tok);
-[tok,rem]=strtok(rem,'_'),lonlim(2)=str2num(tok);
+[tok,rem]=strtok(rem,'_');latlim(1)=str2num(tok);
+[tok,rem]=strtok(rem,'_');latlim(2)=str2num(tok);
+[tok,rem]=strtok(rem,'_');lonlim(1)=str2num(tok);
+[tok,rem]=strtok(rem,'_');lonlim(2)=str2num(tok);
 
 % Europe:
 latlim=[30,56];
@@ -46,8 +46,8 @@ ucid=unique(cid);
 for i=1:nc
   ic=find(cid==ucid(i));
   m_plot(lon(ic),lat(ic),'kd','color',colors(mod(i,6)+1),'MarkerFaceColor',colors(mod(i,6)+1));
-  icil=find(cid(ileft)==ucid(i));
-  pl=m_plot(lon(ileft(icil)),lat(ileft(icil)),'kd','MarkerFaceColor',colors(mod(i,6)+1));
+  %icil=find(cid(ileft)==ucid(i));
+  %pl=m_plot(lon(ileft(icil)),lat(ileft(icil)),'kd','MarkerFaceColor',colors(mod(i,6)+1));
 end;
   
 set(gcf,'Position',[100 100 1100 550]);
