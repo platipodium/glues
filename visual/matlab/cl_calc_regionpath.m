@@ -6,7 +6,7 @@ cl_register_function();
 %map=fullfile(dir,'mapping_80_686.mat');
 
 % Need mapping file enriched with sea information by calc_seas.m
-map='regionmap_sea_1439.mat';
+map='regionmap_sea_685.mat';
 %map='regionmap.mat';
 
 if ~exist(map,'file')
@@ -28,6 +28,7 @@ nreg=length(region.length);
 
 region.path=zeros(nreg,400,3)-NaN;
 region.neighbourhood=zeros(nreg,100)-NaN;
+region.center=zeros(nreg,2);
 
 tmpfile='tmp_calc_regionpath_border.mat';
 if exist(tmpfile,'file')
@@ -38,6 +39,8 @@ else
   for iland=1:nland
     me=land.region(iland);
     [ilon,ilat]=regidx2geoidx(land.map(iland),cols);
+    land.ilon(iland)=ilon;
+    land.ilat(iland)=ilat;
     if (map.region(ilon,ilat) ~= me) 
       fprintf('%f %f\n',map.region(ilon,ilat),me); 
       error('Map and region information do not match');
@@ -50,7 +53,7 @@ else
     border(iland,:)=[map.region(ilonl,ilat) ~= me,map.region(ilon,ilat-1) ~= me,...
                    map.region(ilonr,ilat) ~= me,map.region(ilon,ilat+1) ~= me];
   end
-  save('-v6',tmpfile,'border');
+  save('-v6',tmpfile,'border','land');
 end
 
 
@@ -59,13 +62,14 @@ nborder=sum(border,2);
 iborder=find(nborder > 0);
 nborderland=length(iborder);
 
-debug=3;
+debug=2;
  
+%map.latgrid=fliplr(sort(map.latgrid));
 latgrid=map.latgrid;
 longrid=map.longrid;
 
-if debug>2
  
+%  for ireg=1:nreg
   for ireg=1:nreg
     me=ireg;
   
@@ -79,7 +83,11 @@ if debug>2
   latmax=min([ 90,max(latgrid(ilat))+1]);
   lonmin=max([-180,min(longrid(ilon))-2]);
   lonmax=min([ 180,max(longrid(ilon))+2]);
+   region.center(ireg,1)=calc_geo_mean(map.latgrid(ilat),map.longrid(ilon));
+   %region.center(ireg,2)=calc_geo_mean(map.latgrid(ilat),map.longrid(ilat));
+region.center(ireg,2)=mean(map.latgrid(ilat));
 
+if debug>2
 
   figure(1); clf reset;
   title=sprintf('Regions');
@@ -90,7 +98,7 @@ if debug>2
     m_line(map.longrid(ilon),map.latgrid(ilat),'color','y','Linestyle','none','marker','.');
     m_line(land.lon(iselect),land.lat(iselect),'color','b','Linestyle','none','marker','o');
     m_plot(region.center(ireg,1),region.center(ireg,2),'k*');
-    m_plot(region.lon(ireg),region.lat(ireg),'ro');
+    %m_plot(region.lon(ireg),region.lat(ireg),'ro');
   end
 end
 
@@ -309,7 +317,7 @@ for ireg=1:nreg %:nreg
   uneigh=region.neighbourhood(ireg,1:region.neighbours(ireg));
   if (length(upath)==length(npath)) ;
   else
-      warning('Inconsitency in path and neighbours for region %d',ireg);
+      warning('Inconsistency in path and neighbours for region %d',ireg);
   end
   
 end
