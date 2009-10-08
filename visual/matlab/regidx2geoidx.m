@@ -4,8 +4,8 @@ cl_register_function();
 
 if ~exist('cols','var') cols=720; end;
 
-  ilat=ceil(regidx/cols);  % -2
-  ilon=mod(regidx-1,cols)+1; % +2
+  ilat=362-ceil(regidx/cols);  % -2
+  ilon=mod(regidx,cols)+1; % +2
 
 return
 
