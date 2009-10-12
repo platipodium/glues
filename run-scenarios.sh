@@ -201,3 +201,8 @@ cp $R.out ${R}_events.out
 gsed -i '/flucampl/s/0\.4/0.0/' $DAT
 
 
+# return to base setup
+gsed -i '/spreadv/s/spreadv.*$/spreadv 0.002/' $PAR
+gsed -i '/spreadm/s/spreadm.*$/spreadm 100/' $OPAR
+gsed -i '/LocalSpread/s/LocalSpread.*$/LocalSpread 1/' $CTL
+gsed -i '/flucampl/s/flucampl.*$/flucampl 0.0/' $DAT
