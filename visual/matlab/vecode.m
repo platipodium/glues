@@ -1,4 +1,4 @@
-function vecode(TATB,PRCB,GDD0B,PA)
+function [production,share,carbon]=vecode(TATB,PRCB,GDD0B,PA)
 
 %               VECODE - DYNAMIC GLOBAL VEGETATION MODEL 
 %
@@ -29,13 +29,24 @@ cl_register_function;
 
 % Default CO2 mixing ration
 if nargin<3
-    warning('Please provide temp, prec, gdd0 information');
-    TATB(1,1)=10;
-    PRCB(1,1)=650;
+    warning('Arguments missing','Please provide temp, prec, gdd0 information');
+    TATB(1,1)=15;
+    PRCB(1,1)=950;
     GDD0B(1,1)=3600;
     PA=370;
 end
-if ~exist('PA','var') PA=280.0; end
+if ~exist('PA','var')
+ PA=280.0; 
+end
+
+GDD0B=GDD0B*10;
+
+%if size(TATB,2)==1
+%    TATB=TATB';
+%    PRCB=PRCB';
+%    GDD0B=GDD0B';
+%end
+
 
 %-----------------------------------
 % From file declar.inc
@@ -65,7 +76,7 @@ global ades acr k0t k0g k4g
 % Added by Carsten Lemmen
 global gdd0_min gdd0_max
 global gdd0 npp ave_t ave_pr co2
-global lat lon KVEG INI_STEP
+global lat lon KVEG
 
 
 
@@ -113,18 +124,23 @@ global t1g t2g t3g t4g grass
 
 % parameters initialization: default INI_STEP=0
       
-if  ~exist('INI_STEP','var') INI_STEP=0; end
-if (INI_STEP==0) INITCPAR; end
+if  ~exist('INI_STEP','var') 
+    global INI_STEP;
+    INI_STEP=0; 
+end
+if (INI_STEP==0) 
+    INITCPAR; 
+end
 
 % Choose equilibrium/dynamic model (KVEG=1/2s)
 KVEG=2;
 
 % SPATIAL LOOP: k - longitude, i - latitude 
-for k=1,NS
-  for i=1,IT
-	ave_t= TATB(i,k);
-	ave_pr=PRCB(i,k);
-	gdd0=GDD0B(i,k);
+for i=1:IT
+  for k=1:NS
+	ave_t= TATB(k,i);
+	ave_pr=PRCB(k,i);
+	gdd0=GDD0B(k,i);
     co2=PA;
     lat=i;
 	lon=k;
@@ -146,13 +162,30 @@ for k=1,NS
  	  end
  	end
 
-    if(lat==1 && lon==1) fprintf('ST=%f,SG=%f,NPP=%f,LAI=%f',...
-        st(lat,lon),sg(lat,lon),anpp(lat,lon),alai(lat,lon));
-    end
+   % if(lat==1 && lon==1) fprintf('ST=%f,SG=%f,NPP=%f,LAI=%f',...
+   %     st(lat,lon),sg(lat,lon),anpp(lat,lon),alai(lat,lon));
+   % end
+    
+  
   end
 end
 
 INI_STEP=1;
+
+carbon.leaf=b1;
+carbon.wood=b2;
+carbon.litter=b3;
+carbon.soil=b4;
+
+production.npp=anpp;
+production.lai=alai;
+production.nep=anup;
+
+share.forest=st;
+share.desert=sd;
+share.needle=snlt;
+share.grass=sg;
+
 
 return;
 end
@@ -206,7 +239,10 @@ CCPARAM;
 % b1t is leaves phytomass for trees, b1g - for grass (kg C/m2)
 % t1t is residence time of carbon in trees, t1g - in grass (years)
 
-
+b1(lat,lon)=NaN;
+b2(lat,lon)=NaN;
+b3(lat,lon)=NaN;
+b4(lat,lon)=NaN;
 
 b1t(lat,lon)=k1t*t1t*npp;
 b1g(lat,lon)=k1g*t1g*npp;
@@ -298,8 +334,8 @@ st(lat,lon)=st(lat,lon)+dst;
 snlt(lat,lon)=nlshare_st-nld*exp(-1./t2t);
 
 % desert dynamics; exponential filtre
-dsd=desshare_st-dd*exp(-1./t2g)-sd(lat,lon)
-tempor1=sd(lat,lon)+dsd+st(lat,lon)
+dsd=desshare_st-dd*exp(-1./t2g)-sd(lat,lon);
+tempor1=sd(lat,lon)+dsd+st(lat,lon);
 
 % smooting of response time for desert dynamics 
 if (tempor1 > 0.9)
@@ -307,10 +343,10 @@ if (tempor1 > 0.9)
   dsd=desshare_st-dd*exp(-1./dstime)-sd(lat,lon);
 end        
         
-sd(lat,lon)=sd(lat,lon)+dsd
-dsg=-dst-dsd
+sd(lat,lon)=sd(lat,lon)+dsd;
+dsg=-dst-dsd;
 
-sg(lat,lon)=1.-st(lat,lon)-sd(lat,lon)
+sg(lat,lon)=1.-st(lat,lon)-sd(lat,lon);
 
 if (sg(lat,lon)<0) sg(lat,lon)=0; end
 if (st(lat,lon)<0) st(lat,lon)=0; end
@@ -357,7 +393,7 @@ if (sd(lat,lon)<0) sd(lat,lon)=0; end
 
 	b4t(lat,lon)=b4t(lat,lon)+k3t/t3t*b3t(lat,lon)-b4t(lat,lon)/t4t;
 	b4g(lat,lon)=b4g(lat,lon)+k4g/t2g*b2g(lat,lon)+k3g/t3g* ...
-         b3g(lat,lon)-b4g(lat,lon)/t4g
+         b3g(lat,lon)-b4g(lat,lon)/t4g;
 
 %   fast soil organic matter
 
@@ -433,7 +469,7 @@ global t1g t2g t3g t4g grass
      
 % calculation of annual carbon uptake
 
-	if (KVEG==2)  && length(b1)+length(b2)+length(b3)+length(b4)>3
+	if (KVEG==2)  & length(b1)+length(b2)+length(b3)+length(b4)>3
 	   tempor1=b1(lat,lon)+b2(lat,lon)+b3(lat,lon)+b4(lat,lon);
     else 
            tempor1=0;
@@ -512,8 +548,8 @@ global lat lon
 
        if(gdd0 < 100) desshare_st=1 ;  end
          
-       if(gdd0 >= 100 && gdd0 < gdd0_min)
-           desshare_st=(gdd0_min-gdd0)/(gdd0_min-100.)
+       if(gdd0 >= 100 & gdd0 < gdd0_min)
+           desshare_st=(gdd0_min-gdd0)/(gdd0_min-100.);
        end
 
 % dry deserts
