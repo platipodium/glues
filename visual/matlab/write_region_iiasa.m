@@ -35,7 +35,10 @@ climatefile=[strrep(prefix,'map','_iiasa') '.mat'];
 
 
 load(matfile);
+if ~exist('region','var') region.length=regionlength; end
 nreg=length(region.length);
+
+if ~exist('map','var') map.region=regionmap; end
 [cols,rows]=size(map.region);
 
 
