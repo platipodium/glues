@@ -38,14 +38,23 @@ load(matfile);
 if ~exist('region','var') region.length=regionlength; end
 nreg=length(region.length);
 
-if ~exist('map','var') map.region=regionmap; end
+if ~exist('map','var') 
+  map.region=regionmap;
+  map.longrid=longrid;
+  map.latgrid=fliplr(latgrid);
+end
+
 [cols,rows]=size(map.region);
 
 
 iiasa.temp=mean(iiasa.tmean,2);
 iiasa.precip=sum(iiasa.prec,2);
 iiasa.gdd=sum(iiasa.tmean>0,2)*30.;
-[iiasa.npp,iiasa.fshare,iiasa.dshare]=vecode(iiasa.temp,iiasa.precip,iiasa.gdd);
+[production,share,carbon]=cl_vecode(iiasa.temp,iiasa.precip,iiasa.gdd);
+
+iiasa.npp=production.npp;
+iiasa.fshare=share.forest;
+iiasa.dshare=share.desert;
 
 iiasa.ilon=2*iiasa.lon+360.5;
 iiasa.ilat=361-(2*iiasa.lat+180.5);
@@ -78,13 +87,19 @@ if debug>0
   hold on;
   m_grid;
   m_pcolor(map.longrid,map.latgrid,iiasa.fsharemap');
-  shading interp;
+  %shading interp;
 end
 
 nclim=1;
 climate.npp=zeros(nreg,nclim);
 climate.gdd=climate.npp;
 
+if ~exist('land','var')
+  land.region=regionnumber;
+  land.map=regionindex;
+  land.lat=lat;
+  land.lon=lon;
+end
 
 for ireg=1:nreg
   % select all cells of this region
