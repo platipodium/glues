@@ -31,20 +31,31 @@ while iarg<=nargin
       lonlim=[6,42];
       latlim=[31,50];
       
+      case 'old'
+          lonlim=[-30,180];
+          latlim=[-40,60];
+      case 'afr'
+          lonlim=[-20,60];
+          latlim=[-40,20];
+      
     case 'eme'
       lonlim=[-15,42];
       latlim=[27,55];
       case 'chi'
-          latlim=[18,40]; lonlim=[95,120];
+          latlim=[18,40]; lonlim=[95,122];
      case 'sea'
-          latlim=[12,44]; lonlim=[80,130];
+          latlim=[-12,23]; lonlim=[90,130];
 
     case 'med'
       lonlim=[-15,41];
       latlim=[31,53];
    case 'eur'
-      lonlim=[-15,50];
-      latlim=[18,63];
+      lonlim=[-10,40];
+      latlim=[36,66];
+      
+    case 'ind'
+      lonlim=[65,91];latlim=[6,32];
+
     case 'all'
     case 'wor'
     case 'exc'

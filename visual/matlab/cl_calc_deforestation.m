@@ -37,17 +37,42 @@ p=polyfit(hp,hc,3);
 % Visual inspection of full-scale agricultural societeis in mesopotamia
 cpf=0.02; % km2 per farmer
 
-cropfraction=cpf*dfarm*100;
-cropfraction(cropfraction>100)=100;
-naturalforest=repmat(climate.fshare',1,288)*100;
-remainingforest=naturalforest-cropfraction;
-
+cropfraction=cpf*dfarm;
+cropfraction(cropfraction>1)=1;
+% static 100 t C/ha 
 % Curtis et al (2002) estimate 100 t/ha aboveground carbon in temp decid
 % forest
+% naturalforest=repmat(climate.fshare',1,288)*100;
+
+% new VECODE formulation
+
+fshare=repmat(climate.fshare',1,288);
+gshare=repmat(climate.gshare',1,288);
+b12f=repmat(climate.b12f',1,288);
+b12g=repmat(climate.b12g',1,288);
+b34f=repmat(climate.b34f',1,288);
+b34g=repmat(climate.b34g',1,288);
+
+
+naturalcarbon=b12f.*fshare+b12g.*gshare ...
+    +b34f.*fshare+b34g.*gshare;
+
+remainingcarbon=b12f.*(fshare-cropfraction) ...
+    +b12g.*(gshare+cropfraction) ...
+    +b34f.*(fshare-cropfraction)...
+    +0.58*b34f.*cropfraction...
+    +b34g.*gshare;
+
+
 load('regionpath_685.mat');
-deforestation=cropfraction/100.0*10000.*repmat(region.area',1,288);
-save('hyde_glues_cropfraction','cropfraction','naturalforest',...
-    'remainingforest','deforestation');
+
+if ~exist('region','var')
+  region.area=regionarea;
+end
+
+deforestation=cropfraction*100.*repmat(region.area',1,288);
+save('hyde_glues_cropfraction','cropfraction','naturalcarbon',...
+    'remainingcarbon','deforestation');
 
 
 

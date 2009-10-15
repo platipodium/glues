@@ -1,4 +1,4 @@
-function [production,share,carbon]=cl_vecode(temp,prec,gdd0,co2)
+function [production,share,carbon,p]=cl_vecode(temp,prec,gdd0,co2)
 % [prod,share,carbon] = VECODE(t,p,g)
 % is the matlab implementation of V. Brovkins's VECODE
 % dynamical vegetation model
