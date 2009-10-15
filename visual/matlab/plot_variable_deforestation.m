@@ -1,4 +1,4 @@
-function plot_variable(varargin)
+function plot_variable_deforestation(varargin)
 
 cl_register_function();
 
@@ -18,12 +18,13 @@ load(['regionpath_' num2str(nreg)]);
 %latlim=[-60,70];lonlim=[-180,180];
 
 if nreg==685 
-  regs=find_region_numbers('emea');
+  [regs,nreg,lonlim,latlim]=find_region_numbers('old');
 elseif nreg==686
   regs=find_region_numbers_686('emea');
 else nreg=1:nreg;
 end
 
+% India
 
 if ~exist('region','var')
     region.path=regionpath;
@@ -40,7 +41,7 @@ timelim=[3800 3700];
 %vars={'Agricultures','Migration'};
 mode='absolute';
 resultfilename='result_iiasaclimber_ref_all';
-resultfilename='results';
+%resultfilename='results';
 
   for iarg=1:nargin 
     if all(isletter(varargin{iarg}))
@@ -138,12 +139,12 @@ for ivar=1:nvar
               dovar(ivar)=length(r.variables)+1;
            r.variables{dovar(ivar)}='GluesNaturalForest';
            load('hyde_glues_cropfraction.mat');
-           r.GluesNaturalForest=naturalforest;
+           r.GluesNaturalForest=naturalcarbon;
            case 'GluesDeforestation'
               dovar(ivar)=length(r.variables)+1;
            r.variables{dovar(ivar)}='GluesDeforestation';
            load('hyde_glues_cropfraction.mat');
-           r.GluesDeforestation=deforestation/10E9;
+           r.GluesDeforestation=naturalcarbon-remainingcarbon;
            
            
              otherwise 
@@ -275,14 +276,14 @@ data=eval(['r.' r.variables{ivar}]);
   
   titletext=r.variables{ivar};
   if length(infix)>0 titletext=[titletext '(' infix ')']; end
-  ht=title(titletext);
-  set(ht,'interpreter','none');
+  %ht=title(titletext);
+  %set(ht,'interpreter','none');
  
   
   t=time(itstart);
   
-  hbt=m_text(lonlim(1)+0.02*lonrange,latlim(2)-0.2*latrange,[num2str(t) ' BP'],'backgroundColor','y','EdgeColor','k');
-       
+  %hbt=m_text(lonlim(1)+0.02*lonrange,latlim(2)-0.2*latrange,[num2str(t) ' BP'],'backgroundColor','y','EdgeColor','k');
+  
   if exist('ylim','var') minmax=ylim; end
   
   for ireg=1:length(regs)
@@ -297,14 +298,14 @@ data=eval(['r.' r.variables{ivar}]);
      cbyt=cbyt*(minmax(2)-minmax(1))+minmax(1);
      cbyt=scale_precision(cbyt,2);
      set(cb,'YTickLAbel',num2str(cbyt));
-     set(gca,'Position',[0.05 0.0 0.83 1]);
+     %set(gca,'Position',[0.05 0.0 0.83 1]);
 
   ntime=itend-itstart+1;
 
   for it=itstart:itend
       t=time(it);
     
-     set(hbt,'String',[num2str(t) ' BP']);
+     %set(hbt,'String',[num2str(t) ' BP']);
   
      itprior=max(it-1,itstart);
      ichanged=find(resvar(regs,it)~=resvar(regs,itprior));
@@ -320,7 +321,7 @@ data=eval(['r.' r.variables{ivar}]);
      
      isite=find(sage>t & slat>latlim(1) & slat<latlim(2) & slon>lonlim(1) & slon<lonlim(2));
      if ~isempty(isite)
-      m_line(slon(isite),slat(isite),'MarkerEdgeColor','k','MarkerFaceColor','y','LineStyle','none','Marker','o','MarkerSize',5.0);
+      %m_line(slon(isite),slat(isite),'MarkerEdgeColor','k','MarkerFaceColor','y','LineStyle','none','Marker','o','MarkerSize',5.0);
      end
     
     plotname=fullfile(fd,['variable_' strrep(r.variables{ivar},' ','') '_']);
@@ -345,7 +346,7 @@ data=eval(['r.' r.variables{ivar}]);
   %set(gca,'XTickLabel','','YtickLabel','','Color','none');
   
   data2=r.GluesDeforestation;
-  cmap2=yellow;
+  cmap2=cl_yellow;
    minmax2=[min(min(min(data2(regs,itstart:itend)))),max(max(max(data2(regs,itstart:itend))))];
     resvar2=round(((data2-minmax2(1)))./(minmax2(2)-minmax2(1))*(length(cmap2)-1))+1;
   resvar2(resvar2>length(cmap))=length(cmap2);
@@ -353,7 +354,7 @@ data=eval(['r.' r.variables{ivar}]);
  
   
   
-   for ireg=1:length(regs)
+   for ireg=1:-length(regs)
       reg=regs(ireg);
       hp2(ireg)=m_patch(region.path(reg,1:pathlen(reg),1),region.path(reg,1:pathlen(reg),2),cmap2(resvar2(reg,itstart),:),'FaceAlpha',0.5);
   end
@@ -365,6 +366,26 @@ data=eval(['r.' r.variables{ivar}]);
   %end;
   
 end
+
+
+figure(10);
+sces={'eme','ind','afr','chi','sea'};
+ns=length(sces);
+hold on;
+for is=1:ns
+  [regs,nreg,lonlim,latlim]=find_region_numbers(sces{is});
+  m_plot( [lonlim,fliplr(lonlim),lonlim(1)],...
+      [latlim(1) latlim(1) latlim(2) latlim(2) latlim(1)],'y-');
+end
+
+
+set(gcf,'Renderer','Painters');
+plot_multi_format(gcf,'deforestation_carbon_density');
+figure(9);
+set(gcf,'Renderer','Painters');
+plot_multi_format(gcf,'natural_carbon_density');
+
+
 return;
 end
 

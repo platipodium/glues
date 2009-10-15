@@ -50,11 +50,19 @@ end
 iiasa.temp=mean(iiasa.tmean,2);
 iiasa.precip=sum(iiasa.prec,2);
 iiasa.gdd=sum(iiasa.tmean>0,2)*30.;
-[production,share,carbon]=cl_vecode(iiasa.temp,iiasa.precip,iiasa.gdd);
+[production,share,carbon,p]=cl_vecode(iiasa.temp,iiasa.precip,iiasa.gdd);
 
 iiasa.npp=production.npp;
-iiasa.fshare=share.forest;
-iiasa.dshare=share.desert;
+
+
+
+b12f=p.b1t+p.b2t;
+b34f=p.b3t+p.b4t;
+b12g=p.b1g+p.b2g;
+b34g=p.b3g+p.b4g;
+
+fshare=share.forest;
+gshare=share.grass;
 
 iiasa.ilon=2*iiasa.lon+360.5;
 iiasa.ilat=361-(2*iiasa.lat+180.5);
@@ -64,20 +72,31 @@ iiasa.nppmap=zeros(ncol,nrow)-NaN;
 iiasa.gddmap=iiasa.nppmap;
 iiasa.tempmap=iiasa.nppmap;
 iiasa.precmap=iiasa.nppmap;
-iiasa.fsharemap=iiasa.nppmap;
-iiasa.dsharemap=iiasa.nppmap;
+
+fsharemap=iiasa.nppmap;
+gsharemap=fsharemap;
+b12fmap=fsharemap;
+b34fmap=fsharemap;
+b12gmap=fsharemap;
+b34gmap=fsharemap;
+
+iiasa.fcarbonmap=iiasa.nppmap;
 niiasa=length(iiasa.npp);
 for i=1:niiasa 
     iiasa.nppmap(iiasa.ilon(i),iiasa.ilat(i))=iiasa.npp(i);
     iiasa.gddmap(iiasa.ilon(i),iiasa.ilat(i))=iiasa.gdd(i);
     iiasa.tempmap(iiasa.ilon(i),iiasa.ilat(i))=iiasa.temp(i);
     iiasa.precmap(iiasa.ilon(i),iiasa.ilat(i))= iiasa.precip(i);
-    iiasa.fsharemap(iiasa.ilon(i),iiasa.ilat(i))=iiasa.fshare(i);
-    iiasa.dsharemap(iiasa.ilon(i),iiasa.ilat(i))=iiasa.dshare(i);
+    fsharemap(iiasa.ilon(i),iiasa.ilat(i))=fshare(i);
+    gsharemap(iiasa.ilon(i),iiasa.ilat(i))=gshare(i);
+    b12fmap(iiasa.ilon(i),iiasa.ilat(i))=b12f(i);
+    b12gmap(iiasa.ilon(i),iiasa.ilat(i))=b12g(i);
+    b34fmap(iiasa.ilon(i),iiasa.ilat(i))=b34f(i);
+    b34gmap(iiasa.ilon(i),iiasa.ilat(i))=b34g(i);  
     
 end
 
-debug=1;
+debug=0;
 
 if debug>0
     figure(2);
@@ -86,7 +105,7 @@ if debug>0
   m_coast;
   hold on;
   m_grid;
-  m_pcolor(map.longrid,map.latgrid,iiasa.fsharemap');
+  m_pcolor(map.longrid,map.latgrid,iiasa.fcarbonmap');
   %shading interp;
 end
 
@@ -109,8 +128,12 @@ for ireg=1:nreg
   climate.gdd(ireg)=calc_geo_mean(land.lat(inreg),iiasa.gddmap(land.map(inreg)));
   climate.prec(ireg)=calc_geo_mean(land.lat(inreg),iiasa.precmap(land.map(inreg)));
   climate.temp(ireg)=calc_geo_mean(land.lat(inreg),iiasa.tempmap(land.map(inreg)));
-  climate.fshare(ireg)=calc_geo_mean(land.lat(inreg),iiasa.fsharemap(land.map(inreg)));
-  climate.dshare(ireg)=calc_geo_mean(land.lat(inreg),iiasa.dsharemap(land.map(inreg)));
+  climate.fshare(ireg)=calc_geo_mean(land.lat(inreg),fsharemap(land.map(inreg)));
+  climate.gshare(ireg)=calc_geo_mean(land.lat(inreg),gsharemap(land.map(inreg)));
+  climate.b12f(ireg)=calc_geo_mean(land.lat(inreg),b12fmap(land.map(inreg)));
+  climate.b12g(ireg)=calc_geo_mean(land.lat(inreg),b12gmap(land.map(inreg)));
+  climate.b34f(ireg)=calc_geo_mean(land.lat(inreg),b34fmap(land.map(inreg)));
+  climate.b34g(ireg)=calc_geo_mean(land.lat(inreg),b34gmap(land.map(inreg)));
     
 end
 

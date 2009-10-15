@@ -66,7 +66,7 @@ resultfilename='results';
   
 if ~exist('lonlim','var') lonlim=[-15,42]; end
 if ~exist('latlim','var') latlim=[27,55]; end
-if ~exist('timelim','var') timelim=[9500,5000]; end;
+if ~exist('timelim','var') timelim=[4020,3980]; end;
 if ~exist('timeunit','var') timeunit='BP'; end;
 if exist('scenario','var')
     resultfilename=[resultfilename '_' scenario];
@@ -344,6 +344,8 @@ for idovar=1:nvar
       if isempty(ftime) timing(ireg)=NaN; else timing(ireg)=r.time(min(ftime)); end
  
  end
+ 
+if ~exist('regioncenter','var') regioncenter=region.center; end 
  
 ishow=find(regioncenter(regs,2)>lonlim(1) & regioncenter(regs,2)<lonlim(2) ...
     & regioncenter(regs,1)>latlim(1) & regioncenter(regs,1)<latlim(2) ...
