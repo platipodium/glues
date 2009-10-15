@@ -18,7 +18,7 @@ load(['regionpath_' num2str(nreg)]);
 %latlim=[-60,70];lonlim=[-180,180];
 
 if nreg==685 
-  [regs,nreg,lonlim,latlim]=find_region_numbers('old');
+  [regs,nreg,lonlim,latlim]=find_region_numbers('sam');
 elseif nreg==686
   regs=find_region_numbers_686('emea');
 else nreg=1:nreg;
