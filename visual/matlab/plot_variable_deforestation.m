@@ -18,7 +18,7 @@ load(['regionpath_' num2str(nreg)]);
 %latlim=[-60,70];lonlim=[-180,180];
 
 if nreg==685 
-  [regs,nreg,lonlim,latlim]=find_region_numbers('sam');
+  [regs,nreg,lonlim,latlim]=find_region_numbers('old');
 elseif nreg==686
   regs=find_region_numbers_686('emea');
 else nreg=1:nreg;
@@ -34,7 +34,8 @@ region.path(:,:,1)=region.path(:,:,1)+0.5;
 region.path(:,:,2)=region.path(:,:,2)+1.0;
 
 figoffset=0;
-vars={'GluesNaturalForest','GluesDeforestation'};
+%vars={'GluesNaturalForest'};
+vars={'GluesDeforestation'};
 timelim=[3800 3700];
 %vars={'Density'};
 %vars={'Migration','Agricultures','CivStart','Climate'};
@@ -200,14 +201,17 @@ data=eval(['r.' r.variables{ivar}]);
    end 
   
    minmax=[min(min(min(data(regs,itstart:itend)))),max(max(max(data(regs,itstart:itend))))];
-   if exist('ylim','var') minmax=ylim; end
+   %if exist('ylim','var') minmax=ylim; end
    
-  cmap=colormap('hotcold');
+  ;%cmap=colormap('hotcold');
+  ncol=64;
   
-  
-  resvar=round(((data-minmax(1)))./(minmax(2)-minmax(1))*(length(cmap)-1))+1;
-  resvar(resvar>length(cmap))=length(cmap);
-
+  resvar=round(((data-minmax(1)))./(minmax(2)-minmax(1))*(ncol-1))+1;
+  resvar(resvar>64)=64;
+  resvar(resvar<1)=1;
+  contrastmap=flipud(contrast(resvar(regs,itstart:itend)));
+  greymap=flipud(colormap('gray'));
+  cmap=0.7*greymap+0.3*contrastmap;
   
   % Plot timeseries
   figure(ivar+nvar+figoffset); 
@@ -338,53 +342,42 @@ data=eval(['r.' r.variables{ivar}]);
     %it=it+1;
   end
   
-  %camlight;
-  %lighting gouraud;
-  
-  
-  %ax2=axes('Position',get(ax1,'Position'));
-  %set(gca,'XTickLabel','','YtickLabel','','Color','none');
-  
-  data2=r.GluesDeforestation;
-  cmap2=cl_yellow;
-   minmax2=[min(min(min(data2(regs,itstart:itend)))),max(max(max(data2(regs,itstart:itend))))];
-    resvar2=round(((data2-minmax2(1)))./(minmax2(2)-minmax2(1))*(length(cmap2)-1))+1;
-  resvar2(resvar2>length(cmap))=length(cmap2);
-
- 
-  
-  
-   for ireg=1:-length(regs)
-      reg=regs(ireg);
-      hp2(ireg)=m_patch(region.path(reg,1:pathlen(reg),1),region.path(reg,1:pathlen(reg),2),cmap2(resvar2(reg,itstart),:),'FaceAlpha',0.5);
-  end
-
-  
-  
-  %if (tend-tstart>10*r.tstep) 
+  %if (tend-tstart>10*r.tstep)
   mov=close(mov); 
   %end;
   
 end
 
+load('regionpath_685');
 
 figure(10);
-sces={'eme','ind','afr','chi','sea'};
+sces={'all','old','fsc','eme','ind','afr','chi','sea'};
 ns=length(sces);
 hold on;
 for is=1:ns
-  [regs,nreg,lonlim,latlim]=find_region_numbers(sces{is});
-  m_plot( [lonlim,fliplr(lonlim),lonlim(1)],...
+  if is==3
+      [regs,nreg,lonlim,latlim]=find_region_numbers('med');
+      regs=272
+  else
+      [regs,nreg,lonlim,latlim]=find_region_numbers(sces{is});
+  end 
+  if (is>3) m_plot( [lonlim,fliplr(lonlim),lonlim(1)],...
       [latlim(1) latlim(1) latlim(2) latlim(2) latlim(1)],'y-');
+  end
+  ar=region.area(regs)';
+  dc=naturalcarbon(regs,itend)-remainingcarbon(regs,itend);
+  tc=naturalcarbon(regs,itend);
+  
+  fprintf('%s %.2f mio km^2  / %.2f Gt\n',sces{is},sum(ar)/1E6,sum(dc.*ar)/1E7);
 end
 
 
-set(gcf,'Renderer','Painters');
-plot_multi_format(gcf,'deforestation_carbon_density');
-figure(9);
-set(gcf,'Renderer','Painters');
-plot_multi_format(gcf,'natural_carbon_density');
-
+for idovar=1:nvar
+  ivar=dovar(idovar);
+  figure(ivar);
+  set(gcf,'Renderer','Painters');
+  plot_multi_format(gcf,vars{idovar});
+end
 
 return;
 end

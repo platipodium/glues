@@ -3,11 +3,11 @@ cl_register_function();
 
     try
     set(plot,'PaperPositionMode','auto');
-    print('-depsc2',[basename '.eps']); % -r600
+    %print('-depsc2',[basename '.eps']); % -r600
     catch end;
     try
     set(plot,'PaperPositionMode','auto');
-    %print('-dpdf',[basename '.pdf']); % -r600
+    print('-dpdf',[basename '.pdf']); % -r600
     catch end;
     try
     set(plot,'PaperPositionMode','auto');
@@ -18,10 +18,13 @@ cl_register_function();
     %print('-dpsc2','-r150',[basename '.ps']); % -r600
     catch end;
     try 
-    print('-dpng','-r600',[basename '.png']);
+    %print('-dpng','-r600',[basename '.png']);
     catch end;
     try 
-    print('-djpeg','-r600',[basename '.jpeg']);
+    %print('-djpeg','-r600',[basename '.jpeg']);
+    catch end;
+    try 
+    print('-dtiff','-r600',[basename '.tiff']);
     catch end;
     
     try
