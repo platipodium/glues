@@ -33,7 +33,7 @@ vars={'Farming'}
 %vars={'Migration','Agricultures','CivStart','Climate'};
 %vars={'Agricultures','Migration'};
 mode='absolute';
-resultfilename='result_iiasaclimber_ref_all';
+%resultfilename='result_iiasaclimber_ref_all';
 resultfilename='results';
 
   for iarg=1:nargin 
@@ -66,7 +66,7 @@ resultfilename='results';
   
 if ~exist('lonlim','var') lonlim=[-15,42]; end
 if ~exist('latlim','var') latlim=[27,55]; end
-if ~exist('timelim','var') timelim=[4020,3980]; end;
+if ~exist('timelim','var') timelim=[6020,3980]; end;
 if ~exist('timeunit','var') timeunit='BP'; end;
 if exist('scenario','var')
     resultfilename=[resultfilename '_' scenario];
@@ -240,14 +240,6 @@ for idovar=1:nvar
  % title(sprint('%s (sum %f.1)',vars{ivar},sum(sum(data(regs,itend)))));
   hold off;
  
-   
-  % plot map
-  figure(ivar+figoffset); 
-  clf reset;
-  set(ivar,'DoubleBuffer','on');    
-  %set(ivar,'PaperOrientation','landscape');
-  set(ivar,'PaperType','A4');
-  %set(ivar,'Position',[442   188  607  442]);
   
   fd=fullfile(d.plot,'variable');
   if  ~exist(fd,'file')
@@ -270,6 +262,14 @@ for idovar=1:nvar
   color_sea=0.7*ones(1,3);
   color_land=0.8*ones(1,3);
     
+   
+  % plot map
+  figure(ivar+figoffset); 
+  clf reset;
+  set(ivar,'DoubleBuffer','on');    
+  %set(ivar,'PaperOrientation','landscape');
+  set(ivar,'PaperType','A4');
+  %set(ivar,'Position',[442   188  607  442]);
   clf;
   
   m_proj('equidistant','lon',lonlim,'lat',latlim);
@@ -336,8 +336,8 @@ for idovar=1:nvar
       hp(ireg)=m_patch(region.path(reg,1:pathlen(reg),1),region.path(reg,1:pathlen(reg),2),cc,'EdgeColor','none');
       h=hp(ireg);
       if (h<=0) continue; end
-      %alpha(h,resvar(reg,itstart)./64/1.6);
-      alpha(h,0);
+      alpha(h,resvar(reg,itstart)./64/1.6);
+      %alpha(h,0);
       %alpha(h,0.4);
       set(h,'ButtonDownFcn',@onclick,'UserData',squeeze(data(reg,itstart:itend)));
       ftime=find(data(reg,itstart:itend)>=threshold);
