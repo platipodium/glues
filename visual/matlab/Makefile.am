@@ -114,13 +114,18 @@ showvar.m \
 neolithicsites.mat \
 regionpath.mat\
 rainbow.m \
-cl_def_clustervalue.m \
 cl_calc_cluster.m \
+cl_def_clustervalue.m \
+cl_dump_landcells.m \ 
+cl_dump_result.m \
+cl_dump_regionpath.m \
 cl_get_iiasa.m \
 cl_npp_lieth.m \
 cl_read_iiasa.m  \
 clp_cluster.m \
-clp_iiasa.m
+clp_iiasa.m \
+clp_trajectories.m \
+plot_variable_deforestation
 
 
 
