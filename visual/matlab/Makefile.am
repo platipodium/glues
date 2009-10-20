@@ -125,7 +125,7 @@ cl_read_iiasa.m  \
 clp_cluster.m \
 clp_iiasa.m \
 clp_trajectories.m \
-plot_variable_deforestation
+plot_variable_deforestation.m
 
 
 
