@@ -14,7 +14,7 @@ retdata=NaN;
 load(['regionpath_' num2str(nreg)]);
 
 % Choose 'emea' or 'China' or 'World'
-[regs,nreg,lonlim,latlim]=find_region_numbers('emea');
+[regs,nreg,lonlim,latlim]=find_region_numbers('all');
 
 
 if ~exist('region','var')
@@ -26,7 +26,7 @@ region.path(:,:,2)=region.path(:,:,2)+1.0;
 
 figoffset=0;
 
-vars={'Farming'}
+vars={'Density'}
 %vars={'Technology','Farming','Climate'};
 
 %vars={'Density'};
@@ -66,7 +66,7 @@ resultfilename='results';
   
 if ~exist('lonlim','var') lonlim=[-15,42]; end
 if ~exist('latlim','var') latlim=[27,55]; end
-if ~exist('timelim','var') timelim=[6020,3980]; end;
+if ~exist('timelim','var') timelim=[12000,3000]; end;
 if ~exist('timeunit','var') timeunit='BP'; end;
 if exist('scenario','var')
     resultfilename=[resultfilename '_' scenario];
@@ -441,7 +441,7 @@ end
     
     if mod(t,100)==0
     %mod(it,4)==1
-    plot_multi_format(gcf,plotname);
+    %plot_multi_format(gcf,plotname);
     end
     
     f=getframe(gcf);

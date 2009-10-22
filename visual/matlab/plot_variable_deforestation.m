@@ -18,7 +18,7 @@ load(['regionpath_' num2str(nreg)]);
 %latlim=[-60,70];lonlim=[-180,180];
 
 if nreg==685 
-  [regs,nreg,lonlim,latlim]=find_region_numbers('old');
+  [regs,nreg,lonlim,latlim]=find_region_numbers('all');
 elseif nreg==686
   regs=find_region_numbers_686('emea');
 else nreg=1:nreg;
@@ -35,14 +35,14 @@ region.path(:,:,2)=region.path(:,:,2)+1.0;
 
 figoffset=0;
 %vars={'GluesNaturalForest'};
-vars={'GluesDeforestation'};
-timelim=[3800 3700];
+vars={'GluesDeforestation','Technology','Density'};
+timelim=[7800 3700];
 %vars={'Density'};
 %vars={'Migration','Agricultures','CivStart','Climate'};
 %vars={'Agricultures','Migration'};
 mode='absolute';
-resultfilename='result_iiasaclimber_ref_all';
-%resultfilename='results';
+%resultfilename='result_iiasaclimber_ref_all';
+resultfilename='results';
 
   for iarg=1:nargin 
     if all(isletter(varargin{iarg}))
@@ -203,7 +203,6 @@ data=eval(['r.' r.variables{ivar}]);
    minmax=[min(min(min(data(regs,itstart:itend)))),max(max(max(data(regs,itstart:itend))))];
    %if exist('ylim','var') minmax=ylim; end
    
-  ;%cmap=colormap('hotcold');
   ncol=64;
   
   resvar=round(((data-minmax(1)))./(minmax(2)-minmax(1))*(ncol-1))+1;
@@ -211,7 +210,8 @@ data=eval(['r.' r.variables{ivar}]);
   resvar(resvar<1)=1;
   contrastmap=flipud(contrast(resvar(regs,itstart:itend)));
   greymap=flipud(colormap('gray'));
-  cmap=0.7*greymap+0.3*contrastmap;
+  %cmap=0.7*greymap+0.3*contrastmap;
+  cmap=colormap('hotcold');
   
   % Plot timeseries
   figure(ivar+nvar+figoffset); 
@@ -333,7 +333,7 @@ data=eval(['r.' r.variables{ivar}]);
     plotname=[plotname sprintf('%05d_%d',12000-t,t)];
    
     
-    if mod(it,4)==1 plot_multi_format(gcf,plotname); end
+    %if mod(it,4)==1 plot_multi_format(gcf,plotname); end
     f=getframe(gcf);
      %if (abs(tend-tstart)>10*r.tstep) mov=addframe(mov,f); end;
     mov=addframe(mov,f);
@@ -357,7 +357,7 @@ hold on;
 for is=1:ns
   if is==3
       [regs,nreg,lonlim,latlim]=find_region_numbers('med');
-      regs=272
+      regs=272;
   else
       [regs,nreg,lonlim,latlim]=find_region_numbers(sces{is});
   end 

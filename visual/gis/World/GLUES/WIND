@@ -1,0 +1,18 @@
+proj:       1
+zone:       0
+north:      90
+south:      -90
+east:       180
+west:       -180
+cols:       720
+rows:       360
+e-w resol:  0.5
+n-s resol:  0.5
+top:        1
+bottom:     0
+cols3:      1
+rows3:      1
+depths:     1
+e-w resol3: 1
+n-s resol3: 1
+t-b resol:  1
