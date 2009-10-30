@@ -1,3 +1,5 @@
+subdirs=control src include
+
 
 # Target Operating System
 # Change this according to your needs
