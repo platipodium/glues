@@ -18,7 +18,7 @@ load(['regionpath_' num2str(nreg)]);
 %latlim=[-60,70];lonlim=[-180,180];
 
 if nreg==685 
-  [regs,nreg,lonlim,latlim]=find_region_numbers('all');
+  [regs,nreg,lonlim,latlim]=find_region_numbers('old');
 elseif nreg==686
   regs=find_region_numbers_686('emea');
 else nreg=1:nreg;
@@ -35,14 +35,20 @@ region.path(:,:,2)=region.path(:,:,2)+1.0;
 
 figoffset=0;
 %vars={'GluesNaturalForest'};
-vars={'GluesDeforestation','Technology','Density'};
-timelim=[7800 3700];
+% Figure 2 in paper
+vars={'Technology','Density'}; timelim=[4000 3980];
+vars={'GluesCropfraction','Cropfraction'}; timelim=[4000 3980];
+
+%vars={'GluesNaturalForest','GluesDeforestation','Technology','Density'};
+%vars={'GluesNaturalForest','GluesDeforestation','Technology','Density'};
+%vars={'GluesNaturalForest','GluesDeforestation','Technology','Density'};
+timelim=[4000 3980];
 %vars={'Density'};
 %vars={'Migration','Agricultures','CivStart','Climate'};
 %vars={'Agricultures','Migration'};
 mode='absolute';
-%resultfilename='result_iiasaclimber_ref_all';
-resultfilename='results';
+resultfilename='result_iiasaclimber_ref_all';
+%resultfilename='results';
 
   for iarg=1:nargin 
     if all(isletter(varargin{iarg}))
@@ -134,7 +140,7 @@ for ivar=1:nvar
               dovar(ivar)=length(r.variables)+1;
            r.variables{dovar(ivar)}='GluesCropfraction';
            load('hyde_glues_cropfraction.mat');
-           r.GluesCropfraction=cropfraction;
+           r.GluesCropfraction=100*cropfraction;
           
            case 'GluesNaturalForest'
               dovar(ivar)=length(r.variables)+1;
@@ -201,17 +207,18 @@ data=eval(['r.' r.variables{ivar}]);
    end 
   
    minmax=[min(min(min(data(regs,itstart:itend)))),max(max(max(data(regs,itstart:itend))))];
-   %if exist('ylim','var') minmax=ylim; end
+   if exist('ylim','var') minmax=ylim; end
    
-  ncol=64;
+  ncol=10;
   
   resvar=round(((data-minmax(1)))./(minmax(2)-minmax(1))*(ncol-1))+1;
-  resvar(resvar>64)=64;
+  resvar(resvar>ncol)=ncol;
   resvar(resvar<1)=1;
-  contrastmap=flipud(contrast(resvar(regs,itstart:itend)));
-  greymap=flipud(colormap('gray'));
+  contrastmap=flipud(contrast(resvar(regs,itstart:itend),ncol));
+  greymap=flipud(gray(ncol));
   %cmap=0.7*greymap+0.3*contrastmap;
-  cmap=colormap('hotcold');
+  %cmap=colormap('hotcold');
+  cmap=greymap;
   
   % Plot timeseries
   figure(ivar+nvar+figoffset); 
@@ -219,12 +226,15 @@ data=eval(['r.' r.variables{ivar}]);
    
   hold on;
   set(gca,'XDir','reverse');
+  if minmax(2)==minmax(1) minmax(2)=minmax(1)+1; end
   set(gca,'YLim',minmax);
   ax1=gca;
 
   for ireg=1:length(regs)
     reg=regs(ireg);
-    plot(r.time(itstart:itend),squeeze(data(reg,itstart:itend)),'k-','color',cmap(resvar(reg,itstart),:));
+    colval=resvar(reg,itstart);
+    if isnan(colval) continue; end
+    plot(r.time(itstart:itend),squeeze(data(reg,itstart:itend)),'k-','color',cmap(colval,:));
   end
   p1=plot(r.time(itstart:itend),squeeze(data(regs(1),itstart:itend)));
   set(p1,'Tag','timeseries','LineWidth',4);
@@ -334,6 +344,7 @@ data=eval(['r.' r.variables{ivar}]);
    
     
     %if mod(it,4)==1 plot_multi_format(gcf,plotname); end
+    plot_multi_format(gcf,plotname);
     f=getframe(gcf);
      %if (abs(tend-tstart)>10*r.tstep) mov=addframe(mov,f); end;
     mov=addframe(mov,f);
@@ -350,7 +361,8 @@ end
 
 load('regionpath_685');
 
-figure(10);
+if exist('naturalcarbon','var') & strcmp(vars{1},'GluesDeforestation');
+%figure(10);
 sces={'all','old','fsc','eme','ind','afr','chi','sea'};
 ns=length(sces);
 hold on;
@@ -362,15 +374,18 @@ for is=1:ns
       [regs,nreg,lonlim,latlim]=find_region_numbers(sces{is});
   end 
   if (is>3) m_plot( [lonlim,fliplr(lonlim),lonlim(1)],...
-      [latlim(1) latlim(1) latlim(2) latlim(2) latlim(1)],'y-');
+      [latlim(1) latlim(1) latlim(2) latlim(2) latlim(1)],'k:','linewidth',2);
   end
+  
+  %m_plot( [lonlim,fliplr(lonlim),lonlim(1)],[latlim(1) latlim(1) latlim(2) latlim(2) latlim(1)],'k--','linewidth',3);
+
   ar=region.area(regs)';
   dc=naturalcarbon(regs,itend)-remainingcarbon(regs,itend);
   tc=naturalcarbon(regs,itend);
   
   fprintf('%s %.2f mio km^2  / %.2f Gt\n',sces{is},sum(ar)/1E6,sum(dc.*ar)/1E7);
 end
-
+end
 
 for idovar=1:nvar
   ivar=dovar(idovar);

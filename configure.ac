@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_PREREQ(2.59)
+AC_PREREQ(2.64)
 
 dnl Versioning: please increase micro version at each running version
 
@@ -8,13 +8,13 @@ m4_define(GLUES_MINOR_VERSION,1)
 m4_define(GLUES_MAJOR_VERSION,1)
 m4_define(GLUES_VERSION,GLUES_MAJOR_VERSION.GLUES_MINOR_VERSION.GLUES_MICRO_VERSION)
 
-AC_INIT([GLUES],GLUES_VERSION,[carsten.lemmen@gkss.de])
+AC_INIT([GLUES],[GLUES_VERSION],[carsten.lemmen@gkss.de])
 
 dnl configuring options
 
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_SRCDIR([src/Glues.cc])
-AM_CONFIG_HEADER([config.h])
+AC_CONFIG_HEADERS([config.h])
 
 dnl defining version and package
 ALL_LINGUAS="en de"
@@ -34,10 +34,10 @@ else
 fi
 
 dnl Check for programs	
-AC_PROG_LIBTOOL
+LT_INIT
 AC_PROG_CXX
 #AX_GXX_VERSION
-AC_LANG_CPLUSPLUS
+AC_LANG([C++])
 AC_PROG_CC # for region package
 
 dnl Check for multiprocessing

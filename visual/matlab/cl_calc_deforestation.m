@@ -4,8 +4,8 @@ cl_register_function;
 
 hydefile='region_hyde_685.mat';
 climatefile='region_iiasa_685.mat';
-%resultfilename='result_iiasaclimber_ref_all.mat';
-resultfilename='results.mat';
+resultfilename='result_iiasaclimber_ref_all.mat';
+%resultfilename='results.mat';
 
 hyde=load(hydefile);
 hyde=hyde.climate;
