@@ -24,7 +24,7 @@ cl_register_function();
     %print('-djpeg','-r600',[basename '.jpeg']);
     catch end;
     try 
-    print('-dtiff','-r600',[basename '.tiff']);
+   % print('-dtiff','-r600',[basename '.tiff']);
     catch end;
     
     try
