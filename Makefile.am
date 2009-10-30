@@ -19,9 +19,15 @@
 ## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 ## 02110-1301, USA.
 
+LIBTOOL_DEPS = @LIBTOOL_DEPS@
+
 ACLOCAL_AMFLAGS = -I config
 
 EXTRA_DIST = ChangeLog run.sh bootstrap BUGS
 
 SUBDIRS = src config examples variation visual doc #po intl
+
+# Rule for rebuilding libtool if necessary
+libtool: $(LIBTOOL_DEPS)
+	$(SHELL) ./config.status --recheck
 

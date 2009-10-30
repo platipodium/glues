@@ -33,8 +33,12 @@ else
   echo "Disabling debug support"
 fi
 
-dnl Check for programs	
-LT_INIT
+dnl Check for libtool and changes to libtool
+dnl disabling shared libs speeds up compilation significantly
+LT_INIT([disable-shared])
+AC_SUBST([LIBTOOL_DEPS])
+
+dnl Check for programs
 AC_PROG_CXX
 #AX_GXX_VERSION
 AC_LANG([C++])
