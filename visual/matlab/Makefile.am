@@ -1,6 +1,7 @@
 # visual/matlab/ Makefile for GLUES.
 
-# Copyright (C) 2007,2008 Carsten Lemmen, GKSS-Forschungszentrum Geesthacht GmbH
+# Copyright (C) 2007,2008,2009
+# Carsten Lemmen, GKSS-Forschungszentrum Geesthacht GmbH
 
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -121,11 +122,9 @@ cl_dump_result.m \
 cl_dump_regionpath.m \
 cl_get_iiasa.m \
 cl_npp_lieth.m \
-cl_read_iiasa.m  \
+cl_read_iiasa.m \
 clp_cluster.m \
 clp_iiasa.m \
 clp_trajectories.m \
 plot_variable_deforestation.m
-
-
 

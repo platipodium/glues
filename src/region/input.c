@@ -12,50 +12,50 @@ char logfile[8]="reg.log";
 /******************************************/
 void read_map(char* filename, int binout)
 {
-int ix,iy,d,dd,in;
-float lat,lon,val[12],mval;
-char fbinname[99];
-FILE *sp,*sp2;
-float min,max,rat;
+  int ix,iy,d,dd,in;
+  float lat,lon,val[12],mval;
+  char fbinname[99];
+  FILE *sp,*sp2;
+  float min,max,rat;
 
-for(d=0;d<DIMW1;d++)
-   for(dd=0;dd<DIMW2;dd++)
-     domap[d][dd]=0;  /* background (sea) value */
-sp=fopen(filename,"r");
-in=1;dd=0;min=9E9,max=0;
+  for(d=0;d<DIMW1;d++)
+    for(dd=0;dd<DIMW2;dd++)
+      domap[d][dd]=0;  /* background (sea) value */
+  sp=fopen(filename,"r");
+  in=1;dd=0;min=9E9,max=0;
+
 /******************************************/
 /*   read values for min/max caclulation  */
-/******************************************/
-while(in!=EOF)
+
+  while(in!=EOF)
   {
-  in=fscanf(sp,"%f %f ",&lat,&lon);  /* coordinates */
-/*    printf("%1.1f %1.1f\t",lat,lon); */
-  if(in!=EOF)
+    in=fscanf(sp,"%f %f ",&lat,&lon);  /* coordinates */
+    /*    printf("%1.1f %1.1f\t",lat,lon); */
+    if(in!=EOF)
     {
-    for(d=0;d<12;d++)
-	fscanf(sp,"%f ",&val[d]); /* read monthly values */
-    for(d=0,mval=0;d<12;d++)
-       mval+=val[d];   /* calc annual mean */
-    mval/=12;
-    if(mval<min) min=mval; /* calc minimum for renormalization */
-    if(mval>max) max=mval;
+      for(d=0;d<12;d++)
+	    fscanf(sp,"%f ",&val[d]); /* read monthly values */
+      for(d=0,mval=0;d<12;d++)
+        mval+=val[d];   /* calc annual mean */
+      mval/=12;
+      if(mval<min) min=mval; /* calc minimum for renormalization */
+      if(mval>max) max=mval;
     }
   }
-fclose(sp);
+  fclose(sp);
 
-/*********************************/
-/*      2nd read for matrix      */
-/*********************************/
-sp=fopen(filename,"r");
-in=1;dd=0;
-rat=intl*0.99/(max-min);
-printf("min=%1.1f max=%1.1f rat=%1.2f in %s \n",min,max,rat,filename);
+  /*********************************/
+  /*      2nd read for matrix      */
+  /*********************************/
+  sp=fopen(filename,"r");
+  in=1;dd=0;
+  rat=intl*0.99/(max-min);
+  printf("min=%1.1f max=%1.1f rat=%1.2f in %s \n",min,max,rat,filename);
 
-while(in!=EOF)
-  if((in=fscanf(sp,"%f %f ",&lat,&lon))!=EOF)
-    {
+  while(in!=EOF) if((in=fscanf(sp,"%f %f ",&lat,&lon))!=EOF)
+  {
     for(d=0;d<12;d++)
-	in=fscanf(sp,"%f ",&val[d]); /* read monthly values */
+	  in=fscanf(sp,"%f ",&val[d]); /* read monthly values */
     for(d=0,mval=0;d<12;d++)
        mval+=val[d];   /* calc annual mean */
     mval/=12;
@@ -67,25 +67,27 @@ while(in!=EOF)
     domap[ix%DIMW1][iy%DIMW2]=1+(unsigned int)((mval-min)*rat)%intl;;
     if(dd++%500==-10)
       printf("%d %d %d %1.2f \t%d\n",dd,ix,iy,mval,domap[ix%DIMW1][iy%DIMW2]);
-    }
-printf("reading %s ready ..\n",filename);
-fclose(sp);
-
-/***********************************************/
-/*  write selected region data to binary file  */
-/***********************************************/
-if(binout==1)
-  {
-  strcpy(fbinname,filename);
-  strcat(fbinname,".bin");
-  printf("writing %s  ...\t",fbinname);
-
-  sp=fopen(fbinname,"w");
-  fwrite(domap,DIMW1*DIMW2,sizeof(unsigned int),sp);
-  fclose(sp);
   }
-printf("ready \n",fbinname);
+  printf("reading %s ready ..\n",filename);
+  fclose(sp);
+
+  /***********************************************/
+  /*  write selected region data to binary file  */
+  /***********************************************/
+  if(binout==1)
+  {
+    strcpy(fbinname,filename);
+    strcat(fbinname,".bin");
+    printf("writing %s  ...\t",fbinname);
+
+    sp=fopen(fbinname,"w");
+    fwrite(domap,DIMW1*DIMW2,sizeof(unsigned int),sp);
+    fclose(sp);
+  }
+  printf("ready \n",fbinname);
 }
+
+
 /******************************************/
 /*     read climber-ascii file     */
 /******************************************/
@@ -531,17 +533,19 @@ void out_region_npp(unsigned long max) {
   int y,d,dd,dl,dn,da,dx,dy,ds,r_num[NPOP];
   double r_npp[NPOP],r_gdd[NPOP];
   FILE *sp,*sp2,*sp3;
-  char fname[19]="reg_npp_80_000.dat";
-  char fmapname[19]="reg_gdd_80_000.dat";
+  char fname[21]="reg_npp_XX_00000.dat";
+  char fmapname[21]="reg_gdd_XX_00000.dat";
 
    /* ---------------------------------- */
   /*    open region & evaluation file   */
   /* ---------------------------------- */
-d=(int)(inum*0.01);
-fname[11]=48+d%10; dd=inum-d*100;
-fname[12]=48+(int)(dd*0.1)%10,fname[13]=48+dd%10;
-strncpy(&fmapname[11],&fname[11],3);
-printf("writing %d region npp and gdd into\n\t%s %s... \n",inum,fname,fmapname);
+  d=(int)(inum*0.01);
+  fname[11]=48+d%10; dd=inum-d*100;
+  fname[12]=48+(int)(dd*0.1)%10,fname[13]=48+dd%10;
+  
+  
+  strncpy(&fmapname[11],&fname[11],5);
+  printf("writing %d region npp and gdd into\n\t%s %s... \n",inum,fname,fmapname);
 if((sp=fopen(fname,"w"))<0)
    printf("error opening %s\n",fname);
 if((sp2=fopen(fmapname,"w"))<0)

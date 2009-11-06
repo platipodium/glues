@@ -216,7 +216,7 @@ fi
 
 
 dnl Remove also many MACROS (AC_DEFINE) which are unused by GLUES
-dnl and polluate (and slow down because libtool has to parse them) the build.
+dnl and pollute (and slow down because libtool has to parse them) the build.
 if test -f confdefs.h; then
   sed '/#define PACKAGE_/d' <confdefs.h >confdefs.tmp
   sed '/#define HAVE_STRING/d' <confdefs.tmp >confdefs.h
@@ -238,9 +238,12 @@ fi
 
 
 AC_CONFIG_FILES([Makefile 
-  src/Makefile src/region/Makefile src/sisi/Makefile
+  src/Makefile src/region/Makefile 
   src/test/Makefile config/Makefile
   src/variation/Makefile
+  src/sisi/Makefile
+  src/sisi/src/Makefile
+  src/sisi/include/Makefile
   examples/Makefile examples/setup/Makefile 
   examples/setup/938/Makefile
   examples/setup/939/Makefile
