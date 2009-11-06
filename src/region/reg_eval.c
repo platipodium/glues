@@ -64,8 +64,9 @@ unsigned long di,im[NDIR],*rni,rnin,lat,lon,ar,sar,maxn,maxb;
 double sinfl,imn[NDIR],*rnf,bl;
 double weighta[9]={0.0,1,1,1,1,0.5,0.5,0.5,0.5};
 FILE *sp,*sp2,*sp3;
-char fname[19]="regions_80_000.dat";
-char fmapname[19]="mapping_80_000.dat",fmlname[23];
+char fname[21]="regions_80_00000.dat";
+char fmapname[21]="mapping_80_00000.dat",fmlname[25];
+char fevalname[21];
 
 memcpy(newocc,occ,DIM1*DIM2*sizeof(unsigned int));
 max+=2;
@@ -102,34 +103,36 @@ buf=(int *)malloc((maxb+1)*sizeof(int));
   /* ---------------------------------- */
   /*    open region & evaluation file   */
   /* ---------------------------------- */
-if(run>=0)  {
-   d=(int)(inew*0.01);
-    fname[11]=48+d%10; dd=inew-d*100;
-    fname[12]=48+(int)(dd*0.1)%10,fname[13]=48+dd%10;
+  if(run>=0)  
+  {
+    sprintf(fname,"regions_XX_%05d.dat",inew);
     printf("writing regions into %s ... (%d)\n",fname,run);
-    if((sp=fopen(fname,"w"))<0)
+    if((sp=fopen(fname,"w"))<0) {
       printf("error opening %s\n",fname);
-    sp2=fopen("regeval.dat","a");
+    }
+    
+    sprintf(fevalname,"regeval_XX_%05d.dat",inew);
+    sp2=fopen(fevalname,"a");
   }
 
   /* ---------------------------------- */
   /*    open region mapping      file   */
   /* ---------------------------------- */
-if(run>=0)  {
-   d=(int)(inew*0.01);
-   fmapname[11]=48+d%10; dd=inew-d*100;
-   fmapname[12]=48+(int)(dd*0.1)%10,fmapname[13]=48+dd%10;
-   strcpy(fmlname,fmapname); strcat(fmlname,".len");
-   printf("writing regionlength into %s ... \n",fmlname);
-   sp3=fopen(fmlname,"w");
-   for(d=0;d<inew;d++)
-     buf[d]=pop[old_ind[d]].num;
-   fwrite(buf,inew,sizeof(int),sp3);
-   fclose(sp3);
-   printf("writing region mapping into %s ... (%d)\n",fmapname,run);
+  if(run>=0)  
+  {
+    sprintf(fmapname,"mapping_XX_%05d.dat",inew);
+    strcpy(fmlname,fmapname); 
+    strcat(fmlname,".len");
+    printf("writing regionlength into %s ... \n",fmlname);
+    sp3=fopen(fmlname,"w");
+    for(d=0;d<inew;d++)
+      buf[d]=pop[old_ind[d]].num;
+    fwrite(buf,inew,sizeof(int),sp3);
+    fclose(sp3);
+   
+    printf("writing region mapping into %s ... (%d)\n",fmapname,run);
     if((sp3=fopen(fmapname,"w"))<0)
       printf("error opening %s\n",fmapname);
-
   }
 
 
@@ -137,57 +140,55 @@ if(run>=0)  {
   /*      loop over remaining regions     */
   /*      to aggregate regions            */
   /* ------------------------------------ */
-for(dd=dr=sar=0;dd<inew;dd++)
-   {
-   d=old_ind[dd];
-   find_regcell(d);/* returns position of an arbitrary cell of region */
+  for(dd=dr=sar=0;dd<inew;dd++)
+  {
+    d=old_ind[dd];
+    find_regcell(d);/* returns position of an arbitrary cell of region */
 /*if(dd==18) pos[0]=55,pos[1]=375;*/
-   six[0]=dx=pos[0],siy[0]=dy=pos[1];
-   occ[dx][dy]=dd+1;
+    six[0]=dx=pos[0],siy[0]=dy=pos[1];
+    occ[dx][dy]=dd+1;
 
    /* -------------------------- */
    /*   save mapping info        */
    /* -------------------------- */
 /*    fprintf(sp3,"\n%d %d",dd,dx*DIM2+dy);*/
-   buf[0]=dx*DIM2+dy;
+    buf[0]=dx*DIM2+dy;
 
-   if(pop[d].num<ncrit*0.5)
+    if(pop[d].num<ncrit*0.5)
       printf("%d %d\t%d %d\t",dd,pop[d].num,dx,dy);
 
-   lat=lon=0;
-   dn=db=1;dn0=rnin=0;
-   /* ------------------------------------ */
-   /*   loop to find all connected cells   */
-   /* ------------------------------------ */
-   while(dn>dn0 && dn<max)
-     for(dnd=dn0,dn0=dn;dnd<dn0;dnd++)
-       for(dx=six[dnd],dy=siy[dnd],da=1;da<9;da++)  /* scan all neighbors */
-	  {
-	  dx1=(dx+dirx[da]+DIM1)%DIM1;  /* x/y coordinate of neighbor */
-	  dy1=(dy+diry[da]+DIM2)%DIM2;
-	  if((di=occ[dx1][dy1])>0)
-	    if(newocc[dx1][dy1]!=99999+d)
-	       if(di==d+1)              /* found region member */
-		 {
-		 /* -------------------------- */
-		 /*   mark and add new cells   */
-		 /* -------------------------- */
-		  occ[dx1][dy1]=dd+1;
-		  newocc[dx1][dy1]=99999+d;
-		  six[dn]=dx1,siy[dn++]=dy1;
-		  if(dn>max) printf("calcreg: dn = %d \t%d %d\t%d %d\n",dn--,dx,dy,dx1,dy1);
-		  lat+=dx1;               /* average position */
-		  lon+=dy1;
+    lat=lon=0;
+    dn=db=1;dn0=rnin=0;
+    /* ------------------------------------ */
+    /*   loop to find all connected cells   */
+    /* ------------------------------------ */
+    while(dn>dn0 && dn<max)
+      for(dnd=dn0,dn0=dn;dnd<dn0;dnd++)
+        for(dx=six[dnd],dy=siy[dnd],da=1;da<9;da++)  /* scan all neighbors */
+	    {
+	    dx1=(dx+dirx[da]+DIM1)%DIM1;  /* x/y coordinate of neighbor */
+	    dy1=(dy+diry[da]+DIM2)%DIM2;
+	    if((di=occ[dx1][dy1])>0)
+	      if(newocc[dx1][dy1]!=99999+d)
+	        if(di==d+1)              /* found region member */
+		    {
+		    /* -------------------------- */
+		    /*   mark and add new cells   */
+		    /* -------------------------- */
+		      occ[dx1][dy1]=dd+1;
+		      newocc[dx1][dy1]=99999+d;
+		      six[dn]=dx1,siy[dn++]=dy1;
+		      if(dn>max) printf("calcreg: dn = %d \t%d %d\t%d %d\n",dn--,dx,dy,dx1,dy1);
+		      lat+=dx1;               /* average position */
+		      lon+=dy1;
 
 	    /* -------------------------- */
 	    /*   save mapping info        */
 	    /* -------------------------- */
-		  buf[db++]=dx1*DIM2+dy1;
-		  if(pop[d].num<ncrit*0.5)
-       			printf("%d %d\t",dx,dy);
-
-		  }
-		else                      /* average neighbor */
+		      buf[db++]=dx1*DIM2+dy1;
+		      if(pop[d].num<ncrit*0.5) printf("%d %d\t",dx,dy);
+		     }
+		     else                      /* average neighbor */
 		  if(di<dd+1)
 		    {
 		    for(dni=found=0;dni<rnin;dni++)

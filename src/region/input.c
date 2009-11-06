@@ -539,32 +539,30 @@ void out_region_npp(unsigned long max) {
    /* ---------------------------------- */
   /*    open region & evaluation file   */
   /* ---------------------------------- */
-  d=(int)(inum*0.01);
-  fname[11]=48+d%10; dd=inum-d*100;
-  fname[12]=48+(int)(dd*0.1)%10,fname[13]=48+dd%10;
   
+  sprintf(fname,"reg_npp_XX_%05d.dat",inum);
+  sprintf(fmapname,"reg_gdd_XX_%05d.dat",inum);
   
-  strncpy(&fmapname[11],&fname[11],5);
   printf("writing %d region npp and gdd into\n\t%s %s... \n",inum,fname,fmapname);
 if((sp=fopen(fname,"w"))<0)
    printf("error opening %s\n",fname);
 if((sp2=fopen(fmapname,"w"))<0)
    printf("error opening %s\n",fmapname);
 
-for(y=0;y<23;y++)
+  for(y=0;y<23;y++)
   {
-  /* --------------------------------------------- */
-  /*     clear npp and gdd stores of regions       */
-  /* --------------------------------------------- */
-  for(d=0;d<inum;d++) r_npp[d]=r_gdd[d]=r_num[d]=0;
+    /* --------------------------------------------- */
+    /*     clear npp and gdd stores of regions       */
+    /* --------------------------------------------- */
+    for(d=0;d<inum;d++) r_npp[d]=r_gdd[d]=r_num[d]=0;
   
-  /* ----------------------------------------- */
-  /*     read and distribute npp and gdd       */
-  /* ----------------------------------------- */
-  read_gluesclimate_bin("gluesclimate.bin",y,0);
-  for(dx=0;dx<dlat;dx++)
-     for(dy=0;dy<dlon;dy++)
-       if((d=occ[dx][dy]-1)>=0)
+    /* ----------------------------------------- */
+    /*     read and distribute npp and gdd       */
+    /* ----------------------------------------- */
+    read_gluesclimate_bin("gluesclimate.bin",y,0);
+    for(dx=0;dx<dlat;dx++)
+      for(dy=0;dy<dlon;dy++)
+        if((d=occ[dx][dy]-1)>=0)
          {
          r_npp[d]+=npp_c[dx][dy];
          r_gdd[d]+=gdd_c[dx][dy];
@@ -579,14 +577,14 @@ for(y=0;y<23;y++)
       if(r_num[d]!=pop[d].num && y==0)
         printf("reg %d num differ %d %d\n",d,r_num[d],pop[d].num);
 
-    fprintf(sp,"%4.1f ",r_npp[d]/r_num[d]);
-    fprintf(sp2,"%3.1f ",r_gdd[d]/r_num[d]);
+      fprintf(sp,"%4.1f ",r_npp[d]/r_num[d]);
+      fprintf(sp2,"%3.1f ",r_gdd[d]/r_num[d]);
     }
-  fprintf(sp,"\n");
-  fprintf(sp2,"\n");
+    fprintf(sp,"\n");
+    fprintf(sp2,"\n");
   }
-fclose(sp);
-fclose(sp2);
+  fclose(sp);
+  fclose(sp2);
 }
 
 /* ---------------------------------------------------------------------*/
