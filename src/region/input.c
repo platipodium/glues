@@ -596,21 +596,21 @@ fclose(sp2);
 /**********************************/
 void init_log(void)
 {
-FILE *sp;
-sp=fopen(logfile,"w");
-fclose(sp);
-sp=fopen("regeval.dat","w");
-fclose(sp);
+  FILE *sp;
+  sp=fopen(logfile,"w");
+  fclose(sp);
+  sp=fopen("regeval.dat","w");
+  fclose(sp);
 
-/*----------------------------------*/
-/*     initial control settings     */
-/*----------------------------------*/
-/*first_xcall=1;*/
-intl=(long)(pow(256,sizeof(unsigned int)))-2;
-if( (dlat=lat2-lat1)!=DIM1 || (dlon=lon2-lon1)!=DIM2 )
-  printf("error:check boundaries %d=%d %d=%d?\n",dlat,DIM1,dlon,DIM2);
-
-dfmap=(unsigned char*)malloc(dlat*dlon*3*sizeof(unsigned char));
+  /*----------------------------------*/
+  /*     initial control settings     */
+  /*----------------------------------*/
+  /*first_xcall=1;*/
+  intl=(long)(pow(256,sizeof(unsigned int)))-2;
+  if( (dlat=lat2-lat1)!=DIM1 || (dlon=lon2-lon1)!=DIM2 ) {
+    printf("error:check boundaries %d=%d %d=%d?\n",dlat,DIM1,dlon,DIM2);
+  }
+  dfmap=(unsigned char*)malloc(dlat*dlon*3*sizeof(unsigned char));
 }
 
 /**********************************/
@@ -618,8 +618,8 @@ dfmap=(unsigned char*)malloc(dlat*dlon*3*sizeof(unsigned char));
 /**********************************/
 void write_log(char *mes, int num)
 {
-FILE *sp;
-sp=fopen(logfile,"a");
-fprintf(sp,"%s: %d\n",mes,num);
-fclose(sp);
+  FILE *sp;
+  sp=fopen(logfile,"a");
+  fprintf(sp,"%s: %d\n",mes,num);
+  fclose(sp);
 }
