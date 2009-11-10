@@ -2,7 +2,7 @@
 comment Scenario specific numbers and file names
 int	CoastRegNo	0
 comment Dateipfad fuer Eingabe
-string	datapath	"@abs_builddir/examples/setup/685/"
+string	datapath	"@abs_top_builddir@/examples/setup/685/"
 comment Dateiname fuer Eingabe
 string	regiondata	"regions_80_685.dat"
 string	mappingdata	"mapping_80_685.dat"
