@@ -237,12 +237,13 @@ if test -f confdefs.h; then
 fi
 
 
-AC_CONFIG_FILES([Makefile 
+AC_CONFIG_FILES([Makefile  run.sh
   src/Makefile src/region/Makefile 
   src/test/Makefile config/Makefile
   src/variation/Makefile
   src/sisi/Makefile
   src/sisi/src/Makefile
+  src/patch/Makefile
   src/sisi/include/Makefile
   examples/Makefile examples/setup/Makefile 
   examples/setup/938/Makefile
