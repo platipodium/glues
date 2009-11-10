@@ -248,10 +248,13 @@ AC_CONFIG_FILES([Makefile  run.sh
   examples/Makefile examples/setup/Makefile 
   examples/setup/938/Makefile
   examples/setup/939/Makefile
-  examples/setup/685/Makefile examples/results/Makefile
+  examples/setup/685/Makefile
+  examples/results/Makefile
   examples/results/685/Makefile
   examples/results/938/Makefile
   examples/results/939/Makefile
+  examples/simulations/685/lbk.sce
+  examples/simulations/685/lbk.sim
   examples/simulations/Makefile examples/simulations/685/Makefile
   examples/simulations/938/Makefile
   examples/simulations/test_new_event/Makefile

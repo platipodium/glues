@@ -1,6 +1,7 @@
-# Main Makefile for GLUES.
+# Makefile for GLUES.
 
-# Copyright (C) 2007 Carsten Lemmen, GKSS-Forschungszentrum Geesthacht GmbH
+# Copyright (C) 2007,2008,2009
+# Carsten Lemmen, GKSS-Forschungszentrum Geesthacht GmbH
 
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -17,5 +18,5 @@
 ## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 ## 02110-1301, USA.
 
-EXTRA_DIST=lbk.sim lbk.ctl lbk.dat lbk.init lbk.opar lbk.par lbk.sce
+EXTRA_DIST=lbk.sim.in lbk.ctl lbk.dat lbk.init lbk.opar lbk.par lbk.sce.in
 
