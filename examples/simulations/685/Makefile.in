@@ -15,9 +15,10 @@
 
 @SET_MAKE@
 
-# Main Makefile for GLUES.
+# Makefile for GLUES.
 
-# Copyright (C) 2007 Carsten Lemmen, GKSS-Forschungszentrum Geesthacht GmbH
+# Copyright (C) 2007,2008,2009
+# Carsten Lemmen, GKSS-Forschungszentrum Geesthacht GmbH
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -174,7 +175,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-EXTRA_DIST = lbk.sim lbk.ctl lbk.dat lbk.init lbk.opar lbk.par lbk.sce
+EXTRA_DIST = lbk.sim.in lbk.ctl lbk.dat lbk.init lbk.opar lbk.par lbk.sce.in
 all: all-am
 
 .SUFFIXES:

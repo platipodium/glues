@@ -3,10 +3,9 @@
 
 string	SimulationName	"Neolithic Transition in Europe"
 				\d (Only for information!)
-
-string	ModelName	"GLUES v1.1.3"
+string	ModelName	"@PACKAGE_NAME@ @PACKAGE_VERSION@"
 				\d (Only for information!)
-string	ModelPath	"@abs_builddir/src/glues"
+string	ModelPath	"@abs_top_builddir@/src/glues"
 				\d The path of the executable model.
 
 float	Time     	0.0	\d Actual simulated Time.
