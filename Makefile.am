@@ -31,3 +31,13 @@ SUBDIRS = src config examples variation visual doc #po intl
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status --recheck
 
+# Add pkgconfig support
+#pkgconfigdir = $(libdir)/pkgconfig
+#pkgconfig_DATA= $(PACKAGE)-$(VERSION).pc
+
+.PHONY: snapshot
+
+
+# Snapshot (rule from gtkextras)
+snapshot:
+	$(MAKE) dist distdir=$(PACKAGE)-`date +"%y%m%d"`

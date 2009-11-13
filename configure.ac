@@ -17,9 +17,10 @@ AC_CONFIG_SRCDIR([src/Glues.cc])
 AC_CONFIG_HEADERS([config.h])
 
 dnl defining version and package
+VERSION=$GLUES_VERSION
 ALL_LINGUAS="en de"
 #AM_GNU_GETTEXT
-AM_INIT_AUTOMAKE([glues], $GLUES_VERSION)
+AM_INIT_AUTOMAKE([glues], $VERSION)
 #AM_MAINTAINER_MODE
 
 dnl Optimization or debug
