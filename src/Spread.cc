@@ -38,8 +38,8 @@ int exchange(void) {
     for(unsigned int i=0;i<N_POPVARS;i++) {
       ch=TimeStep*sprd[id*N_POPVARS+i];
       if(fabs(ch/(ev[i]+0.01))>RelChange  && !VarActive) //
-	cout<<"HighExch "<<state_names[i]<<" "<<id<<"\t:"<<ev[i]
-	<<"+"<<ch<<endl;  // */
+		cout<<"HighExch "<<state_names[i]<<" "<<id<<"\t:"<<ev[i]
+		<<"+"<<ch<<endl;  // */
       ev[i]+=min(ch,RelChange*ev[i]);
     }
 
@@ -109,7 +109,10 @@ double calc_spread_single(unsigned int iid) {
   /* -------------------------------------------- */
   neigh= populations[iid].Region()->Neighbour();
   while (neigh) {
-    if( (jid   = neigh->Region()->Id()) < iid) {
+    jid   = neigh->Region()->Id();
+    /** Only perform an update if jid > iid to avoid
+    double exchange in one time step */	
+    if (jid > iid) {
       
       /* -------------------------------------------- */
       /*     Gets neighbours' characteristics  ...    */
@@ -203,10 +206,14 @@ double calc_spread_single(unsigned int iid) {
    
       sprd[import_id*N_POPVARS+0] += (export_tech*export_pop/import_pop)*import_change;
       sprd[import_id*N_POPVARS+1] += (export_ndom*export_pop/import_pop)*import_change;
+      
       sprd[import_id*N_POPVARS+2] += (export_qfarm*export_pop/import_pop)*import_change;
+      
+      
+      /* TODO: germs and resist
       sprd[import_id*N_POPVARS+3] += (export_resist*export_pop/import_pop)*import_change;
       sprd[import_id*N_POPVARS+5] += (export_germ*export_pop/import_pop)*import_change;
-  
+      */
   
       /*-------------------------------------------------------*/
       /*   Spread of traits with trade (see parameter spreadm)   */
@@ -223,7 +230,6 @@ double calc_spread_single(unsigned int iid) {
       //sprd[import_id*N_POPVARS+5]+=traitspread(igerm,populations[jid].Germs(),import_change);
       //sprd[import_id*N_POPVARS+3]+=genospread(iresist,populations[jid].Resist(),export_tech);
 
-  }
     
    /**cerr << populations[import_id] << " rgr= " << populations[import_id].RelativeGrowthrate() 
     	<< "/ import_change = " << import_change << endl
@@ -245,9 +251,10 @@ double calc_spread_single(unsigned int iid) {
   if (0& (iid==211 || iid==271 || iid== 235))
      printf("%d %d\t%1.1f %1.1f\t%1.1f \n",iid,jid,dp0*1E3,dp1*1E3,ndx*1E3);
 
-    /** For diagnostic output calculate total migration activity */
-  sprdm[iid]+=fabs(dp0*ipop);
-  sprdm[jid]+=fabs(dp1*jpop);
+      /** For diagnostic output calculate total migration activity */
+      sprdm[iid]+=fabs(dp0*ipop);
+      sprdm[jid]+=fabs(dp1*jpop);
+      }
 
     }
     neigh = neigh->Next();
