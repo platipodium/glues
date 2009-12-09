@@ -20,4 +20,21 @@
 
 SUBDIRS = common datastructures development iostreams math 
 
-EXTRA_DIST=Version.cc
+EXTRA_DIST=\
+./common/date.cc\
+./datastructures\
+./datastructures/Makefile.am\
+./datastructures/Parameter.cc\
+./datastructures/ParameterType.cc\
+./datastructures/String.cc\
+./development/EmitCxxCode.cc\
+./development/MessageHandler.cc\
+./development/ResultElement.cc\
+./development/ResultReader.cc\
+./development/ResultWriter.cc\
+./iostreams/FileParser.cc\
+./iostreams/SiSiParser.cc\
+./math/Random.cc\
+./platform.cc\
+./Version.cc
+
