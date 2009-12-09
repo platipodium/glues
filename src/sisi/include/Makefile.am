@@ -19,3 +19,52 @@
 ## 02110-1301, USA.
 
 SUBDIRS = common datastructures development iostreams math memory tree twowaylist
+
+noinst_HEADERS = ./common/CharacterHandler.hh\
+./common/ClassObject.hh\
+./common/date.hh\
+./common/FilenameHandling.hh\
+./common/StringHandler.hh\
+./cppinc.h\
+./cppinc.h.orig\
+./datastructures/ArrayParameter.hh\
+./datastructures/BooleanParameter.hh\
+./datastructures/CharParameter.hh\
+./datastructures/CommentParameter.hh\
+./datastructures/FloatParameter.hh\
+./datastructures/InfoType.hh\
+./datastructures/IntParameter.hh\
+./datastructures/ListParameter.hh\
+./datastructures/Parameter.hh\
+./datastructures/ParameterType.hh\
+./datastructures/ResultParameter.hh\
+./datastructures/String.hh\
+./datastructures/StringParameter.hh\
+./datastructures/TableParameter.hh\
+./development/EmitCxxCode.hh\
+./development/LogFile.hh\
+./development/MessageHandler.hh\
+./development/OutputStream.hh\
+./development/ResultElement.hh\
+./development/ResultReader.hh\
+./development/ResultWriter.hh\
+./development/SiSi.hh\
+./iostreams/FileParser.hh\
+./iostreams/SiSiParser.hh\
+./math\
+./math/Makefile.am\
+./math/Math.hh\
+./math/Random.hh\
+./math/Round.hh\
+./memory/ArrayChecker.hh\
+./memory/MemoryHandler.hh\
+./platform.hh\
+./tree/Node.hh\
+./tree/Tree.hh\
+./twowaylist/TwoWayList.hh\
+./twowaylist/TwoWayListElement.hh\
+./twowaylist/TwoWayListFloatElement.hh\
+./twowaylist/TwoWayListIntElement.hh\
+./twowaylist/TwoWayListStringElement.hh\
+./Version.hh
+

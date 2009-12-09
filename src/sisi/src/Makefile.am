@@ -19,3 +19,5 @@
 ## 02110-1301, USA.
 
 SUBDIRS = common datastructures development iostreams math 
+
+EXTRA_DIST=Version.cc
