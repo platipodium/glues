@@ -56,4 +56,6 @@ public:
   static const char* CompletionTime;
 };
 
+static char sisi_is_available() { return 1; }
+
 #endif // _Version_hh_

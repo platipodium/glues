@@ -1,0 +1,13 @@
+a scan with the ifnames command to reveal all #if
+put these into configure.ac at a later time
+
+DEBUG ./src/GeoRegion.cc
+ENABLE_LITERACY ./src/CulturePopulation.cc ./src/RegionalPopulation.cc
+HAVE_LIBINTL_H ./src/Glues.cc
+HAVE_MPI_H ./src/Glues.cc
+HAVE_NETCDF_H ./src/Glues.cc ./src/IO.cc ./src/test/add_reg_geography.cc ./src/test/create_reg_climate.cc ./src/test/nc_glues.cc ./src/test/sample_netcdf.cc ./src/test/test_netcdf.cc
+__DESTRUCTOR_DEBUG__ ./src/sisi/src/development/ResultElement.cc ./src/sisi/src/development/ResultReader.cc
+__FILEPARSER_DEBUG__ ./src/sisi/src/iostreams/FileParser.cc
+__SISSIPARSER_DEBUG__ ./src/sisi/src/iostreams/SiSiParser.cc
+__STRING_DESTRUCTOR_DEBUG__ ./src/sisi/src/datastructures/String.cc
+__UNIX__ ./src/sisi/src/platform.cc
