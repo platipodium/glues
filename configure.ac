@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_PREREQ(2.64)
+AC_PREREQ(2.59)
 
 dnl Versioning: please increase micro version at each running version
 
@@ -108,8 +108,10 @@ dnl Check if we can link with SiSi
 #AC_CHECK_LIB(SiSi2.0, SiSi::finalize(), [LIBS="-lSiSi2.0 $LIBS"],
 # [AC_MSG_ERROR(libSiSi2.0 not found or uses a different ABI..)])
 
-dnl AC_SEARCH_LIBS([SiSi::finalize()],[sisi,SiSi,SiSi2.0],
-	#[],[],[])
+#AC_SEARCH_LIBS([sisi_is_available],
+#[sisi,SiSi,SiSi2.0],
+#[AC_MSG_NOTICE([sisi library found : $ac_cv_search_sisi_is_available])],
+#[AC_MSG_ERROR(libSiSi2.0 not found or uses a different ABI..)],[])
 
 # it is better to use ac_serach libs over ac_check_lib
 dnl AC_SEARCH_LIBS (function, search-libs, [action-if-found], [action-if-not-found], [other-libraries])

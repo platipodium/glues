@@ -68,7 +68,6 @@ SOURCEFILES =	$(addsuffix .cc, $(basename $(OBJECTS))) \
 		$(addsuffix .cc, $(basename $(MANIPOBJECTS))) \
 		$(addsuffix .cc, $(basename $(LIBOBJECTS)))
 
-
 .cc.o:
 	$(CC) -c $(CCOPTS) $(CCINCLUDE) $(DEFINES) -o $*.o $*.cc
 

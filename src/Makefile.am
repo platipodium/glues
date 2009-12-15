@@ -1,6 +1,7 @@
 # Makefile for GLUES sources.
 
-# Copyright (C) 2007,2008 Carsten Lemmen, GKSS-Forschungszentrum Geesthacht
+# Copyright (C) 2007,2008,2009
+# Carsten Lemmen, GKSS-Forschungszentrum Geesthacht
 
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -20,6 +21,8 @@
 SUBDIRS=region sisi test variation patch
 
 bin_PROGRAMS = glues
+
+glues_DEPENDENCIES = sisi/lib/libSiSi2.0.a
 
 noinst_HEADERS = \
 Symbols.h \
