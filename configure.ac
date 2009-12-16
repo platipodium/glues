@@ -1,20 +1,32 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_PREREQ(2.59)
 
 dnl Versioning: please increase micro version at each running version
+dnl only m4 macros are allowed before AC_INIT
 
-m4_define(GLUES_MICRO_VERSION,5)
+m4_define(GLUES_MICRO_VERSION,6)
 m4_define(GLUES_MINOR_VERSION,1)
 m4_define(GLUES_MAJOR_VERSION,1)
 m4_define(GLUES_VERSION,GLUES_MAJOR_VERSION.GLUES_MINOR_VERSION.GLUES_MICRO_VERSION)
 
-AC_INIT([GLUES],[GLUES_VERSION],[carsten.lemmen@gkss.de])
+# Macro: AC_INIT (package, version, [bug-report], [tarname])
+# Process any command-line arguments and perform various initializations and verifications.
+# Set the name of the package and its version. These are typically used in `--version' support, including that of configure. The optional argument bug-report should be the email to which users should send bug reports. The package tarname differs from package: the latter designates the full package name (e.g., `GNU Autoconf'), while the former is meant for distribution tar ball names (e.g., `autoconf'). It defaults to package with `GNU ' stripped, lower-cased, and all characters other than alphanumerics and underscores are changed to `-'.
+# Defines AC_PACKAGE_NAME, PACKAGE_NAME, AC_PACKAGE_TARNAME, PACKAGE_TARNAME
+# Defines AC_PACKAGE_VERSION, PACKAGE_VERSION, AC_PACKAGE_STRING, PACKAGE_STRING
+# Defines AC_PACKAGE_BUGREPORT, PACKAGE_BUGREPORT
+AC_INIT([GLUES],[GLUES_VERSION],[carsten.lemmen@gkss.de],[glues])
+AC_PREREQ(2.59)
+AC_COPYRIGHT ([[Carsten Lemmen and Kai W. Wirtz, GKSS-Forschungszentrum Geesthacht GmbH]])
 
 dnl configuring options
 
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_SRCDIR([src/Glues.cc])
-AC_CONFIG_HEADERS([config.h])
+
+dnl configuration actions
+
+# change the default prefix from /usr/local 
+AC_PREFIX_DEFAULT([$HOME/opt])
 
 dnl defining version and package
 VERSION=$GLUES_VERSION
@@ -44,6 +56,8 @@ AC_PROG_CXX
 #AX_GXX_VERSION
 AC_LANG([C++])
 AC_PROG_CC # for region package
+# AC_PROG_AWK
+AC_PROG_RANLIB # for sisi (move to sisi configure?)
 
 dnl Check for multiprocessing
 #AX_MPI from autoconf archive
@@ -190,7 +204,21 @@ AC_CHECK_HEADER(cstring, , GLUES_ERROR([The standard <cstring> header file could
 
 # Checks for library functions.
 #AC_FUNC_ERROR_AT_LINE
+
+
+#AC_FUNC_MALLOC
+# If the malloc function is compatible with the GNU C library malloc (i.e., `malloc (0)' returns a valid pointer), define HAVE_MALLOC to 1. Otherwise define HAVE_MALLOC to 0, ask for an AC_LIBOBJ replacement for `malloc', and define malloc to rpl_malloc so that the native malloc is not used in the main project.
+# Typically, the replacement file `malloc.c' should look like (note the `#undef malloc'):
+#
+#   @verbatim #if HAVE_CONFIG_H # include <config.h> #endif #undef malloc
+#   #include <sys/types.h>
+#   void *malloc ();
+#    /* Allocate an N-byte block of memory from the heap. If N is zero, allocate a 1-byte block. */
+#    void * rpl_malloc (size_t n) { if (n == 0) n = 1; return malloc (n); } 
 AC_FUNC_MALLOC
+# AC_LIBOBJ(malloc.c)
+# AC_CONFIG_LIBOBJ_DIR (arch)
+
 AC_CHECK_FUNCS([pow exp sqrt strstr strrchr])
 
 #AC_ARG_WITH(sisi, [ --with-sisi location of SISI library])
@@ -216,6 +244,10 @@ fi
 
 
 
+# TODO: separate configuration in sisi only if a local sisi is required
+#if test -d $srcdir/src/sisi; then
+#AC_CONFIG_SUBDIRS(src/sisi)
+#fi
 
 
 dnl Remove also many MACROS (AC_DEFINE) which are unused by GLUES
@@ -240,7 +272,16 @@ if test -f confdefs.h; then
 fi
 
 
-AC_CONFIG_FILES([Makefile  run.sh
+dnl configure HEADERS, COMMANDS, LINKS, and FILES
+
+AC_CONFIG_HEADERS([config.h])
+#AC_CONFIG_LINKS
+
+AC_CONFIG_COMMANDS([time-stamp], [date >time-stamp])
+
+AC_CONFIG_FILES([run.sh:run.sh.in],[chmod +x run.sh])
+
+AC_CONFIG_FILES([Makefile
   src/Makefile src/region/Makefile 
   src/test/Makefile config/Makefile
   src/variation/Makefile
