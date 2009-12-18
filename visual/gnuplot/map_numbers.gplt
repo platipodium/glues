@@ -1,0 +1,23 @@
+data='../../examples/setup/685/region_geography.tsv'
+
+##Writing geographic region properties to /Users/lemmen/devel/mercurial/examples/setup/685/region_geography.tsv
+
+#    0   79.50  -84.00   187340      243 32767  3 0
+#    1   78.50  -62.00   201144     1185 32767  6 0
+#    2   79.00   16.00    49300        0 32767  1 0
+
+# plot region numbers at lon/lat
+
+unset key
+unset border
+unset yzeroaxis
+unset xtics
+unset ytics
+unset ztics
+set view map
+set title "Region numbers"
+plot data us 3:2:1 with labels
+
+
+set view 10,30,1,1
+splot data us 3:2:5 with impulses lw 3, data us 3:2:5:1 with labels 

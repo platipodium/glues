@@ -1,6 +1,7 @@
-# Main Makefile for GLUES.
+# Makefile for GLUES.
 
-# Copyright (C) 2007 Carsten Lemmen, GKSS-Forschungszentrum Geesthacht GmbH
+# Copyright (C) 2009 
+# Carsten Lemmen, GKSS-Forschungszentrum Geesthacht GmbH
 
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -17,4 +18,5 @@
 ## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 ## 02110-1301, USA.
 
-SUBDIRS = matlab gnuplot
+SUBDIRS = 
+EXTRA_DIST=map_regions.gplt
