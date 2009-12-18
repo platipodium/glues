@@ -1,9 +1,8 @@
-#! /bin/sh
+#!/bin/sh
 
-AUTORECONF=none
-AUTORECONF=$(which autoreconf)
+AUTORECONF=`which autoreconf`
 
-if [[ $AUTORECONF == "none" ]]; then 
+if test -x $AUTORECONF  ; then 
   aclocal -I config && autoheader \
   && automake --gnu --add-missing  --copy \
   && autoconf
