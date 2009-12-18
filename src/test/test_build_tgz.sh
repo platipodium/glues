@@ -1,15 +1,23 @@
 #!/bin/sh
 
-# GLUES daily test for developer version
+# GLUES weekly test for distribution version
 
-url="http://glues.hg.sourceforge.net:8000/hgroot/glues/glues"
+if  [ "x$1" == "x" ] ; then
+  VERSION=1.1.6
+else
+  VERSION=$1
+fi
 
-dat=`date +"%Y%m%d%H%M" `
+BASE=glues-$VERSION
+TGZ=$BASE.tar.gz
+
+
+url="http://downloads.sourceforge.net/project/glues/${TGZ}?use_mirror=surfnet"
 
 owd=`pwd`
 topdir=$HOME/.glues
-tmp=$topdir/glues-test-$dat
-log=$topdir/$dat.log
+tmp=$topdir/$BASE
+log=$topdir/$BASE.log
 
 test -d topdir || mkdir -p $topdir
 test -d $tmp && rm -rf $tmp
@@ -17,22 +25,16 @@ test -d $tmp && rm -rf $tmp
 echo $dat > $log
 
 cd $topdir
-hg clone $url $tmp >> $log
+test -f $TGZ || wget $url >> $log
+tar xvf $TGZ 
+
 if ! test -d $tmp ; then 
-  echo "HG checkout faild" >> $log
+  echo "wget retrieval of $url faild" >> $log
   cd $owd
   exit 1
 fi
 
 cd $tmp
-./bootstrap >> $log 
-if test -x configure ; then : 
-else
-  echo "Bootstrap failed" >> $log
-  cd $owd
-  exit 1
-fi
-  
 ./configure >> $log 
 if test -f Makefile ; then :
 else
