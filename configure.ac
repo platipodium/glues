@@ -16,7 +16,9 @@ m4_define([GLUES_VERSION],[GLUES_MAJOR_VERSION.GLUES_MINOR_VERSION.GLUES_MICRO_V
 # Defines AC_PACKAGE_BUGREPORT, PACKAGE_BUGREPORT
 AC_INIT([GLUES],[GLUES_VERSION],[carsten.lemmen@gkss.de],[glues])
 AC_PREREQ(2.59)
-AC_COPYRIGHT ([[Carsten Lemmen and Kai W. Wirtz, GKSS-Forschungszentrum Geesthacht GmbH]])
+
+#AC_COPYRIGHT broken on autoconf 2.61 sunray
+#AC_COPYRIGHT ([[Carsten Lemmen and Kai W. Wirtz, GKSS-Forschungszentrum Geesthacht GmbH]])
 
 dnl configuring options
 

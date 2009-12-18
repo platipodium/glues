@@ -32,6 +32,8 @@ noinst_HEADERS = ../GeoRegion.h ../GeoNeighbour.h ../Symbols.h ../LandRegion.h \
 
 EXTRA_DIST = georegions.tsv test_IO.tsv
 
+noinst_SCRIPTS = test_build_maintainer.sh
+
 test_netcdf_SOURCES=test_netcdf.cc
 test_netcdf_LDADD=-lnetcdf -lnetcdf_c++
 
