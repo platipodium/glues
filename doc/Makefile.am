@@ -1,5 +1,5 @@
 # Datei, die von Doxygen bearbeitet werden soll
-EXTRA_DIST = glues.doxygen doxygen.css
+EXTRA_DIST = glues.doxygen 
 # Die zu reinigenden files
 CLEANFILES = *.html *.gif *.css *.png
 # zu erstellende Datei

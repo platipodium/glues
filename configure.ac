@@ -3,10 +3,10 @@ dnl Process this file with autoconf to produce a configure script.
 dnl Versioning: please increase micro version at each running version
 dnl only m4 macros are allowed before AC_INIT
 
-m4_define(GLUES_MICRO_VERSION,6)
-m4_define(GLUES_MINOR_VERSION,1)
-m4_define(GLUES_MAJOR_VERSION,1)
-m4_define(GLUES_VERSION,GLUES_MAJOR_VERSION.GLUES_MINOR_VERSION.GLUES_MICRO_VERSION)
+m4_define([GLUES_MICRO_VERSION],6)
+m4_define([GLUES_MINOR_VERSION],1)
+m4_define([GLUES_MAJOR_VERSION],1)
+m4_define([GLUES_VERSION],[GLUES_MAJOR_VERSION.GLUES_MINOR_VERSION.GLUES_MICRO_VERSION])
 
 # Macro: AC_INIT (package, version, [bug-report], [tarname])
 # Process any command-line arguments and perform various initializations and verifications.
@@ -29,10 +29,9 @@ dnl configuration actions
 AC_PREFIX_DEFAULT([$HOME/opt])
 
 dnl defining version and package
-VERSION=$GLUES_VERSION
 ALL_LINGUAS="en de"
 #AM_GNU_GETTEXT
-AM_INIT_AUTOMAKE([glues], $VERSION)
+AM_INIT_AUTOMAKE([glues],[GLUES_VERSION])
 #AM_MAINTAINER_MODE
 
 dnl Optimization or debug
@@ -58,6 +57,11 @@ AC_LANG([C++])
 AC_PROG_CC # for region package
 # AC_PROG_AWK
 AC_PROG_RANLIB # for sisi (move to sisi configure?)
+
+#AC_ARG_VAR (variable, description)
+#Declare variable is a precious variable, and include its description in the variable section of `./configure --help'. 
+AC_ARG_VAR(CC)
+AC_ARG_VAR(CXX)
 
 dnl Check for multiprocessing
 #AX_MPI from autoconf archive

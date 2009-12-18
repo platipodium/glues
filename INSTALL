@@ -10,10 +10,11 @@ directory).  For options to the configuration utility, run
 
 ./configure --help
 
-Run 
+It is not recommended as of now to run
 
 make install
 
-ONLY if you want the executable in your installation 
-directory (default /usr/bin).  We do not recommend this at the
-time being.
+This will install the binaries glues region and random_variation into
+$PREFIX/bin, where the default prefix is $HOME/opt
+
+Instead, run the local script run.sh to start the example simulation.
