@@ -308,7 +308,7 @@ AC_CONFIG_FILES([Makefile
   examples/simulations/Makefile examples/simulations/685/Makefile
   examples/simulations/938/Makefile
   examples/simulations/test_new_event/Makefile
-  visual/Makefile visual/matlab/Makefile
+  visual/Makefile visual/matlab/Makefile visual/gnuplot/Makefile
   variation/Makefile doc/Makefile
 ])
 

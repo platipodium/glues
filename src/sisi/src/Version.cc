@@ -5,4 +5,4 @@
 const char* Version::ProgramName    =  "SiSi";
 const char* Version::Number         =  "2.0";
 const char* Version::Program        =  "SiSi 2.0";
-const char* Version::CompletionTime =  "Sep 28 2009, 09:32:39 (uncompleted)";
+const char* Version::CompletionTime =  "Dec 18 2009, 14:53:05 (uncompleted)";
