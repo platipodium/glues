@@ -1,4 +1,3 @@
-
 #!/bin/sh
 
 # GLUES daily test
@@ -15,7 +14,7 @@ HOST=`hostname`
 
 topdir=$HOME/.glues
 tmp=$topdir/glues-test-$DATE-$HOST
-log=$topdir/$DATE.log
+log=$topdir/glues-test-$DATE-$HOST.log
 
 test -d $topdir || mkdir -p $topdir
 test -d $tmp && rm -rf $tmp
@@ -26,16 +25,19 @@ echo On system $SYS >> $log
 # test for execution of HG and MAKE variables
 if test -x $HG ; then echo HG=$HG >> $log ; else 
   echo Mercurial CVS $HG not found. >> $log
-  exit
+  cd $OWD
+  exit 1
 fi
 if test -x $MAKE ; then echo MAKE=$MAKE >> $log ; else
   echo make program $MAKE not found. >> $log
+  cd $OWD
   exit
 fi
 
 cd $topdir
 $HG clone $url $tmp >> $log
-if ! test -d $tmp ; then 
+if test -d $tmp ; then :
+else 
   echo "HG checkout faild" >> $log
   cd $OWD
   exit 1
@@ -54,11 +56,13 @@ fi
 if test -f Makefile ; then :
 else
   echo "Configure failed" >> $log
+  cd $OWD
   exit 1
 fi
   
 $MAKE -j4  >> $log 
-if ! test -x src/glues ; then
+if test -x src/glues ; then :
+else/h/lemmen/opt/bin/test_glues_build.sh:
   echo "Make failed" >> $log
   cd $OWD
   exit 1
