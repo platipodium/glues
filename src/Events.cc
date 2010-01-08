@@ -29,7 +29,6 @@
 #include <cstdlib>
 
 /**
-   @param none
    @return number of sites
 */
 

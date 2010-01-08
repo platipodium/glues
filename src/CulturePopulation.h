@@ -43,7 +43,7 @@ namespace glues {
 
 /** @class CulturePopulation
     @brief A population asscociated with a land region
-    @description A CulturePopulation is a Population which is associated with a region.
+    A CulturePopulation is a Population which is associated with a region.
     This implies that space-related properties such as population density can be introduced.
     Also, the migration of population can be described only with the association to a
     LandRegion

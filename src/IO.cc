@@ -97,6 +97,10 @@ glues::IO::count_ascii_columns(std::istream& is)
 /**
  @param is: input stream to read from
  @param table_double: pointer to double matrix
+ @param row_offset
+ @param column_offset
+ @param max_nrow
+ @param max_ncol
  @return: number of lines read
  */
 
