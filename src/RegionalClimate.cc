@@ -99,7 +99,6 @@ return exp(-expo*expo);
 
 
 /**
- * @function hyper
  * @brief Calculates a hyperbolic function 
  */
 double glues::RegionalClimate::hyper(double kap, double np, int n) const {

@@ -151,7 +151,7 @@ std::ostream& glues::operator<<(std::ostream& os, const glues::LandRegion& lr) {
    
    From *.sce file:
    array   IceExtent
-   \d 1:rlat0  2:rlat2 3:lat_off 4:lon_off
+   d 1:rlat0  2:rlat2 3:lat_off 4:lon_off
    50.0	80.0	80.0	45.0
    typeOfArray     float
    dimension       4

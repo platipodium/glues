@@ -52,7 +52,7 @@ glues::GeoRegion::GeoRegion() {
 
 /**
  * @brief Gets region properties from input stream
- * @param[in] Input stream with id, numcells, area, lon, lat fields
+ * @param[in] is: Input stream with id, numcells, area, lon, lat fields
  */
 glues::GeoRegion::GeoRegion(std::istream& is) {
 
@@ -87,7 +87,7 @@ bool glues::GeoRegion::Sahara() {
 
 /**
  * @brief Gets region properties from line
- * @param[in] string with id, numcells, area, lon, lat fields
+ * @param[in] line: string with id, numcells, area, lon, lat fields
  */
 glues::GeoRegion::GeoRegion(const std::string& line)
 {
@@ -140,9 +140,9 @@ glues::GeoRegion::~GeoRegion(){
 
 /**
  * @brief Adds a neighbour 
- * @param[in] reg Pointer to neighbour region to add as neighbour
- * @param[in] bound_length Common boundary length in km
- * @param[in] bound_ease   Ease of boundary 
+ * @param[in] gr Pointer to neighbour region to add as neighbour
+ * @param[in] length Common boundary length in km
+ * @param[in] ease   Ease of boundary 
  * @todo Check whether ease of boundary is used yet
  */
 
