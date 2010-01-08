@@ -1,3 +1,4 @@
+
 #!/bin/sh
 
 # GLUES daily test
@@ -10,12 +11,13 @@ MAKE=`which gmake`
 DATE=`date +"%Y%m%d%H%M" `
 OWD=`pwd`
 SYS=`uname -a` 
+HOST=`hostname` 
 
 topdir=$HOME/.glues
-tmp=$topdir/glues-test-$dat
-log=$topdir/$dat.log
+tmp=$topdir/glues-test-$DATE-$HOST
+log=$topdir/$DATE.log
 
-
+test -d $topdir || mkdir -p $topdir
 test -d $tmp && rm -rf $tmp
 
 echo Glues daily build test $DATE > $log
