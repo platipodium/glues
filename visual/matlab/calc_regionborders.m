@@ -2,7 +2,7 @@ function calc_regionborders
 
 cl_register_function();
 
-regionpathfile='regionpath_686.mat';
+regionpathfile='regionpath_685.mat';
 
 load(regionpathfile);
 

@@ -171,3 +171,33 @@ disturb_chronologies.m					plot_threshold.m					write_region_properties.m
 disturb_chronology.m					plot_timeseries_anomaly.m				xget_map_coordinates.m
 do_cluster_regionmap_regionpath.m			plot_timeseries_anomaly_publication.m
 
+
+
+>> add_info_to_proxydescription
+??? Reference to non-existent field 'glow'.
+Error in ==> add_info_to_proxydescription at 19
+rmdata.gdiff=rmdata.glow-rmdata.gupp;
+
+>> calc_cluster2regionmap
+??? Error using ==> load
+Unable to read file cluster_-65_085_-180_0180_0100_0200_02068_clean_9: No
+such file or directory.
+Error in ==> calc_cluster2regionmap at 15
+load(clusterfile);
+
+>> calc_event_integral
+??? Attempted to access eventregtime(686,1); index out of bounds because
+size(eventregtime)=[685,16].
+Error in ==> calc_event_integral at 26
+      told = time(it)-eventregtime(i,eventregind(i));
+
+
+
+>> get_holodata
+??? Input argument "datafile" is undefined.
+Error in ==> get_holodata at 6
+    holodata = read_textcsv(datafile, ';','"');
+ 
+
+
+
