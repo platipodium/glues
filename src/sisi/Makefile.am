@@ -71,6 +71,8 @@ SOURCEFILES =	$(addsuffix .cc, $(basename $(OBJECTS))) \
 .cc.o:
 	$(CC) -c $(CCOPTS) $(CCINCLUDE) $(DEFINES) -o $*.o $*.cc
 
+.PHONY: version time completiontime linecount
+
 $(LIBRARY): lib
 
 lib: 	$(LIBOBJECTS)
@@ -137,7 +139,7 @@ time:
 	  $(MAKE) version > /dev/null; \
 	  echo Done.
 
-version:
+version: 
 	@echo -n "Creating file \"$(VERSIONFILE)\" from VERSION ... "; \
 	  echo "// Generated automatically from VERSION by 'make version'" \
 	    >$(VERSIONFILE); \
