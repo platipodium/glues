@@ -53,7 +53,7 @@ LT_INIT([disable-shared])
 AC_SUBST([LIBTOOL_DEPS])
 
 dnl Check for programs
-AC_PROG_CXX
+AC_PROG_CXX(["ccache g++" g++ c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC])
 #AX_GXX_VERSION
 AC_LANG([C++])
 AC_PROG_CC # for region package
@@ -291,10 +291,7 @@ AC_CONFIG_FILES([Makefile
   src/Makefile src/region/Makefile 
   src/test/Makefile config/Makefile
   src/variation/Makefile
-  src/sisi/Makefile
-  src/sisi/src/Makefile
   src/patch/Makefile
-  src/sisi/include/Makefile
   examples/Makefile examples/setup/Makefile 
   examples/setup/938/Makefile
   examples/setup/939/Makefile
@@ -308,12 +305,20 @@ AC_CONFIG_FILES([Makefile
   examples/simulations/Makefile examples/simulations/685/Makefile
   examples/simulations/938/Makefile
   examples/simulations/test_new_event/Makefile
-  visual/Makefile visual/matlab/Makefile visual/gnuplot/Makefile
+  visual/Makefile 
+  visual/matlab/Makefile visual/matlab/get_files.m
+  visual/gnuplot/Makefile
   variation/Makefile doc/Makefile
 ])
 
-
+if test $LOCALSISI = 1 ; then
+  AC_CONFIG_SUBDIRS([src/sisi])
+fi
+ 
 #  po/Makefile.in
+#  src/sisi/Makefile
+#  src/sisi/src/Makefile
+#  src/sisi/include/Makefile
 
 AC_OUTPUT
 

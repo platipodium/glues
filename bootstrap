@@ -45,3 +45,5 @@ fi
 
 test -x ./configure || chmod +x ./configure
 
+cd src/sisi
+exec ./bootstrap
