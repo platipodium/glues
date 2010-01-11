@@ -19,8 +19,8 @@ glues_warning_txt="$glues_warning_txt
 glues_warning=yes])
 
 
-dnl Usage: GLUES_WARNING(message)
-dnl This macro displays the warning "message" and sets the flag glues_warning
+dnl Usage: GLUES_INFO(message)
+dnl This macro displays the informational "message" and set sthe flag glues_info
 dnl to yes.
 AC_DEFUN([GLUES_INFO],[
 glues_info_txt="$glues_info_txt

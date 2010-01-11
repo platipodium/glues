@@ -19,4 +19,4 @@
 ## 02110-1301, USA.
 
 SUBDIRS = 
-EXTRA_DIST=map_regions.gplt
+EXTRA_DIST=map_numbers.gplt
