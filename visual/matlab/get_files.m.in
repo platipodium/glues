@@ -30,22 +30,29 @@ function [dir,file] = get_files(nreg)
 
 cl_register_function;
 
-    if ~exist('nreg','var') nreg=685; end
+
+    default_nreg=685;
+    default_datadir='/h/koedata01/data';
+    default_paperdir='/h/koedata01/paper';
+    default_basedir='@abs_top_builddir@';
+
+    if ~exist('nreg','var') nreg=default_nreg; end
 
     user=getenv('USER');
     host=getenv('HOST');
     home=getenv('HOME');
     [status,hostname]=system('hostname');
     
-    dir.data='/h/koedata01/data';
-    dir.paper='/h/koedata01/paper';
+    dir.data=default_datadir;
+    dir.paper=default_paperdir;
+    basepath=default_basedir;
     
     if strcmp(user,'lemmen')
 
       %if strcmp(hostname(1:end-1),'possum.local')
       %    basepath=fullfile(home,'Development','Eclipse','glues-1.1.2');
       %else        
-        basepath=fullfile('/h/lemmen','projects','glues','glues','glues');
+      %  basepath=fullfile('/h/lemmen','projects','glues','glues','glues');
       %end
         
       dir.setup=fullfile(basepath,'examples','setup',num2str(nreg));

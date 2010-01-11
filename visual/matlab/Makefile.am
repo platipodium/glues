@@ -43,7 +43,7 @@ geoidx2geoneighbour.m \
 georeference.m \
 getchi2.m \
 getdof.m \
-get_files.m \
+get_files.m.in \
 get_holodata.m \
 get_jetnew.m \
 get_map_coords.m \
