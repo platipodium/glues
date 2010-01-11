@@ -193,11 +193,23 @@ Error in ==> calc_event_integral at 26
 
 
 
+
+
+
 >> get_holodata
 ??? Input argument "datafile" is undefined.
 Error in ==> get_holodata at 6
     holodata = read_textcsv(datafile, ';','"');
  
+>> calc_geo_mean
+??? Input argument "lat" is undefined.
+Error in ==> calc_geo_mean at 9
+nlat=numel(lat);
 
+
+
+
+=====================
+calc_event_series OK
 
 
