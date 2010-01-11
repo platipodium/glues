@@ -3,10 +3,11 @@ function cl_calc_seas(varargin)
 cl_register_function();
 
 regionmapfile='regionmap_685.mat';
-load(regionmapfile);
-
-%load('/h/lemmen/projects/glues/glues/glues/examples/setup/686/mapping_80_685.mat');
-
+if exist(regionmapfile,'file') 
+    load(regionmapfile);
+else
+  load('../..//examples/setup/685/mapping_80_685.mat');
+end
 
 if ~exist('region','var') | ~isstruct(region) 
     map.region=regionmap;
