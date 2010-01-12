@@ -18,7 +18,7 @@
 ## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 ## 02110-1301, USA.
 
-SUBDIRS=lib
+SUBDIRS=lib data
 
 EXTRA_DIST=\
 calc_event_integral.m \
