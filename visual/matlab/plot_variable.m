@@ -308,6 +308,7 @@ data=eval(['r.' r.variables{ivar}]);
       reg=regs(ireg);
       hp(ireg)=m_patch(region.path(reg,1:pathlen(reg),1),region.path(reg,1:pathlen(reg),2),'b');
       h=hp(ireg);
+      if h==0 continue; end
       alpha(h,resvar(reg,itstart)./64/1.6);
       set(h,'ButtonDownFcn',@onclick,'UserData',squeeze(data(reg,itstart:itend)));
   end

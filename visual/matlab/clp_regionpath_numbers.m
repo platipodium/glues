@@ -4,7 +4,7 @@ cl_register_function();
 
 % Defaults
 mode='optimal';
-reg='EMEA';
+reg='world';
 %lat=[10 30];
 %lon=[-120 -90];
 

@@ -121,7 +121,7 @@ for ivar=1:3
   cb=colorbar;
   ytl=str2num(get(cb,'YTickLabel'));
   set(cb,'YTickLabel',num2str(scale_precision(ytl*var.range{ivar}+var.min{ivar},var.prec{ivar})));
-  v=get_version;
+  v=cl_get_version;
   cptext=sprintf('%s, created %s by %s (%s)',v.copy,datestr(datenum(v.time),'YYMMDD'),v.file,v.version);
   cp=text(min(get(gca,'Xlim')),min(get(gca,'Ylim')),cptext);
   set(cp,'Color',[0.5 0.5 0.5],'Interpreter','none','VerticalAlignment','bottom');

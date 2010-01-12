@@ -69,7 +69,7 @@ end
 
 save('-v6','regionclimate_686','climate');
 
-v=get_version;
+v=cl_get_version;
 fid=fopen(nppfile,'w');
 fprintf(fid,'# ASCII data info: columns\n');
 fprintf(fid,'# 1. region id 2. number of climates,\n');

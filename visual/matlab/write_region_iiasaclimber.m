@@ -49,7 +49,7 @@ gddfile=strrep(nppfile,'npp','gdd');
 
 save('-v6',matfile,'climate');
 
-v=get_version;
+v=cl_get_version;
 fid=fopen(nppfile,'w');
 fprintf(fid,'# ASCII data info: columns\n');
 fprintf(fid,'# 1. region id 2. number of climates,\n');

@@ -15,7 +15,7 @@ gdd=load(gddtxtfile);
 nppfile=['region_iiasaclimber_kai_npp_' num2str(nreg) '.tsv'];
 gddfile=strrep(nppfile,'npp','gdd');
 
-v=get_version;
+v=cl_get_version;
 fid=fopen(nppfile,'w');
 fprintf(fid,'# ASCII data info: columns\n');
 fprintf(fid,'# 1. region id 2. number of climates,\n');

@@ -4,7 +4,7 @@ cl_register_function();
 
 [d,f]=get_files;
 d.total=fullfile(d.proxies,'redfit/data/input/total');
-v=get_version;
+v=cl_get_version;
 
 proxyfile='holodata.mat';
 
@@ -171,7 +171,7 @@ for ifile=1:nvalid
   end
 end
 
-v=get_version;
+v=cl_get_version;
 fid=fopen('event_series.tsv','w');
 fprintf(fid,'# Proxy-id lon lat nevents min(t) max(t) event1 event2 ..\n');
 fprintf(fid,'# %s, created %s by program %s (%s)\n',v.copy,v.time,v.file, v.version);
