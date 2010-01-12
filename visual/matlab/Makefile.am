@@ -18,7 +18,7 @@
 ## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 ## 02110-1301, USA.
 
-SUBDIRS=lib data
+SUBDIRS=lib data doc
 
 EXTRA_DIST=\
 calc_event_integral.m \
@@ -128,4 +128,6 @@ clp_cluster.m \
 clp_iiasa.m \
 clp_trajectories.m \
 plot_variable_deforestation.m \
-startup.m
+startup.m \
+clp_basemap.m \
+clp_marble.m
