@@ -1,5 +1,5 @@
 function cl_get_hyde
-%CL_GET_HYDE   Retrieves HYDE database
+%CL_GET_HYDE   Retrieves HYDE database.  Data is stored in ./data subdirectory
 %  CL_GET_HYDE retrieves the data from the History database of human
 %  development found at  (ftp://ftp.mnp.nl/hyde)
 %
@@ -13,8 +13,9 @@ function cl_get_hyde
 cl_register_function;
 
 baseurl='ftp://ftp.mnp.nl/hyde/hyde31_final';
+destdir='./data';
 
-years=[1000:1000:10000]
+years=[1000:1000:10000];
 ny=length(years);
 
 parameters={'lu','pop'};
@@ -28,14 +29,20 @@ for ip=1:np
   zipname=strrep(zipname,'PARAM',par);
   url=fullfile(baseurl,zipname);
     
+  zipname=fullfile(destdir,zipname);
   if ~exist(zipname)
     [filename,status] = urlwrite(url,zipname);
   end
 
-  filename=strrep(zipname,'.zip','');
-  if ~exist(filename)
-    status=system(['unzip ' filename]);
+  if ~exist(zipname)
+      error('Zip file could not be downloaded');
   end
+  
+  
+      % TODO: only unzip if contents not yet unzipped
+    unzip(zipname,destdir);
+
+  
 end
 end
 

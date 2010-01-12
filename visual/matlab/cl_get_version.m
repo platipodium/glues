@@ -1,13 +1,13 @@
-function v=get_version
-% GET_VERSION gets calling file's version information
+function v=cl_get_version
+% CL_GET_VERSION gets calling file's version information
 %  
-% V=GET_VERSION returns calling file's version information 
+% V=CL_GET_VERSION returns calling file's version information 
 %   in structure V with members
 %   v.file (file name)
 %   v.function (function name)
 %   v.version (file last modified date)s
 
-cl_register_function();
+cl_register_function;
 
 v.matlab=version;
 v.user=[ getenv('USER') '@' getenv('HOST')];
@@ -18,8 +18,8 @@ v.pwd=pwd;
 v.release=str2num(version('-release'));
 
 
-progname='get_version.m';
-funcname='get_version';
+progname='cl_get_version.m';
+funcname='cl_get_version';
 
 if v.release>13
     

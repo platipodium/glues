@@ -3,7 +3,7 @@ function strline=struct2stringlines(struct)
 cl_register_function();
 
 if ~exist('struct','var')
-      struct=get_version;
+      struct=cl_get_version;
 end
 
 if ~isstruct(struct)

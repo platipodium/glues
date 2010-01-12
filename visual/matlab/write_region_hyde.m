@@ -85,7 +85,7 @@ end
 
 save('-v6',climatefile,'climate');
 
-v=get_version;
+v=cl_get_version;
 fid=fopen(cropfile,'w');
 fprintf(fid,'# ASCII data info: columns\n');
 fprintf(fid,'# 1. region id 2. number of entries,\n');

@@ -58,7 +58,7 @@ regionvector=reshape(region.land,maxn*nreg,1);
 fwrite(fid,regionvector,'uint32');
 fclose(fid);
 
-v=get_version;
+v=cl_get_version;
 fid=fopen(txtfile,'w');
 fprintf(fid,'Binary format: ieee-le uint32\n');
 fprintf(fid,'Land info: %d land cells in %d regions\n',nland,length(region.length));

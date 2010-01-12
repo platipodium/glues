@@ -1,0 +1,38 @@
+\documentclass{report}
+
+\author{Carsten Lemmen}
+\title{GLUES visualization handbook}
+
+\newcommand{\code}[1]{\verb|#1|}
+
+\begin{document}
+\maketitle
+
+\chapter{Matlab}
+
+
+\section{Basic mapping}
+
+\subsection{The \code{m_map} package}
+
+The freely available \code{m_map} package is required for full functionality of all map visualization in the GLUES package.  You can download this package 
+at.  
+
+\subsection{Creating a base map}
+With the procedure \code{clp_basemap}, a world map between -60 N and 70 N latitude is drawn with coast lines in blue color.
+
+\subsection{Overlaying a picture of Earth}
+The view of Earth as seen from space is commonly termed the ``Blue Marble''.  Pictures of this blue marble are available from NASA or from TrueMarble.
+The procedure \code{clp_marble} automatically downloads a background picture from the internet and overlays the base map with this image of vegetation and ice cover.
+
+\section{Library functionality}
+All utility functions are separated from the end user functions in a subdirectory \code{lib}.  
+
+\subsection{Startup}
+When started from the local directory, the \code{startup} program is run automatically by Matlab.  If not, you should call this program manually, it adds the local directory and its subdirectories to the Matlab search path.
+
+\subsection{Logging}
+A logging facility is provided by \code{cl_register_function}.  Each routine registers itself with this function when it is called.  All calls are written to the journal
+file \code{journal.txt}.
+
+\end{document}

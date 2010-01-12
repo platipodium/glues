@@ -50,7 +50,7 @@ for ireg=1:nreg
 end
 fclose(fid);
 
-v=get_version;
+v=cl_get_version;
 fid=fopen(txtfile,'w');
 fprintf(fid,'ASCII data info: columns\n');
 fprintf(fid,'1. region id 2. number of cells, 3. area in sqkm\n');

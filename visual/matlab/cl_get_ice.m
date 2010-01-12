@@ -11,7 +11,9 @@ function cl_get_ice
 
 cl_register_function;
 d=cl_init;
-datadir=fullfile(d.share,'glues/extern/ice5g');
+
+%atadir=fullfile(d.share,'glues/extern/ice5g');
+datadir='./data';
 
 years=[0:0.5:12]; % kyr BP
 ny=length(years);
@@ -34,8 +36,7 @@ for iy=1:ny
   end
 
   if ~exist(ncfile) & exist(zipfile)
-    status=system(['gunzip ' zipname]);
-    status=system(['mv ' ncname ' ' ncfile]);
+    filenames=gunzip(zipname,datadir);
   end
 end
 

@@ -30,7 +30,7 @@ for i=1:n
   save(fullfile(outdir,d(i).name),'-ascii','data');
 end
 
-v=struct2cell(get_version);
+v=struct2cell(cl_get_version);
 vtext=v{1};
 for i=2:length(v)
   vtext=[vtext ' ' v{i}];
