@@ -1,0 +1,4 @@
+%
+newpath='@top_src_builddir/visual/matlab@'
+addpath(genpath(newpath));
+printf('Added %s and subdirectories to MATLAB search path\n',newpath);
