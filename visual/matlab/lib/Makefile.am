@@ -18,4 +18,15 @@
 ## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 ## 02110-1301, USA.
 
-EXTRA_DIST=
+EXTRA_DIST=\
+  db.m        # convert to decibel 
+  
+  
+  
+  
+  
+  
+  
+  
+# Not in distro due to copyright by MATLAB
+#  sind.m        # take sine of degree argument
