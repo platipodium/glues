@@ -130,4 +130,5 @@ clp_trajectories.m \
 plot_variable_deforestation.m \
 startup.m \
 clp_basemap.m \
-clp_marble.m
+clp_marble.m \
+clp_regionpath.m 

@@ -1,17 +1,24 @@
-function clp_basemap(varargin)
+function [lonlimit,latlimit]=clp_basemap(varargin)
+% CLP_BASEMAP plots a basic map with coast line
+% 
+% [lo,la]=CLP_BASEMAP returns the longitude and latitude limits
 
 cl_register_function;
 
-% Default values
-latlim=[-60 70];
-lonlim=[-180 180];
+arguments = {...
+  {'latlim',[-60 70]},...
+  {'nocoast',0},...
+  {'lonlim',[-180 180]},...
+  {'projection','equidistant'}...
+};
 
-% todo: parse arguments
+[args,rargs]=clp_arguments(varargin,arguments);
+for i=1:args.length   
+  eval([ args.name{i} ' = ' clp_valuestring(args.value{i}) ';']); 
+end
 
-
-% todo: adjust default home search for m_map
 if (exist('m_proj')~=2)
-  addpath('/Users/lemmen/matlab/m_map')
+  addpath(fullfile(getenv('HOME'),'matlab/m_map'));
 end
 
 try
@@ -24,12 +31,19 @@ end
 figure(gcf);
 clf reset;
 
-set(gcf,'userdata',cl_cl_get_version);
+set(gcf,'userdata',cl_get_version);
 
 m_grid;%('backcolor',color_sea);
-m_coast;
-% m_coast('patch',color_land);
+if ~nocoast
+    m_coast;
+  % m_coast('patch',color_land);
+end
 
 hold on;
+
+if nargout>0
+  lonlimit=lonlim;
+  latlimit=latlim;
+end
 
 end
