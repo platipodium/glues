@@ -1,4 +1,4 @@
-function [h,latlimit,lonlimit]=clp_regionpath(varargin);
+function [h,latlimit,lonlimit]=clp_regionpath(varargin)
 
 cl_register_function;
 
@@ -11,7 +11,7 @@ arguments = {...
   {'filename','regionpath_685'}...
 };
 
-[args,varargin]=clp_arguments(varargin,arguments);
+[args,rargs]=clp_arguments(varargin,arguments);
 for i=1:args.length   
   eval([ args.name{i} ' = ' clp_valuestring(args.value{i}) ';']); 
 end
@@ -87,8 +87,9 @@ for i=1:length(iselect)
   if strcmp(drawmode,'patch')
     phdl(i)=m_patch(lonpath,latpath,colpath,'EdgeColor','none');
   elseif strcmp(drawmode,'line') 
-    if ~isempty(varargin) phdl(i)=m_line(lonpath,latpath,'color',colpath,varargin{:});
-    else phdl(i)=m_line(lonpath,latpath,'color',colpath); end
+    %if ~isempty(varargin) phdl(i)=m_line(lonpath,latpath,'color',colpath,rargs);
+    %else 
+    phdl(i)=m_line(lonpath,latpath,'color',colpath); %end
   else 
     phdl(i)=m_patch(lonpath,latpath,colpath,'EdgeColor','none');      
     %set(mp,'LineStyle','none');

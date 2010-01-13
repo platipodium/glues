@@ -29,30 +29,6 @@ for i=1:ncargs
 end
 
 
-% Determine minimum number of characters to 
-% identify uniquely the argument names
-
-names=char(args.name);
-s=zeros(ncargs);
-
-for i=1:ncargs-1
-  for j=i+1:ncargs
-    wordlen=min([sum(names(i,:)~=' '),sum(names(j,:)~=' ')]);
-    for k=1:wordlen
-      if (strncmp(names(i,:),names(j,:),k))
-        s(i,j)=k;
-      else
-        break;
-      end
-    end
-  end
-end
-
-for i=1:ncargs
-  us(i)=max([max(s(i,:)),max(s(:,i))])+1;
-end
-usm=max(us);
-
 rargs=varargin{1};
 nargs=length(rargs);
 

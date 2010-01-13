@@ -29,7 +29,7 @@ end
 
 % Create new figure
 figure(gcf);
-clf reset;
+if ~ishold(gcf) clf reset; end
 
 set(gcf,'userdata',cl_get_version);
 
