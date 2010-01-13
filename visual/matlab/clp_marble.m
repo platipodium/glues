@@ -1,4 +1,4 @@
-function clp_marble(varargin);
+function [p,lonlim,latlim]=clp_marble(varargin)
 
 cl_register_function;
 
@@ -9,8 +9,11 @@ lonlim=[-180 180];
 
 % todo: if no figure exists, create one with a call to clp_basemap
 
-if ~exist('filename','var') filename='data/TrueMarble.32km.1350x675.tif'; end
-if ~exist(filename,'file') 
+if ~exist('filename','var') 
+  filename='data/TrueMarble.32km.1350x675.tif'; 
+end
+
+if ~exist(filename,'file')
     warning('File %s does not exist, trying to fetch from server (takes some time)',filename);
     [f,status]=urlwrite(['http://ueod-globe.net/globe/TrueMarble_GeoTIFF/' filename '.gz'],[filename '.gz']);
     %if  status==0
