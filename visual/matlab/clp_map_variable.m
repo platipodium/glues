@@ -3,20 +3,26 @@ function retdata=clp_map_variable(varargin)
 global ivar nvar figoffset;
 
 arguments = {...
-  {'latlim',[27 55]},...
-  {'lonlim',[-15 42]},...
-  {'timelim',[5000,5000]},...
+  {'latlim',[-60 70]},...
+  {'lonlim',[-180 180]},...
+  {'timelim',[12000,3000]},...
   {'reg','all'},...
   {'vars','Density'},...
   {'scale','absolute'},...
   {'figoffset',0},...
   {'zlim',},...
   {'timeunit','BP'},...
+  {'timestep',480},...
   {'marble',0},...
   {'seacolor',0.7*ones(1,3)},...
   {'landcolor',.8*ones(1,3)},...
+  {'transparency',1},...
   {'showsites',0}
 };
+
+% For Europe:
+%  {'latlim',[27 55]},...
+%  {'lonlim',[-15 42]},...
 
 
 cl_register_function;
@@ -168,33 +174,27 @@ time=r.time;
 [tmax,itend]=min(abs(time-tend));
 [tmin,itstart]=min(abs(time-tstart));
 
-ntime=itend-itstart+1;
+timespan=abs(time(itstart)-time(itend));
+ntime=ceil(timespan/timestep);
+itime=itstart:floor((itend-itstart)/ntime):itend;
+if itime(end)~=itend itime=[itime itend]; end
+time=time(itime);
 
-retdata=zeros(nvar,ntime,length(regs))+NaN;
+retdata=zeros(nvar,itend-itstart+1,length(regs))+NaN;
 
 for idovar=1:nvar
     
-    ivar=dovar(idovar);
-
-    
-   data=eval(['r.' r.variables{ivar}]);
-
-   retdata(idovar,:,:)=data(squeeze(regs),itstart:itend)';
-    
-   switch scale
-      case 'absolute', ;
-      otherwise ;
-   end 
-  
-   minmax=[min(min(min(data(regs,itstart:itend)))),max(max(max(data(regs,itstart:itend))))];
-   if exist('zlim','var') minmax=zlim; end
+  ivar=dovar(idovar);
+  data=eval(['r.' r.variables{ivar}]);
+  retdata(idovar,:,:)=data(squeeze(regs),itstart:itend)';
+      
+  minmax=[min(min(min(data(regs,itstart:itend)))),max(max(max(data(regs,itstart:itend))))];
+  if exist('zlim','var') minmax=zlim; end
    
   cmap=colormap('hotcold');
   
-  
   resvar=round(((data-minmax(1)))./(minmax(2)-minmax(1))*(length(cmap)-1))+1;
   resvar(resvar>length(cmap))=length(cmap);
-
   
   % Plot timeseries
   figure(ivar+nvar+figoffset); 
@@ -213,17 +213,11 @@ for idovar=1:nvar
  % title(sprint('%s (sum %f.1)',vars{ivar},sum(sum(data(regs,itend)))));
   hold off;
  
-  
   fd=fullfile(d.plot,'variable');
-  if  ~exist(fd,'file')
-      mkdir(fd);
-  end
+  if ~exist(fd,'file') mkdir(fd); end
   
   fd=fullfile(fd,strrep(r.variables{ivar},' ',''));
-   if  ~exist(fd,'file')
-      mkdir(fd);
-  end
-  
+  if ~exist(fd,'file') mkdir(fd); end
   
   aviname=fullfile(fd,['variable_' strrep(r.variables{ivar},' ','')]);
   if length(infix)>0 aviname=[aviname '_' infix]; end
@@ -233,8 +227,7 @@ for idovar=1:nvar
   pathlen=sum(region.path(:,:,1)>-999,2);
 
   seacolor=0.7*ones(1,3);
-  landcolor=0.8*ones(1,3);
-    
+  landcolor=0.8*ones(1,3);  
    
   % plot map
   figure(ivar+figoffset); 
@@ -248,7 +241,6 @@ for idovar=1:nvar
     if pm>0 alpha(pm,marble); end
   
   else
-      
     m_coast('patch',landcolor);
     % only needed for empty (non-marble background) to get rid of lakes
     c=get(gca,'Children');
@@ -261,14 +253,13 @@ for idovar=1:nvar
     end
   
   end
-  
     
   titletext=r.variables{ivar};
   if length(infix)>0 titletext=[titletext '(' infix ')']; end
   ht=title(titletext,'interpreter','none');
  
   
-  t=time(itstart);
+  t=r.time(itstart);
   if ~isbp
     if (t==0) t=1; end
     if (t<0)
@@ -279,7 +270,6 @@ for idovar=1:nvar
     end
   end
      
-    
   pos=[0.08 0.0 0.83 0.91];
   
   %hbt=m_text(lonlim(1)+0.02*lonrange,latlim(2)-0.2*latrange,[num2str(t) ' ' timeunit],'backgroundColor','y','EdgeColor','k');
@@ -298,15 +288,13 @@ for idovar=1:nvar
   
   ival=find(hp>0);
   alpha(hp(ival),resvar(regs(ival),itstart)./64/1.6);
-  for i=1:length(ival)
-      
-      set(hp(ival(i)),'ButtonDownFcn',@onclick,'UserData',squeeze(data(regs(ival(i)),itstart:itend)));
-      ftime=find(data(regs(ival(i)),itstart:itend)>=threshold);
-      if isempty(ftime) timing(ival(i))=NaN; else timing(ival(i))=r.time(min(ftime)); end
+  for i=1:length(ival)  
+    set(hp(ival(i)),'ButtonDownFcn',@onclick,'UserData',squeeze(data(regs(ival(i)),itstart:itend)));
+    ftime=find(data(regs(ival(i)),itstart:itend)>=threshold);
+    if isempty(ftime) timing(ival(i))=NaN; else timing(ival(i))=r.time(min(ftime)); end
+  end
  
- end
- 
-if ~exist('regioncenter','var') regioncenter=region.center; end 
+  if ~exist('regioncenter','var') regioncenter=region.center; end 
  
 %ishow=find(regioncenter(regs,2)>lonlim(1) & regioncenter(regs,2)<lonlim(2) ...
 %    & regioncenter(regs,1)>latlim(1) & regioncenter(regs,1)<latlim(2) ...
@@ -346,9 +334,10 @@ for i=0:16:64
 end
 end
 
-  ntime=itend-itstart+1;
+  % Reduce data set to timestep
+  resvar=resvar(:,itime);
 
-  for it=itstart:1:itend
+  for it=1:length(time)
     t=time(it);
     if ~isbp
       if (t==0) t=1; end
@@ -362,7 +351,7 @@ end
     
      set(hbt,'String',[num2str(t) ' ' timeunit]);
   
-     itprior=max(it-1,itstart);
+     itprior=max(it-1,1);
      ichanged=find(resvar(regs,it)~=resvar(regs,itprior));
      for ir=1:length(ichanged)
       ireg=ichanged(ir);
@@ -382,7 +371,6 @@ end
       %m_patch(region.path(reg,1:pathlen(reg),1),region.path(reg,1:pathlen(reg),2),cmap(resvar(reg,it),:));
      end
      
- showsites=1
     if showsites 
      isite=find(sage<time(it) & slat>latlim(1) & slat<latlim(2) & slon>lonlim(1) & slon<lonlim(2));
      if ~isempty(isite)
@@ -417,6 +405,7 @@ end
   %end;
   
 end
+
 return;
 end
 
