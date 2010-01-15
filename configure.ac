@@ -176,7 +176,7 @@ if test "x${netcdf_path}" != "no" ; then
 
    AC_CHECK_HEADERS([netcdf.h])
    AC_CHECK_HEADERS([netcdfcpp.h])
-   AC_CHECK_LIB(netcdf,ncclose)
+   AC_CHECK_LIB(netcdf,_ncclose)
    AC_CHECK_LIB(netcdf_c++,ncclose)
   
 else

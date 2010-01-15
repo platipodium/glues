@@ -1,0 +1,57 @@
+netcdf glues_template {
+dimensions:
+	region = 1 ;
+	time = UNLIMITED ; // (0 currently)
+variables:
+	float region(region) ;
+		region:units =  ;
+		region:long_name = "region_index" ;
+		region:standard_name = "region_index" ;
+		region:description = "Unique integer index of region" ;
+		region:valid_min = 1. ;
+		region:coordinates = "lon lat" ;
+	float time(time) ;
+		time:units = "years since 01-01-01" ;
+		time:calendar = "360_day" ;
+	float latitude(region) ;
+		latitude:units = "degrees_north" ;
+		latitude:long_name = "center_latitude" ;
+		latitude:description = "Latitude of region center" ;
+	float longitude(region) ;
+		longitude:units = "degrees_east" ;
+		longitude:long_name = "center_longitude" ;
+		longitude:description = "longitude of region center" ;
+	float technology(time, region) ;
+		technology:long_name = "technology_index" ;
+		technology:units = "1" ;
+		technology:description = "Relative technology index with respect to mesolithic hunters" ;
+	float farming(time, region) ;
+		farming:long_name = "farming_ratio" ;
+		farming:units = "1" ;
+		farming:description = "Fraction of agriculturalist and pastoralist activities in population" ;
+	float economies(time, region) ;
+		economies:long_name = "economy_diversity" ;
+		economies:units = "1" ;
+		economies:description = "Number of diverse economic strategies" ;
+	float population_density(time, region) ;
+		population_density:units = "km^-2" ;
+		population_density:long_name = "population_density" ;
+		population_density:description = "Population density" ;
+
+// global attributes:
+		:Conventions = "CF-1.4" ;
+		:title = "GLUES netcdf template in CF conventions" ;
+		:history = "Glues template netcdf file" ;
+		:institution = "GKSS-Forschungszentrum Geesthacht GmbH" ;
+		:source = "GLUES 1.1.7 model" ;
+		:comment =  ;
+		:references = "Wirtz & Lemmen (2003), Lemmen (2009)" ;
+		:model_name = "GLUES" ;
+data:
+
+ region = _ ;
+
+ latitude = _ ;
+
+ longitude = _ ;
+}
