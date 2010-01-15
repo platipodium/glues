@@ -1,7 +1,7 @@
-/* GLUES nc_glues; this file is part of
+/* GLUES nc_result; this file is part of
    the Global Land Use and technological Evolution Simulator
    
-   Copyright (C) 2009,2010
+   Copyright (C) 2010
    Carsten Lemmen <carsten.lemmen@gkss.de>
 
    This program is free software; you can redistribute it and/or modify it
