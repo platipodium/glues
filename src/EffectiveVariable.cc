@@ -63,9 +63,11 @@ glues::EffectiveVariable& glues::EffectiveVariable::operator+=(const double d) {
     return *this;
 }
 
-std::ostream& glues::operator<<(std::ostream& os, const glues::EffectiveVariable& ev) {
+namespace glues {
+std::ostream& operator<<(std::ostream& os, const EffectiveVariable& ev) {
     return os << ev.name << " " << ev.initialvalue << " " << ev.minvalue << " "
 	      << ev.value << " " << ev.maxvalue ;
+}
 }
 
 double glues::EffectiveVariable::CheckBounds(const double v) const {

@@ -34,28 +34,28 @@
 
 namespace glues {
 
-    class LocalClimate {
-    protected:
-	double lai,npp,tlim;
-	double gdd0; // not yet used and implemented
-    private:
-	static double gdd_opt;
+  class LocalClimate {
     public:
-	static void Init(const double);
-	LocalClimate(double,double,double);
-        LocalClimate();
+	  double lai,npp,tlim;
+	  double gdd0; // not yet used and implemented
+    public:
+	  static double gdd_opt;
+    public:
+	  static void Init(const double);
+	  LocalClimate(double,double,double);
+      LocalClimate();
 	
 	/** Accessor methods */
 	//double Lai(double l)	        {return lai = (l > 0?l:glues::EPS);}
-	double Lai()	const		{return lai;}
-	double Npp(double n)		{return npp = (n > 0?n:glues::EPS);}
-	double Npp()	const		{return npp;}
+	  double Lai()	const		{return lai;}
+	  double Npp(double n)		{return npp = (n > 0?n:glues::EPS);}
+	  double Npp()	const		{return npp;}
 	//double Tlim(double tl)		{return tlim = tl;}
-	double Tlim() const      	{return tlim;}
-	static double GddOpt() {return gdd_opt;}
+	  double Tlim() const      	{return tlim;}
+	  static double GddOpt() {return gdd_opt;}
+   };
 	
 	/** other methods */
-	friend std::ostream& operator<<(std::ostream& os, const LocalClimate& climate);
-    };
+    std::ostream& operator<<(std::ostream&, const LocalClimate&);
 }
 #endif

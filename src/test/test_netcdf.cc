@@ -1,7 +1,7 @@
 /* GLUES test; this file is part of
    the Global Land Use and technological Evolution Simulator
    
-   Copyright (C) 2009
+   Copyright (C) 2009,2010
    Carsten Lemmen <carsten.lemmen@gkss.de>
 
    This program is free software; you can redistribute it and/or modify it
@@ -41,7 +41,6 @@ int main(int argc, char* argv[])
 #endif
 
     NcFile ncfile("test_netcdf.nc");
-
 
     std::cout << " OK" << std::endl;    
     return 0;

@@ -40,8 +40,8 @@
 //# Globals.h for IceExtent
 
 namespace glues {
-    
-    class LandRegion: public GeoRegion {
+
+    class LandRegion : public GeoRegion {
     protected:
         LocalClimate climate;
         double icefreefraction;
@@ -77,10 +77,11 @@ namespace glues {
 	double FoodExtractionPotential();
 	double LocalSpeciesDiversity();
 	
-	friend std::ostream& operator<<(std::ostream& os,const glues::LandRegion&);
+    friend std::ostream& glues::operator<<(std::ostream&, const glues::LandRegion&);
 	
     private:
 	double hyper(double,double,unsigned int);
     };
 }
+
 #endif

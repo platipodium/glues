@@ -81,11 +81,12 @@ double glues::Population::DeathCoefficient(const double d) {
   }
 */
 
-std::ostream& glues::operator<<(std::ostream& os, const Population& p) {
+namespace glues {
+std::ostream& operator<<(std::ostream& os, const Population& p) {
     return os << p.birthcoefficient << " " << p.deathcoefficient << " "
 	      << p.size << " " << p.rgr << " " << p.size*p.rgr ;
 }
-
+}
 /** EOF Population.cc */
 
 

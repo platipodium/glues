@@ -1,7 +1,7 @@
 /* GLUES land region specification; this file is part of
    the Global Land Use and technological Evolution Simulator
    
-   Copyright (C) 2007,2008
+   Copyright (C) 2007,2008,2009,2010
    Carsten Lemmen <carsten.lemmen@gkss.de>, Kai Wirtz <kai.wirtz@gkss.de>
 
    This program is free software; you can redistribute it and/or modify it

@@ -1,4 +1,5 @@
 function plot_multi_format(plot,basename,varargins)
+
 cl_register_function();
 
     try
@@ -18,7 +19,7 @@ cl_register_function();
     %print('-dpsc2','-r150',[basename '.ps']); % -r600
     catch end;
     try 
-    %print('-dpng','-r600',[basename '.png']);
+     print('-dpng','-r600',[basename '.png']);
     catch end;
     try 
     %print('-djpeg','-r600',[basename '.jpeg']);

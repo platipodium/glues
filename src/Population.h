@@ -75,9 +75,9 @@ namespace glues {
 	inline double Change() {
 	    return rgr*size*timestep;
 	}
-	
-	friend std::ostream& operator<<(std::ostream&, const Population&);
 
+    friend std::ostream& glues::operator<<(std::ostream&, const glues::Population&);
+	
     };
 }
 
