@@ -1,10 +1,10 @@
-function retdata=clp_map_variable(varargin)
+function rdata=clp_map_variable(varargin)
 
 global ivar nvar figoffset;
 
 arguments = {...
-  {'latlim',[-60 70]},...
-  {'lonlim',[-180 180]},...
+  {'latlim',[-55 65]},...
+  {'lonlim',[-130 150]},...
   {'timelim',[12000,3000]},...
   {'reg','all'},...
   {'vars','Density'},...
@@ -12,11 +12,13 @@ arguments = {...
   {'figoffset',0},...
   {'zlim',},...
   {'timeunit','BP'},...
-  {'timestep',480},...
+  {'timestep',100},...
   {'marble',0},...
   {'seacolor',0.7*ones(1,3)},...
   {'landcolor',.8*ones(1,3)},...
   {'transparency',1},...
+  {'snapyear',1000},...
+  {'movie',1},...
   {'showsites',0}
 };
 
@@ -62,7 +64,7 @@ if exist([resultfilename '.mat'],'file') load(resultfilename); else
     return; 
 end
 
-infix=strrep(resultfilename,'result','');
+infix=strrep(resultfilename,'results','');
 if length(infix)>0
   while infix(1)=='_' infix=infix(2:end); end
 end
@@ -176,7 +178,7 @@ time=r.time;
 
 timespan=abs(time(itstart)-time(itend));
 ntime=ceil(timespan/timestep);
-itime=itstart:floor((itend-itstart)/ntime):itend;
+itime=itstart:ceil((itend-itstart)/ntime):itend;
 if itime(end)~=itend itime=[itime itend]; end
 time=time(itime);
 
@@ -189,7 +191,7 @@ for idovar=1:nvar
   retdata(idovar,:,:)=data(squeeze(regs),itstart:itend)';
       
   minmax=[min(min(min(data(regs,itstart:itend)))),max(max(max(data(regs,itstart:itend))))];
-  if exist('zlim','var') minmax=zlim; end
+  %if exist('zlim','var') minmax=zlim; end
    
   cmap=colormap('hotcold');
   
@@ -273,21 +275,22 @@ for idovar=1:nvar
   pos=[0.08 0.0 0.83 0.91];
   
   %hbt=m_text(lonlim(1)+0.02*lonrange,latlim(2)-0.2*latrange,[num2str(t) ' ' timeunit],'backgroundColor','y','EdgeColor','k');
-  hbt=m_text(lonlim(1)+0.02*lonrange,latlim(2)-0.2*latrange,[num2str(t) ' ' timeunit],...
-      'color','y','FontWeight','bold','backgroundColor','none','EdgeColor','none');
+  hbt=m_text(lonlim(1)+0.3*lonrange,latlim(2)-0.2*latrange,[num2str(t) ' ' timeunit],...
+      'color','y','FontWeight','bold','backgroundColor','none','EdgeColor','none','fontSize',15);
        
   if exist('ylim','var') minmax=ylim; end
   set(gca,'Position',pos,'box','off');
 
   cc='b' ; % base color for alpha fading
-  cchigh='b' ; % base color for highlighting
+  cchigh='r' ; % base color for highlighting
 
   threshold=0.1;
   
-  hp=clp_regionpath('lat',latlim,'lon',lonlim,'draw','patch','col',cc);
+  hp=clp_regionpath('lat',latlim,'lon',lonlim,'draw','patch','col',landcolor);
   
   ival=find(hp>0);
-  alpha(hp(ival),resvar(regs(ival),itstart)./64/1.6);
+  alpha(hp(ival),0);
+  
   for i=1:length(ival)  
     set(hp(ival(i)),'ButtonDownFcn',@onclick,'UserData',squeeze(data(regs(ival(i)),itstart:itend)));
     ftime=find(data(regs(ival(i)),itstart:itend)>=threshold);
@@ -310,19 +313,23 @@ for idovar=1:nvar
   %  set(hp(ishow(i6)),'FaceColor',[1 0.5 0],'FaceAlpha',0.25);
   %  set(hp(ishow(i7)),'FaceColor',[1 0 0],'FaceAlpha',0.25);
 
-if (0) % colorbar
+if (1) % colorbar
      
 cbw=0.4;  %  (relative width of colorbar)
-cbxo=0.15; %(x-offset of colorbar)
+cbxo=0.35; %(x-offset of colorbar)
 cbyo=0.04;
-cbh=0.03;
+cbh=0.08;
 cby=latlim(1)+(cbyo+[0,0,cbh,cbh])*(latlim(2)-latlim(1));
 cbx=lonlim(1)+(cbxo+[0,cbw,cbw,0])*(lonlim(2)-lonlim(1));
 
 m_patch(cbx,cby,'w');
 for i=1:64
   cba(i)=m_patch(lonlim(1)+(cbxo+cbw/64*(i-1)+[0,cbw/64,cbw/64,0])*(lonlim(2)-lonlim(1)),cby,cc,'EdgeColor','none');
-  alpha(cba(i),i/64.0/1.6);
+  greyval=i/64.0/1.6;
+  greyval=0.15+0.35*sqrt(i./64);
+  if (abs(greyval-0.4)<0.1) set(cba(i),'FaceColor',cchigh); end
+  
+  alpha(cba(i),greyval);
 end
 
 cbtv=scale_precision(minmax(1):(minmax(2)-minmax(1))/4.0:minmax(2),2);
@@ -371,6 +378,33 @@ end
       %m_patch(region.path(reg,1:pathlen(reg),1),region.path(reg,1:pathlen(reg),2),cmap(resvar(reg,it),:));
      end
      
+     
+     % Update colorbar
+     if exist('cba','var')
+      resvarmean=repmat(mean(resvar(:,it)),1,2);
+      resvarmax=repmat(max(resvar(:,it)),1,2);
+      resvarmed=repmat(median(resvar(:,it)),1,2);
+      lxmean=lonlim(1)+(cbxo+cbw/64*(resvarmean-1)+cbw/128)*(lonlim(2)-lonlim(1));
+      lxmed =lonlim(1)+(cbxo+cbw/64*(resvarmed -1)+cbw/128)*(lonlim(2)-lonlim(1));
+      lxmax =lonlim(1)+(cbxo+cbw/64*(resvarmax -1)+cbw/128)*(lonlim(2)-lonlim(1));
+      [xmean,ymean]=m_ll2xy(lxmean,cby(1,3));
+      [xmed ,ymean]=m_ll2xy(lxmed ,cby(1,3));
+      [xmax ,ymean]=m_ll2xy(lxmax ,cby(1,3));
+      ymean=repmat(ymean,1,2);
+      if ~exist('cbmean','var')
+        cbmean(1)=m_plot(lxmean,cby([1 3]),'b-');
+        cbmean(2)=m_plot(lxmax ,cby([1 3]),'r-');
+        cbmean(3)=m_plot(lxmed ,cby([1 3]),'b:');
+      else
+        set(cbmean(1),'XData',xmean);
+        set(cbmean(2),'XData',xmax);
+        set(cbmean(3),'XData',xmed);
+          
+      end
+     end
+     
+     
+     
     if showsites 
      isite=find(sage<time(it) & slat>latlim(1) & slat<latlim(2) & slon>lonlim(1) & slon<lonlim(2));
      if ~isempty(isite)
@@ -388,22 +422,28 @@ end
     plotname=[plotname sprintf('%05d_%d',12000-t,t)];
    
     
-    if mod(t,100)==0
-    %mod(it,4)==1
-    %plot_multi_format(gcf,plotname);
+    if mod(t,snapyear)==0
+    ;
+        %mod(it,4)==1
+      plot_multi_format(gcf,plotname);
     end
     
     f=getframe(gcf);
      %if (abs(tend-tstart)>10*r.tstep) mov=addframe(mov,f); end;
     mov=addframe(mov,f);
     fprintf('.');
-    if mod(it,80)==0 fprintf('\n'); end
+    if mod(it,50)==0 fprintf('\n'); end
     %it=it+1;
   end
   %if (tend-tstart>10*r.tstep) 
   mov=close(mov); 
   %end;
   
+end
+hold off;
+
+if nargout>0 
+  rdata=retdata;
 end
 
 return;

@@ -39,8 +39,8 @@ namespace glues
 	    double CheckBounds(const double, const double, const double) const;
 	protected:
 	    
-	    const static double minvalue=glues::EPS;
-	    const static double maxvalue=1-glues::EPS;
+	    const static double minvalue=0; //=glues::EPS;
+	    const static double maxvalue=1; //=1-glues::EPS;
 	    static double initialvalue;
 	    
 	public:

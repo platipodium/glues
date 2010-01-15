@@ -45,5 +45,4 @@ fi
 
 test -x ./configure || chmod +x ./configure
 
-cd src/sisi
-exec ./bootstrap
+#test -x src/sisi/bootstrap && ( cd src/sisi;  exec ./bootstrap) 
