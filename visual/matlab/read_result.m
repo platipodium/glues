@@ -1,4 +1,4 @@
-function res=read_result(filename);
+function res=read_result(filename)
 % Reads a glues result file and dumps it to a matlab binary file
 % regardless of endianness of result file
 
@@ -8,6 +8,7 @@ nreg=685;
 
 [d,f]=get_files(nreg);
 
+%% File opening in both big/little endian
 if nargin<1
   file=fullfile(d.setup,'results.out');
 elseif length(strfind(filename,'/'))>0
@@ -50,6 +51,8 @@ tstep=fread(fid,1,'float32');
 result = fread(fid,inf,'float32');
 fclose(fid);
 
+
+%% Quality checks on time and record length
 toffset=500.0;
 nstep=ceil((tend-tstart)/tstep);
 
@@ -66,6 +69,7 @@ if tnum~=nstep
   end
 end
 
+%% Reshape results
 result=reshape(result,nreg,nums,nstep);
 
 r.nreg=nreg;
