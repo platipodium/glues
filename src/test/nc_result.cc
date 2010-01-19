@@ -28,6 +28,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <vector>
 #include <cstdlib>
 #include <cstdio>
@@ -40,6 +41,9 @@
 #endif
 
 using namespace std;
+
+int copy_att(NcFile*,const NcAtt*);
+int copy_att(NcVar*,const NcAtt*);
 
 int main(int argc, char* argv[]) 
 {
@@ -119,17 +123,8 @@ Byte fields for nreg
   }
 
   // Copy global attributes
-  int natt = nctmpl.num_atts();
-  NcAtt* att;
-  for (int i=0; i<natt; i++) {
-    att=nctmpl.get_att(i);
-    long attlen=att->num_vals();
-    NcType atttype=att->type();
-    NcValues* values=att->values();
-    int nbyte=values->bytes_for_one();
-    char buffer[attlen*nbyte];
-    //buffer = (char*)values;
-    //ncfile.add_att(att->name(),att->
+  for (int i=0; i<nctmpl.num_atts(); i++) {  
+    copy_att(&ncfile,nctmpl.get_att(i));
   }
 
   // Create coordinate variables and copy all       
@@ -155,8 +150,18 @@ Byte fields for nreg
     if (ndim==5) ncvar=ncfile.add_var(var->name(), var->type(), 
       var->get_dim(0),var->get_dim(1),var->get_dim(2),var->get_dim(3),var->get_dim(4));
   }
-} 
+ }
  
+ // For each target variable, look for corresponding attributes in source file and copy them
+ for (int i=0; i<ncfile.num_vars(); i++) {
+   var=ncfile.get_var(i);
+   if (ncvar=nctmpl.get_var(var->name())) {
+     for (int i=0; i<ncvar->num_atts(); i++) {  
+       copy_att(var,ncvar->get_att(i));
+     }
+   }
+ }
+  
  var=ncfile.get_var("time");
   for (int i=0; i<ntime; i++) var->put_rec(ncfile.rec_dim(),time+i,i);
   //netcdf_copyvar(ncfile,ncrvar);  
@@ -214,5 +219,39 @@ Byte fields for nreg
  
  return 0;
 #endif
+}
+
+int copy_att(NcFile* file, const NcAtt* att) { 
+  // Copy a global attribute
+  long attlen=att->num_vals();
+  NcType atttype=att->type();
+  NcValues* values=att->values();
+  
+  switch (atttype) {
+	  case ncChar: 	file->add_att(att->name(),(char*)values->base()); break;
+	  case ncByte: file->add_att(att->name(),attlen,(short*)values->base()); break;
+	  case ncShort: file->add_att(att->name(),attlen,(short*)values->base()); break;
+	  case ncInt: file->add_att(att->name(),attlen,(long*)values->base()); break;
+	  case ncFloat: file->add_att(att->name(),attlen,(float*)values->base()); break;
+	  case ncDouble: file->add_att(att->name(),attlen,(double*)values->base()); break;
+  }
+  return 0;
+}
+
+int copy_att(NcVar* var, const NcAtt* att) { 
+  // Copy a global attribute
+  long attlen=att->num_vals();
+  NcType atttype=att->type();
+  NcValues* values=att->values();
+  
+  switch (atttype) {
+	  case ncChar: 	var->add_att(att->name(),(char*)values->base()); break;
+	  case ncByte: var->add_att(att->name(),attlen,(short*)values->base()); break;
+	  case ncShort: var->add_att(att->name(),attlen,(short*)values->base()); break;
+	  case ncInt: var->add_att(att->name(),attlen,(long*)values->base()); break;
+	  case ncFloat: var->add_att(att->name(),attlen,(float*)values->base()); break;
+	  case ncDouble: var->add_att(att->name(),attlen,(double*)values->base()); break;
+  }
+  return 0;
 }
 
