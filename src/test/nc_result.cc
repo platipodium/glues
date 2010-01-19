@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
   for (char i=0; i<numvar; i++) {
     ifs >> line;
     vars.push_back(line);
-  //  cout <<  line << endl;
+    //cout <<  line << endl;
   }
 
 /*
@@ -136,7 +136,8 @@ Byte fields for nreg
   NcVar *var, *ncvar;
   if (!(var = ncfile.add_var("region", ncFloat, rdim))) return 1;
 
-  NcError ncerror(NcError::verbose_nonfatal);
+{
+  NcError ncerror(NcError::silent_nonfatal);
   
   int nvar = nctmpl.num_vars();
   for (int i=0; i<nvar; i++) {
@@ -154,8 +155,9 @@ Byte fields for nreg
     if (ndim==5) ncvar=ncfile.add_var(var->name(), var->type(), 
       var->get_dim(0),var->get_dim(1),var->get_dim(2),var->get_dim(3),var->get_dim(4));
   }
+} 
  
-  var=ncfile.get_var("time");
+ var=ncfile.get_var("time");
   for (int i=0; i<ntime; i++) var->put_rec(ncfile.rec_dim(),time+i,i);
   //netcdf_copyvar(ncfile,ncrvar);  
   
@@ -165,28 +167,42 @@ Byte fields for nreg
 
   string s;
   vector<string>::iterator ivar;
-  char data[ntime*nreg*sizeof(float)];
+  char data[nreg*sizeof(float)];
   float* result = (float*) data;
-  for (ivar=vars.begin() ; ivar<vars.end(); ivar++)  {
+  int i;
+  
+  {
+  NcError ncerror(NcError::silent_nonfatal);
+
+  for (int itime=0; itime<ntime; itime++) 
+  
+  for (ivar=vars.begin(); ivar<vars.end(); ivar++)  {
     
     var=ncfile.get_var((*ivar).c_str());
     if (!var) {
-      if (strcmp((*ivar).c_str(),"Technology")) s="technology";
-      if (strcmp((*ivar).c_str(),"Farming")) s="farming";
-      if (strcmp((*ivar).c_str(),"Agricultures")) s="economies";
-      if (strcmp((*ivar).c_str(),"Resistance")) s="resistance";
-      if (strcmp((*ivar).c_str(),"Density")) s="population_density";
-      if (strcmp((*ivar).c_str(),"Migration")) s="migration_rate";
-      if (strcmp((*ivar).c_str(),"Climate")) s="climate";
-      if (strcmp((*ivar).c_str(),"CivStart")) s="time_of_high_civilization";
-      if (strcmp((*ivar).c_str(),"Birthrate")) s="rate_of_birth";
+      if (!strcmp((*ivar).c_str(),"Technology")) s="technology";
+      else if (!strcmp((*ivar).c_str(),"Farming")) s="farming";
+      else if (!strcmp((*ivar).c_str(),"Agricultures")) s="economies"; 
+      else if (!strcmp((*ivar).c_str(),"Resistance")) s="resistance"; 
+      else if (!strcmp((*ivar).c_str(),"Density")) s="population_density";
+      else if (!strcmp((*ivar).c_str(),"Migration")) s="migration_rate";
+      else if (!strcmp((*ivar).c_str(),"Climate")) s="climate";
+      else if (!strcmp((*ivar).c_str(),"CivStart")) s="time_of_high_civilization";
+      else if (!strcmp((*ivar).c_str(),"Birthrate")) s="rate_of_birth";
       var=ncfile.get_var(s.c_str());
-      if (!var) ncfile.add_var(s.c_str(),ncFloat,tdim,rdim);
+      if (!var) var=ncfile.add_var(s.c_str(),ncFloat,tdim,rdim);
     }
+    
+    //cout << (*ivar) << "/" << s << "t=" << time[itime] << " r=" ; 
     ifs.read(data,sizeof(data));
-    var->put(result,ntime*nreg);
+    result=(float*)data;
+    var->put_rec(result,itime);
+    //for (i=0; i<nreg; i+=137) cout << result[i] << ",";
+    //cout << endl;
+    
+    i++;
   }
-
+  }
 
   ifs.close();
 
