@@ -20,13 +20,20 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
-   @date   2009-08-07
-   @file nc_glues.cc
+   @date   2010-01-15
+   @file nc_result.cc
 */
 
 #include "config.h"
 #include <string>
-#include "iostream"
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <cstdlib>
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <map>
 
 #ifdef HAVE_NETCDF_H
 #include "netcdfcpp.h"
@@ -42,81 +49,154 @@ int main(int argc, char* argv[])
     return 1;
 #else
  
-  const int ntime=0;
-  const int nreg=1;
-  string filename="glues_template.nc";
+  string template_filename="glues_template.nc";
+  string input_filename="../../examples/setup/685/results.out";
+  string output_filename="results.nc";
    
-  NcFile ncfile(filename.c_str(), NcFile::Replace);
+  NcFile nctmpl(template_filename.c_str(), NcFile::ReadOnly);
+  if (!nctmpl.is_valid()) return 1;
+  
+  ifstream ifs(input_filename.c_str(),ios::in | ios::binary);
+  if (!ifs.good()) return 1;
+  
+  NcFile ncfile(output_filename.c_str(), NcFile::Replace);
   if (!ncfile.is_valid()) return 1;
   
-  ncfile.add_att("Conventions","CF-1.4");
-  ncfile.add_att("title","GLUES netcdf template in CF conventions");
-  ncfile.add_att("history","Glues template netcdf file");
-  ncfile.add_att("institution","GKSS-Forschungszentrum Geesthacht GmbH");
-  ncfile.add_att("source","GLUES 1.1.7 model");
-  ncfile.add_att("comment","");
-  ncfile.add_att("references","Wirtz & Lemmen (2003), Lemmen (2009)");
+  vector<string> vars;
+  string line;
   
-  ncfile.add_att("model_name","GLUES");
+  // big endian versus low endian?
   
-  NcDim *regdim, *timedim;
-  if (!(regdim  = ncfile.add_dim("region", nreg))) return 1;
-  if (!(timedim = ncfile.add_dim("time", ntime))) return 1;
-       
-  NcVar *regionvar;
-  if (!(regionvar = ncfile.add_var("region", ncFloat, regdim))) return 1;
+  char numvar; // matlab uint8
+  ifs.get(numvar);
   
-  regionvar->add_att("units", "");
-  regionvar->add_att("long_name","region_index");
-  regionvar->add_att("standard_name","region_index");
-  regionvar->add_att("description","Unique integer index of region");
-  regionvar->add_att("valid_min",1.0);
-  regionvar->add_att("coordinates","lon lat");
-  
-  //regionvar->add_att("_FillValue",1E-30);
+  for (char i=0; i<numvar; i++) {
+    ifs >> line;
+    vars.push_back(line);
+  //  cout <<  line << endl;
+  }
 
-  NcVar *timevar;
-  timevar   = ncfile.add_var("time", ncFloat, timedim);
-  timevar->add_att("units","years since 01-01-01");
-  timevar->add_att("calendar","360_day");
+/*
+Byte fields for nreg
+00 40 2b 44
+*/
   
-  NcVar *latvar;
-  latvar = ncfile.add_var("latitude",ncFloat, regdim);
-  latvar->add_att("units","degrees_north");
-  latvar->add_att("long_name","center_latitude");
-  latvar->add_att("description","Latitude of region center");
+  char dummy,ch4[20];
+  ifs.get(dummy);
+  ifs.read(ch4,20);
   
-  NcVar *lonvar;
-  lonvar = ncfile.add_var("longitude",ncFloat, regdim);
-  lonvar->add_att("units","degrees_east");
-  lonvar->add_att("long_name","center_longitude");
-  lonvar->add_att("description","longitude of region center");
+ // printf("%x %x %x %x\n",ch4[0],ch4[1],ch4[2],ch4[3]);
   
-  NcVar *techvar;
-  techvar = ncfile.add_var("technology",ncFloat,timedim,regdim);
-  techvar->add_att("long_name","technology_index");
-  techvar->add_att("units","1");
-  techvar->add_att("description","Relative technology index with respect to mesolithic hunters");
+  float* fptr=(float*) (ch4);
+  int nreg = (int)(*fptr);
+  // The following check fails on big-endian systems
+  if (nreg>1E6 || nreg < 1) return 1;  
+  
+  float tstart=*(fptr+1);  
+  float tend  =*(fptr+2);
+  float tstep =*(fptr+3);
+  int ntime=ceil((tend-tstart)/tstep);
+//  cout << nreg << " " << tstart << ":" << tstep << ":" << tend << " " << ntime << endl;
+  
+  
+  // Populate coordinate vars
+  float time[ntime];
+  for (int i=0; i<ntime; i++) time[i]=tstart+i*tstep;
+  float region[nreg];
+  for (int i=0; i<nreg; i++) region[i]=1+i;
+  
+  // Create time and region dimensions, copy all others
+  int ndim = nctmpl.num_dims();
+  NcDim* dim;
+  NcDim *rdim, *tdim;
+  if (!(rdim = ncfile.add_dim("region", nreg))) return 1;
+  if (!(tdim = ncfile.add_dim("time", 0))) return 1;
+  for (int i=0; i<ndim; i++) {
+    dim=nctmpl.get_dim(i);
+    if (strncmp(dim->name(),"region",6)) continue;
+    if (strncmp(dim->name(),"time",4)) continue;
+    ncfile.add_dim(dim->name(),dim->size());
+  }
 
-  NcVar *farmvar;
-  farmvar = ncfile.add_var("farming",ncFloat,timedim,regdim);
-  farmvar->add_att("long_name","farming_ratio");
-  farmvar->add_att("units","1");
-  farmvar->add_att("description","Fraction of agriculturalist and pastoralist activities in population");
- 
-  NcVar *econvar;
-  econvar = ncfile.add_var("economies",ncFloat,timedim,regdim);
-  econvar->add_att("long_name","economy_diversity");
-  econvar->add_att("units","1");
-  econvar->add_att("description","Number of diverse economic strategies");
+  // Copy global attributes
+  int natt = nctmpl.num_atts();
+  NcAtt* att;
+  for (int i=0; i<natt; i++) {
+    att=nctmpl.get_att(i);
+    long attlen=att->num_vals();
+    NcType atttype=att->type();
+    NcValues* values=att->values();
+    int nbyte=values->bytes_for_one();
+    char buffer[attlen*nbyte];
+    //buffer = (char*)values;
+    //ncfile.add_att(att->name(),att->
+  }
+
+  // Create coordinate variables and copy all       
+  NcVar *var, *ncvar;
+  if (!(var = ncfile.add_var("region", ncFloat, rdim))) return 1;
+
+  NcError ncerror(NcError::verbose_nonfatal);
+  
+  int nvar = nctmpl.num_vars();
+  for (int i=0; i<nvar; i++) {
+    var=nctmpl.get_var(i);
+    if (ncvar=ncfile.get_var(var->name())) continue;
     
-  NcVar *densityvar;
-  densityvar = ncfile.add_var("population_density",ncFloat,timedim,regdim);
-  densityvar->add_att("units","km^-2");
-  densityvar->add_att("long_name","population_density");
-  densityvar->add_att("description","Population density");
-   
-  return 0;
+    ndim=var->num_dims();
+    if (ndim==1) ncvar=ncfile.add_var(var->name(), var->type(), var->get_dim(0));
+    if (ndim==2) ncvar=ncfile.add_var(var->name(), var->type(), 
+      var->get_dim(0),var->get_dim(1));
+    if (ndim==3) ncvar=ncfile.add_var(var->name(), var->type(), 
+      var->get_dim(0),var->get_dim(1),var->get_dim(2));
+    if (ndim==4) ncvar=ncfile.add_var(var->name(), var->type(), 
+      var->get_dim(0),var->get_dim(1),var->get_dim(2),var->get_dim(3));
+    if (ndim==5) ncvar=ncfile.add_var(var->name(), var->type(), 
+      var->get_dim(0),var->get_dim(1),var->get_dim(2),var->get_dim(3),var->get_dim(4));
+  }
+ 
+  var=ncfile.get_var("time");
+  for (int i=0; i<ntime; i++) var->put_rec(ncfile.rec_dim(),time+i,i);
+  //netcdf_copyvar(ncfile,ncrvar);  
+  
+  var=ncfile.get_var("region");
+  //dim=var->get_dim(0);
+  for (int i=0; i<nreg; i++)  var->put(region,nreg);  
+
+  string s;
+  vector<string>::iterator ivar;
+  char data[ntime*nreg*sizeof(float)];
+  float* result = (float*) data;
+  for (ivar=vars.begin() ; ivar<vars.end(); ivar++)  {
+    
+    var=ncfile.get_var((*ivar).c_str());
+    if (!var) {
+      if (strcmp((*ivar).c_str(),"Technology")) s="technology";
+      if (strcmp((*ivar).c_str(),"Farming")) s="farming";
+      if (strcmp((*ivar).c_str(),"Agricultures")) s="economies";
+      if (strcmp((*ivar).c_str(),"Resistance")) s="resistance";
+      if (strcmp((*ivar).c_str(),"Density")) s="population_density";
+      if (strcmp((*ivar).c_str(),"Migration")) s="migration_rate";
+      if (strcmp((*ivar).c_str(),"Climate")) s="climate";
+      if (strcmp((*ivar).c_str(),"CivStart")) s="time_of_high_civilization";
+      if (strcmp((*ivar).c_str(),"Birthrate")) s="rate_of_birth";
+      var=ncfile.get_var(s.c_str());
+      if (!var) ncfile.add_var(s.c_str(),ncFloat,tdim,rdim);
+    }
+    ifs.read(data,sizeof(data));
+    var->put(result,ntime*nreg);
+  }
+
+
+  ifs.close();
+
+
+  
+  nctmpl.close();
+  ifs.close();
+  ncfile.close();
+ 
+ return 0;
 #endif
 }
 
