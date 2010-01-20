@@ -44,6 +44,7 @@ using namespace std;
 
 int copy_att(NcFile*,const NcAtt*);
 int copy_att(NcVar*,const NcAtt*);
+int append(NcAtt*,const char*);
 
 int main(int argc, char* argv[]) 
 {
@@ -122,14 +123,28 @@ Byte fields for nreg
     ncfile.add_dim(dim->name(),dim->size());
   }
 
-  time_t  today;
+  time_t today;
   std::time(&today);
+  string s1(asctime(gmtime(&today)));
+  string timestring=s1.substr(0,s1.find_first_of("\n"));
+
   // Copy global attributes
   for (int i=0; i<nctmpl.num_atts(); i++) {  
     copy_att(&ncfile,nctmpl.get_att(i));
   }
-  ncfile.add_att("date_of_creation",asctime(gmtime(&today)));
-
+  if (ncfile.get_att("date_of_creation"))
+    ncfile.add_att("date_of_modification",timestring.c_str());
+  else
+    ncfile.add_att("date_of_creation",timestring.c_str());
+  
+/*  if (ncfile.get_att("history"))
+    append(ncfile.get_att("history"),(string("nc_result ") + timestring).c_str());
+  else*/
+    ncfile.add_att("history",("nc_result " + timestring).c_str());
+  
+  ncfile.add_att("filenames_input",(input_filename + ", " + template_filename).c_str());
+  ncfile.add_att("filenames_output",output_filename.c_str());
+  
   // Create coordinate variables and copy all       
   NcVar *var, *ncvar;
   if (!(var = ncfile.add_var("region", ncFloat, rdim))) return 1;
@@ -200,10 +215,10 @@ Byte fields for nreg
       var=ncfile.get_var(s.c_str());
       if (!var) {
         var=ncfile.add_var(s.c_str(),ncFloat,tdim,rdim);
-        var->add_att("date_of_creation",ctime(&today));
+        var->add_att("date_of_creation",timestring.c_str());
       }
       else
-        var->add_att("date_of_modification",ctime(&today));
+        var->add_att("date_of_modification",timestring.c_str());
       
     }
     
@@ -267,4 +282,17 @@ int copy_att(NcVar* var, const NcAtt* att) {
   }
   return 0;
 }
+
+int append(NcAtt* att, const char* ch) { 
+  // Copy a global attribute
+  long attlen=att->num_vals();
+  NcType atttype=att->type();
+  NcValues* values=att->values();
+  string s1((char*)values->base());
+  string s2 = s2.append(", " + string(ch));
+  
+  return 0;
+}
+
+
 

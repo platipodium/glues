@@ -1,7 +1,7 @@
 /* GLUES create_reg_climate; this file is part of
    the Global Land Use and technological Evolution Simulator
    
-   Copyright (C) 2009
+   Copyright (C) 2009,2010
    Carsten Lemmen <carsten.lemmen@gkss.de>
 
    This program is free software; you can redistribute it and/or modify it
@@ -20,7 +20,7 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
-   @date   2009-08-07
+   @date   2010-01-19
    @file create_reg_climate.cc
 */
 
