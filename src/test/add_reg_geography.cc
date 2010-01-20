@@ -1,7 +1,7 @@
 /* GLUES add_reg_geography; this file is part of
    the Global Land Use and technological Evolution Simulator
    
-   Copyright (C) 2009
+   Copyright (C) 2009,2010
    Carsten Lemmen <carsten.lemmen@gkss.de>
 
    This program is free software; you can redistribute it and/or modify it
@@ -20,7 +20,7 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
-   @date   2009-08-07
+   @date   2009-01-19
    @file create_reg_climate.cc
 */
 
@@ -88,7 +88,7 @@ int main(int argc, char* argv[])
     latvar->add_att("long_name","center_latitude");
     latvar->add_att("description","Latitude of region center");
   }
-  for (i=0; i<nreg; i++) record[i]=fbuffer[1+length*i];
+  for (i=0; i<nreg; i++) record[i]=fbuffer[2+length*i];
   latvar->put(record,nreg);
   
   NcVar *lonvar=ncfile.get_var("longitude");
@@ -98,8 +98,24 @@ int main(int argc, char* argv[])
     lonvar->add_att("long_name","center_longitude");
     lonvar->add_att("description","longitude of region center");
   }
-  for (i=0; i<nreg; i++) record[i]=fbuffer[2+length*i];
+  for (i=0; i<nreg; i++) record[i]=fbuffer[3+length*i];
   lonvar->put(record,nreg);
+
+  NcVar *var;
+  { 
+    NcError ncerror(NcError::silent_nonfatal);
+    var=ncfile.get_var("area");
+  }
+  if (ncerror.get_err() !=0 ) {
+    var = ncfile.add_var("area",ncFloat, regdim);
+    var->add_att("units","km^2");
+    var->add_att("long_name","area of region");
+    var->add_att("description","Area of region");
+  }
+  for (i=0; i<nreg; i++) record[i]=fbuffer[4+length*i];
+  var->put(record,nreg);
+
+
   
   delete [] record;
   delete [] fbuffer;
