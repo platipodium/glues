@@ -129,7 +129,9 @@ clp_iiasa.m \
 clp_trajectories.m \
 plot_variable_deforestation.m \
 startup.m \
+cl_ncread_results.m \
 clp_basemap.m \
+clp_map_variable.m \
 clp_marble.m \
 clp_regionpath.m \
-clp_map_variable.m
+clp_traj_variable.m
