@@ -20,7 +20,7 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
-   @date   2009-08-07
+   @date   2010-01-19
    @file nc_glues.cc
 */
 
