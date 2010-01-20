@@ -34,7 +34,7 @@
 #include <cstdio>
 #include <cmath>
 #include <cstring>
-#include <map>
+#include <ctime>
 
 #ifdef HAVE_NETCDF_H
 #include "netcdfcpp.h"
@@ -122,10 +122,13 @@ Byte fields for nreg
     ncfile.add_dim(dim->name(),dim->size());
   }
 
+  time_t  today;
+  std::time(&today);
   // Copy global attributes
   for (int i=0; i<nctmpl.num_atts(); i++) {  
     copy_att(&ncfile,nctmpl.get_att(i));
   }
+  ncfile.add_att("date_of_creation",asctime(gmtime(&today)));
 
   // Create coordinate variables and copy all       
   NcVar *var, *ncvar;
@@ -195,13 +198,23 @@ Byte fields for nreg
       else if (!strcmp((*ivar).c_str(),"CivStart")) s="time_of_high_civilization";
       else if (!strcmp((*ivar).c_str(),"Birthrate")) s="rate_of_birth";
       var=ncfile.get_var(s.c_str());
-      if (!var) var=ncfile.add_var(s.c_str(),ncFloat,tdim,rdim);
+      if (!var) {
+        var=ncfile.add_var(s.c_str(),ncFloat,tdim,rdim);
+        var->add_att("date_of_creation",ctime(&today));
+      }
+      else
+        var->add_att("date_of_modification",ctime(&today));
+      
     }
     
     //cout << (*ivar) << "/" << s << "t=" << time[itime] << " r=" ; 
     ifs.read(data,sizeof(data));
     result=(float*)data;
     var->put_rec(result,itime);
+    if (itime==0) {
+      var->add_att("glues_name",(*ivar).c_str());
+      var->add_att("glues_order",i);
+    }
     //for (i=0; i<nreg; i+=137) cout << result[i] << ",";
     //cout << endl;
     
