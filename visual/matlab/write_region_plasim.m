@@ -4,7 +4,8 @@ cl_register_function();
 
 matfile='regionmap_685.mat';
 
-climatefile='plasim_klima.mat';
+%climatefile='plasim_klima.mat';
+climatefile='plasim_10k.mat';
 
 if ~exist(climatefile,'file') 
   warning('No climate change information found / %s missing. writing static climate',climatefile);
@@ -35,7 +36,22 @@ gddfile =[strrep(prefix,'map','_plasim_gdd')  '.tsv'];
 climatefile=[strrep(prefix,'map','_plasim') '.mat'];
 
 
-load(matfile);
+load(matfile)
+if ~exist('region','var') 
+  region.length=regionlength;
+end
+
+if ~exist('map','var')
+    map.region=regionmap;
+end
+
+if ~exist('land','var')
+    land.region=regionnumber;
+    land.map=regionindex;
+    land.lat=lat;
+    land.lon=lon;
+end
+
 nreg=length(region.length);
 [cols,rows]=size(map.region);
 
@@ -60,7 +76,7 @@ plasim.npp(find(plasim.npp<=0))=NaN;
 lat=[0:nlat-1]/nlat*180-90+90/nlat;
 lat=fliplr(lat);
 
-plasim.nppl=vecode_npp_lieth(mean(plasim.temp,3),sum(plasim.precip,3));
+plasim.nppl=cl_npp_lieth(mean(plasim.temp,3),sum(plasim.precip,3));
 plasim.gdd=sum(plasim.temp>0,3)*30.;
 
 for ireg=1:nreg
@@ -160,5 +176,3 @@ end
 
 
  
-
-asdf
