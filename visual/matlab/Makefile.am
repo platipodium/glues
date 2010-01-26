@@ -126,12 +126,11 @@ cl_npp_lieth.m \
 cl_read_iiasa.m \
 clp_cluster.m \
 clp_iiasa.m \
-clp_trajectories.m \
 plot_variable_deforestation.m \
 startup.m \
-cl_get_variable \
+cl_get_variable.m \
 cl_koeppen.m \
-cl_ncread_results.m \
+cl_ncread_result.m \
 clp_basemap.m \
 clp_map_variable.m \
 clp_marble.m \

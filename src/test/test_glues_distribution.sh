@@ -2,7 +2,7 @@
 
 # GLUES daily test
 
-url=" http://dfn.dl.sourceforge.net/project/glues/glues-1.1.6.tar.gz"
+url=" http://dfn.dl.sourceforge.net/project/glues/glues-1.1.7.tar.gz"
 
 WGET=`which wget` 
 MAKE=`which gmake` 
