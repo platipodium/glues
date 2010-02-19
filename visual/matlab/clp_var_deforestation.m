@@ -34,6 +34,7 @@ region.path(:,:,2)=region.path(:,:,2)+1.0;
 
 figoffset=0;
 vars={'GluesNaturalForest','GluesDeforestation'};
+vars={'GluesDeforestation'};
 timelim=[3800 3700];
 %vars={'Density'};
 %vars={'Migration','Agricultures','CivStart','Climate'};
@@ -87,7 +88,8 @@ slat=Forenbaher.Latitude-1;
 slon=Forenbaher.Long-1;
 sage=Forenbaher.Median_age;
 n=length(slat);
-ntime=size(r.Density,2);
+%ntime=size(r.Density,2);
+ntime=size(r.population_density,2);
  
 
 if iscell(vars) 

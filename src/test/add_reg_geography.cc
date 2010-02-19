@@ -85,7 +85,8 @@ int main(int argc, char* argv[])
   if (ncerror.get_err() != 0) {
     latvar = ncfile.add_var("latitude",ncFloat, regdim);
     latvar->add_att("units","degrees_north");
-    latvar->add_att("long_name","center_latitude");
+    latvar->add_att("long_name","center latitude");
+    latvar->add_att("standard_name","latitude");
     latvar->add_att("description","Latitude of region center");
   }
   for (i=0; i<nreg; i++) record[i]=fbuffer[2+length*i];
@@ -95,7 +96,8 @@ int main(int argc, char* argv[])
   if (ncerror.get_err() !=0 ) {
     lonvar = ncfile.add_var("longitude",ncFloat, regdim);
     lonvar->add_att("units","degrees_east");
-    lonvar->add_att("long_name","center_longitude");
+    lonvar->add_att("standard_name","longitude");
+    lonvar->add_att("long_name","center longitude");
     lonvar->add_att("description","longitude of region center");
   }
   for (i=0; i<nreg; i++) record[i]=fbuffer[3+length*i];
@@ -111,11 +113,10 @@ int main(int argc, char* argv[])
     var->add_att("units","km^2");
     var->add_att("long_name","area of region");
     var->add_att("description","Area of region");
+    var->add_att("coordinates","longitude latitude");
   }
   for (i=0; i<nreg; i++) record[i]=fbuffer[4+length*i];
   var->put(record,nreg);
-
-
   
   delete [] record;
   delete [] fbuffer;
