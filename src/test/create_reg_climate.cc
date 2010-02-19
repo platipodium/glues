@@ -56,9 +56,9 @@ int main(int argc, char* argv[])
   ncfile.add_att("title","GLUES netcdf background climate");
   ncfile.add_att("history","Glues template netcdf file");
   ncfile.add_att("institution","GKSS-Forschungszentrum Geesthacht GmbH");
-  ncfile.add_att("source","GLUES 1.1.3 model");
+  ncfile.add_att("source","GLUES 1.1.7 model");
   ncfile.add_att("comment","");
-  ncfile.add_att("references","Wirtz & Lemmen (2003)");
+  ncfile.add_att("references","Wirtz & Lemmen (2003), Lemmen (2009)");
   
   ncfile.add_att("model_name","GLUES");
   
@@ -90,12 +90,14 @@ int main(int argc, char* argv[])
   gddvar->add_att("units","d");
   gddvar->add_att("long_name","growing degree days above zero");
   gddvar->add_att("description","");
+  gddvar->add_att("coordinates","lon lat");
   
   NcVar *nppvar;
   nppvar = ncfile.add_var("npp",ncFloat, timedim, regdim);
   nppvar->add_att("units","kg m-2 a-1");
   nppvar->add_att("long_name","net_primary_production");
   nppvar->add_att("description","Net primary production");
+  nppvar->add_att("coordinates","lon lat");
   
     
   string gddname = "../../examples/setup/685/reg_npp_80_685.dat";
