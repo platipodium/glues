@@ -1,7 +1,7 @@
 /* GLUES io; this file is part of
    the Global Land Use and technological Evolution Simulator
 
-   Copyright (C) 2009
+   Copyright (C) 2009,2010
    Carsten Lemmen <carsten.lemmen@gkss.de>
 
    This program is free software; you can redistribute it and/or modify it
@@ -20,7 +20,7 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
-   @date   2009-02-06
+   @date   2010-02-21
    @file   IO.h
 */
 
@@ -33,7 +33,7 @@
 #ifdef HAVE_NETCDF_H
 #include "netcdfcpp.h"
 #endif
-#include "RegionalPopulation.h"
+//#include "RegionalPopulation.h"
 
 
 namespace glues {
@@ -51,6 +51,27 @@ namespace glues {
 	    long unsigned int column_offset,
 	    long unsigned int nrow,
 	    long unsigned int ncol);
+
+	static long unsigned int read_ascii_table(
+	    std::istream& is,float**,
+	    long unsigned int row_offset,
+	    long unsigned int column_offset,
+	    long unsigned int nrow,
+	    long unsigned int ncol);
+
+	static long unsigned int read_ascii_table(
+	    std::istream& is,float*,
+	    long unsigned int row_offset,
+	    long unsigned int column_offset,
+	    long unsigned int nrow,
+	    long unsigned int ncol);
+	static long unsigned int read_ascii_table(
+	    std::istream& is,int**,
+	    long unsigned int row_offset,
+	    long unsigned int column_offset,
+	    long unsigned int nrow,
+	    long unsigned int ncol);
+
 
 	static int define_resultfile(std::string,unsigned long int);
 #ifdef HAVE_NETCDF_H

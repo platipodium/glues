@@ -7,7 +7,7 @@ function cl_read_iiasa
 % 
 %  See also CL_GET_IIASA
 
-% Copyright 2009 Carsten Lemmen <carsten.lemmen@gkss.de>
+% Copyright 2009,2010 Carsten Lemmen <carsten.lemmen@gkss.de>
 
 cl_register_function;
 
@@ -62,6 +62,12 @@ if (1)
   
   idid=netcdf.inqVarID(ncid,'id');
   netcdf.putVar(ncid,idid,[1:nid]);
+  
+  varid=netcdf.inqVarID(ncid,'lat');
+  netcdf.putVar(ncid,varid,lat);
+  varid=netcdf.inqVarID(ncid,'lon');
+  netcdf.putVar(ncid,varid,lon);
+  
   
   for ip=1:np
     par=parameters{ip};
