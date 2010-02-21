@@ -184,6 +184,193 @@ glues::IO::read_ascii_table(std::istream& is, double** table_double,
   return irow - row_offset;
 }
 
+
+/**
+ @param is: input stream to read from
+ @param table_float: pointer to float matrix
+ @param row_offset
+ @param column_offset
+ @param max_nrow
+ @param max_ncol
+ @return: number of lines read
+ */
+
+long unsigned int
+glues::IO::read_ascii_table(std::istream& is, float** table_float,
+    long unsigned int row_offset = 0, long unsigned int column_offset = 0,
+    long unsigned int max_nrow = 0, long unsigned int max_ncol = 0)
+
+{
+  float fvalue;
+  std::string line, word;
+  long unsigned int icol = 0, irow = 0;
+
+  if (is.bad())
+    {
+      std::cerr << "ERROR in read_ascii_table. Input stream not ready\n";
+      return 0;
+    }
+
+  if (table_float == NULL)
+    {
+      std::cerr << "ERROR in read_ascii_table.  Matrix not allocated\n";
+      return 0;
+    }
+
+  //std::cerr  << line << std::endl;
+  while (is.good() && getline(is, line))
+    {
+
+      icol = 0;
+      std::istringstream iss(line);
+
+      while (iss.good() && getline(iss, word, ' '))
+        {
+
+		  //std::cerr << word << " ";
+
+          // Skip multi-blank and tab words, break on non-numeric
+          if (word.length() < 1)
+            continue;
+          if (is_whitespace(word))
+            continue;
+          if (!is_numeric(word))
+            break;
+
+		  std::cerr << word << " " << max_ncol << " " << icol << " " << column_offset << std::endl;
+
+          // Skip this line if more than max_col
+          if (max_ncol > 0 && icol >= column_offset + max_ncol)
+            break;
+
+          icol++;
+          if (icol == column_offset + 1)
+            irow++;
+
+          // Skip this column if less than col-offset
+          if (icol <= column_offset)
+            continue;
+
+          // Skip this line if less than row-offset
+          if (irow <= row_offset)
+            {
+              //icol--;
+              break;
+            }
+
+          fvalue = strtof(word.c_str(), NULL);
+
+          if (table_float[irow - row_offset - 1] == 0)
+            {
+              std::cerr << "ERROR in read_ascii_table.  Matrix not allocated\n";
+              return 0;
+            }
+
+          table_float[irow - row_offset - 1][icol - column_offset - 1]
+              = fvalue;
+
+        }
+      //std::cerr << icol << "/" << column_offset << " " << irow << "/" << row_offset << std::endl;
+
+      if (icol > column_offset && max_nrow > 0 && irow >= row_offset + max_nrow)
+        break;
+    }
+
+  return irow - row_offset;
+}
+
+
+/**
+ @param is: input stream to read from
+ @param f: pointer to float
+ @param row_offset
+ @param column_offset
+ @param max_nrow
+ @param max_ncol
+ @return: number of lines read
+ */
+
+long unsigned int
+glues::IO::read_ascii_table(std::istream& is, float* f,
+    long unsigned int row_offset = 0, long unsigned int column_offset = 0,
+    long unsigned int max_nrow = 0, long unsigned int max_ncol = 0)
+
+{
+  float fvalue;
+  std::string line, word;
+  long unsigned int icol = 0, irow = 0;
+
+  if (is.bad())
+    {
+      std::cerr << "ERROR in read_ascii_table. Input stream not ready\n";
+      return 0;
+    }
+
+  if (f == NULL)
+    {
+      std::cerr << "ERROR in read_ascii_table.  Vector not allocated\n";
+      return 0;
+    }
+
+  // std::cerr  << line << std::endl;
+  while (is.good() && getline(is, line))
+    {
+
+      icol = 0;
+      std::istringstream iss(line);
+
+      while (iss.good() && getline(iss, word, ' '))
+        {
+
+          // Skip multi-blank and tab words, break on non-numeric
+          if (word.length() < 1)
+            continue;
+          if (is_whitespace(word))
+            continue;
+          if (!is_numeric(word))
+            break;
+
+          // Skip this line if more than max_col
+          if (max_ncol > 0 && icol >= column_offset + max_ncol)
+            break;
+
+          icol++;
+          if (icol == column_offset + 1)
+            irow++;
+
+          // Skip this column if less than col-offset
+          if (icol <= column_offset)
+            continue;
+
+          // Skip this line if less than row-offset
+          if (irow <= row_offset)
+            {
+              //icol--;
+              break;
+            }
+
+          fvalue = strtof(word.c_str(), NULL);
+
+          if (f[irow - row_offset - 1] == 0)
+            {
+              std::cerr << "ERROR in read_ascii_table.  Matrix not allocated\n";
+              return 0;
+            }
+
+          f[(irow - row_offset - 1)*max_ncol+(icol - column_offset - 1)]
+              = fvalue;
+
+        }
+      //	std::cerr << icol << "/" << column_offset << " " << irow << "/" << row_offset << std::endl;
+
+      if (icol > column_offset && max_nrow > 0 && irow >= row_offset + max_nrow)
+        break;
+    }
+
+  return irow - row_offset;
+}
+
+
 bool
 glues::IO::is_whitespace(std::string word)
 {
@@ -214,9 +401,7 @@ glues::IO::is_numeric(std::string word)
 
   char ch = word[0];
 
-  if (ch != '-'
-  //&& ch != 'N' && ch != 'n' && ch != 'i' && ch !='I'
-      && (word[0] < '0' || word[0] > '9'))
+  if (ch != '-' && ch !='+' && (ch < '0' || ch > '9') && ch !='.' )
     return false;
 
   return true;
