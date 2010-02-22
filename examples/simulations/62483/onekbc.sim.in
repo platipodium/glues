@@ -21,12 +21,12 @@ int	RandomInit 	100	\d Initializer for a random generator.
 list	IncludeFiles		\d List of all included files.
 	type	string
 data
-	"lbk.ctl"
-	"lbk.init"
-	"lbk.opar"
-	"lbk.par"
-	"lbk.dat"
-	"lbk.sce"
+	"onekbc.ctl"
+	"onekbc.init"
+	"onekbc.opar"
+	"onekbc.par"
+	"onekbc.dat"
+	"onekbc.sce"
 end
 
 list	OutputVariables
