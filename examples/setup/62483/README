@@ -1,0 +1,13 @@
+Files for this setup are rather big (30 Mb uncompressed)
+Please recreate the necessary files
+- regions.dat
+- reg_npp.dat
+- reg_gdd.dat
+- EventInRad.dat
+- EventInReg.dat
+with the program nc_write_region_dat and copy or link
+the file
+- EvSeries.dat
+from any other setup directory to here
+
+

@@ -1,4 +1,4 @@
-# Main Makefile for GLUES.
+# Makefile for GLUES.
 
 # Copyright (C) 2007 Carsten Lemmen, GKSS-Forschungszentrum Geesthacht GmbH
 
@@ -17,4 +17,4 @@
 ## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 ## 02110-1301, USA.
 
-SUBDIRS=685 938 test_new_event 62483
+EXTRA_DIST=README
