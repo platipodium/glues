@@ -2,10 +2,10 @@
 comment Scenario specific numbers and file names
 int	CoastRegNo	0
 comment Dateipfad fuer Eingabe
-string	datapath	"@abs_top_builddir@/examples/setup/685/"
+string	datapath	"@abs_top_builddir@/examples/setup/62483/"
 comment Dateiname fuer Eingabe
-string	regiondata	"regions_80_685.dat"
-string	mappingdata	"mapping_80_685.dat"
+string	regiondata	"regions.dat"
+string	mappingdata	"mapping.dat"
 comment Dateinamen fuer Ausgabe
 string	resultfilename	"results.out"
 string	watchstring	"watch.res"
@@ -21,7 +21,7 @@ data
 end
 comment 	122	146	170	215	216	223	224	225	227	234	249	269	270	271	359	379	383	410	411	418	461
 comment Cimate updates 
-string	climatefile	"reg_npp_80_685.dat"
+string	climatefile	"reg_npp.dat"
 array	ClimUpdateTimes
 	\d 1:TimeStep  2:NumberOfUpdates
 	typeOfArray	int

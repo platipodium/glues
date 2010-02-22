@@ -1,0 +1,4 @@
+#!/bin/bash
+
+@abs_top_builddir@/src/glues @abs_top_builddir@/examples/simulations/62483/onekbc.sim
+

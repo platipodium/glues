@@ -286,6 +286,7 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_COMMANDS([time-stamp], [date >time-stamp])
 
 AC_CONFIG_FILES([run.sh:run.sh.in],[chmod +x run.sh])
+AC_CONFIG_FILES([grid.sh:grid.sh.in],[chmod +x grid.sh])
 
 AC_CONFIG_FILES([Makefile
   src/Makefile src/region/Makefile 
@@ -296,12 +297,16 @@ AC_CONFIG_FILES([Makefile
   examples/setup/938/Makefile
   examples/setup/939/Makefile
   examples/setup/685/Makefile
+  examples/setup/62483/Makefile
   examples/results/Makefile
   examples/results/685/Makefile
   examples/results/938/Makefile
   examples/results/939/Makefile
   examples/simulations/685/lbk.sce
   examples/simulations/685/lbk.sim
+  examples/simulations/62483/Makefile
+  examples/simulations/62483/onekbc.sce
+  examples/simulations/62483/onekbc.sim
   examples/simulations/Makefile examples/simulations/685/Makefile
   examples/simulations/938/Makefile
   examples/simulations/test_new_event/Makefile
