@@ -727,6 +727,7 @@ sscanf(charbuffer,"%d:%f:%f",&neighid,&neigh_boundary);
 //
 // -------------------------------------------------------------------------------
 int read_mapping() {
+  return 1;
 
   static const unsigned int BUFSIZE=1024;
   unsigned int* cellids=NULL;
@@ -805,7 +806,7 @@ int init_names() {
   cout << "  Output of results to \t" << resultstring << endl;
   cout << "  Region data from   \t" << regionstring << endl;
   cout << "  Neighbour data from \t" << regionstring << endl;
-  cout << "  Mapping data from \t" << mappingstring << endl;
+  //cout << "  Mapping data from \t" << mappingstring << endl;
   
   for (unsigned int i=0;i<LengthOfClimUpdateTimes; i++)
     cout << "  Climate data at "
