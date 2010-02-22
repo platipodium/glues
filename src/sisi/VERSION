@@ -1,5 +1,5 @@
 PRG            = SiSi
 VERSION        = 2.0
-COMPLETIONTIME = Feb 21 2010, 20:15:30 (uncompleted)
+COMPLETIONTIME = Feb 22 2010, 09:57:59 (uncompleted)
 
 # Datum der Fertigstellung wird mittels  make completiontime (time) erzeugt.

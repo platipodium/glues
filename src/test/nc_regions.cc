@@ -393,3 +393,7 @@ inline float npp_lieth(float temp, float prec) {
   float npp_t=1./(1.+V3*exp(-V2*temp))*NPPMAX;
   return min(npp_p,npp_t);
 }
+
+
+
+
