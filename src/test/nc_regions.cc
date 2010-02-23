@@ -48,6 +48,7 @@ float sind(float);
 float cosd(float);
 float calc_gridcell_area(float clat,float dlon=0.5,float dlat=0.5,float radius=6378.137);
 float npp_lieth(float,float);
+double search_continent(short int**,int**,int, short int,int,int);
 
 int main(int argc, char* argv[]) 
 {
@@ -163,11 +164,10 @@ int main(int argc, char* argv[])
   if (!(var = ncfile.add_var("neighbour", ncInt, ncfile.get_dim("neighbour")))) return 1;
   var->add_att("date_of_creation",timestring.c_str());
   var->add_att("long_name","neighbour");
-  var->add_att("standard_name","neighbour enumeration {ww,nw,nn,ne,ee,se,ss,sw}");
-  var->add_att("description","");
+  var->add_att("standard_name","neighbour");
+  var->add_att("description","neighbour enumeration {ww,nw,nn,ne,ee,se,ss,sw}");
   // has no units attribute
 
-  // Other variables
 
   if (!(var = ncfile.add_var("latitude", ncFloat, ncfile.get_dim("region")))) return 1;
   var->add_att("date_of_creation",timestring.c_str());
@@ -210,6 +210,25 @@ int main(int argc, char* argv[])
   var->add_att("description","Map of region id"); 
 */
 
+  if (!(var = ncfile.add_var("annual_precipitation", ncFloat, ncfile.get_dim("region")))) return 1;
+  var->add_att("date_of_creation",timestring.c_str());
+  var->add_att("long_name","annual precipitation");
+  var->add_att("standard_name","annual_precipitation");
+  var->add_att("units","mm");
+  var->add_att("description","Annual cumulative precipitation from IIASA climatology");
+  var->add_att("reference","Leemans & Cramer (1991)");
+  var->add_att("coordinates","lat lon");
+
+  if (!(var = ncfile.add_var("annual_temperature", ncFloat, ncfile.get_dim("region")))) return 1;
+  var->add_att("date_of_creation",timestring.c_str());
+  var->add_att("long_name","annual mean temperature");
+  var->add_att("standard_name","annual_mean_temperature");
+  var->add_att("units","degree_C");
+  var->add_att("description","Annual mean temperature from IIASA climatology");
+  var->add_att("reference","Leemans & Cramer (1991)");
+  var->add_att("coordinates","lat lon");
+
+
   if (!(var = ncfile.add_var("region_neighbour", ncInt, ncfile.get_dim("neighbour"), ncfile.get_dim("region")))) return 1;
   var->add_att("date_of_creation",timestring.c_str());
   var->add_att("long_name","region neighbour");
@@ -220,6 +239,7 @@ int main(int argc, char* argv[])
   if (!(var = ncfile.add_var("area", ncFloat, ncfile.get_dim("region")))) return 1;
   var->add_att("date_of_creation",timestring.c_str());
   var->add_att("long_name","area");
+  var->add_att("units","km^{2}");
   var->add_att("standard_name","region_area");
   var->add_att("description","Area of single region (gridcell)");
   var->add_att("coordinates","lat lon");
@@ -237,6 +257,13 @@ int main(int argc, char* argv[])
   var->add_att("long_name","growing degree days above zero");
   var->add_att("standard_name","growing_degree_days_above_zero");
   var->add_att("description","Number of days with mean temperature above zero");
+  var->add_att("coordinates","lat lon");
+
+  if (!(var = ncfile.add_var("region_continent", ncShort, ncfile.get_dim("region")))) return 1;
+  var->add_att("date_of_creation",timestring.c_str());
+  var->add_att("long_name","region continent");
+  var->add_att("standard_name","region_continent");
+  var->add_att("description","Unique number of continuous landmass on which region is located");
   var->add_att("coordinates","lat lon");
  
   // Fill coordinate variables with values
@@ -306,23 +333,24 @@ int main(int argc, char* argv[])
  	 ireg=ilat[i]*(ncol+2)+ilon[i];
  	 if (map[ireg]!=i+1)
        cerr << ilat[i] << "/" << ilon[i] << " " << i+1 << "/" << map[ireg] << " " << ireg << endl;
-    neigh[i*nn+0]=map[(ilat[i]+0)*(ncol+2)+ilon[i]-1]; // ww neighbour
-    neigh[i*nn+1]=map[(ilat[i]+1)*(ncol+2)+ilon[i]-1]; // nw neighbour
-    neigh[i*nn+2]=map[(ilat[i]+1)*(ncol+2)+ilon[i]-0]; // nn neighbour
-    neigh[i*nn+3]=map[(ilat[i]+1)*(ncol+2)+ilon[i]+1]; // ne neighbour
-    neigh[i*nn+4]=map[(ilat[i]+0)*(ncol+2)+ilon[i]+1]; // ee neighbour
-    neigh[i*nn+5]=map[(ilat[i]-1)*(ncol+2)+ilon[i]+1]; // se neighbour
-    neigh[i*nn+6]=map[(ilat[i]-1)*(ncol+2)+ilon[i]-0]; // ss neighbour
-    neigh[i*nn+7]=map[(ilat[i]-1)*(ncol+2)+ilon[i]-1]; // sw neighbour
+    neigh[nreg*0+i]=map[(ilat[i]+0)*(ncol+2)+ilon[i]-1]; // ww neighbour
+    neigh[nreg*1+i]=map[(ilat[i]+1)*(ncol+2)+ilon[i]-1]; // nw neighbour
+    neigh[nreg*2+i]=map[(ilat[i]+1)*(ncol+2)+ilon[i]-0]; // nn neighbour
+    neigh[nreg*3+i]=map[(ilat[i]+1)*(ncol+2)+ilon[i]+1]; // ne neighbour
+    neigh[nreg*4+i]=map[(ilat[i]+0)*(ncol+2)+ilon[i]+1]; // ee neighbour
+    neigh[nreg*5+i]=map[(ilat[i]-1)*(ncol+2)+ilon[i]+1]; // se neighbour
+    neigh[nreg*6+i]=map[(ilat[i]-1)*(ncol+2)+ilon[i]-0]; // ss neighbour
+    neigh[nreg*7+i]=map[(ilat[i]-1)*(ncol+2)+ilon[i]-1]; // sw neighbour
   }
   var=ncfile.get_var("region_neighbour");
   var->put(neigh,nn,nreg);
   
   // Calculate gridcell area
   float * fval=new float[nreg];
-  for (int i=0; i<nreg; i++) fval[i]=calc_gridcell_area(latit[i]);
+  float * area=new float[nreg];
+  for (int i=0; i<nreg; i++) area[i]=calc_gridcell_area(latit[i]);
   var=ncfile.get_var("area");
-  var->put(fval,nreg);
+  var->put(area,nreg);
   
   // Calculate npp with Miami limitation model
   float *atemp=new float[nreg];
@@ -333,10 +361,11 @@ int main(int argc, char* argv[])
     atemp[i]=temp[i*ntime+0];
     gdd[i]=(temp[i*ntime+0]>0?1:0);
     for (int j=1; j<ntime; j++) {
-      aprec[i]+=prec[i*ntime+j];
-      atemp[i]+=temp[i*ntime+j];
-      gdd[i]+=(temp[i*ntime+j]>0?1:0);
+      aprec[i]+=prec[j*nreg+i];
+      atemp[i]+=temp[j*nreg+i];
+      gdd[i]+=(temp[j*nreg+i]>0?1:0);
     }
+    atemp[i]/=ntime;
     gdd[i]*=30; // 360 day calendar
     fval[i]=npp_lieth(atemp[i],aprec[i]);
   }
@@ -345,7 +374,72 @@ int main(int argc, char* argv[])
   var=ncfile.get_var("gdd");
   var->put(gdd,nreg);
   
+  var=ncfile.get_var("annual_temperature");
+  var->put(atemp,nreg);
+  var=ncfile.get_var("annual_precipitation");
+  var->put(aprec,nreg);
   
+  
+  /** Define continuous land masses */
+  short int* continent=new short int[nreg];
+  for (int i=0; i<nreg; i++) continent[i]=0;
+  short int id=0;
+  double s=0;
+  for (int i=0; i<nreg; i++) {
+    if (continent[i]>0) continue;
+    
+    id++;
+    continent[i]=id;
+    search_continent(&continent,&neigh,i,id,nreg,nn); 
+  }
+
+  if (!(dim = ncfile.add_dim("continent",id))) return 1;
+  
+  if (!(var = ncfile.add_var("continent", ncInt, ncfile.get_dim("continent")))) return 1;
+  var->add_att("date_of_creation",timestring.c_str());
+  var->add_att("long_name","continent");
+  var->add_att("standard_name","continent enumeration");
+  var->add_att("description","Unique identifier of contiguous landmass");
+  // has no units attribute
+
+  if (!(var = ncfile.add_var("continent_area", ncFloat, ncfile.get_dim("continent")))) return 1;
+  var->add_att("date_of_creation",timestring.c_str());
+  var->add_att("long_name","continental area");
+  var->add_att("standard_name","continent_area");
+  var->add_att("description","Area of continent");
+  var->add_att("units","km^2");
+
+  if (!(var = ncfile.add_var("continent_gridcells", ncInt, ncfile.get_dim("continent")))) return 1;
+  var->add_att("date_of_creation",timestring.c_str());
+  var->add_att("long_name","continent_gridcells");
+  var->add_att("standard_name","continent_gridcells");
+  var->add_att("description","Number of gridcells on continent");
+  
+  /** End definition mode */
+  var=ncfile.get_var("region_continent");
+  var->put(continent,nreg);
+  
+  int* cont=new int[id];
+  float* carea=new float[id];
+  int* cnum=new int[id];
+
+  for (int i=0; i<id; i++) {
+    cont[i]=i+1;
+    cnum[i]=0;
+    carea[i]=0;
+  }
+  var=ncfile.get_var("continent");
+  var->put(cont,id);
+  //return 0;
+  
+  for (int i=0; i<nreg; i++) {
+    cnum[continent[i]-1]++;
+    carea[continent[i]-1]+=area[i];
+  }
+  var=ncfile.get_var("continent_area");
+  var->put(carea,id);
+  var=ncfile.get_var("continent_gridcells");
+  var->put(cnum,id);
   
   ncfile.close();
  
@@ -394,6 +488,19 @@ inline float npp_lieth(float temp, float prec) {
   return min(npp_p,npp_t);
 }
 
+  /** Define continuous land masses */
+double search_continent(short int** cont, int** neigh, int i, short int id, int nreg, int nn) {
 
-
+   double s;
+   int n;
+   for (int j=0; j<nn; j++) {
+      n=(*neigh)[nreg*j+i];
+      if ((*cont)[n-1]<1) {
+        (*cont)[n-1]=id;
+        s++;
+        s+=search_continent(cont,neigh,n-1,id,nreg,nn);
+      }
+    }
+    return s;
+  }
 

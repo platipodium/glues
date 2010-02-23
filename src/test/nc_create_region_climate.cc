@@ -20,7 +20,7 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
-   @date   2010-01-19
+   @date   2010-02-23
    @file create_reg_climate.cc
 */
 
@@ -117,7 +117,7 @@ int main(int argc, char* argv[])
   unsigned int nclim=(i-1)/nreg;
  
   float *time = new float[nclim];
-  for (i=0; i<nclim; i++) time[i] = -9000.0 + i*500;
+  for (i=0; i<nclim; i++) time[i] = -9500.0 + i*500;
   timevar->put(time,nclim);
   
   
