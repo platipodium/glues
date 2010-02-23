@@ -32,32 +32,34 @@ end
 rargs=varargin{1};
 nargs=length(rargs);
 
-irarg=1;
+irarg=1; iarg=1;
 remargs={};
-for iarg=1:nargs
-  if ~ischar(rargs{iarg}(1)) continue; end
+while (iarg<=nargs)
+  if ~ischar(rargs{iarg}(1)) iarg=iarg+1; continue; end
     
   for i=1:length(rargs{iarg})
     found=strncmpi(rargs{iarg},args.name,i);
+
     if sum(found)>1 continue; end
     
     if sum(found)==1 found=find(found);
     else found=0;
     end
-    break;
     
+    break
   end
   
-  if ~found 
+  if (found<1)
     remargs{irarg}=rargs{iarg};
     irarg=irarg+1;
+    iarg=iarg+1;
     continue;
   end
       
-  if args.size{found}==2
+  %if args.size{found}==2
       args.value{found}=rargs{iarg+1};
-      iarg=iarg+1;
-  end
+      iarg=iarg+2;
+  %end
   
   %case 'pat'
   %    drawmode='patch';
