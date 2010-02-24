@@ -32,6 +32,7 @@
 #include <fstream>
 #include <streambuf>
 #include <vector>
+#include <map>
 #include "Globals.h"
 #include "AsciiTable.h"
 
@@ -275,20 +276,28 @@ unsigned int read_SiteRegfile()
 
     ifs.open(filename.c_str(),ios::in);
     MaxProxyReg=count_ascii_columns(ifs);
-    if (MaxProxyReg >= MAXPROXY) return 0;
-
-    ifs.seekg(0);
-
+    ifs.close();
+    
+    if (MaxProxyReg >= MAXPROXY) {
+      cerr<< "\nERROR\t Number of proxies greater than MAXPROXY constant.\n";
+      return 0;
+    }
+    if (MaxProxyReg == 0) {
+      cerr<< "\nERROR\t Number of proxies cannot be zero.\n";
+      return 0;
+    }
+    
     for (j=0; j<(unsigned int)MaxProxyReg; j++) RegSiteInd[j]=(int *)(malloc(numberOfRegions*sizeof(int)));
 
+    ifs.open(filename.c_str(),ios::in);
     n=read_ascii_table(ifs,RegSiteInd);
+    ifs.close();
 
     if (n<numberOfRegions)  { 
 	cout << "\nERROR\t NumberOfRegions != rows\t" <<  n << endl;
 	return 0;  
     }
 
-    ifs.close();
     cout << "SUCCESS" << endl;
     return MaxProxyReg;
 }
@@ -374,19 +383,20 @@ unsigned int read_ascii_table(std::istream& is, int** table_int)
       }
 
 
-  if (table_int==NULL) {
+  if (table_int==NULL || (*table_int)==NULL) {
       cout << "ERROR in read_ascii_table.  Matrix not allocated\n" ;
       return 0;
   }
   
   while( is.good() && getline(is,line) ) {
-    if ( (line[0] < '0' || line[0] > '9') ) {
+    if ( (line[0] < '0' || line[0] > '9') && (line[0]!='-') && line [0]!='.' && line[0]!='+'  ) {
       // Skip non-number lines
       continue;
     }
     
     std::istringstream ss(line);
     
+    cout << dummy;
     while ( ss >> dummy ) table_int[j++][i]=dummy;
     i++;
     j=0;
@@ -437,25 +447,26 @@ unsigned int count_ascii_columns(std::istream& is)
     unsigned int n=0;
   
     if ( is.bad() ) {
-	cout << "ERROR in count_ascii_columns. Input stream not ready\n";
+	  cout << "ERROR in count_ascii_columns. Input stream not ready\n";
     }
   
-    is.seekg(0);
+   // is.seekg(0);
   
     while( is.good() && getline(is,line) ) {
 	
-	if ( (line[0] < '0' || line[0] > '9') ) {
+//	  cout << line << endl;
+	  if ( (line[0] < '0' || line[0] > '9') && line[0]!='-' && line[0]!='.' && line[0]!='+' ) {
 	    // Skip non-number lines
 	    continue;
-	}
+	  }
 	
-	std::istringstream iss(line);
-    
-	while ( iss.good() && getline(iss,word,' ') ) {
+	  std::istringstream iss(line);
+
+	  while ( iss.good() && getline(iss,word,' ') ) {
 	    //cout << n << " '"  << word << "'\n" ;
-	    if (word.length()>0) n++;
-	}
-// TODO: why n-2?
+	      if (word.length()>0) n++;
+	  }
+// TODO: why n-2? The last two columns give lat lon info (or similar)
 	return n;
     }
     
@@ -575,23 +586,20 @@ int read_neighbours() {
   }
 
   unsigned int i=0;
-  unsigned int offset=0;
- offset= regions[0].Id();
 
+  /** find a mapping from Id to index of all regions */
+  map<unsigned int,unsigned int> idmap;
+  for (i=0; i<numberOfRegions; i++) idmap[regions[i].Id()]=i;
+ 
   while ( i<numberOfRegions && !ifs.eof() ) {
-      c=ifs.peek();
-      if ( (c < '0') || (c > '9') ) {
+    c=ifs.peek();
+    if ( (c < '0') || (c > '9') ) {
 	  ifs.getline(charbuffer,BUFSIZE);
 	  continue;  
-      }
-
-      ifs >> selfid;
-      //if ( i<10) printf("%d = %d ?\n",i,selfid);
-  
-    if (selfid-offset != i) {
-	cout << "Something went wrong with ids ..." << endl;
-	return 0;
     }
+
+    ifs >> selfid;
+  
     for (unsigned int j=0; j<5; j++) ifs >> numneigh;
     for (unsigned int j=0; j<numneigh; j++) {
 
@@ -599,9 +607,11 @@ int read_neighbours() {
       sscanf(charbuffer,"%d:%f:%d",&neighid,&neigh_boundary,&neigh_distance);
      
       if ( neighid>=0 ) {
-        regions[i].AddNeighbour(&regions[neighid-offset],
+        unsigned int j=idmap[neighid];
+        
+        regions[i].AddNeighbour(&regions[j],
 			      neigh_boundary,1);
-        if (neighid < selfid) regions[neighid].AddNeighbour(&regions[i],
+        if (j < i) regions[j].AddNeighbour(&regions[i],
 						     neigh_boundary,1);
     }				     
 	//if (i>680) printf("read %i %d %d %d %f\n",i,selfid,numneigh,neighid,neigh_boundary);
@@ -726,6 +736,8 @@ sscanf(charbuffer,"%d:%f:%f",&neighid,&neigh_boundary);
 // -------------------------------------------------------------------------------
 //
 // -------------------------------------------------------------------------------
+/** This function is obsolete */
+
 int read_mapping() {
   return 1;
 

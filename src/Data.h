@@ -49,7 +49,7 @@ namespace glues {
 
 	    id=new long int[n];
 	    /*for (ip=rp.begin(); ip<rp.end(); ip++) {
-		//id[i]=rp[i]->Region()->Id();
+		//id[i]=rp[i]->Region()->Index()
 		cout << *ip  ;//[i] << id[i];
 		}J*/
 	    for (i=0; i<rp.size(); i++)

@@ -354,7 +354,7 @@ double sprp;
   case 2: return qfarming;
   case 3: return resist;
   case 4: return density;
-  case 5: sprp=sprdm[(region->Id()-0)]/OutputStep;
+  case 5: sprp=sprdm[(region->Index()-0)]/OutputStep;
    if(sprp<0) sprp=-sprp;
    return sprp*1E3;
   case 6: return region->Npp();
