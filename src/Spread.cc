@@ -78,9 +78,10 @@ double spread_all() {
 /* ----------------------------------------------------------- */
 /*   Calculates exchange of a single region with neighbours    */
 /* ----------------------------------------------------------- */
-double calc_spread_single(unsigned int iid) {
+double calc_spread_single(unsigned int i) {
 
-  unsigned int jid, i1;
+  unsigned int j, i1;
+  unsigned int jid, iid;
   double length,exch,ptech,jrgr,force;
   double jpop,ipop,ijpop,iarea,jarea,irgr,idommax;
 	//double maxforce;
@@ -91,36 +92,54 @@ double calc_spread_single(unsigned int iid) {
   /* ------------------------------------------------- */
   /*    Gets all population & region properties ...    */
   /* ------------------------------------------------- */
-  iarea  = populations[iid].Region()->Area();
-  ipop   = populations[iid].Density();
-  itech  = populations[iid].Technology();
-  indom  = populations[iid].Ndomesticated();
-  iqfarm = populations[iid].Qfarming();
-  igerm  = populations[iid].Germs();
-  iresist= populations[iid].Resist();
-  idommax= populations[iid].Ndommax();
+  iarea  = populations[i].Region()->Area();
+  ipop   = populations[i].Density();
+  itech  = populations[i].Technology();
+  indom  = populations[i].Ndomesticated();
+  iqfarm = populations[i].Qfarming();
+  igerm  = populations[i].Germs();
+  iresist= populations[i].Resist();
+  idommax= populations[i].Ndommax();
+  iid    = populations[i].Region()->Id();
   
-  irgr = populations[iid].Growthrate();
+  irgr = populations[i].Growthrate();
   
   iinfl=itech*ipop;  
+  
+ 
+  /** Test for neighbours, debugging only 
+  neigh= populations[i].Region()->Neighbour();
+  cerr << i <<  "/" << iid << ":" ;
+  while (neigh) {
+    j   = neigh->Region()->Index();
+    jid = neigh->Region()->Id();
+    cerr << " " <<  j << "/" << jid;
+    neigh=neigh->Next();
+  }
+  cerr << endl;
+  return 0;
+  // End test */
   
   /* -------------------------------------------- */
   /*     Gets all region neighbours ...           */
   /* -------------------------------------------- */
-  neigh= populations[iid].Region()->Neighbour();
+  neigh= populations[i].Region()->Neighbour();
   while (neigh) {
-    jid   = neigh->Region()->Id();
-    /** Only perform an update if jid > iid to avoid
+    j   = neigh->Region()->Index();
+    jid = neigh->Region()->Id();
+    
+    cerr << i << "/" <<  iid << " " << j << "/" << jid << endl; 
+    /** Only perform an update if j>i to avoid
     double exchange in one time step */	
-    if (jid > iid) {
+    if (j > i) {
       
       /* -------------------------------------------- */
       /*     Gets neighbours' characteristics  ...    */
       /* -------------------------------------------- */
-      jpop  = populations[jid].Density();
-      jarea = populations[jid].Region()->Area();
-      jtech = populations[jid].Technology();
-      jrgr  = populations[jid].Growthrate();
+      jpop  = populations[j].Density();
+      jarea = populations[j].Region()->Area();
+      jtech = populations[j].Technology();
+      jrgr  = populations[j].Growthrate();
       length= neigh->Length();
       jinfl = jtech*jpop;
       /*-------------------------------------------------*/
@@ -152,16 +171,16 @@ double calc_spread_single(unsigned int iid) {
 	  introduced 2008-01-22 cl */
 
       /*maxforce=RelChange/TimeStep
-      *min(1.0/populations[iid].Region()->Numneighbours(),
-	   1.0/populations[jid].Region()->Numneighbours()
+      *min(1.0/populations[i].Region()->Numneighbours(),
+	   1.0/populations[j].Region()->Numneighbours()
 	   *jpop*jarea/ipop/iarea);
       
 	   dp0=min(force,maxforce/iarea);*/ 
       dp0=force;
       dp1=-iarea*dp0/jarea;
       
-    sprd[iid*N_POPVARS+4]+=dp0*ipop;
-    sprd[jid*N_POPVARS+4]+=dp1*jpop;
+    sprd[i*N_POPVARS+4]+=dp0*ipop;
+    sprd[j*N_POPVARS+4]+=dp1*jpop;
 
      /**
 	 For unidirectional transport of traits and traits in people,
@@ -174,13 +193,13 @@ double calc_spread_single(unsigned int iid) {
     double import_change=0;
     
     if(force<0) {  // outward pressure
-      export_id=iid;
-      import_id=jid;
+      export_id=i;
+      import_id=j;
       import_change=dp1;
     }
     else { // inward pressure
-      export_id=jid;
-      import_id=iid;
+      export_id=j;
+      import_id=i;
       import_change=dp0;
     }
     
@@ -224,11 +243,11 @@ double calc_spread_single(unsigned int iid) {
      sprd[import_id*N_POPVARS+1]+=traitspread(export_ndom,populations[import_id].Ndomesticated(),import_change);
        
       // Qfarming should not spread, thus next line commented
-      //sprd[i1*N_POPVARS+2]+=traitspread(iqfarm,populations[jid].Qfarming());
+      //sprd[i1*N_POPVARS+2]+=traitspread(iqfarm,populations[j].Qfarming());
 
 // TODO germs and resist
-      //sprd[import_id*N_POPVARS+5]+=traitspread(igerm,populations[jid].Germs(),import_change);
-      //sprd[import_id*N_POPVARS+3]+=genospread(iresist,populations[jid].Resist(),export_tech);
+      //sprd[import_id*N_POPVARS+5]+=traitspread(igerm,populations[j].Germs(),import_change);
+      //sprd[import_id*N_POPVARS+3]+=genospread(iresist,populations[j].Resist(),export_tech);
 
     
    /**cerr << populations[import_id] << " rgr= " << populations[import_id].RelativeGrowthrate() 
@@ -239,11 +258,11 @@ double calc_spread_single(unsigned int iid) {
 
   
       double ch;
-      ch=TimeStep*sprd[iid*N_POPVARS+4];
+      ch=TimeStep*sprd[i*N_POPVARS+4];
       if(fabs(ch/(ipop+0.01))>RelChange)
 	cout<<"HighDeni "<< state_names[4] <<" "<<iid<<"\t: "<< ipop
 	<<"+"<<ch<<endl;
-      ch=TimeStep*sprd[jid*N_POPVARS+4];
+      ch=TimeStep*sprd[j*N_POPVARS+4];
       if(fabs(ch/(jpop+0.01))>RelChange)
 	cout<<"HighDenj "<< state_names[4] <<" "<<jid<<"\t: "<< jpop
 	<<"+"<<ch<<endl;
@@ -252,14 +271,14 @@ double calc_spread_single(unsigned int iid) {
      printf("%d %d\t%1.1f %1.1f\t%1.1f \n",iid,jid,dp0*1E3,dp1*1E3,ndx*1E3);
 
       /** For diagnostic output calculate total migration activity */
-      sprdm[iid]+=fabs(dp0*ipop);
-      sprdm[jid]+=fabs(dp1*jpop);
+      sprdm[i]+=fabs(dp0*ipop);
+      sprdm[j]+=fabs(dp1*jpop);
       }
 
     }
     neigh = neigh->Next();
   }
-  return fabs(sprd[iid*N_POPVARS+4])*iarea;
+  return fabs(sprd[i*N_POPVARS+4])*iarea;
 }
 
 /*-----------------------------------------------*/

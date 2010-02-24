@@ -1,7 +1,7 @@
 /* GLUES initialization; this file is part of
    the Global Land Use and technological Evolution Simulator
    
-   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008,2009
+   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008,2009,2010
    Carsten Lemmen <carsten.lemmen@gkss.de>, Kai Wirtz <kai.wirtz@gkss.de>
 
    This program is free software; you can redistribute it and/or modify it
@@ -21,7 +21,7 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
    @author Kai W Wirtz <kai.wirtz@gkss.de
-   @date   2008-01-07
+   @date   2010-02-24
    @file Initialization.cc
    @brief Initialize all data
 */
@@ -650,6 +650,7 @@ int initialize_populations(double var) {
     /* ------------------------------------------- */
     /*     initialisation of population traits     */
     /* ------------------------------------------- */
+    regions[i].Index(i);
     regions[i].Climate(startclimate.Climate(i));
     ice_fac = IceFac(regions[i].Latitude(),regions[i].Longitude());
 
@@ -663,7 +664,7 @@ int initialize_populations(double var) {
     if(i==300 || i==6) {
     cout<<i<<":" ; 
     cout <<ice_fac<<" Lat:"<<cnd[ind]<<" biond:"<<biond<<" tl:"<<regions[i].Tlim()<<" stl:"<<tl<<endl;
-    regions[i].Write(stdout,regions[i].Id());
+    regions[i].Write(stdout,regions[i].Index());
     }
     //   biond=regions[i].ContNdommax()*regions[i].SuitableSpecies();
     if(biond<EPS) biond=EPS;  
@@ -678,6 +679,13 @@ int initialize_populations(double var) {
     regions[i].Population(&(populations[i]));
     regions[i].ResetCivStart();
   }
+  
+  /** Test for debugging only 
+  for (unsigned int i=0;i<numberOfRegions; i++) {
+    cerr << populations[i].Region()->Index() << endl;
+  }
+  // end test */
+  
   if(!VarActive) out_statreg();
   return 1;
 }

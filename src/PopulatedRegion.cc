@@ -76,7 +76,7 @@ int PopulatedRegion::CivStart(long tc) {
 /*    Test for first civilization in the neighbourhood     */
 /* ------------------------------------------------------- */
   while (neigh) {
-    jid   = neigh->Region()->Id()-0;
+    jid   = neigh->Region()->Index()-0;
     if(regions[jid].CivStart()>0) {
       ncp=1;
       break;

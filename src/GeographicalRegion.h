@@ -35,6 +35,7 @@ class RegionMapping;
 class GeographicalRegion {
  protected:
   unsigned int id;                  /** Unique id of this region */
+  unsigned int index;               /** zero based index in vector of regions */
   unsigned int numneighbours;       /** Number of neighbour regions */
   unsigned int contind;             /** Index of continent */
   unsigned int numcells;            /** Number of cells on grid */
@@ -62,6 +63,7 @@ class GeographicalRegion {
   int AddNeighbour(GeographicalRegion *reg, float bound_length, float bound_ease);
   
   /* Accessor methods to retrieve data */
+  unsigned int Index()      const  { return index; }
   unsigned int Id()         const  { return id; }
   unsigned int ContId()     const  { return contind; }
   unsigned int Sahara()     const  { return sahara; }
@@ -88,6 +90,7 @@ class GeographicalRegion {
   int Mapping(unsigned int num,unsigned int* ids);
   int CellNumber(unsigned int num) { numcells=num; return 1; }
   unsigned int Sahara(double,double);
+  int Index(unsigned int i) {index = i; return 0;}
   
   /* Further methods */
   float DistanceTo(const GeographicalRegion& ) const ;

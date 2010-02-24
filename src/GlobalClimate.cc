@@ -220,7 +220,7 @@ int GlobalClimate::InitRead(char* filename)
   ifs.close();
 
   /*for (unsigned int j=numberOfRegions-10; j<numberOfRegions; j++) {
-      cout << regions[j].Id() ;
+      cout << regions[j].Index() ;
       for (unsigned int i=0; i<num; i++)
 	  fprintf(stdout," %f",gdd_store[j+numberOfRegions*i]);
       cout << endl;

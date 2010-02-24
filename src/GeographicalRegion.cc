@@ -24,6 +24,7 @@
  */
 GeographicalRegion::GeographicalRegion(unsigned int i,unsigned int ci,float a,
 				       float la, float lo) {
+  index = 0;
   id = i;
   area = a;
   numneighbours = 0;
@@ -39,6 +40,7 @@ GeographicalRegion::GeographicalRegion(unsigned int i,unsigned int ci,float a,
 }
 
 GeographicalRegion::GeographicalRegion() {
+    index = 0;
     id = 0;
     area = 0;
     numneighbours = 0;
@@ -107,6 +109,7 @@ GeographicalRegion::GeographicalRegion(const std::string& line)
  * @brief Copy constructor
  */
 GeographicalRegion::GeographicalRegion(const GeographicalRegion& gr) {
+    index = gr.index; 
     id = gr.id;
     area = gr.area;
     numneighbours = gr.numneighbours;
@@ -181,7 +184,7 @@ int GeographicalRegion::Write(FILE* resfile,unsigned int id) const {
 }
 
 std::ostream& operator<<(std::ostream& os, const GeographicalRegion& reg) {
-  return os << "R "  	<< reg.Id() << " ("
+  return os << "R["  	<< reg.Index() << "] " << reg.Id() << " ("
   	    << "A=" 	<< reg.Area() 
 	    << " C=" << reg.Latitude() << "?N " << reg.Longitude() 
 	    << "?E N=" << reg.Numneighbours() 
