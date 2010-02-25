@@ -113,6 +113,17 @@ int main(int argc, char* argv[])
       return 1;
   }
 
+ /** Correct ins and LengthOfIns for those regions which are not part
+  of the simulation */
+  long int* newins=new long int[LengthOfins];
+  unsigned int newlenins=0;
+  for (unsigned int i=0; i<numberOfRegions; i++) {
+    unsigned int j=regions[i].Id();
+    for (unsigned int ii=0; ii<LengthOfins; ii++) if (j==ins[ii]) newins[newlenins++]=ins[ii]; 
+  }
+  LengthOfins=newlenins;
+  for (unsigned int i=0; i<LengthOfins; i++) ins[i]=newins[i];
+  delete [] newins;
 
 
 /** Initialize the Events and populations */
@@ -147,6 +158,8 @@ int main(int argc, char* argv[])
  glues::IO::define_resultfile(std::string("test.nc"),numberOfRegions);
  glues::Data data(numberOfRegions,population); */
 
+    
+  /** Run the simulation */
   
   err_i=simulation();
 
@@ -160,7 +173,7 @@ int main(int argc, char* argv[])
   printf("\t tech_final: %1.2f\n",populations[KeyFCrescent].Technology());
 
 
-  for(unsigned int i=0;i<LengthOfins;i++) fclose(watchfile[i]);
+  for(unsigned int i=0;i<LengthOfins;i++) if (watchfile[i]) fclose(watchfile[i]);
   fclose(outfile);
   // out_vegetation();
 
