@@ -1,6 +1,6 @@
 # Parameter file written by XSiSi 2.0
 comment Switches for spreading
-int	LocalSpread 1
+int	LocalSpread 0
 	\d 1: Exchange between adjacent regions
 int	RemoteSpread	0
 	\d 1: Exchange between remote seashore regions (not used in v2!)
@@ -10,7 +10,7 @@ float	CultIndex	0.5
 float	Space2Time	2.0
 	\u y/km
 	\d Conversion of distance error to time error
-int	MaxCivNum	232
+int	MaxCivNum	2320
 	\d Maximal number of independet civilizations; stop condition for simulation		
 int	DataActive	0
 	\d 1: Vergleich mit Daten (not used yet)

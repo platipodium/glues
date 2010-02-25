@@ -20,7 +20,7 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
-   @date   2010-01-15
+   @date   2010-02-124
    @file nc_result.cc
 */
 
@@ -50,22 +50,33 @@ int main(int argc, char* argv[])
 {
 
 #ifndef HAVE_NETCDF_H
-    std::cout << " No netcdf interface defined. FAIL" << std::endl;
+    std::cerr << " No netcdf interface defined. FAIL" << std::endl;
     return 1;
 #else
  
   string template_filename="glues_template.nc";
-  string input_filename="../../examples/setup/685/results.out";
+  string input_filename="../../examples/setup/62483/results.out";
   string output_filename="results.nc";
    
   NcFile nctmpl(template_filename.c_str(), NcFile::ReadOnly);
-  if (!nctmpl.is_valid()) return 1;
+  if (!nctmpl.is_valid()) {
+    std::cerr << " Required template " << template_filename << " not found." << std::endl;
+    return 1;
+  }
   
   ifstream ifs(input_filename.c_str(),ios::in | ios::binary);
-  if (!ifs.good()) return 1;
+  if (!ifs.good()) {
+    std::cerr << " Required input file " << input_filename << " not found." << std::endl;
+    return 1;
+  }
+  else std::cout << " Reading file " << input_filename << std::endl;
   
   NcFile ncfile(output_filename.c_str(), NcFile::Replace);
-  if (!ncfile.is_valid()) return 1;
+  if (!ncfile.is_valid()) {
+    std::cerr << " Output " << output_filename << " could not be created." << std::endl;
+    return 1;
+  }
+   
   
   vector<string> vars;
   string line;

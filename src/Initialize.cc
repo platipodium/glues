@@ -399,7 +399,8 @@ int read_data() {
     global control variables         */
 /*--------------------------------------------*/
 int initialize() {
-  unsigned int MaxNew=(unsigned int)(0.5*numberOfRegions+1);
+
+  unsigned int MaxNew=numberOfRegions;
   /* ----------------------------------------------- */
   /*      Initialize  global/simulation values       */
   /* ----------------------------------------------- */
@@ -410,7 +411,7 @@ int initialize() {
   NewCivDev= new double[MaxNew];
   NewCivTime= new double[MaxNew];
   NewCivDist=1.5E3;
-  NewCivMaxNum=(int)(0.5*(MaxCivNum-RowsOfdata_agri_start));
+  NewCivMaxNum=(int)(MaxCivNum-RowsOfdata_agri_start);
   
   // cropfertility = NPPCROP/(NPPCROP+kappa);
   cropfertility = 1;

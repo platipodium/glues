@@ -169,15 +169,20 @@ unsigned int RegionNumber() {
   }
   
   do {
-    // Skip lines which do not commence with a digit
+    // Skip lines which do not commence with a digit or whitespace
     c=ifs.peek();
-    if ( (c < '0') || (c > '9') ) {
+    if (( (c < '0') || (c > '9')) && (c!=' ') && (c!='\t') ) {
       ifs.getline(charbuffer,BUFSIZE);
       continue;  
     }
     
     ifs.getline(charbuffer,BUFSIZE);
-    number++;
+    
+    c=charbuffer[0];
+    unsigned int i=0;
+    while ((c!='\0') && ((c==' ') || (c=='\t'))) c=charbuffer[i++];
+    if ( (c < '0') || (c > '9') ) continue;
+    number++;          
   } while (!ifs.eof()) ; 
   
   cout << number << _(" regions") << " OK" << endl;
