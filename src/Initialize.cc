@@ -326,6 +326,9 @@ int read_data() {
   nregion=RegionProperties(region);
 
   cout << "Read " << nregion << " regions" << endl;
+
+// for (unsigned int i; i<numberOfRegions; i++) cerr << regions[i] << endl; 
+
   // if nregions=0 return 1;
 
   if (!read_neighbours()) return 0;  // calculate neighbour regions 
@@ -335,6 +338,9 @@ int read_data() {
   // if (!read_mapping()) return 0;
 
   if (GlobalClimate::InitRead(climatestring) < 1) return 0;
+
+// for (unsigned int i; i<numberOfRegions; i++) cerr << regions[i] << endl; 
+
   
   if (!read_proxyevents()) return 0;  //  
 

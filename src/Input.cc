@@ -20,7 +20,7 @@
 
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
    @author Kai W Wirtz <kai.wirtz@gkss.de
-   @date   2009-01-30
+   @date   20010-02-24
    @file Input.cc 
    @brief Input/output routines 
 */
@@ -454,8 +454,7 @@ unsigned int count_ascii_columns(std::istream& is)
   
     while( is.good() && getline(is,line) ) {
 	
-//	  cout << line << endl;
-	  if ( (line[0] < '0' || line[0] > '9') && line[0]!='-' && line[0]!='.' && line[0]!='+' ) {
+  if ( (line[0] < '0' || line[0] > '9') && (line[0]!='-') && line [0]!='.' && line[0]!='+'  ) {	    // Skip non-number lines
 	    // Skip non-number lines
 	    continue;
 	  }
@@ -552,7 +551,10 @@ vector<PopulatedRegion>::size_type  RegionProperties(vector<PopulatedRegion> reg
       }
       /* Later to be replaced */
       regions[i] = PopulatedRegion(ifs);
+      regions[i].Index(i);
+      
       region.push_back(PopulatedRegion(regions[i]));
+      // todo: add index generation
       i++;
   }
  
@@ -589,7 +591,7 @@ int read_neighbours() {
 
   /** find a mapping from Id to index of all regions */
   map<unsigned int,unsigned int> idmap;
-  for (i=0; i<numberOfRegions; i++) idmap[regions[i].Id()]=i;
+ // TODO: for (i=0; i<numberOfRegions; i++) idmap[regions[i].Id()]=i;
  
   while ( i<numberOfRegions && !ifs.eof() ) {
     c=ifs.peek();
@@ -607,11 +609,10 @@ int read_neighbours() {
       sscanf(charbuffer,"%d:%f:%d",&neighid,&neigh_boundary,&neigh_distance);
      
       if ( neighid>=0 ) {
-        unsigned int j=idmap[neighid];
-        
-        regions[i].AddNeighbour(&regions[j],
-			      neigh_boundary,1);
-        if (j < i) regions[j].AddNeighbour(&regions[i],
+        unsigned int in=neighid;//idmap[neighid];
+        // rpelace neighid with in in this block
+        regions[i].AddNeighbour(&regions[in],neigh_boundary,1);
+        if (in < i) regions[in].AddNeighbour(&regions[i],
 						     neigh_boundary,1);
     }				     
 	//if (i>680) printf("read %i %d %d %d %f\n",i,selfid,numneigh,neighid,neigh_boundary);
@@ -733,9 +734,6 @@ sscanf(charbuffer,"%d:%f:%f",&neighid,&neigh_boundary);
 }
 
 /* -------------------------------------------------- */
-// -------------------------------------------------------------------------------
-//
-// -------------------------------------------------------------------------------
 /** This function is obsolete */
 
 int read_mapping() {

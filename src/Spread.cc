@@ -128,7 +128,7 @@ double calc_spread_single(unsigned int i) {
     j   = neigh->Region()->Index();
     jid = neigh->Region()->Id();
     
-    cerr << i << "/" <<  iid << " " << j << "/" << jid << endl; 
+    //cerr << i << "/" <<  iid << " " << j << "/" << jid << endl; 
     /** Only perform an update if j>i to avoid
     double exchange in one time step */	
     if (j > i) {
