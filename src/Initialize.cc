@@ -730,6 +730,9 @@ int CalcContNdommax() {
     cnd[ind]+=area*regions[i].SuitableSpecies()*tl;
   }
   
+  //for (i=1;i<=LengthOfndommaxcont;i++) cout << i << " LOOK " << cnd[i] << endl;
+  
+  
   /** Introduced to avoid NaNs if other region is larger than Eurasia
     (e.g. in case of single region simulations) */
     
@@ -754,7 +757,8 @@ int CalcContNdommax() {
   
   /** Correct with correction factor in simulation setup */
   MaxContAr*=ndommaxcont[0];
-  if (!VarActive ) printf("cont:ndomax\t");
+
+  if (!VarActive ) cout << "cont:ndomax\t";
   for (unsigned int i=1;i<=LengthOfndommaxcont;i++) {
     /*------------------------------------------------------------*/
     /*   correct manually the continental index to inlude more
@@ -764,11 +768,11 @@ int CalcContNdommax() {
 
     cnd[i]*=1.0*ndommaxcont[i-1]/MaxContAr;
     cnd[i]=ndommaxmean*pow(cnd[i],1+ndommaxvar);
-    if (!VarActive ) printf("%d:%1.2f ",i,cnd[i]);
-  }
+    if (!VarActive ) cout << " " << i << ":" << cnd[i];
+    //cout << i << " LOOK " << cnd[i] << endl;
+ }
   if (!VarActive) cout<<endl;
   
-
   /* ------------------------------------------- */
   /*    variant C: adjustment of preset vector   */
   /* ------------------------------------------- */
