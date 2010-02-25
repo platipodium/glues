@@ -293,6 +293,7 @@ AC_CONFIG_FILES([Makefile
   src/test/Makefile config/Makefile
   src/variation/Makefile
   src/patch/Makefile
+  src/Messages.cc
   examples/Makefile examples/setup/Makefile 
   examples/setup/938/Makefile
   examples/setup/939/Makefile
