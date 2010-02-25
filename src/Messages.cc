@@ -43,7 +43,7 @@ namespace glues {
       << "*                                                              *" << endl
       << "*  Authors Carsten Lemmen & Kai Wirtz                          *" << endl
       << "*  Contact <carsten.lemmen@gkss.de>                            *" << endl 
-      << "*  Last change  2009-08-14 / Version 1.1.7                     *" << endl
+      << "*  Last change  2009-08-14 / Version 1.1.8                     *" << endl
       << "****************************************************************" << endl
       << endl;
     return;
@@ -53,7 +53,7 @@ namespace glues {
     cout 
       << endl
       << "****************************************************************" << endl
-      << "*                Thank you for using GLUES 1.1.7" << endl
+      << "*                Thank you for using GLUES 1.1.8" << endl
       << "****************************************************************" << endl
       << endl;
     return;

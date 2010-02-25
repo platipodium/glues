@@ -3,7 +3,7 @@ dnl Process this file with autoconf to produce a configure script.
 dnl Versioning: please increase micro version at each running version
 dnl only m4 macros are allowed before AC_INIT
 
-m4_define([GLUES_MICRO_VERSION],7)
+m4_define([GLUES_MICRO_VERSION],8)
 m4_define([GLUES_MINOR_VERSION],1)
 m4_define([GLUES_MAJOR_VERSION],1)
 m4_define([GLUES_VERSION],[GLUES_MAJOR_VERSION.GLUES_MINOR_VERSION.GLUES_MICRO_VERSION])
