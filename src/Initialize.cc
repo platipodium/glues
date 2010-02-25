@@ -323,16 +323,16 @@ int read_data() {
   vector<PopulatedRegion> region;
   vector<PopulatedRegion>::size_type nregion;
 
+  /** Initialize regions* and region vector and get number of regions
+  in both numberOfRegions and nregion.  Assert that nregion is greater than
+  zero else fail. */
   nregion=RegionProperties(region);
-
+  assert(nregion>0);
   cout << "Read " << nregion << " regions" << endl;
-
-// for (unsigned int i; i<numberOfRegions; i++) cerr << regions[i] << endl; 
-
-  // if nregions=0 return 1;
-
+  
+  for (unsigned int i; i<numberOfRegions; i++) cout << regions[i].Index() << "/" << regions[i].Id() << endl; 
   if (!read_neighbours()) return 0;  // calculate neighbour regions 
- 
+
   // Mapping data ist not needed, but optional (not used yet, i.e.
   // for remapping of regions
   // if (!read_mapping()) return 0;
@@ -380,6 +380,8 @@ int read_data() {
  // out_boxes();
   //cout << "No proxy events. TODO: Initialize.cc ll.312 " << endl;
   if (!set_events()) return 0;
+  
+
   
   return 1;
 }

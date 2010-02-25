@@ -587,13 +587,16 @@ int read_neighbours() {
     return 0;  // The file does not exist
   }
 
-  unsigned int i=0;
-
   /** find a mapping from Id to index of all regions */
   map<unsigned int,unsigned int> idmap;
- // TODO: for (i=0; i<numberOfRegions; i++) idmap[regions[i].Id()]=i;
+//  for (unsigned int i; i<numberOfRegions; i++) cout << regions[i].Index() << "/" << regions[i].Id() << endl; 
+  for (unsigned int i; i<numberOfRegions; i++) idmap[regions[i].Id()]=i;
  
-  while ( i<numberOfRegions && !ifs.eof() ) {
+
+  unsigned int i=0;
+
+  
+  while (i<numberOfRegions && !ifs.eof() ) {
     c=ifs.peek();
     if ( (c < '0') || (c > '9') ) {
 	  ifs.getline(charbuffer,BUFSIZE);
