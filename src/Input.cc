@@ -612,8 +612,7 @@ int read_neighbours() {
       sscanf(charbuffer,"%d:%f:%d",&neighid,&neigh_boundary,&neigh_distance);
      
       if ( neighid>=0 ) {
-        unsigned int in=neighid;//idmap[neighid];
-        // rpelace neighid with in in this block
+        unsigned int in=idmap[neighid];
         regions[i].AddNeighbour(&regions[in],neigh_boundary,1);
         if (in < i) regions[in].AddNeighbour(&regions[i],
 						     neigh_boundary,1);

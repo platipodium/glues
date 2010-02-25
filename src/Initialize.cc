@@ -330,8 +330,16 @@ int read_data() {
   assert(nregion>0);
   cout << "Read " << nregion << " regions" << endl;
   
-  for (unsigned int i; i<numberOfRegions; i++) cout << regions[i].Index() << "/" << regions[i].Id() << endl; 
+  //for (unsigned int i; i<numberOfRegions; i++) cout << regions[i].Index() << "/" << regions[i].Id() << endl; 
   if (!read_neighbours()) return 0;  // calculate neighbour regions 
+
+  /** Debug neighbours 
+  for (unsigned int i; i<numberOfRegions; i++) {
+    cout << regions[i].Id();
+    if (regions[i].Neighbour()) cout << ' .';
+    cout << endl;
+  }
+  // End debug */
 
   // Mapping data ist not needed, but optional (not used yet, i.e.
   // for remapping of regions
