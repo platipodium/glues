@@ -34,6 +34,9 @@ while iarg<=nargin
       case 'old'
           lonlim=[-30,180];
           latlim=[-40,60];
+      case 'cp1' % For CP paper with Gaillard
+          lonlim=[-25,145];
+          latlim=[-40,60];
       case 'afr'
           lonlim=[-20,60];
           latlim=[-40,20];

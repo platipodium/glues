@@ -14,9 +14,9 @@ ilat(i)=1-ilat(i);
 ilon(i)=ilon(i)+cols/2-1;
 
 i=find(ilon<1);
-ilon(i)=ilon+cols;
+ilon(i)=(i)+cols;
 i=find(ilon>cols);
-ilon(i)=ilon-cols;
+ilon(i)=ilon(i)-cols;
 
 index=(ilat-1)*cols+ilon;
   

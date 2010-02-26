@@ -14,11 +14,17 @@ if ~exist(mapfile,'file')
   return
 end
 
+debug=4
+
 %map='$HOME/projects/glues/glues/glues/setup/mapping_80_686.mat'
 
 load(mapfile);
 
-[cols,rows]=size(map.region);
+[rows,cols]=size(map.region);
+if rows>cols
+  map.region=map.region';
+ [rows,cols]=size(map.region);
+end 
 
 
 nland=length(land.map);
@@ -27,28 +33,33 @@ nreg=length(region.length);
 region.path=zeros(nreg,400,3)-NaN;
 region.neighbourhood=zeros(nreg,100)-NaN;
 
-[land.ilon,land.ilat]=regidx2geoidx(land.map,cols);
+%[land.ilat,land.ilon]=regidx2geoidx(land.map,cols);
+[ilat,ilon]=cl_i2lli(land.map,cols);
 
-% fix 685 file
-if (nreg==685)
-  if (map.latgrid(1)==-89.75) 
-    map.latgrid=fliplr(map.latgrid);
-  end
-  land.ilat=land.ilat-1;
-  land.ilon=land.ilon+1;
+% fix reversed latgrid, it should be decreasing from 90.. -90
+if (map.latgrid(1)==-89.75) 
+  map.latgrid=fliplr(map.latgrid);
 end
 
-
+%% land.lat and land.lon are good, thus recreate everything else, i.e.
+%  recreate map.region,land.map
 lat=land.lat;
 lon=land.lon;
+map.resolution=abs([map.latgrid(1)-map.latgrid(2),map.longrid(1)-map.longrid(2)]);
+
+land.ilat=rows+1-ceil((land.lat+map.resolution(1)/2-min(map.latgrid))/map.resolution(1));
+land.ilon=ceil((land.lon+map.resolution(2)/2-min(map.longrid))/map.resolution(2));
+land.map=cl_lli2i(land.ilat,land.ilon);
+map.region=map.region*0-10;
+map.region(land.map)=land.region;
 
 % Sanity check for ilon/ilat
-ok=all(map.latgrid(land.ilat)==land.lat')
-ok=all(map.longrid(land.ilon)==land.lon')
+ok=all(map.latgrid(land.ilat)==land.lat').*all(map.longrid(land.ilon)==land.lon')
+
 
 f=find(land.region==272);
-fl=land.lat(f(1:10));
-fm=map.latgrid(land.ilat(f(1:10)));
+fl=land.lat(f);
+fm=map.latgrid(land.ilat(f));
 
 
 
@@ -56,24 +67,18 @@ border=zeros(nland,4);
 
 ilon=land.ilon;
 ilat=land.ilat;
+
 ilonl=ilon-1;
 ilonl(ilonl==0)=cols;
 ilonr=ilon+1;
 ilonr(ilonr==cols+1)=1;
 
-nnu=geoidx2regidx(ilon,ilat-1,cols);
-nnd=geoidx2regidx(ilon,ilat+1,cols);
-nnl=geoidx2regidx(ilonl,ilat,cols);
-nnr=geoidx2regidx(ilonr,ilat,cols);
-nni=geoidx2regidx(ilon,ilat,cols);
+nnu=cl_lli2i(ilat-1,ilon,cols);
+nnd=cl_lli2i(ilat+1,ilon,cols);
+nnl=cl_lli2i(ilat,ilonl,cols);
+nnr=cl_lli2i(ilat,ilonr,cols);
+nni=cl_lli2i(ilat,ilon,cols);
 
-if nreg==685
-  nnu=geoidx2regidx(ilon-1,ilat,cols);
-  nnd=geoidx2regidx(ilon-1,ilat+2,cols);
-  nnl=geoidx2regidx(ilonl-1,ilat+1,cols);
-  nnr=geoidx2regidx(ilonr-1,ilat+1,cols);
-  nni=geoidx2regidx(ilon-1,ilat+1,cols);
-end
 
 ok=all(map.region(nni)==land.region)
 
@@ -85,7 +90,7 @@ nborder=sum(border,2);
 iborder=find(nborder > 0);
 nborderland=length(iborder);
 
-debug=0;
+debug=4;
  
 latgrid=map.latgrid;
 longrid=map.longrid;
@@ -102,8 +107,7 @@ if ~isfield(region,'center')
     if nselect~=region.length(ireg) error('Inconsistency detected'); end
 
    region.center(ireg,1)=calc_geo_mean(map.latgrid(ilat(iselect)),map.longrid(ilon(iselect)));
-   %region.center(ireg,2)=calc_geo_mean(map.latgrid(ilat),map.longrid(ilat));
-  region.center(ireg,2)=mean(map.latgrid(ilat(iselect)));
+   region.center(ireg,2)=mean(map.latgrid(ilat(iselect)));
 
   if debug>2
 
@@ -171,7 +175,7 @@ for ireg=1:nreg %:nreg
     la=repmat(latgrid(ila),nlo,1);
    % if (nreg==685 || nreg==686) ilat=361-ilat; end
     m_text(reshape(lo,nlo*nla,1),reshape(la,nlo*nla,1),...
-        num2str(reshape(map.region(ilo,ila),nlo*nla,1)),...
+        num2str(reshape(map.region(ila,ilo),nlo*nla,1)),...
         'VerticalAlignment','middle','HorizontalAlignment','center','FontSize',6);
     
   end
@@ -267,9 +271,9 @@ for ireg=1:nreg %:nreg
     ibord=ibord(1);
     switch isort(ibord)
       case 1
-        path(ipath,:)=[lonc-0.25,latc,map.region(ilol,ilac)];
-        if (map.region(ilol,ilac-1) == me) idir=3; ineigh=1;
-        elseif (map.region(iloc,ilac-1) == me) idir=0; ineigh=2;
+        path(ipath,:)=[lonc-0.25,latc,map.region(ilac,ilol)];
+        if (map.region(ilac-1,ilol) == me) idir=3; ineigh=1;
+        elseif (map.region(ilac-1,iloc) == me) idir=0; ineigh=2;
         else ineigh=8; idir=1; end
         if 0&ipath>1 & path(ipath-1,3)~=path(ipath,3)
            path(ipath+1,:)=path(ipath,:);
@@ -278,9 +282,9 @@ for ireg=1:nreg %:nreg
         end
         
       case 2
-        path(ipath,:)=[lonc,latc+0.25,map.region(iloc,ilac-1)];
-        if (map.region(ilor,ilac-1) == me) idir=0; ineigh=3; 
-        elseif (map.region(ilor,ilac) == me) idir=1; ineigh=4; 
+        path(ipath,:)=[lonc,latc+0.25,map.region(ilac-1,iloc)];
+        if (map.region(ilac-1,ilor) == me) idir=0; ineigh=3; 
+        elseif (map.region(ilac,ilor) == me) idir=1; ineigh=4; 
         else idir=2; ineigh=8; end
         if 0&ipath>1 & path(ipath-1,3)~=path(ipath,3)
            path(ipath+1,:)=path(ipath,:);
@@ -288,9 +292,9 @@ for ireg=1:nreg %:nreg
            ipath=ipath+1;
         end
       case 3
-        path(ipath,:)=[lonc+0.25,latc,map.region(ilor,ilac)];
-        if (map.region(ilor,ilac+1) == me) idir=1; ineigh=5;
-        elseif (map.region(iloc,ilac+1) == me) idir=2; ineigh=6; 
+        path(ipath,:)=[lonc+0.25,latc,map.region(ilac,ilor)];
+        if (map.region(ilac+1,ilor) == me) idir=1; ineigh=5;
+        elseif (map.region(ilac+1,iloc) == me) idir=2; ineigh=6; 
         else idir=3; ineigh=8; end
         if 0&ipath>1 & path(ipath-1,3)~=path(ipath,3)
            path(ipath+1,:)=path(ipath,:);
@@ -298,9 +302,9 @@ for ireg=1:nreg %:nreg
            ipath=ipath+1;
         end
       case 4
-        path(ipath,:)=[lonc,latc-0.25,map.region(iloc,ilac+1)];
-        if (map.region(ilol,ilac+1) == me) idir=2; ineigh=7; 
-        elseif (map.region(ilol,ilac) == me)  idir=3; ineigh=0; 
+        path(ipath,:)=[lonc,latc-0.25,map.region(ilac+1,iloc)];
+        if (map.region(ilac+1,ilol) == me) idir=2; ineigh=7; 
+        elseif (map.region(ilac,ilol) == me)  idir=3; ineigh=0; 
         else  idir=0; ineigh=8; end
         if ipath>1 & path(ipath-1,3)~=path(ipath,3)
            path(ipath+1,:)=path(ipath,:);
@@ -343,7 +347,7 @@ for ireg=1:nreg %:nreg
   region.path(ireg,1:ipath,1)=path(1:ipath,1);
   region.path(ireg,1:ipath,2)=path(1:ipath,2);
   region.path(ireg,1:ipath,3)=path(1:ipath,3);
-  if debug m_plot(region.path(ireg,:,1),region.path(ireg,:,2),'m-'); end
+  if debug m_plot(region.path(ireg,:,1),region.path(ireg,:,2),'m-','LineW',4); end
   %Consistency check
   
   upath=unique(region.path(ireg,1:ipath,3));
@@ -353,6 +357,9 @@ for ireg=1:nreg %:nreg
       warning('Inconsistency in path and neighbours for region %d',ireg);
   end
   
+  
+  warning('The path contains still too many nans, something needs to be fixed in this routine');
+  error('Do not use this routine right now');
   
   if mod(ireg,20)==0 fprintf('.'); end
   

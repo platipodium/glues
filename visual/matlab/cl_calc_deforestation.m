@@ -64,13 +64,21 @@ remainingcarbon=b12f.*(fshare-cropfraction) ...
     +b34g.*gshare;
 
 
-load('regionpath_685.mat');
-
+%load('regionpath_685.mat');
+load('regionmap_sea_685.mat');
 if ~exist('region','var')
   region.area=regionarea;
 end
 
-deforestation=cropfraction*100.*repmat(region.area',1,r.nstep);
+if ~isfield(region,'area')
+  land.area=calc_gridcell_area(map.latgrid(land.ilat))';
+  for i=1:region.nreg
+    r.area(i)=sum(land.area(land.region==i));
+  end
+end
+
+
+deforestation=cropfraction*100.*repmat(r.area',1,r.nstep);
 save('hyde_glues_cropfraction','cropfraction','naturalcarbon',...
     'remainingcarbon','deforestation');
 
