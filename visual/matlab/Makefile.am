@@ -1,6 +1,6 @@
 # visual/matlab/ Makefile for GLUES.
 
-# Copyright (C) 2007,2008,2009
+# Copyright (C) 2007,2008,2009,2010
 # Carsten Lemmen, GKSS-Forschungszentrum Geesthacht GmbH
 
 ## This program is free software; you can redistribute it and/or modify
@@ -135,5 +135,6 @@ clp_basemap.m \
 clp_map_variable.m \
 clp_marble.m \
 clp_regionpath.m \
-clp_traj_variable.m
+clp_traj_variable.m \
+cl_i2lli.m cl_lli2i.m
 

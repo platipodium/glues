@@ -18,7 +18,7 @@ load(['regionpath_' num2str(nreg)]);
 %latlim=[-60,70];lonlim=[-180,180];
 
 if nreg==685 
-  [regs,nreg,lonlim,latlim]=find_region_numbers('old');
+  [regs,nreg,lonlim,latlim]=find_region_numbers('cp1');
 elseif nreg==686
   regs=find_region_numbers_686('emea');
 else nreg=1:nreg;
@@ -36,19 +36,31 @@ region.path(:,:,2)=region.path(:,:,2)+1.0;
 figoffset=0;
 %vars={'GluesNaturalForest'};
 % Figure 2 in paper
-vars={'Technology','Density'}; timelim=[4000 3980];
-vars={'GluesCropfraction','Cropfraction'}; timelim=[3000 2980];
+vars={'Density','GluesDeforestation'};
+timelim=[3000 2980];
+
+% For Gaillard et al paper
+%vars={'Density'}; timelim=[3000 2980]; ylim=[0,8];
+%vars={'GluesDeforestation'}; timelim=[3000 2980]; ylim=[0,40];
+vars={'GluesCropfraction'}; timelim=[4000 3980]; ylim=[0,15];
+vars={'GluesCropfraction'}; timelim=[7000 6980]; ylim=[0,15];
+%vars={'Density'}; timelim=[5000 4980]; ylim=[0,8];
+%vars={'GluesDeforestation'}; timelim=[5000 4980]; ylim=[0,40];
+%vars={'Density'}; timelim=[7000 6980]; ylim=[0,8];
+%vars={'GluesDeforestation'}; timelim=[7000 6980]; ylim=[0,40];
+%vars={'Density'}; timelim=[9000 8980]; ylim=[0,8];
+%vars={'GluesDeforestation'}; timelim=[9000 8980]; ylim=[0,40];
+
 
 %vars={'GluesNaturalForest','GluesDeforestation','Technology','Density'};
 %vars={'GluesNaturalForest','GluesDeforestation','Technology','Density'};
 %vars={'GluesNaturalForest','GluesDeforestation','Technology','Density'};
-timelim=[3000 2980];
 %vars={'Density'};
 %vars={'Migration','Agricultures','CivStart','Climate'};
 %vars={'Agricultures','Migration'};
 mode='absolute';
-resultfilename='result_iiasaclimber_ref_all';
-%resultfilename='results';
+%resultfilename='result_iiasaclimber_ref_all';
+resultfilename='results';
 
   for iarg=1:nargin 
     if all(isletter(varargin{iarg}))
@@ -85,7 +97,7 @@ lonrange=abs(lonlim(2)-lonlim(1));
   
 if exist([resultfilename '.mat'],'file') load(resultfilename); else return; end
 
-infix=strrep(resultfilename,'result','');
+infix=strrep(resultfilename,'results','');
 if length(infix)>0
   while infix(1)=='_' infix=infix(2:end); end
 end
@@ -177,8 +189,8 @@ nvar=length(dovar);
 
 toffset=500;
 
-tstart=min([r.tend+toffset,timelim(1)]);
-tend=max([r.tstart+toffset,timelim(2)]);
+tstart=min([r.tend+toffset,2000-timelim(1)]);
+tend=max([r.tstart+toffset,2000-timelim(2)]);
 r.time=r.time+toffset;
          
 
@@ -192,7 +204,7 @@ for idovar=1:nvar
             | strcmp(vars{idovar},'HydePopulationDensity') )
         time=2000+[10000:-1000:1000];
     else
-        time=r.time
+        time=r.time;
     end
     
 [tmax,itend]=min(abs(time-tend));
@@ -209,15 +221,18 @@ data=eval(['r.' r.variables{ivar}]);
    minmax=[min(min(min(data(regs,itstart:itend)))),max(max(max(data(regs,itstart:itend))))];
    if exist('ylim','var') minmax=ylim; end
    
-  ncol=10;
+   
+   
+  ncol=19;
   
   resvar=round(((data-minmax(1)))./(minmax(2)-minmax(1))*(ncol-1))+1;
   resvar(resvar>ncol)=ncol;
   resvar(resvar<1)=1;
   contrastmap=flipud(contrast(resvar(regs,itstart:itend),ncol));
   greymap=flipud(gray(ncol));
+  colmap=hotcold(ncol);
   %cmap=0.7*greymap+0.3*contrastmap;
-  cmap=colormap('hotcold');
+  cmap=colmap;
   %cmap=greymap;
   
   % Plot timeseries
@@ -290,8 +305,8 @@ data=eval(['r.' r.variables{ivar}]);
   
   titletext=r.variables{ivar};
   if length(infix)>0 titletext=[titletext '(' infix ')']; end
-  %ht=title(titletext);
-  %set(ht,'interpreter','none');
+  ht=title(titletext);
+  set(ht,'interpreter','none');
  
   
   t=time(itstart);
@@ -361,8 +376,8 @@ end
 
 load('regionpath_685');
 
-if exist('naturalcarbon','var') & strcmp(vars{1},'GluesDeforestation');
-%figure(10);
+if exist('naturalcarbon','var') & strcmp(vars{nvar},'GluesDeforestation');
+figure(ivar+figoffset);
 sces={'all','old','fsc','eme','ind','afr','chi','sea'};
 ns=length(sces);
 hold on;
@@ -379,7 +394,15 @@ for is=1:ns
   
   %m_plot( [lonlim,fliplr(lonlim),lonlim(1)],[latlim(1) latlim(1) latlim(2) latlim(2) latlim(1)],'k--','linewidth',3);
 
-  ar=region.area(regs)';
+  if ~isfield(region,'area')
+     load('regionmap_sea_685.mat');
+     land.area=calc_gridcell_area(map.latgrid(land.ilat))';
+     for ir=1:nreg 
+       r.area(ir)=sum(land.area(land.region==ir));
+     end
+  end
+  
+  ar=r.area(regs)';
   dc=naturalcarbon(regs,itend)-remainingcarbon(regs,itend);
   tc=naturalcarbon(regs,itend);
   
