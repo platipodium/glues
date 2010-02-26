@@ -24,6 +24,13 @@ end
 [cols rows]=size(map.region);
 nreg=length(region.length);
 
+% Check consistency
+[ilon,ilat]=regidx2geoidx(land.map,cols);
+if any(map.latgrid(ilat)-lat') error('Inconsistency in land.map and lat'); end
+if any(map.longrid(ilon)-lon') error('Inconsistency in land.map and lon'); end
+if any(map.region(land.map)-land.region)  error('Inconsistency in map.region and land.region'); end
+
+
 % Set water to 999 in map.region
 tmpmap=map.region.*0-1;
 tmpmap(land.map)=land.region;

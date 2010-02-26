@@ -37,12 +37,12 @@ figoffset=0;
 %vars={'GluesNaturalForest'};
 % Figure 2 in paper
 vars={'Technology','Density'}; timelim=[4000 3980];
-vars={'GluesCropfraction','Cropfraction'}; timelim=[4000 3980];
+vars={'GluesCropfraction','Cropfraction'}; timelim=[3000 2980];
 
 %vars={'GluesNaturalForest','GluesDeforestation','Technology','Density'};
 %vars={'GluesNaturalForest','GluesDeforestation','Technology','Density'};
 %vars={'GluesNaturalForest','GluesDeforestation','Technology','Density'};
-timelim=[4000 3980];
+timelim=[3000 2980];
 %vars={'Density'};
 %vars={'Migration','Agricultures','CivStart','Climate'};
 %vars={'Agricultures','Migration'};
@@ -217,8 +217,8 @@ data=eval(['r.' r.variables{ivar}]);
   contrastmap=flipud(contrast(resvar(regs,itstart:itend),ncol));
   greymap=flipud(gray(ncol));
   %cmap=0.7*greymap+0.3*contrastmap;
-  %cmap=colormap('hotcold');
-  cmap=greymap;
+  cmap=colormap('hotcold');
+  %cmap=greymap;
   
   % Plot timeseries
   figure(ivar+nvar+figoffset); 

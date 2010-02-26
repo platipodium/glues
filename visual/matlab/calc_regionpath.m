@@ -20,6 +20,9 @@ load(map);
 
 [cols,rows]=size(map.region);
 
+latgrid=[1:rows]*0.5-90.25;
+longrid=[1:cols]*0.5-180.25;
+
 lat=land.lat;
 lon=land.lon;
 
@@ -30,10 +33,19 @@ border=zeros(nland,4);
 region.path=zeros(nreg,400,3)-NaN;
 region.neighbourhood=zeros(nreg,100)-NaN;
 
+% Check consistency
+[ilon,ilat]=regidx2geoidx(land.map,cols);
+if any(map.latgrid(ilat)-lat') error('Inconsistency in land.map and lat'); end
+if any(map.longrid(ilon)-lon') error('Inconsistency in land.map and lon'); end
+if any(map.region(land.map)-land.region)  error('Inconsistency in map.region and land.region'); end
+
+
+
 for iland=1:nland
   me=land.region(iland);
   [ilon,ilat]=regidx2geoidx(land.map(iland),cols);
   if (map.region(ilon,ilat) ~= me) 
+    fprintf('Please correct map.region');
     fprintf('%f %f\n',map.region(ilon,ilat),me); 
    error('Map and region information do not match');
   end

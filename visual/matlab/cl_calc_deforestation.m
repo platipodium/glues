@@ -4,8 +4,8 @@ cl_register_function;
 
 hydefile='region_hyde_685.mat';
 climatefile='region_iiasa_685.mat';
-resultfilename='result_iiasaclimber_ref_all.mat';
-%resultfilename='results.mat';
+%resultfilename='result_iiasaclimber_ref_all.mat';
+resultfilename='results.mat';
 
 hyde=load(hydefile);
 hyde=hyde.climate;
@@ -42,16 +42,16 @@ cropfraction(cropfraction>1)=1;
 % static 100 t C/ha 
 % Curtis et al (2002) estimate 100 t/ha aboveground carbon in temp decid
 % forest
-% naturalforest=repmat(climate.fshare',1,288)*100;
+% naturalforest=repmat(climate.fshare',1,r.nstep)*100;
 
 % new VECODE formulation
 
-fshare=repmat(climate.fshare',1,288);
-gshare=repmat(climate.gshare',1,288);
-b12f=repmat(climate.b12f',1,288);
-b12g=repmat(climate.b12g',1,288);
-b34f=repmat(climate.b34f',1,288);
-b34g=repmat(climate.b34g',1,288);
+fshare=repmat(climate.fshare',1,r.nstep);
+gshare=repmat(climate.gshare',1,r.nstep);
+b12f=repmat(climate.b12f',1,r.nstep);
+b12g=repmat(climate.b12g',1,r.nstep);
+b34f=repmat(climate.b34f',1,r.nstep);
+b34g=repmat(climate.b34g',1,r.nstep);
 
 
 naturalcarbon=b12f.*fshare+b12g.*gshare ...
@@ -70,7 +70,7 @@ if ~exist('region','var')
   region.area=regionarea;
 end
 
-deforestation=cropfraction*100.*repmat(region.area',1,288);
+deforestation=cropfraction*100.*repmat(region.area',1,r.nstep);
 save('hyde_glues_cropfraction','cropfraction','naturalcarbon',...
     'remainingcarbon','deforestation');
 
