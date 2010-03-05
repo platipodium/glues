@@ -189,12 +189,17 @@ monthly precip and montly temperature */
        for (int m=0; m<nmonth;m++)  {
          tyear[m*nland+l]=temp[m*nland+l]+tslice[(m*ny+ila)*nx+ilo]-t0[(m*ny+ila)*nx+ilo];
          pyear[m*nland+l]=prec[m*nland+l]+pslice[(m*ny+ila)*nx+ilo]-p0[(m*ny+ila)*nx+ilo];
+         if (pyear[m*nland+l]<0) pyear[m*nland+l]=0;
          tann[l]+=tyear[m*nland+l]/12.0;
          pann[l]+=pyear[m*nland+l];
          gdd[y*nland+l]+=(tyear[m*nland+l]>=0?1:0)*monthdays[m];
          //cout << " " << temp[m*nland+l] << " " << tyear[m*nland+l];
        }
        npp[y*nland+l]=npp_lieth(tann[l],pann[l]);
+       if (npp_lieth(tann[l],pann[l])<0) {
+           cerr << l << " " << y << " " << tann[l] << " " << pann [l] << endl;
+           return 1;
+       }
        tanmean+=tann[l]/nland;
        panmean+=pann[l]/nland;
        nppmean+=npp[y*nland+l]/nland;
@@ -291,14 +296,14 @@ monthly precip and montly temperature */
   var->add_att("standard_name","region_area");
   var->add_att("description","Area of single region (gridcell)");
   
-  if (!(var = ncfile.add_var("npp", ncFloat, ncfile.get_dim("time"), ncfile.get_dim("region")))) return 1;
+  if (!(var = ncfile.add_var("npp", ncShort, ncfile.get_dim("time"), ncfile.get_dim("region")))) return 1;
   var->add_att("date_of_creation",monthstring.c_str());
   var->add_att("long_name","net primary productivity");
   var->add_att("standard_name","net_primary_productivity");
   var->add_att("description","Net primary production of carbon");
   var->add_att("units","g m^-2 a^-1");
   
-  if (!(var = ncfile.add_var("gdd", ncFloat, ncfile.get_dim("time"),  ncfile.get_dim("region")))) return 1;
+  if (!(var = ncfile.add_var("gdd", ncShort, ncfile.get_dim("time"),  ncfile.get_dim("region")))) return 1;
   var->add_att("date_of_creation",monthstring.c_str());
   var->add_att("long_name","growing degree days above zero");
   var->add_att("standard_name","growing_degree_days_above_zero");
@@ -381,9 +386,12 @@ monthly precip and montly temperature */
   var->put(area,nland);
  
   var=ncfile.get_var("npp");
-  var->put(npp,nyear,nland);
+  short * sh=new short[nland*nyear];
+  for (int i=0; i<nland*nyear; i++) sh[i]=lrintf(npp[i]);
+  var->put(sh,nyear,nland);
+  for (int i=0; i<nland*nyear; i++) sh[i]=lrintf(gdd[i]);
   var=ncfile.get_var("gdd");
-  var->put(gdd,nyear,nland);
+  var->put(sh,nyear,nland);
     
   /** Define continuous land masses */
   short int* continent=new short int[nland];
