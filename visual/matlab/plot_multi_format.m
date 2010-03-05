@@ -8,7 +8,7 @@ cl_register_function();
     catch end;
     try
     set(plot,'PaperPositionMode','auto');
-    print('-dpdf',[basename '.pdf']); % -r600
+    %print('-dpdf',[basename '.pdf']); % -r600
     catch end;
     try
     set(plot,'PaperPositionMode','auto');
