@@ -3,7 +3,7 @@ function clp_nc_variable(varargin)
 arguments = {...
   {'latlim',[-60 80]},...
   {'lonlim',[-180 180]},...
-  {'timelim',[1,12]},...
+  {'timelim',[-9000,1960]},...
   {'lim',[-inf,inf]},...
   {'reg','all'},...
   {'discrete',0},...
@@ -18,7 +18,8 @@ arguments = {...
   {'transparency',1},...
   {'snapyear',1000},...
   {'movie',1},...
-  {'showsites',0}
+  {'showsites',0},...
+  {'file','../../src/test/regions.nc'}
 };
 
 cl_register_function;
@@ -33,22 +34,29 @@ for i=1:a.length eval([a.name{i} '=' clp_valuestring(a.value{i}) ';']); end
 [regs,nreg,~,~]=find_region_numbers(reg);
 
 
-ncfile='../../src/test/regions.nc';
-if ~exist(ncfile,'file')
+if ~exist(file,'file')
     error('File does not exist');
 end
-ncid=netcdf.open(ncfile,'NC_NOWRITE');
+ncid=netcdf.open(file,'NC_NOWRITE');
 
 [ndim nvar natt udimid] = netcdf.inq(ncid); 
-
-varname='latitude'; varid=netcdf.inqVarId(ncid,varname);
-lat=netcdf.getVar(ncid,varid);
 
 varname='region'; varid=netcdf.inqVarId(ncid,varname);
 region=netcdf.getVar(ncid,varid);
 
-varname='longitude'; varid=netcdf.inqVarId(ncid,varname);
+varname='lat'; varid=netcdf.inqVarId(ncid,varname);
+lat=netcdf.getVar(ncid,varid);
+varname='lon'; varid=netcdf.inqVarId(ncid,varname);
 lon=netcdf.getVar(ncid,varid);
+
+
+if length(lat)~=length(region)
+  varname='latitude'; varid=netcdf.inqVarId(ncid,varname);
+  lat=netcdf.getVar(ncid,varid);
+  varname='longitude'; varid=netcdf.inqVarId(ncid,varname);
+  lon=netcdf.getVar(ncid,varid);
+end
+
 
 varname=vars; varid=netcdf.inqVarId(ncid,varname);
 try
@@ -103,19 +111,6 @@ cmap=colormap('hotcold');
 rlon=lon;
 rlat=lat;
 
-for itime=1:ntime
-  
-  resvar=round(((data(ireg,itime)-minmax(1)))./(minmax(2)-minmax(1))*(length(cmap)-1))+1;
-  resvar(resvar>length(cmap))=length(cmap);
-
-  if (discrete>0)
-    [b,i,j]=unique(resvar);
-    resvar=resvar(i);
-    rlat=lat(i);
-    rlon=lon(i);
-  end
-
-  
   % plot map
   figure(varid); 
   clf reset;
@@ -141,37 +136,62 @@ for itime=1:ntime
     end
   
   end
+
+ncol=length(colormap);
+
+
+for itime=1:ntime
+  
+  resvar=round(((data(ireg,itime)-minmax(1)))./(minmax(2)-minmax(1))*(length(cmap)-1))+1;
+  resvar(resvar>length(cmap))=length(cmap);
+
+  if (discrete>0)
+    [b,i,j]=unique(resvar);
+    resvar=resvar(i);
+    rlat=lat(i);
+    rlon=lon(i);
+  end
+
+  
  
   titletext=description;
   if (ntime>1) titletext=[titletext ' ' num2str(time(itime))]; end
   ht=title(titletext,'interpreter','none');
+
+  if (itime>1) 
+    for i=1:ncol
+      if isfinite(p(i)) delete(p(i)); end
+    end
+  end
   
  
   %m_plot(lon,lat,'rs','MarkerSize',0.1);
-  ncol=length(colormap);
   for i=1:ncol
     if i==1 j=find(resvar<=1);
     elseif i==ncol j=find(resvar>=ncol);
     else j=find(resvar==i);
     end
     
-    if isempty(j) continue; end
+    if isempty(j) p(i)=NaN; continue; end
     p(i)=m_plot(rlon(j),rlat(j),'rs','MarkerSize',0.1,'Color',cmap(i,:));  
   end
+
+  if (itime==1)
+    cb=colorbar;
+    if length(units)>0 title(cb,units); end
+    yt=get(cb,'YTick');
+    yr=minmax(2)-minmax(1);
+    ytl=scale_precision(yt*yr+minmax(1),3)';
+    set(cb,'YTickLabel',num2str(ytl));
   
-  cb=colorbar;
-  if length(units)>0 title(cb,units); end
-  yt=get(cb,'YTick');
-  yr=minmax(2)-minmax(1);
-  ytl=scale_precision(yt*yr+minmax(1),3)';
-  set(cb,'YTickLabel',num2str(ytl));
-  
-  set(gcf,'UserData',cl_get_version);
+    set(gcf,'UserData',cl_get_version);
  
-  fdir=fullfile(d.plot,'variable',varname);
-  if ~exist('fdir','dir') system(['mkdir -p ' fdir]); end
-      
+    fdir=fullfile(d.plot,'variable',varname);
+    if ~exist('fdir','dir') system(['mkdir -p ' fdir]); end
+  end
+  
   bname=[varname '_' num2str(nreg)];
+  
   if (ntime>1) bname = [bname '_' num2str(time(itime))]; end
   plot_multi_format(gcf,fullfile(fdir,bname));
 end

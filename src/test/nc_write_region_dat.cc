@@ -50,6 +50,12 @@ float calc_geodesic(float,float,float,float);
 int main(int argc, char* argv[]) 
 {
 
+if (argc>1) {
+  std::cout << "nc_write_region_dat" << std::endl << std::endl  
+  << "This program creates the region, climate and mapping files from regions.nc" << endl; 
+  return 0;
+}
+
 #ifndef HAVE_NETCDF_H
     std::cout << " No netcdf interface defined. FAIL" << std::endl;
     return 1;
