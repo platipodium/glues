@@ -20,11 +20,13 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
-   @date   2010-03-04
+   @date   2010-03-06
    @file nc_map2regions.cc
-   @description This program reads a map (created by nc_regionmap), reads a climatology and
-   a varying climate, produces regions and neighbour files
+   @description This program reads a map (created by nc_regionmap) and a climate region file
+   (created by nc_climateregions), and scales all info on the climateregions to the new map
 */
+
+//#include "nc_util.h"
 
 #include "config.h"
 #include <string>
@@ -34,6 +36,7 @@
 #include <fstream>
 #include <cmath>
 #include <cassert>
+#include <cstring>
 
 #ifdef HAVE_NETCDF_H
 #include "netcdfcpp.h"
@@ -65,158 +68,131 @@ int main(int argc, char* argv[])
 
 
   string mapfilename="glues_map.nc";
-  string regionfilename="regions.nc";
-  string transientfilename="plasim_11k.nc";
-  string filename="regions_11k.nc";
-  
-/** Read the climatology, this file need to include the variables longitude, latitude,
-monthly precip and montly temperature */
+  string cellfilename="regions_11k.nc";
+  string filename="regions_11k_685.nc";
 
-  NcFile ncc(regionfilename.c_str(), NcFile::ReadOnly);
+ /** Open map file, read id and lat/lon fields  */
+ 
+  NcFile ncm(mapfilename.c_str(), NcFile::ReadOnly);
+  if (!ncm.is_valid()) return 1;
+
+  int nrow=ncm.get_dim("lat")->size();
+  int ncol=ncm.get_dim("lon")->size();
+
+  float *lat = new float[nrow];
+  ncm.get_var("lat")->get(lat,nrow);
+  float *lon = new float[ncol];
+  ncm.get_var("lon")->get(lon,ncol);
+  int* id=new int[ncol*nrow];
+  ncm.get_var("id")->get(id,ncol,nrow);
+  ncm.close();
+
+/** Read the cell file, this file need to include the variables longitude, latitude,
+npp and gdd */
+
+  NcFile ncc(cellfilename.c_str(), NcFile::ReadOnly);
   if (!ncc.is_valid()) { 
-    std::cerr << "Regions/climatology file " << regionfilename << " not found." << std::endl
-    << "Please run nc_regions to create this file." << std::endl;
+    std::cerr << "Regions file " << cellfilename << " not found." << std::endl
+    << "Please run nc_climateregions to create this file." << std::endl;
     return 1;
   }
 
+  NcVar* var, *varid;
+  int natt;
   NcDim *dim;
+  int ndim;
+
   dim=ncc.get_dim("time");
-  long nmonth=dim->size();
+  long nyear=dim->size();
   dim=ncc.get_dim("region");
   long nland=dim->size();
+  dim=ncc.get_dim("neighbour");
+  long nn=dim->size();
+  dim=ncc.get_dim("continent");
+  long ncont=dim->size();
  
-  float *month=new float[nmonth];
-  float *latit = new float[nland];
+  float *year=new float[nyear];
+  ncc.get_var("time")->get(year,nyear);
+  float *latit  = new float[nland];
+  ncc.get_var("lat")->get(latit,nland);
   float *longit = new float[nland];
-  float *prec = new float[nland*nmonth];
-  float *temp = new float[nland*nmonth];
+  ncc.get_var("lon")->get(longit,nland);
+  float *area = new float[nland];
+  ncc.get_var("area")->get(area,nland);
+  int* region = new int[nland];
+  ncc.get_var("region")->get(region,nland);
+  short *npp = new short[nland*nyear];
+  ncc.get_var("npp")->get(npp,nyear,nland);
+  short *gdd = new short[nland*nyear];
+  ncc.get_var("gdd")->get(gdd,nyear,nland);
+
+  assert(gdd != NULL);
+  assert(npp != NULL);
+    
+  int * ilat=new int[nland];
+  int * ilon=new int[nland];
+  int * regionid=new int[nland];
+  int minreg=nrow*ncol;
+  int maxreg=0;
+  for (int i=0; i<nrow*ncol; i++) {
+    if (minreg>=id[i] && id[i]>=0) minreg=id[i];
+    if (maxreg<=id[i] && id[i]>=0) maxreg=id[i];
+  }
+  
+  int nreg=maxreg-minreg+1;
+  int* reg=new int[nreg];
+  int* regn=new int[nreg];
+  float* reglon=new float[nreg];
+  float* reglat=new float[nreg];
+  float* regarea=new float[nreg];
+  float* reggdd=new float[nreg];
+  float* regnpp=new float[nreg];
   float dx=0.5;
   float dy=0.5;
-
-  NcVar *var;
-  var=ncc.get_var("time");
-  var->get(month,nmonth);
-  var=ncc.get_var("latitude");
-  var->get(latit,nland);
-  var=ncc.get_var("longitude");
-  var->get(longit,nland);
-  var=ncc.get_var("precipitation");
-  var->get(prec,nmonth,nland);
-  var=ncc.get_var("temperature");
-  var->get(temp,nmonth,nland);
-  ncc.close();
- 
- /** now open transient climate run, this may be on a different grid */
- 
-  NcFile nct(transientfilename.c_str(), NcFile::ReadOnly);
-  if (!nct.is_valid()) return 1;
   
-  long ny=nct.get_dim("lat")->size();
-  long nx=nct.get_dim("lon")->size();
-  long ntime=nct.get_dim("time")->size();
-  
-  float *time=new float[ntime];
-  float *lat = new float[ny];
-  float *lon = new float[nx];
-  float *lsp = new float[ntime*ny*nx];
-  float *t2 =  new float[ntime*ny*nx];
-  
-  nct.get_var("time")->get(time,ntime);
-  nct.get_var("lat")->get(lat,ny);
-  nct.get_var("lon")->get(lon,nx);
-  nct.get_var("lsp")->get(lsp,ntime,ny,nx);
-  nct.get_var("t2")->get(t2,ntime,ny,nx);
- 
-  long nyear=ntime/12;
-  long ystep=50;         // Plasim is 50 year climatological value
-  long yoffset=-9000;    // Start of simulation is 9000 BC
-  
-  /** Interpolation of climate */
-  float *tyear=new float[nmonth*nland];
-  float *pyear=new float[nmonth*nland];
-  float *tslice=new float[nmonth*ny*nx]; // current time record
-  float *pslice=new float[nmonth*ny*nx]; // current time record
-  float *t0=new float[nmonth*ny*nx];     // time record at 1950
-  float *p0=new float[nmonth*ny*nx];     // time record at 1950
-  var=nct.get_var("t2");
-  var->set_cur((nyear-1)*nmonth,-1,-1);
-  var->get(t0,nmonth,ny,nx);
-  var=nct.get_var("lsp");
-  var->set_cur((nyear-1)*nmonth,-1,-1);
-  var->get(p0,nmonth,ny,nx);
- 
-  long ila,ilo;
-  float* npp = new float[nyear*nland];
-  float* gdd = new float[nyear*nland];
-  float* tann= new float[nland];
-  float* pann= new float[nland];
-  float* year= new float[nyear];
-  float monthdays[12]={31,28.25,31,30,31,30,31,31,30,31,30,31};
-
-  for (int i=0; i<nland*nyear; i++) {
-    npp[i]=0;
-    gdd[i]=0;
+  for (int i=0; i<nreg; i++) {
+    reg[i]=i+1;
+    regn[i]=0;
+    reglat[i]=0;
+    reglon[i]=0;
+    reggdd[i]=0;
+    regnpp[i]=0;
   }
- 
-  for (int i=0; i<nyear; i++) year[i]=yoffset+ystep*i;
-  
-  for (int y=0; y<nyear; y++) {
-     var=nct.get_var("t2");
-     var->set_cur(y*nmonth,-1,-1);
-     var->get(tslice,nmonth,ny,nx);
-     var=nct.get_var("lsp");
-     var->set_cur(y*nmonth,-1,-1);
-     var->get(pslice,nmonth,ny,nx);
-     
-     float tanmean=0;
-     float panmean=0;
-     for (int i=0; i<-nx*ny*nmonth; i++) {
-       panmean+=abs(pslice[i]-p0[i]);
-       tanmean+=abs(tslice[i]-t0[i]);
-     }
-     //cout << tanmean << " " << panmean << " " ;
-     
-     float nppmean=0;
-     float gddmean=0;
-     tanmean=0;
-     panmean=0;
-     for (int l=0;l<nland;l++) {
-       pann[l]=0;
-       tann[l]=0;
-       ila=( latit[l]+(lat[2]-lat[1])/2.0-lat[0])/(lat[2]-lat[1]);
-       ilo=(longit[l]+(lon[2]-lon[1])/2.0-lon[0])/(lon[2]-lon[1]);
-       //cout << l ;
-       for (int m=0; m<nmonth;m++)  {
-         tyear[m*nland+l]=temp[m*nland+l]+tslice[(m*ny+ila)*nx+ilo]-t0[(m*ny+ila)*nx+ilo];
-         pyear[m*nland+l]=prec[m*nland+l]+pslice[(m*ny+ila)*nx+ilo]-p0[(m*ny+ila)*nx+ilo];
-         if (pyear[m*nland+l]<0) pyear[m*nland+l]=0;
-         tann[l]+=tyear[m*nland+l]/12.0;
-         pann[l]+=pyear[m*nland+l];
-         gdd[y*nland+l]+=(tyear[m*nland+l]>=0?1:0)*monthdays[m];
-         //cout << " " << temp[m*nland+l] << " " << tyear[m*nland+l];
-       }
-       npp[y*nland+l]=npp_lieth(tann[l],pann[l]);
-       if (npp_lieth(tann[l],pann[l])<0) {
-           cerr << l << " " << y << " " << tann[l] << " " << pann [l] << endl;
-           return 1;
-       }
-       tanmean+=tann[l]/nland;
-       panmean+=pann[l]/nland;
-       nppmean+=npp[y*nland+l]/nland;
-       gddmean+=gdd[y*nland+l]/nland;
-       //cout << " " << tann[l] << " " << pann[l] << " " << npp[y*nland+l] << " " << gdd[y*nland+l] << endl;
-     }      
-     //cout << year[y] << " " << tanmean << " " << panmean << " " << nppmean << " " << gddmean << endl;
-  }
-  delete [] p0; delete [] t0;
-  delete [] pslice; delete [] tslice;
-  delete [] pann; delete [] tann;
-  delete [] tyear; delete [] pyear;
- 
-  nct.close();
- 
- 
+
   NcFile ncfile(filename.c_str(), NcFile::Replace);
+  if (!ncfile.is_valid()) return 1;
+
+  for (int i=0; i<nland; i++) {
+    ilat[i]=(lat[0]-latit[i])/dy;
+    ilon[i]=(longit[i]-lon[0])/dx;
+    regionid[i]=id[ilon[i]*nrow+ilat[i]];
+    if (regionid[i]<0) continue; // exclude sea regions
+    reglon[regionid[i]]+=longit[i];
+    reglat[regionid[i]]+=latit[i];
+    regarea[regionid[i]]+=area[i];
+    regn[regionid[i]]++;
+    for (int j=0; j<nyear; j++) {
+      reggdd[j*nreg+regionid[i]]+=gdd[0*nland+i];
+      //regnpp[j*nreg+regionid[i]]+=1.0*npp[i*nyear+j];
+      regnpp[j*nreg+regionid[i]]+=npp[0*nland+i];
+    }
+    cout << regionid[i] << " " << i << " " <<  regn[regionid[i]] << " " << npp[i] << " " << regnpp[regionid[i]]/regn[regionid[i]] << endl;
+  }  
+
+  delete [] npp, gdd, area, latit, longit, ilat, ilon;
+
+  for (int i=0; i<nreg; i++) {
+    for (int j=0; j<nyear; j++) {
+      regnpp[j*nreg+i]/=1.0*regn[i];
+      reggdd[j*nreg+i]/=1.0*regn[i];
+    }
+    reglon[i]/=regn[i];
+    reglat[i]/=regn[i];
+    cout << i << " " << regn[i] << " " << reggdd[i] << " " << regnpp[i] << endl;
+  }
+  
+ 
+//  NcFile ncfile(filename.c_str(), NcFile::Replace);
   if (!ncfile.is_valid()) return 1;
   
   time_t today;
@@ -224,121 +200,72 @@ monthly precip and montly temperature */
   string s1(asctime(gmtime(&today)));
   string monthstring=s1.substr(0,s1.find_first_of("\n"));
   
-  ncfile.add_att("Conventions","CF-1.4");
-  ncfile.add_att("title","GLUES netCDF regions ");
-  ncfile.add_att("history","Created by nc_map2regions");
-  ncfile.add_att("institution","GKSS-Forschungszentrum Geesthacht GmbH");
-  ncfile.add_att("address","Max-Planck-Str 1, 21502 Geesthacht, Germany");
-  ncfile.add_att("principal_investigator","Carsten Lemmen");
-  ncfile.add_att("email","carsten.lemmen@gkss.de");
-  ncfile.add_att("model_name","GLUES");
-  ncfile.add_att("model_version","1.1.8");
-  ncfile.add_att("source","GLUES model 1.1.8");
-  ncfile.add_att("comment","Background climate provided by Plasim anomalies on IIASA database");
-  ncfile.add_att("references","Wirtz & Lemmen, Climatic Change 2003; Lemmen, Geomorphologie 2009");
+  /** Copy global attributes */
+  NcAtt* att;
+  for (int i=0; i<ncc.num_atts(); i++) {
+    att=ncc.get_att(i);
+    //copy_att(&ncfile,att);
+  }
   ncfile.add_att("date_of_creation",monthstring.c_str());
   ncfile.add_att("filenames_output",filename.c_str());
+  //att=ncfile.get_att("history");
+  //append_att(att,"nc_map2regions");
  
-  // Create month and region dimensions, copy all others
-  // CF-Convention is T,Z,Y,X
-  long nn=8;
-  if (!(dim = ncfile.add_dim("time", 0))) return 1;
-  if (!(dim = ncfile.add_dim("region", nland))) return 1;
-  if (!(dim = ncfile.add_dim("neighbour", nn))) return 1;
-  
-  // Create coordinate variables
-  if (!(var = ncfile.add_var("time", ncFloat, ncfile.get_dim("time")))) return 1;
-  var->add_att("date_of_creation",monthstring.c_str());
-  var->add_att("long_name","month");
-  var->add_att("standard_name","year");
-  var->add_att("units","years since 1");
-  var->add_att("average","50 year average from denoted year");
-  var->add_att("axis","T");
+  /** Recreate dimensions */
+  for (int i=0; i<ncc.num_dims(); i++) {
+     dim=ncc.get_dim(i);
+     if (dim->is_unlimited()) ncfile.add_dim(dim->name(), 0);
+     else if (!strncmp(dim->name(),"region",6)) ncfile.add_dim(dim->name(), nreg);
+     else ncfile.add_dim(dim->name(), dim->size());
+  }
 
-  if (!(var = ncfile.add_var("lat", ncFloat, ncfile.get_dim("region")))) return 1;
-  var->add_att("date_of_creation",monthstring.c_str());
-  var->add_att("long_name","latitude");
-  var->add_att("standard_name","latitude");
-  var->add_att("description","Latitude of region center");
-  var->add_att("units","degree_north");
-  
-  if (!(var = ncfile.add_var("lon", ncFloat, ncfile.get_dim("region")))) return 1;
-  var->add_att("date_of_creation",monthstring.c_str());
-  var->add_att("long_name","longitude");
-  var->add_att("standard_name","longitude");
-  var->add_att("units","degree_east");
-  var->add_att("description","Longitude of region center");
-  
-  if (!(var = ncfile.add_var("region", ncInt, ncfile.get_dim("region")))) return 1;
-  var->add_att("date_of_creation",monthstring.c_str());
-  var->add_att("long_name","region id");
-  var->add_att("standard_name","region_id");
-  var->add_att("description","Unique identifier of discrete region");
-  // has no units attribute
+  for (int i=0; i<ncc.num_vars(); i++) {
+    var=ncc.get_var(i);
+    ndim=var->num_dims();
+    switch (ndim) {
+     case 1: ncfile.add_var(var->name(), var->type(), var->get_dim(0)); break;
+     case 2: ncfile.add_var(var->name(), var->type(), var->get_dim(0), var->get_dim(1)); break;
+     case 3: ncfile.add_var(var->name(), var->type(), var->get_dim(0), var->get_dim(1), var->get_dim(2)); break;
+     case 4: ncfile.add_var(var->name(), var->type(), var->get_dim(0), var->get_dim(1), var->get_dim(2), var->get_dim(3)); break;
+     case 5: ncfile.add_var(var->name(), var->type(), var->get_dim(0), var->get_dim(1), var->get_dim(2), var->get_dim(3), var->get_dim(4)); break;
+    }
+    varid=ncfile.get_var(i);
+    //for (int j=0; j<var->num_atts(); j++) copy_att(varid,var->get_att(j));
+    varid->add_att("date_of_creation",monthstring.c_str());
+  }
 
-  if (!(var = ncfile.add_var("neighbour", ncInt, ncfile.get_dim("neighbour")))) return 1;
+  if (!(var = ncfile.add_var("number_of_gridcells", ncInt, ncfile.get_dim("region")))) return 1;
   var->add_att("date_of_creation",monthstring.c_str());
-  var->add_att("long_name","neighbour");
-  var->add_att("standard_name","neighbour");
-  var->add_att("description","neighbour enumeration {ww,nw,nn,ne,ee,se,ss,sw}");
-  // has no units attribute
+  var->add_att("long_name","number_of_gridcells");
+  var->add_att("description","number of half degree grid cells associated with this region");
+  
+  /** Fill values */
+  ncfile.get_var("time")->put(year,nyear);
+  ncfile.get_var("number_of_gridcells")->put(regn,nreg);
+  ncfile.get_var("region")->put(reg,nreg);
+  ncfile.get_var("lon")->put(reglon,nreg);
+  ncfile.get_var("lat")->put(reglat,nreg);
+  ncfile.get_var("area")->put(regarea,nreg);
+  short* sh=new short[nyear*nreg];
+  for (int i=0; i<nyear*nreg; i++) sh[i]=lrintf(regnpp[i]);
+  //for (int i=0; i<nreg; i++)  cout << i << " " << regnpp[i] << " " << sh[i] << endl;
+  ncfile.get_var("npp")->put(sh,nyear,nreg);
+  for (int i=0; i<nyear*nreg; i++) sh[i]=lrintf(reggdd[i]);
+  ncfile.get_var("gdd")->put(sh,nyear,nreg);  
+  
+  
+  
+  
+ 
+  ncc.close();
+  ncfile.close();
+ cout << "end: " ; 
+  return 0;
 
-  if (!(var = ncfile.add_var("region_neighbour", ncInt, ncfile.get_dim("neighbour"), ncfile.get_dim("region")))) return 1;
-  var->add_att("date_of_creation",monthstring.c_str());
-  var->add_att("long_name","region neighbour");
-  var->add_att("standard_name","region_neighbour");
-  var->add_att("description","Region id of neighbours to 8 directions");
   
-  if (!(var = ncfile.add_var("area", ncFloat, ncfile.get_dim("region")))) return 1;
-  var->add_att("date_of_creation",monthstring.c_str());
-  var->add_att("long_name","area");
-  var->add_att("units","km^{2}");
-  var->add_att("standard_name","region_area");
-  var->add_att("description","Area of single region (gridcell)");
-  
-  if (!(var = ncfile.add_var("npp", ncShort, ncfile.get_dim("time"), ncfile.get_dim("region")))) return 1;
-  var->add_att("date_of_creation",monthstring.c_str());
-  var->add_att("long_name","net primary productivity");
-  var->add_att("standard_name","net_primary_productivity");
-  var->add_att("description","Net primary production of carbon");
-  var->add_att("units","g m^-2 a^-1");
-  
-  if (!(var = ncfile.add_var("gdd", ncShort, ncfile.get_dim("time"),  ncfile.get_dim("region")))) return 1;
-  var->add_att("date_of_creation",monthstring.c_str());
-  var->add_att("long_name","growing degree days above zero");
-  var->add_att("standard_name","growing_degree_days_above_zero");
-  var->add_att("description","Number of days with mean temperature above zero");
-  
-  if (!(var = ncfile.add_var("region_continent", ncShort, ncfile.get_dim("region")))) return 1;
-  var->add_att("date_of_creation",monthstring.c_str());
-  var->add_att("long_name","region continent");
-  var->add_att("standard_name","region_continent");
-  var->add_att("description","Unique number of continuous landmass on which region is located");
-    
-  // Fill coordinate variables with values
-  var=ncfile.get_var("time");
-  for (int i=0; i<nyear; i++) var->put_rec(year+i,i);
-  
-  float neighbour[8]={1,2,3,4,5,6,7,8};
-  ncfile.get_var("neighbour")->put(neighbour,nn);
-
-  int* region=new int[nland];
-  for (int i=0; i<nland; i++) region[i]=i+1;
-  ncfile.get_var("region")->put(region,nland);
-
-  // Fill  variables with values
-  var=ncfile.get_var("lat");
-  var->put(latit,nland);
-  var=ncfile.get_var("lon");
-  var->put(longit,nland);
-  
-  int ncol=720; 
-  int nrow=360;
   float lly=-89.75;
   float llx=-179.75;
 
-  int* ilat=new int[nland];
-  int* ilon=new int[nland];
   int* map=new int[(nrow+2)*(ncol+2)];
   for (int i=0; i<(nrow+2)*(ncol+2); i++) map[i]=0;
   
@@ -378,34 +305,13 @@ monthly precip and montly temperature */
   var=ncfile.get_var("region_neighbour");
   var->put(neigh,nn,nland);
   
-  // Calculate gridcell area
-  float * area=new float[nland];
-  float * fval=new float[nland];
-  for (int i=0; i<nland; i++) area[i]=calc_gridcell_area(latit[i]);
-  var=ncfile.get_var("area");
-  var->put(area,nland);
- 
-  var=ncfile.get_var("npp");
-  short * sh=new short[nland*nyear];
-  for (int i=0; i<nland*nyear; i++) sh[i]=lrintf(npp[i]);
-  var->put(sh,nyear,nland);
-  for (int i=0; i<nland*nyear; i++) sh[i]=lrintf(gdd[i]);
-  var=ncfile.get_var("gdd");
-  var->put(sh,nyear,nland);
     
   /** Define continuous land masses */
   short int* continent=new short int[nland];
   for (int i=0; i<nland; i++) continent[i]=0;
-  short int id=0;
   double s=0;
-  for (int i=0; i<nland; i++) {
-    if (continent[i]>0) continue;    
-    id++;
-    continent[i]=id;
-    search_continent(&continent,&neigh,i,id,nland,nn); 
-  }
 
-  if (!(dim = ncfile.add_dim("continent",id))) return 1;
+  //if (!(dim = ncfile.add_dim("continent",id))) return 1;
   
   if (!(var = ncfile.add_var("continent", ncInt, ncfile.get_dim("continent")))) return 1;
   var->add_att("date_of_creation",monthstring.c_str());
@@ -431,7 +337,7 @@ monthly precip and montly temperature */
   var=ncfile.get_var("region_continent");
   var->put(continent,nland);
   
-  int* cont=new int[id];
+  /*int* cont=new int[id];
   float* carea=new float[id];
   int* cnum=new int[id];
 
@@ -452,7 +358,7 @@ monthly precip and montly temperature */
   var->put(carea,id);
   var=ncfile.get_var("continent_gridcells");
   var->put(cnum,id);
-  
+  */
   ncfile.close();
  
  return 0;

@@ -39,22 +39,32 @@ if ~exist(file,'file')
 end
 ncid=netcdf.open(file,'NC_NOWRITE');
 
-[ndim nvar natt udimid] = netcdf.inq(ncid); 
-
 varname='region'; varid=netcdf.inqVarId(ncid,varname);
 region=netcdf.getVar(ncid,varid);
 
-varname='lat'; varid=netcdf.inqVarId(ncid,varname);
-lat=netcdf.getVar(ncid,varid);
-varname='lon'; varid=netcdf.inqVarId(ncid,varname);
-lon=netcdf.getVar(ncid,varid);
+[ndim nvar natt udimid] = netcdf.inq(ncid); 
+for varid=0:nvar-1
+  [varname,xtype,dimids,natts]=netcdf.inqVar(ncid,varid);
+  if strcmp(varname,'lat') lat=netcdf.getVar(ncid,varid); end
+  if strcmp(varname,'lon') lon=netcdf.getVar(ncid,varid); end
+  if strcmp(varname,'latitude') latit=netcdf.getVar(ncid,varid); end
+  if strcmp(varname,'longitude') lonit=netcdf.getVar(ncid,varid); end
+end
 
+if exist('lat','var') 
+  if length(lat)~=(region)
+    if exist('latit','var') lat=latit; end
+  end
+else
+  if exist('latit','var') lat=latit; end
+end
 
-if length(lat)~=length(region)
-  varname='latitude'; varid=netcdf.inqVarId(ncid,varname);
-  lat=netcdf.getVar(ncid,varid);
-  varname='longitude'; varid=netcdf.inqVarId(ncid,varname);
-  lon=netcdf.getVar(ncid,varid);
+if exist('lon','var') 
+  if length(lon)~=(region)
+    if exist('lonit','var') lon=lonit; end
+  end
+else
+  if exist('lonit','var') lon=lonit; end
 end
 
 
