@@ -172,7 +172,7 @@ npp and gdd */
     regarea[regionid[i]]+=area[i];
     regn[regionid[i]]++;
     for (int j=0; j<nyear; j++) {
-      reggdd[j*nreg+regionid[i]]+=gdd[0*nland+i];
+      reggdd[j*nreg+regionid[i]]+=gdd[0*nland+i]; // TODO here, get npp info right
       //regnpp[j*nreg+regionid[i]]+=1.0*npp[i*nyear+j];
       regnpp[j*nreg+regionid[i]]+=npp[0*nland+i];
     }
