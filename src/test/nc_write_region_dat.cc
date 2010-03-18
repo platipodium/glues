@@ -46,6 +46,11 @@
 using namespace std;
 
 float calc_geodesic(float,float,float,float);
+bool is_var(NcFile*, std::string);
+bool is_att(NcVar*,  std::string);
+bool is_att(NcFile*, std::string);
+bool is_dim(NcFile*, std::string);
+bool check_var(NcFile*, std::string,int);
 
 int main(int argc, char* argv[]) 
 {
@@ -61,10 +66,13 @@ if (argc>1) {
     return 1;
 #else
   
-  string ncfilename="regions.nc";
-  string regfilename="regions.dat";
-  string regnppname="reg_npp.dat";
-  string reggddname="reg_gdd.dat";
+  string prefix="regions";
+  string appendix="_11k_685";
+  
+  string ncfilename=prefix + appendix + ".nc";
+  string regfilename=prefix + appendix + "dat";
+  string regnppname=prefix + "_npp" + appendix + ".dat";
+  string reggddname=prefix + "_gdd" + appendix + ".dat";
   
   /** You may need to run the C++ program nc_regions to create the input file */
   
@@ -73,6 +81,12 @@ if (argc>1) {
 
   NcDim *dim; 
   NcVar *var;
+
+  int ntime=1;
+  if (is_dim(&ncin,"time")) {
+    dim=ncin.get_dim("time");
+    ntime=dim->size();
+  }
 
   dim=ncin.get_dim("region");
   int nreg=dim->size();
@@ -86,34 +100,44 @@ if (argc>1) {
   var->get(region,nreg);
   
   float *lat = new float[nreg];
-  var=ncin.get_var("latitude");
+  if (check_var(&ncin,"latitude",nreg)) var=ncin.get_var("latitude");
+  else if (check_var(&ncin,"lat",nreg)) var=ncin.get_var("lat");
+  else return 1;
   var->get(lat,nreg);
   
   float *lon = new float[nreg];
-  var=ncin.get_var("longitude");
+  if (check_var(&ncin,"longitude",nreg)) var=ncin.get_var("longitude");
+  else if (check_var(&ncin,"lon",nreg)) var=ncin.get_var("lon");
+  else  return 1; 
   var->get(lon,nreg);
   
   float *area = new float[nreg];
+  if (!check_var(&ncin,"area",nreg)) return 1;
   var=ncin.get_var("area");
   var->get(area,nreg);
 
   float *neigh = new float[nn*nreg];
+  if (!check_var(&ncin,"region_neighbour",nreg*nn)) return 1;
   var=ncin.get_var("region_neighbour");
   var->get(neigh,nn,nreg);
 
-  float *npp = new float[nreg];
+  float *npp = new float[ntime*nreg];
+  if (!check_var(&ncin,"npp",ntime*nreg)) return 1;
   var=ncin.get_var("npp");
-  var->get(npp,nreg);
+  var->get(npp,ntime,nreg);
 
-  float *gdd = new float[nreg];
+  float *gdd = new float[ntime*nreg];
+  if (!check_var(&ncin,"gdd",ntime*nreg)) return 1;
   var=ncin.get_var("gdd");
-  var->get(gdd,nreg);
+  var->get(gdd,ntime,nreg);
 
   int *cont = new int[nreg];
+  if (!check_var(&ncin,"region_continent",nreg)) return 1;
   var=ncin.get_var("region_continent");
   var->get(cont,nreg);
 
   float *carea = new float[nc];
+  if (!check_var(&ncin,"continent_area",nc)) return 1;
   var=ncin.get_var("continent_area");
   var->get(carea,nc);
   
@@ -249,4 +273,87 @@ float calc_geodesic(float lon1, float lat1, float lon2, float lat2) {
   float a = sin(dlat/2)*sin(dlat/2) + cos(lat1)*cos(lat2)*sin(dlon/2)*sin(dlon/2);
   float angles = 2 * atan( sqrt(a)) ; //, sqrt(1-a) );
   return radius * angles;
+}
+
+bool is_var(NcFile* ncfile, std::string varname) {
+
+  int n=ncfile->num_vars();
+  NcVar* var;
+ 
+  for (int i=0; i<n; i++) {
+    var=ncfile->get_var(i);
+    string name(var->name());
+    if (name==varname) return true;
+  }
+
+  cerr << "NetCDF file does not contain variable \"" << varname << "\".\n";    
+  return false;
+}
+
+bool is_dim(NcFile* ncfile, std::string dimname) {
+
+  int n=ncfile->num_dims();
+  NcDim* dim;
+ 
+  for (int i=0; i<n; i++) {
+    dim=ncfile->get_dim(i);
+    string name(dim->name());
+    if (name==dimname) return true;
+  }
+
+  cerr << "NetCDF file does not contain dimension \"" << dimname << "\".\n";    
+  return false;
+}
+
+
+bool is_att(NcFile* ncfile, std::string attname) {
+
+  int n=ncfile->num_atts();
+  NcAtt* att;
+ 
+  for (int i=0; i<n; i++) {
+    att=ncfile->get_att(i);
+    string name(att->name());
+    if (name==attname) return true;
+  }
+
+  cerr << "NetCDF file does not contain attribute \"" << attname << "\".\n";    
+  return false;
+}
+
+
+bool is_att(NcVar* var, std::string attname) {
+
+  int n=var->num_atts();
+  NcAtt* att;
+ 
+  for (int i=0; i<n; i++) {
+    att=var->get_att(i);
+    string name(att->name());
+    if (name==attname) return true;
+  }
+
+  cerr << "Variable \"" << var->name() << "\" does not contain attribute \"" << attname << "\".\n";    
+  return false;
+}
+
+
+bool check_var(NcFile* ncfile, std::string varname,int len) {
+
+  if (!is_var(ncfile,varname)) return false;
+  
+  NcVar* var=ncfile->get_var(varname.c_str());
+  NcDim* dim;
+  
+  int n=var->num_dims();
+  int s=1;
+  for (int i=0; i<n; i++) {
+    dim=var->get_dim(i);
+    if (dim->size()==len) return true;
+    s*=dim->size();
+  }
+  if (s==len) return true;
+
+  cerr << "None of the dimensions of variable \"" << varname << "\" is of requested length " << len << ".\n";    
+  return false;
 }

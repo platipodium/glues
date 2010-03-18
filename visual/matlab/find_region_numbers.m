@@ -44,6 +44,12 @@ while iarg<=nargin
       case 'sam'
           lonlim=[-80,-20];
           latlim=[-60,15];
+     case 'nam'
+          lonlim=[-170,-50];
+          latlim=[15,80];
+    case 'usa'
+          lonlim=[-125,-70];
+          latlim=[10,50];
     case 'eme'
       lonlim=[-15,42];
       latlim=[27,55];

@@ -3,14 +3,14 @@ function rdata=clp_map_variable(varargin)
 global ivar nvar figoffset;
 
 arguments = {...
-  {'latlim',[-55 65]},...
-  {'lonlim',[-130 150]},...
-  {'timelim',[12000,3000]},...
+  {'latlim',[-Inf,Inf]},...
+  {'lonlim',[Inf,Inf]},...
+  {'timelim',[3100,3000]},...
   {'reg','all'},...
   {'vars','Density'},...
   {'scale','absolute'},...
   {'figoffset',0},...
-  {'zlim',},...
+  {'ylimit',[-Inf,Inf]},...
   {'timeunit','BP'},...
   {'timestep',100},...
   {'marble',0},...
@@ -19,6 +19,8 @@ arguments = {...
   {'transparency',1},...
   {'snapyear',1000},...
   {'movie',1},...
+  {'cmap',0},...
+  {'projection','miller'},...
   {'showsites',0}
 };
 
@@ -36,7 +38,11 @@ for i=1:a.length eval([a.name{i} '=' clp_valuestring(a.value{i}) ';']); end
 
 % Choose 'emea' or 'China' or 'World'
 %[regs,nreg,lonlim,latlim]=find_region_numbers(reg);
-[regs,nreg,~,~]=find_region_numbers(reg);
+[regs,nreg,loli,lali]=find_region_numbers(reg);
+loli(isfinite(lonlim))=lonlim(isfinite(lonlim));
+lali(isfinite(latlim))=latlim(isfinite(latlim));
+latlim=lali;
+lonlim=loli;
 
 
 % Get region path
@@ -184,6 +190,10 @@ time=time(itime);
 
 retdata=zeros(nvar,itend-itstart+1,length(regs))+NaN;
 
+if numel(cmap)<3 cmap=colormap(jet(19)); end
+ncol=length(cmap(:,1));
+
+
 for idovar=1:nvar
     
   ivar=dovar(idovar);
@@ -191,30 +201,32 @@ for idovar=1:nvar
   retdata(idovar,:,:)=data(squeeze(regs),itstart:itend)';
       
   minmax=[min(min(min(data(regs,itstart:itend)))),max(max(max(data(regs,itstart:itend))))];
-  %if exist('zlim','var') minmax=zlim; end
-   
-  cmap=colormap('hotcold');
   
-  resvar=round(((data-minmax(1)))./(minmax(2)-minmax(1))*(length(cmap)-1))+1;
+  ylimit(~isfinite(ylimit))=minmax(~isfinite(ylimit));
+
+  
+  resvar=round(((data-ylimit(1)))./(ylimit(2)-ylimit(1))*(ncol-1))+1;
   resvar(resvar>length(cmap))=length(cmap);
+  resvar(resvar<1)=1;
   
-  % Plot timeseries
+%% Plot timeseries in extra plot
   figure(ivar+nvar+figoffset); 
   clf reset;
    
   hold on;
   if isbp set(gca,'XDir','reverse'); end
-  set(gca,'YLim',minmax);
+  set(gca,'YLim',ylimit);
 
   for ireg=1:length(regs)
-    reg=regs(ireg);
-    plot(r.time(itstart:itend),squeeze(data(reg,itstart:itend)),'k-','color',cmap(resvar(reg,itstart),:));
+    plot(r.time(itstart:itend),squeeze(data(regs(ireg),itstart:itend)),'k-','color',cmap(resvar(regs(ireg),itstart),:));
   end
   p1=plot(r.time(itstart:itend),squeeze(data(regs(1),itstart:itend)));
   set(p1,'Tag','timeseries','LineWidth',4);
  % title(sprint('%s (sum %f.1)',vars{ivar},sum(sum(data(regs,itend)))));
   hold off;
  
+%% Make directory for plots and prepare files  
+  
   fd=fullfile(d.plot,'variable');
   if ~exist(fd,'file') mkdir(fd); end
   
@@ -226,18 +238,18 @@ for idovar=1:nvar
   aviname=[aviname '.avi'];
   mov=avifile(aviname);
  
+%% Plot base map  
   pathlen=sum(region.path(:,:,1)>-999,2);
 
   seacolor=0.7*ones(1,3);
   landcolor=0.8*ones(1,3);  
    
-  % plot map
   figure(ivar+figoffset); 
   clf reset;
-  set(ivar,'DoubleBuffer','on');    
+  set(ivar,'DoubleBuffer','on','ActivePositionProperty','outerposition');    
   set(ivar,'PaperType','A4');
   hold on;
-  pb=clp_basemap('lon',lonlim,'lat',latlim);
+  pb=clp_basemap('lon',lonlim,'lat',latlim,'projection',projection);
   if (marble>0)
     pm=clp_marble('lon',lonlim,'lat',latlim);
     if pm>0 alpha(pm,marble); end
@@ -255,7 +267,8 @@ for idovar=1:nvar
     end
   
   end
-    
+  
+  %% Add title and determine time units
   titletext=r.variables{ivar};
   if length(infix)>0 titletext=[titletext '(' infix ')']; end
   ht=title(titletext,'interpreter','none');
@@ -278,23 +291,26 @@ for idovar=1:nvar
   hbt=m_text(lonlim(1)+0.3*lonrange,latlim(2)-0.2*latrange,[num2str(t) ' ' timeunit],...
       'color','y','FontWeight','bold','backgroundColor','none','EdgeColor','none','fontSize',15);
        
-  if exist('ylim','var') minmax=ylim; end
   set(gca,'Position',pos,'box','off');
 
+  
+  
   cc='b' ; % base color for alpha fading
   cchigh='r' ; % base color for highlighting
 
   threshold=0.1;
   
-  hp=clp_regionpath('lat',latlim,'lon',lonlim,'draw','patch','col',landcolor);
-  
+  %% Invisible plotting of all regions
+  hp=clp_regionpath('lat',latlim,'lon',lonlim,'draw','patch','col',landcolor,'reg',reg);  
   ival=find(hp>0);
   alpha(hp(ival),0);
   
-  for i=1:length(ival)  
-    set(hp(ival(i)),'ButtonDownFcn',@onclick,'UserData',squeeze(data(regs(ival(i)),itstart:itend)));
-    ftime=find(data(regs(ival(i)),itstart:itend)>=threshold);
-    if isempty(ftime) timing(ival(i))=NaN; else timing(ival(i))=r.time(min(ftime)); end
+  for i=1:length(ival)
+    ireg=regs(ival(i));
+    if (hp(ival(i))==0) continue; end
+    set(hp(ival(i)),'ButtonDownFcn',@onclick,'UserData',squeeze(data(ireg,itstart:itend)));
+    ftime=find(data(ireg,itstart:itend)>=threshold);
+    if isempty(ftime) timing(ireg)=NaN; else timing(ireg)=r.time(min(ftime)); end
   end
  
   if ~exist('regioncenter','var') regioncenter=region.center; end 
@@ -323,70 +339,72 @@ cby=latlim(1)+(cbyo+[0,0,cbh,cbh])*(latlim(2)-latlim(1));
 cbx=lonlim(1)+(cbxo+[0,cbw,cbw,0])*(lonlim(2)-lonlim(1));
 
 m_patch(cbx,cby,'w');
-for i=1:64
-  cba(i)=m_patch(lonlim(1)+(cbxo+cbw/64*(i-1)+[0,cbw/64,cbw/64,0])*(lonlim(2)-lonlim(1)),cby,cc,'EdgeColor','none');
-  greyval=i/64.0/1.6;
-  greyval=0.15+0.35*sqrt(i./64);
-  if (abs(greyval-0.4)<0.1) set(cba(i),'FaceColor',cchigh); end
+for i=1:ncol
+  cba(i)=m_patch(lonlim(1)+(cbxo+cbw/ncol*(i-1)+[0,cbw/ncol,cbw/ncol,0])*(lonlim(2)-lonlim(1)),cby,cmap(i,:),'EdgeColor','none');
+  greyval=0.15+0.35*sqrt(i./ncol);
+  %greyval=0.15+0.65*sqrt(i./ncol);
+  %if (abs(greyval-0.4)>0.1) set(cba(i),'FaceColor',cchigh); end
   
   alpha(cba(i),greyval);
 end
 
-cbtv=scale_precision(minmax(1):(minmax(2)-minmax(1))/4.0:minmax(2),2);
+cbtv=scale_precision(ylimit(1):(ylimit(2)-ylimit(1))/4.0:ylimit(2),2);
 j=0;
-for i=0:16:64
+for i=0:ncol/4:ncol
     j=j+1;
-    m_text(lonlim(1)+(cbxo+cbw/64*i)*(lonlim(2)-lonlim(1)),cby(end),num2str(cbtv(j)),...
+    m_text(lonlim(1)+(cbxo+cbw/ncol*i)*(lonlim(2)-lonlim(1)),cby(end),num2str(cbtv(j)),...
         'horiz','center','vertical','bottom');
 end
 end
 
-  % Reduce data set to timestep
-  resvar=resvar(:,itime);
+%% Correct the size/position of the figure when axis labels are off screen
 
-  for it=1:length(time)
-    t=time(it);
-    if ~isbp
-      if (t==0) t=1; end
-      if (t<0)
+set(gca,'outerposition',[0 0 1 1]);
+%xlabel('Longitude');
+%ylabel('Latitude');
+%xp=get(get(gca,'xlabel'),'pos');
+%yp=get(get(gca,'ylabel'),'pos');
+
+
+
+for it=1:length(time)
+  t=time(it);
+  if ~isbp
+    if (t==0) t=1; end
+    if (t<0)
           timeunit='BC';
           t=abs(t);
-      else
+    else
         timeunit='AD';
-      end
     end
+  end
     
-     set(hbt,'String',[num2str(t) ' ' timeunit]);
+  set(hbt,'String',[num2str(t) ' ' timeunit]);
   
-     itprior=max(it-1,1);
-     ichanged=find(resvar(regs,it)~=resvar(regs,itprior));
-     for ir=1:length(ichanged)
+  itprior=max(it-1,1);
+  if it==1 ichanged=1:length(regs);
+  else ichanged=find(resvar(regs,itime(it))~=resvar(regs,itime(itprior)));
+  end
+  for ir=1:length(ichanged)
       ireg=ichanged(ir);
-      reg=regs(ireg);
       if hp(ireg)==0 continue; end
-      if (resvar(reg,it)>1)
         h=hp(ireg);
-        greyval=0.15+0.35*sqrt(resvar(reg,it)./64);
+        greyval=0.15+0.35*sqrt(resvar(regs(ireg),itime(it))./ncol);
        alpha(h,greyval);
       
-      if (abs(greyval-0.4)<0.1)
-        set(hp(ireg),'FaceColor',cchigh);
-      else  
-       set(hp(ireg),'FaceColor',cc);
-      end
-      end
+      set(hp(ireg),'FaceColor',cmap(resvar(regs(ireg),itime(it)),:));
       %m_patch(region.path(reg,1:pathlen(reg),1),region.path(reg,1:pathlen(reg),2),cmap(resvar(reg,it),:));
-     end
+  end
      
      
      % Update colorbar
-     if exist('cba','var')
-      resvarmean=repmat(mean(resvar(:,it)),1,2);
-      resvarmax=repmat(max(resvar(:,it)),1,2);
-      resvarmed=repmat(median(resvar(:,it)),1,2);
-      lxmean=lonlim(1)+(cbxo+cbw/64*(resvarmean-1)+cbw/128)*(lonlim(2)-lonlim(1));
-      lxmed =lonlim(1)+(cbxo+cbw/64*(resvarmed -1)+cbw/128)*(lonlim(2)-lonlim(1));
-      lxmax =lonlim(1)+(cbxo+cbw/64*(resvarmax -1)+cbw/128)*(lonlim(2)-lonlim(1));
+  if exist('cba','var')
+      resvarmean=repmat(mean(resvar(:,itime(it))),1,2);
+      resvarmax=repmat(max(resvar(:,itime(it))),1,2);
+      resvarmed=repmat(median(resvar(:,itime(it))),1,2);
+      lxmean=lonlim(1)+(cbxo+cbw/ncol*(resvarmean-1)+cbw/ncol/2)*(lonlim(2)-lonlim(1));
+      lxmed =lonlim(1)+(cbxo+cbw/ncol*(resvarmed -1)+cbw/ncol/2)*(lonlim(2)-lonlim(1));
+      lxmax =lonlim(1)+(cbxo+cbw/ncol*(resvarmax -1)+cbw/ncol/2)*(lonlim(2)-lonlim(1));
       [xmean,ymean]=m_ll2xy(lxmean,cby(1,3));
       [xmed ,ymean]=m_ll2xy(lxmed ,cby(1,3));
       [xmax ,ymean]=m_ll2xy(lxmax ,cby(1,3));
@@ -401,11 +419,11 @@ end
         set(cbmean(3),'XData',xmed);
           
       end
-     end
+  end
      
      
      
-    if showsites 
+  if showsites 
      isite=find(sage<time(it) & slat>latlim(1) & slat<latlim(2) & slon>lonlim(1) & slon<lonlim(2));
      if ~isempty(isite)
       m_line(slon(isite),slat(isite),'MarkerEdgeColor','k','MarkerFaceColor','w','LineStyle','none','Marker','o','MarkerSize',4.0);
@@ -414,19 +432,19 @@ end
      if ~isempty(isite)
       m_line(slon(isite),slat(isite),'MarkerEdgeColor','k','MarkerFaceColor','y','LineStyle','none','Marker','o','MarkerSize',4.0);
      end
+       
+  end
     
-    end
-    
-    plotname=fullfile(fd,['marble_variable_' strrep(r.variables{ivar},' ','') '_']);
-    if length(infix)>0 plotname=[plotname infix '_']; end
-    plotname=[plotname sprintf('%05d_%d',12000-t,t)];
+  plotname=fullfile(fd,['map_variable_' strrep(r.variables{ivar},' ','') '_']);
+  if length(infix)>0 plotname=[plotname infix '_']; end
+  plotname=[plotname sprintf('%05d_%d',12000-t,t)];
    
     
-    if mod(t,snapyear)==0
+  if mod(t,snapyear)==0
     ;
         %mod(it,4)==1
       plot_multi_format(gcf,plotname);
-    end
+  end
     
     f=getframe(gcf);
      %if (abs(tend-tstart)>10*r.tstep) mov=addframe(mov,f); end;
@@ -434,12 +452,12 @@ end
     fprintf('.');
     if mod(it,50)==0 fprintf('\n'); end
     %it=it+1;
-  end
+end % of time loop
   %if (tend-tstart>10*r.tstep) 
-  mov=close(mov); 
+mov=close(mov); 
   %end;
   
-end
+end % of for loop for idovar
 hold off;
 
 if nargout>0 

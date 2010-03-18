@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
 #else
  
   string template_filename="glues_template.nc";
-  string input_filename="../../examples/setup/62483/results.out";
+  string input_filename="../../examples/setup/685/results.out";
   string output_filename="results.nc";
    
   NcFile nctmpl(template_filename.c_str(), NcFile::ReadOnly);
