@@ -125,6 +125,9 @@ npp and gdd */
   ncc.get_var("npp")->get(npp,nyear,nland);
   short *gdd = new short[nland*nyear];
   ncc.get_var("gdd")->get(gdd,nyear,nland);
+  int *neigh = new int[nland*nn];
+  ncc.get_var("region_neighbour")->get(neigh,nn,nland);
+  
 
   assert(gdd != NULL);
   assert(npp != NULL);
@@ -142,21 +145,26 @@ npp and gdd */
   int nreg=maxreg-minreg+1;
   int* reg=new int[nreg];
   int* regn=new int[nreg];
+  int* regnn=new int[nreg];
   float* reglon=new float[nreg];
   float* reglat=new float[nreg];
   float* regarea=new float[nreg];
-  float* reggdd=new float[nreg];
-  float* regnpp=new float[nreg];
+  float* reggdd=new float[nyear*nreg];
+  float* regnpp=new float[nyear*nreg];
+  int nnmax=30; /* Assume at most 30 neighbour regions */
+  int* regneigh=new int[nreg*nnmax];  
   float dx=0.5;
   float dy=0.5;
   
   for (int i=0; i<nreg; i++) {
     reg[i]=i+1;
     regn[i]=0;
+    regnn[i]=0;
     reglat[i]=0;
     reglon[i]=0;
     reggdd[i]=0;
     regnpp[i]=0;
+    for (int j=0; j<nnmax; j++) regneigh[j*nreg+i]=0;
   }
 
   NcFile ncfile(filename.c_str(), NcFile::Replace);
@@ -172,27 +180,80 @@ npp and gdd */
     regarea[regionid[i]]+=area[i];
     regn[regionid[i]]++;
     for (int j=0; j<nyear; j++) {
-      reggdd[j*nreg+regionid[i]]+=gdd[0*nland+i]; // TODO here, get npp info right
-      //regnpp[j*nreg+regionid[i]]+=1.0*npp[i*nyear+j];
-      regnpp[j*nreg+regionid[i]]+=npp[0*nland+i];
+      reggdd[j*nreg+regionid[i]]+=gdd[j*nland+i];
+      regnpp[j*nreg+regionid[i]]+=npp[j*nland+i];
     }
-    cout << regionid[i] << " " << i << " " <<  regn[regionid[i]] << " " << npp[i] << " " << regnpp[regionid[i]]/regn[regionid[i]] << endl;
   }  
 
-  delete [] npp, gdd, area, latit, longit, ilat, ilon;
+ for (int i=0; i<nland; i++) {
+    if (regionid[i]<1) continue;
+    //cout << "r[" << i << "]=" << regionid[i] << ":" ; 
+//    cout << "r[" << i << "]=" << regionid[i] << " " << longit[i] << "|" << latit[i]; 
+ 
+    int k,n;
+ 	for (int j=0; j<nn; j++) {
+      //int neighid=neigh[j*nland+i];
+ 	  int neighid=neigh[j*nland+i];
+ 	  if (neighid<1) break;         // break if neighbour not labeled (zero value)
+ 	  //if (regionid[neighid-1]<1) break; // break if neighbour is sea
+ 	  if (regionid[neighid-1]==regionid[i]) break; // break if neighbour same id 
+ 	  /* Find neighbour in this region */
+ 	  n=regnn[regionid[i]-1];
+ 	  k=0;
+ 	  //cout << " " << neighid <<  "[" << j << "]="  << longit[neighid-1] << "|" << latit[neighid-1]; //regionid[neighid-1];
+ 	 // cout << " "  << regionid[neighid-1];
+ 	  while (k<n && regneigh[(regionid[i]-1)*nnmax+k]!=regionid[neighid-1] ) {
+ 	    //cout << " " << k << "/" << n; 
+ 	    k++;
+ 	  }
+ 	  //cout << "." ;
+ 	  if (k<n) continue;
+ 	  if (k>=nnmax) {
+ 	    cerr << "Insufficent size of nnmax, please increase in source code.\n";
+ 	    return 1;
+ 	  }
+ 	  regnn[regionid[i]-1]++;
+ 	  regneigh[(regionid[i]-1)*nnmax+k]=regionid[neighid-1];
+   }
+//   cout << " " << regnn[regionid[i]-1] << endl;
+   //if (i > 20) break;
+}
 
+  delete [] npp, gdd, area, latit, longit, ilat, ilon, neigh;
+
+  nn=0;
   for (int i=0; i<nreg; i++) {
     for (int j=0; j<nyear; j++) {
-      regnpp[j*nreg+i]/=1.0*regn[i];
-      reggdd[j*nreg+i]/=1.0*regn[i];
+      regnpp[j*nreg+i]/=1.0*max(1,regn[i]);
+      reggdd[j*nreg+i]/=1.0*max(1,regn[i]);
     }
     reglon[i]/=regn[i];
     reglat[i]/=regn[i];
-    cout << i << " " << regn[i] << " " << reggdd[i] << " " << regnpp[i] << endl;
+    if (regnn[i]>nn) nn=regnn[i];
+//    cout << i << " " << regn[i] << " " << reggdd[i] << " " << regnpp[i] << endl;
   }
   
+  /** Copy regneigh [nreg*nnmax] into new neigh[nreg*nn] 
+      and swap arrays after copying */
+  neigh=new int[nreg*nn];
+  for (int i=0; i<nreg; i++) {
+    cout << reg[i] << " " << regnn[i] ;
+    for (int j=0; j<regnn[i]; j++) {
+      neigh[i*nn+j]=regneigh[i*nnmax+j];
+      //neigh[j*nreg+i]=regneigh[i*nnmax+j];
+      cout << " " << regneigh[i*nnmax+j];
+    }
+    cout << endl;
+  }
+  
+  
+  
+  delete [] regneigh;
+  regneigh=neigh;
+  delete [] neigh;
  
-//  NcFile ncfile(filename.c_str(), NcFile::Replace);
+
+  /** Create new file */
   if (!ncfile.is_valid()) return 1;
   
   time_t today;
@@ -216,6 +277,8 @@ npp and gdd */
      dim=ncc.get_dim(i);
      if (dim->is_unlimited()) ncfile.add_dim(dim->name(), 0);
      else if (!strncmp(dim->name(),"region",6)) ncfile.add_dim(dim->name(), nreg);
+     else if (!strncmp(dim->name(),"neighbour",6)) ncfile.add_dim(dim->name(), nn); // TODO
+     else if (!strncmp(dim->name(),"continent",6)) ncfile.add_dim(dim->name(), ncont); // TODO
      else ncfile.add_dim(dim->name(), dim->size());
   }
 
@@ -232,12 +295,19 @@ npp and gdd */
     varid=ncfile.get_var(i);
     //for (int j=0; j<var->num_atts(); j++) copy_att(varid,var->get_att(j));
     varid->add_att("date_of_creation",monthstring.c_str());
+   // cout << "added varialbe " << var->name() << endl;
+    
   }
 
   if (!(var = ncfile.add_var("number_of_gridcells", ncInt, ncfile.get_dim("region")))) return 1;
   var->add_att("date_of_creation",monthstring.c_str());
   var->add_att("long_name","number_of_gridcells");
   var->add_att("description","number of half degree grid cells associated with this region");
+  
+  var=ncfile.add_var("number_of_neighbours",ncFloat,ncfile.get_dim("region"));
+  var->add_att("date_of_creation",monthstring.c_str());
+  var->add_att("long_name","number_of_neighbours");
+  var->add_att("description","number of neighbours to this region");
   
   /** Fill values */
   ncfile.get_var("time")->put(year,nyear);
@@ -251,15 +321,16 @@ npp and gdd */
   //for (int i=0; i<nreg; i++)  cout << i << " " << regnpp[i] << " " << sh[i] << endl;
   ncfile.get_var("npp")->put(sh,nyear,nreg);
   for (int i=0; i<nyear*nreg; i++) sh[i]=lrintf(reggdd[i]);
-  ncfile.get_var("gdd")->put(sh,nyear,nreg);  
-  
+  ncfile.get_var("gdd")->put(sh,nyear,nreg);
+  ncfile.get_var("region_neighbour")->put(regneigh,nn,nreg);
+  ncfile.get_var("number_of_neighbours")->put(regnn,nreg);
   
   
   
  
   ncc.close();
   ncfile.close();
- cout << "end: " ; 
+  cout << "end: " ; 
   return 0;
 
   
@@ -269,13 +340,10 @@ npp and gdd */
   int* map=new int[(nrow+2)*(ncol+2)];
   for (int i=0; i<(nrow+2)*(ncol+2); i++) map[i]=0;
   
-  //int maxlat=10000;
   for (int i=0; i<nland; i++) {
     ilat[i]=lrintf((latit[i]-lly)/dy)+1;
     ilon[i]=lrintf((longit[i]-llx)/dx)+1;
     map[(ncol+2)*ilat[i]+ilon[i]]=region[i];
-    //maxlat=min(ilat[i],maxlat);
-    //cout << maxlat << endl;
   }
   for (int i=0; i<nrow; i++) {
     map[i*(ncol+2)+0]=map[i*(ncol+2)+ncol];
@@ -286,22 +354,7 @@ npp and gdd */
     map[(nrow+1)*(ncol+2)+i]=map[(ncol+2)*nrow+i];
   }
 
-  int* neigh=new int[nland*nn];
   int ireg;
-  for (int i=0; i<nland; i++) {
- 
- 	 ireg=ilat[i]*(ncol+2)+ilon[i];
- 	 if (map[ireg]!=i+1)
-       cerr << ilat[i] << "/" << ilon[i] << " " << i+1 << "/" << map[ireg] << " " << ireg << endl;
-    neigh[nland*0+i]=map[(ilat[i]+0)*(ncol+2)+ilon[i]-1]; // ww neighbour
-    neigh[nland*1+i]=map[(ilat[i]+1)*(ncol+2)+ilon[i]-1]; // nw neighbour
-    neigh[nland*2+i]=map[(ilat[i]+1)*(ncol+2)+ilon[i]-0]; // nn neighbour
-    neigh[nland*3+i]=map[(ilat[i]+1)*(ncol+2)+ilon[i]+1]; // ne neighbour
-    neigh[nland*4+i]=map[(ilat[i]+0)*(ncol+2)+ilon[i]+1]; // ee neighbour
-    neigh[nland*5+i]=map[(ilat[i]-1)*(ncol+2)+ilon[i]+1]; // se neighbour
-    neigh[nland*6+i]=map[(ilat[i]-1)*(ncol+2)+ilon[i]-0]; // ss neighbour
-    neigh[nland*7+i]=map[(ilat[i]-1)*(ncol+2)+ilon[i]-1]; // sw neighbour
-  }
   var=ncfile.get_var("region_neighbour");
   var->put(neigh,nn,nland);
   

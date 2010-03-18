@@ -308,6 +308,8 @@ AC_CONFIG_FILES([Makefile
   examples/simulations/62483/Makefile
   examples/simulations/62483/onekbc.sce
   examples/simulations/62483/onekbc.sim
+  examples/simulations/eurolbk/lbk.sce
+  examples/simulations/eurolbk/lbk.sim
   examples/simulations/Makefile examples/simulations/685/Makefile
   examples/simulations/938/Makefile
   examples/simulations/test_new_event/Makefile

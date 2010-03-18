@@ -22,7 +22,7 @@ if (exist('m_proj')~=2)
 end
 
 try
-  m_proj('equidistant','lat',latlim,'lon',lonlim);
+  m_proj(projection,'lat',latlim,'lon',lonlim);
 catch exception
   error('M_MAP package not found (either not in search path or not downloaded at all');
 end

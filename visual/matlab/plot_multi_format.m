@@ -4,19 +4,19 @@ cl_register_function();
 
     try
     set(plot,'PaperPositionMode','auto');
-    %print('-depsc2',[basename '.eps']); % -r600
+    %print('-depsc2','-painters',[basename '.eps']); % -r600
     catch end;
     try
     set(plot,'PaperPositionMode','auto');
-    %print('-dpdf',[basename '.pdf']); % -r600
+    %print('-dpdf','-painters',[basename '.pdf']); % -r600
     catch end;
     try
     set(plot,'PaperPositionMode','auto');
-    %print('-dsvg',[basename '.svg']); % -r600
+    %print('-dsvg','-painters',[basename '.svg']); % -r600
     catch end;
     try
     set(plot,'PaperPositionMode','auto');
-    %print('-dpsc2','-r150',[basename '.ps']); % -r600
+    %print('-dpsc2','-painters','-r150',[basename '.ps']); % -r600
     catch end;
     try 
      print('-dpng','-r300',[basename '.png']);
@@ -25,7 +25,7 @@ cl_register_function();
     %print('-djpeg','-r600',[basename '.jpeg']);
     catch end;
     try 
-   % print('-dtiff','-r600',[basename '.tiff']);
+   % print('-dtiff','-painters','-r600',[basename '.tiff']);
     catch end;
     
     try
