@@ -22,8 +22,8 @@
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
    @date   2010-03-06
    @file nc_map2regions.cc
-   @description This program reads a map (created by nc_regionmap) and a climate region file
-   (created by nc_climateregions), and scales all info on the climateregions to the new map
+   @description This program converts the mapping information added to the climate region file
+   (created by nc_climateregions and subsequent nc_add_map), and scales all info on the climateregions to the new map
 */
 
 //#include "nc_util.h"
@@ -53,6 +53,7 @@ float cosd(float);
 float calc_gridcell_area(float clat,float dlon=0.5,float dlat=0.5,float radius=6378.137);
 float npp_lieth(float,float);
 double search_continent(short int**,int**,int, short int,int,int);
+bool is_var(NcFile*, std::string);
 
 int main(int argc, char* argv[]) 
 {
@@ -62,31 +63,12 @@ int main(int argc, char* argv[])
     return 1;
 #else
   
-  /** You may need to run nc_regions to get regions.nc grid file
-      You may need to rund nc_regionmap to create map file from raster file
+  /** You may need to run nc_climateregions to get regions_*.nc grid file
+      You may need to rund nc_add_map to have mapid information in file
    */
-
-
-  string mapfilename="glues_map.nc";
   string cellfilename="regions_11k.nc";
   string filename="regions_11k_685.nc";
-
- /** Open map file, read id and lat/lon fields  */
  
-  NcFile ncm(mapfilename.c_str(), NcFile::ReadOnly);
-  if (!ncm.is_valid()) return 1;
-
-  int nrow=ncm.get_dim("lat")->size();
-  int ncol=ncm.get_dim("lon")->size();
-
-  float *lat = new float[nrow];
-  ncm.get_var("lat")->get(lat,nrow);
-  float *lon = new float[ncol];
-  ncm.get_var("lon")->get(lon,ncol);
-  int* id=new int[ncol*nrow];
-  ncm.get_var("id")->get(id,ncol,nrow);
-  ncm.close();
-
 /** Read the cell file, this file need to include the variables longitude, latitude,
 npp and gdd */
 
@@ -127,19 +109,26 @@ npp and gdd */
   ncc.get_var("gdd")->get(gdd,nyear,nland);
   int *neigh = new int[nland*nn];
   ncc.get_var("region_neighbour")->get(neigh,nn,nland);
-  
+  int* numneigh=new int[nland];
+
+  if (!is_var(&ncc,"map_id")) {
+    cerr << "Please add map_id information by running nc_add_map." << endl;
+    return 1;
+  }
+  int * regionid=new int[nland];
+  ncc.get_var("map_id")->get(regionid,nland);
 
   assert(gdd != NULL);
   assert(npp != NULL);
     
   int * ilat=new int[nland];
   int * ilon=new int[nland];
-  int * regionid=new int[nland];
-  int minreg=nrow*ncol;
+  int minreg=nland;
   int maxreg=0;
-  for (int i=0; i<nrow*ncol; i++) {
-    if (minreg>=id[i] && id[i]>=0) minreg=id[i];
-    if (maxreg<=id[i] && id[i]>=0) maxreg=id[i];
+  for (int i=0; i<nland; i++) {
+    if (minreg>=regionid[i] && regionid[i]>0) minreg=regionid[i];
+    if (maxreg<=regionid[i] && regionid[i]>0) maxreg=regionid[i];
+    //cout << minreg << " " << maxreg << endl;
   }
   
   int nreg=maxreg-minreg+1;
@@ -171,38 +160,47 @@ npp and gdd */
   if (!ncfile.is_valid()) return 1;
 
   for (int i=0; i<nland; i++) {
-    ilat[i]=(lat[0]-latit[i])/dy;
-    ilon[i]=(longit[i]-lon[0])/dx;
-    regionid[i]=id[ilon[i]*nrow+ilat[i]];
-    if (regionid[i]<0) continue; // exclude sea regions
-    reglon[regionid[i]]+=longit[i];
-    reglat[regionid[i]]+=latit[i];
-    regarea[regionid[i]]+=area[i];
-    regn[regionid[i]]++;
+    numneigh[i]=0;
+    reglon[regionid[i]-1]+=longit[i];
+    reglat[regionid[i]-1]+=latit[i];
+    regarea[regionid[i]-1]+=area[i];
+    regn[regionid[i]-1]++;
     for (int j=0; j<nyear; j++) {
-      reggdd[j*nreg+regionid[i]]+=gdd[j*nland+i];
-      regnpp[j*nreg+regionid[i]]+=npp[j*nland+i];
+      reggdd[j*nreg+regionid[i]-1]+=gdd[j*nland+i];
+      regnpp[j*nreg+regionid[i]-1]+=npp[j*nland+i];
+    }
+    for (int j=0; j<nn; j++) {
+      if (neigh[j*nland+i]>0) numneigh[i]++;
     }
   }  
 
  for (int i=0; i<nland; i++) {
     if (regionid[i]<1) continue;
-    //cout << "r[" << i << "]=" << regionid[i] << ":" ; 
+    //cout << "r[" << i << "]=" << region[i] << " (" << numneigh[i] << "):" ; 
 //    cout << "r[" << i << "]=" << regionid[i] << " " << longit[i] << "|" << latit[i]; 
  
+    if (numneigh[i]<1) continue;
     int k,n;
  	for (int j=0; j<nn; j++) {
       //int neighid=neigh[j*nland+i];
  	  int neighid=neigh[j*nland+i];
- 	  if (neighid<1) break;         // break if neighbour not labeled (zero value)
- 	  //if (regionid[neighid-1]<1) break; // break if neighbour is sea
- 	  if (regionid[neighid-1]==regionid[i]) break; // break if neighbour same id 
+ 	  if (neighid<1) continue;         // break if neighbour not labeled (zero value)
+ 	  if (regionid[neighid-1]<1) continue; // break if neighbour is sea
+ 	  
+ 	  /* Check for mutual neighbour relationship 
+ 	  This is a todo for the  creating program */
+ 	  if (neigh[((j+4)%8)*nland+neighid-1] != region[i]) {
+ 	    cout << "r[" << i << "]=" << region[i] << " (" << j << ") n[" << neighid-1 << "]=" << neigh[((j+4)%8)*nland+neighid-1] << endl;
+ 	  }
+ 	  //cout << " " << j << ":" << neighid << ":" << neigh[((j+4)%8)*nland+neighid-1];
+ 	  
+ 	  if (regionid[neighid-1]==regionid[i]) continue; // break if neighbour same id 
  	  /* Find neighbour in this region */
  	  n=regnn[regionid[i]-1];
  	  k=0;
  	  //cout << " " << neighid <<  "[" << j << "]="  << longit[neighid-1] << "|" << latit[neighid-1]; //regionid[neighid-1];
- 	 // cout << " "  << regionid[neighid-1];
- 	  while (k<n && regneigh[(regionid[i]-1)*nnmax+k]!=regionid[neighid-1] ) {
+ 	  //while (k<n && regneigh[(regionid[i]-1)*nnmax+k]!=regionid[neighid-1] ) {
+ 	  while (k<n && regneigh[k*nreg+(regionid[i]-1)]!=regionid[neighid-1] ) {
  	    //cout << " " << k << "/" << n; 
  	    k++;
  	  }
@@ -213,15 +211,21 @@ npp and gdd */
  	    return 1;
  	  }
  	  regnn[regionid[i]-1]++;
- 	  regneigh[(regionid[i]-1)*nnmax+k]=regionid[neighid-1];
+ 	  //regneigh[(regionid[i]-1)*nnmax+k]=regionid[neighid-1];
+ 	  regneigh[k*nreg+(regionid[i]-1)]=regionid[neighid-1];
+ 	  //cout << regionid[i] << " " << longit[i] << " " << longit[neighid-1];
+ 	  //assert(fabs( latit[i]- latit[neighid-1])<=0.5);
+ 	  //assert(fabs(longit[i]-longit[neighid-1])<=0.5);
    }
-//   cout << " " << regnn[regionid[i]-1] << endl;
+   //   cout << " " << regnn[regionid[i]-1] << endl;
    //if (i > 20) break;
+  //cout << endl;
 }
 
   delete [] npp, gdd, area, latit, longit, ilat, ilon, neigh;
 
   nn=0;
+  int maxregn=0;
   for (int i=0; i<nreg; i++) {
     for (int j=0; j<nyear; j++) {
       regnpp[j*nreg+i]/=1.0*max(1,regn[i]);
@@ -230,30 +234,42 @@ npp and gdd */
     reglon[i]/=regn[i];
     reglat[i]/=regn[i];
     if (regnn[i]>nn) nn=regnn[i];
+    if (regn[i]>maxregn) maxregn=regn[i];
 //    cout << i << " " << regn[i] << " " << reggdd[i] << " " << regnpp[i] << endl;
   }
   
   /** Copy regneigh [nreg*nnmax] into new neigh[nreg*nn] 
       and swap arrays after copying */
-  neigh=new int[nreg*nn];
+  neigh=new int[nn*nreg];
   for (int i=0; i<nreg; i++) {
-    cout << reg[i] << " " << regnn[i] ;
+    cout << reg[i] << " " << regn[i] << " " << reglon[i] << "|" << reglat[i] << " " << regnn[i];
     for (int j=0; j<regnn[i]; j++) {
-      neigh[i*nn+j]=regneigh[i*nnmax+j];
+      //neigh[i*nn+j]=regneigh[i*nnmax+j];
       //neigh[j*nreg+i]=regneigh[i*nnmax+j];
-      cout << " " << regneigh[i*nnmax+j];
+      neigh[j*nreg+i]=regneigh[j*nreg+i];
+      cout << " " << regneigh[j*nreg+i];
     }
     cout << endl;
-  }
-  
-  
-  
+  } 
   delete [] regneigh;
   regneigh=neigh;
   delete [] neigh;
  
-
-  /** Create new file */
+ 
+ /** get the back-mapping into cells array */
+  int * ncell = new int [nreg];
+  int * cells = new int [nreg*maxregn];
+  int r,p;
+  for (int i=0; i<nreg; i++) ncell[i]=0;
+  for (int i=0; i<nland; i++) {
+    r=regionid[i];
+    if (r<1) continue;
+    cells[(r-1)*maxregn+ncell[r-1]]=region[i];
+    ncell[r-1]++;
+  }
+ 
+ 
+ /** Create new file */
   if (!ncfile.is_valid()) return 1;
   
   time_t today;
@@ -281,9 +297,11 @@ npp and gdd */
      else if (!strncmp(dim->name(),"continent",6)) ncfile.add_dim(dim->name(), ncont); // TODO
      else ncfile.add_dim(dim->name(), dim->size());
   }
+  ncfile.add_dim("cell",maxregn);
 
   for (int i=0; i<ncc.num_vars(); i++) {
     var=ncc.get_var(i);
+    if (!strncmp(var->name(),"map_id",6)) continue;
     ndim=var->num_dims();
     switch (ndim) {
      case 1: ncfile.add_var(var->name(), var->type(), var->get_dim(0)); break;
@@ -303,6 +321,11 @@ npp and gdd */
   var->add_att("date_of_creation",monthstring.c_str());
   var->add_att("long_name","number_of_gridcells");
   var->add_att("description","number of half degree grid cells associated with this region");
+
+  if (!(var = ncfile.add_var("gridcells", ncInt, ncfile.get_dim("region"),ncfile.get_dim("cell")))) return 1;
+  var->add_att("date_of_creation",monthstring.c_str());
+  var->add_att("long_name","gridcells");
+  var->add_att("description","ids of grid cells associated with this region");
   
   var=ncfile.add_var("number_of_neighbours",ncFloat,ncfile.get_dim("region"));
   var->add_att("date_of_creation",monthstring.c_str());
@@ -324,98 +347,16 @@ npp and gdd */
   ncfile.get_var("gdd")->put(sh,nyear,nreg);
   ncfile.get_var("region_neighbour")->put(regneigh,nn,nreg);
   ncfile.get_var("number_of_neighbours")->put(regnn,nreg);
-  
-  
+  ncfile.get_var("gridcells")->put(cells,nreg,maxregn);
   
  
   ncc.close();
   ncfile.close();
-  cout << "end: " ; 
+
+
   return 0;
-
   
-  float lly=-89.75;
-  float llx=-179.75;
-
-  int* map=new int[(nrow+2)*(ncol+2)];
-  for (int i=0; i<(nrow+2)*(ncol+2); i++) map[i]=0;
-  
-  for (int i=0; i<nland; i++) {
-    ilat[i]=lrintf((latit[i]-lly)/dy)+1;
-    ilon[i]=lrintf((longit[i]-llx)/dx)+1;
-    map[(ncol+2)*ilat[i]+ilon[i]]=region[i];
-  }
-  for (int i=0; i<nrow; i++) {
-    map[i*(ncol+2)+0]=map[i*(ncol+2)+ncol];
-    map[i*(ncol+2)+ncol+1]=map[i*(ncol+2)+1];
-  }
-  for (int i=0; i<ncol; i++) {
-    map[0*(ncol+2)+i]=map[1*(ncol+2)+i];
-    map[(nrow+1)*(ncol+2)+i]=map[(ncol+2)*nrow+i];
-  }
-
-  int ireg;
-  var=ncfile.get_var("region_neighbour");
-  var->put(neigh,nn,nland);
-  
-    
-  /** Define continuous land masses */
-  short int* continent=new short int[nland];
-  for (int i=0; i<nland; i++) continent[i]=0;
-  double s=0;
-
-  //if (!(dim = ncfile.add_dim("continent",id))) return 1;
-  
-  if (!(var = ncfile.add_var("continent", ncInt, ncfile.get_dim("continent")))) return 1;
-  var->add_att("date_of_creation",monthstring.c_str());
-  var->add_att("long_name","continent");
-  var->add_att("standard_name","continent enumeration");
-  var->add_att("description","Unique identifier of contiguous landmass");
-  // has no units attribute
-
-  if (!(var = ncfile.add_var("continent_area", ncFloat, ncfile.get_dim("continent")))) return 1;
-  var->add_att("date_of_creation",monthstring.c_str());
-  var->add_att("long_name","continental area");
-  var->add_att("standard_name","continent_area");
-  var->add_att("description","Area of continent");
-  var->add_att("units","km^2");
-
-  if (!(var = ncfile.add_var("continent_gridcells", ncInt, ncfile.get_dim("continent")))) return 1;
-  var->add_att("date_of_creation",monthstring.c_str());
-  var->add_att("long_name","continent_gridcells");
-  var->add_att("standard_name","continent_gridcells");
-  var->add_att("description","Number of gridcells on continent");
-  
-  /** End definition mode */
-  var=ncfile.get_var("region_continent");
-  var->put(continent,nland);
-  
-  /*int* cont=new int[id];
-  float* carea=new float[id];
-  int* cnum=new int[id];
-
-  for (int i=0; i<id; i++) {
-    cont[i]=i+1;
-    cnum[i]=0;
-    carea[i]=0;
-  }
-  var=ncfile.get_var("continent");
-  var->put(cont,id);
-  //return 0;
-  
-  for (int i=0; i<nland; i++) {
-    cnum[continent[i]-1]++;
-    carea[continent[i]-1]+=area[i];
-  }
-  var=ncfile.get_var("continent_area");
-  var->put(carea,id);
-  var=ncfile.get_var("continent_gridcells");
-  var->put(cnum,id);
-  */
-  ncfile.close();
- 
- return 0;
-#endif
+  #endif
 }
 
 float calc_gridcell_area(float clat,float dlon,float dlat,float radius) { 
@@ -475,3 +416,18 @@ double search_continent(short int** cont, int** neigh, int i, short int id, int 
     return s;
   }
 
+
+bool is_var(NcFile* ncfile, std::string varname) {
+
+  int n=ncfile->num_vars();
+  NcVar* var;
+ 
+  for (int i=0; i<n; i++) {
+    var=ncfile->get_var(i);
+    string name(var->name());
+    if (name==varname) return true;
+  }
+
+  cerr << "NetCDF file does not contain variable \"" << varname << "\".\n";    
+  return false;
+}
