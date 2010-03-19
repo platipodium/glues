@@ -50,6 +50,7 @@ using namespace std;
 
 float sind(float);
 float cosd(float);
+float calc_geodesic(float,float,float,float);
 float calc_gridcell_area(float clat,float dlon=0.5,float dlat=0.5,float radius=6378.137);
 float npp_lieth(float,float);
 double search_continent(short int**,int**,int, short int,int,int);
@@ -142,6 +143,7 @@ npp and gdd */
   float* regnpp=new float[nyear*nreg];
   int nnmax=30; /* Assume at most 30 neighbour regions */
   int* regneigh=new int[nreg*nnmax];  
+  int* regboundary=new int[nreg*nnmax];  
   float dx=0.5;
   float dy=0.5;
   
@@ -153,7 +155,10 @@ npp and gdd */
     reglon[i]=0;
     reggdd[i]=0;
     regnpp[i]=0;
-    for (int j=0; j<nnmax; j++) regneigh[j*nreg+i]=0;
+    for (int j=0; j<nnmax; j++) {
+      regneigh[j*nreg+i]=0;
+      regboundary[j*nreg+i]=0;
+    } 
   }
 
   NcFile ncfile(filename.c_str(), NcFile::Replace);
@@ -188,7 +193,7 @@ npp and gdd */
  	  if (regionid[neighid-1]<1) continue; // break if neighbour is sea
  	  
  	  /* Check for mutual neighbour relationship 
- 	  This is a todo for the  creating program */
+ 	  if not, fix this in the the creating program */
  	  if (neigh[((j+4)%8)*nland+neighid-1] != region[i]) {
  	    cout << "r[" << i << "]=" << region[i] << " (" << j << ") n[" << neighid-1 << "]=" << neigh[((j+4)%8)*nland+neighid-1] << endl;
  	  }
@@ -204,12 +209,19 @@ npp and gdd */
  	    //cout << " " << k << "/" << n; 
  	    k++;
  	  }
- 	  //cout << "." ;
- 	  if (k<n) continue;
  	  if (k>=nnmax) {
  	    cerr << "Insufficent size of nnmax, please increase in source code.\n";
  	    return 1;
  	  }
+ 	  
+ 	  /** Calc boundary */
+ 	  int edge=1/20.0;  // Allow diagonally adjacent gridcells a connection of length edge
+ 	  float boundary=calc_geodesic(longit[neighid-1],latit[neighid-1],longit[i],latit[i]);
+ 	  if (j%2>0) boundary*=edge;
+ 	  regboundary[k*nreg+(regionid[i]-1)]+=boundary;
+      
+      /** Add neighbour if new otherwise skip this*/
+ 	  if (k<n) continue; 
  	  regnn[regionid[i]-1]++;
  	  //regneigh[(regionid[i]-1)*nnmax+k]=regionid[neighid-1];
  	  regneigh[k*nreg+(regionid[i]-1)]=regionid[neighid-1];
@@ -332,6 +344,12 @@ npp and gdd */
   var->add_att("long_name","number_of_neighbours");
   var->add_att("description","number of neighbours to this region");
   
+  var=ncfile.add_var("region_boundary",ncFloat,ncfile.get_dim("neighbour"),ncfile.get_dim("region"));
+  var->add_att("date_of_creation",monthstring.c_str());
+  var->add_att("long_name","region_boundary");
+  var->add_att("description","Length of boundaries to neighbours");
+  var->add_att("units","km");
+  
   /** Fill values */
   ncfile.get_var("time")->put(year,nyear);
   ncfile.get_var("number_of_gridcells")->put(regn,nreg);
@@ -346,6 +364,7 @@ npp and gdd */
   for (int i=0; i<nyear*nreg; i++) sh[i]=lrintf(reggdd[i]);
   ncfile.get_var("gdd")->put(sh,nyear,nreg);
   ncfile.get_var("region_neighbour")->put(regneigh,nn,nreg);
+  ncfile.get_var("region_boundary")->put(regboundary,nn,nreg);
   ncfile.get_var("number_of_neighbours")->put(regnn,nreg);
   ncfile.get_var("gridcells")->put(cells,nreg,maxregn);
   
@@ -430,4 +449,26 @@ bool is_var(NcFile* ncfile, std::string varname) {
 
   cerr << "NetCDF file does not contain variable \"" << varname << "\".\n";    
   return false;
+}
+
+
+/** Calculats the boundary length of gridcells at mean latitude
+    @return boundary length along great arc
+*/
+float calc_geodesic(float lon1, float lat1, float lon2, float lat2) {
+
+  float pi180=M_PI/180.0;
+  float radius=6378.137;
+
+  lon1*=pi180;
+  lon2*=pi180;
+  lat1*=pi180;
+  lat2*=pi180;
+
+  float dlon = lon2 - lon1; 
+  float dlat = lat2 - lat1;
+  
+  float a = sin(dlat/2)*sin(dlat/2) + cos(lat1)*cos(lat2)*sin(dlon/2)*sin(dlon/2);
+  float angles = 2 * atan( sqrt(a)) ; //, sqrt(1-a) );
+  return radius * angles;
 }
