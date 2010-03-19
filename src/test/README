@@ -1,0 +1,22 @@
+This is the README file for the netcdf utilities in GLUES
+
+
+1) nc_climateregions.cc
+
+  Takes as input a climatology and a transient climate and produces
+  a transient climate as climatology + transient climate anomalies;
+  calculates npp and gdd in transient climate
+  
+  Example: transient climate from plasim_11k.nc, climatology from iiasa.nc, output as regions_11k.nc
+
+2) nc_add_map.cc
+
+  Adds a mapping to region ids other than gridcells to the transient climate
+  
+  Example: transient climate regions_11k.nc and mapping glues_map.nc, output as regions_11k_685.nc
+  
+3) nc_write_region_dat.cc
+
+  Writes the ascii files from transient climate that serve as input to glues simulations
+  
+  Example: input regions_11k_685.nc, output regions_685.dat, regions_gdd_11k_685.dat, regions_npp_11k_685.dat
