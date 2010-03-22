@@ -33,6 +33,7 @@
 #include <streambuf>
 #include <vector>
 #include <map>
+#include <cassert>	
 #include "Globals.h"
 #include "AsciiTable.h"
 
@@ -540,6 +541,8 @@ vector<PopulatedRegion>::size_type  RegionProperties(vector<PopulatedRegion> reg
     
   //numberOfRegions=input.getRegionNumber();
   numberOfRegions=RegionNumber();
+  assert(numberOfRegions>0);
+  
   if (numberOfRegions < 1 ) return 0;
 
   regions = new PopulatedRegion[numberOfRegions];
@@ -547,20 +550,30 @@ vector<PopulatedRegion>::size_type  RegionProperties(vector<PopulatedRegion> reg
   region.clear();
 
   ifs.open(regionstring.c_str(),ios::in);
+  assert(ifs.good());
+  
   while (ifs.good() && !ifs.eof() && i<numberOfRegions) {
  
-       c=ifs.peek();
-      if ( (c < '0') || (c > '9') ) {
+    c=ifs.peek();
+    
+    /* Eat white space */
+    while ( (c == ' ') || (c == '\t') ) {
+      ifs.get();
+      c=ifs.peek();
+    }
+    /* Skip if non-numeric */
+    if ( (c < '0') || (c > '9') ) {
 	  ifs.getline(charbuffer,BUFSIZE);
 	  continue;
-      }
-      /* Later to be replaced */
+    }
+    
+    /* Later to be replaced */
       regions[i] = PopulatedRegion(ifs);
       regions[i].Index(i);
       
       region.push_back(PopulatedRegion(regions[i]));
       // todo: add index generation
-      i++;
+      cout << i++ << endl;;
   }
  
   ifs.close();
