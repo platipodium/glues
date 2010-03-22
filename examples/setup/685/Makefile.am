@@ -1,6 +1,6 @@
 # Makefile for GLUES.
 
-# Copyright (C) 2010 Carsten Lemmen, GKSS-Forschungszentrum Geesthacht GmbH
+# Copyright (C) 2007 Carsten Lemmen, GKSS-Forschungszentrum Geesthacht GmbH
 
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 ## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 ## 02110-1301, USA.
 
-EXTRA_DIST= EvSeries.dat EventInRad.dat EventInReg.dat \
-regions_11k_685.dat regions_gdd_11k_685.dat regions_npp_11k_685.dat
+EXTRA_DIST=mapping_80_685.dat mapping_80_685.dat.len \
+regions_80_685.dat reg_npp_80_685.dat reg_gdd_80_685.dat \
+EvSeries.dat EventInReg.dat EventInRad.dat
 
