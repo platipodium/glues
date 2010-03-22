@@ -298,6 +298,7 @@ AC_CONFIG_FILES([Makefile
   examples/setup/938/Makefile
   examples/setup/939/Makefile
   examples/setup/685/Makefile
+  examples/setup/plasim/Makefile
   examples/setup/62483/Makefile
   examples/results/Makefile
   examples/results/685/Makefile
@@ -310,6 +311,9 @@ AC_CONFIG_FILES([Makefile
   examples/simulations/62483/onekbc.sim
   examples/simulations/eurolbk/lbk.sce
   examples/simulations/eurolbk/lbk.sim
+  examples/simulations/plasim/Makefile
+  examples/simulations/plasim/plasim.sce
+  examples/simulations/plasim/plasim.sim
   examples/simulations/Makefile examples/simulations/685/Makefile
   examples/simulations/938/Makefile
   examples/simulations/test_new_event/Makefile
