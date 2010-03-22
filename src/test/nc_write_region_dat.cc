@@ -20,9 +20,10 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
-   @date   2010-02-22
+   @date   2010-03-19
    @file nc_regions.cc
-   @description This program creates the region, climate and mapp8ing files from regions.nc
+   @description This program creates the region, climate and mapping files from regions.nc (on gridcell) or
+   from regions_11k_685.nc (alread mapped)
 */
 
 #include "config.h"
@@ -70,7 +71,7 @@ if (argc>1) {
   string appendix="_11k_685";
   
   string ncfilename=prefix + appendix + ".nc";
-  string regfilename=prefix + appendix + "dat";
+  string regfilename=prefix + appendix + ".dat";
   string regnppname=prefix + "_npp" + appendix + ".dat";
   string reggddname=prefix + "_gdd" + appendix + ".dat";
   
@@ -141,6 +142,19 @@ if (argc>1) {
   var=ncin.get_var("continent_area");
   var->get(carea,nc);
   
+  float *regnn = new float[nreg];
+  bool has_neighbour_info = false;
+  if (check_var(&ncin,"number_of_neighbours",nreg)) {
+    ncin.get_var("number_of_neighbours")->get(regnn,nreg);
+    has_neighbour_info = true;
+  }
+  float *regboundary = new float[nn*nreg];
+  if (check_var(&ncin,"region_boundary",nn*nreg)) {
+    ncin.get_var("region_boundary")->get(regboundary,nn,nreg);
+    has_neighbour_info = true;
+  }
+  else has_neighbour_info = false;
+  
   ncin.close();
 
   ofstream ofs;
@@ -152,25 +166,19 @@ if (argc>1) {
   float dy=0.5;
   int *ilat=new int[nreg];
   int *ilon=new int[nreg];
-  int *numneigh=new int[nreg];
- 
- 
+
   /** apply selection to area greater threshold */
   double threshold=40000000;
-  for (int i=0; i<nreg; i++) {
+  for (int i=0; i<-nreg; i++) {
     if (carea[cont[i]-1]>=threshold) continue;
     region[i]=0;
   }
-  
-  
+ 
   /** apply latlon filter */
   for (int i=0; i<-nreg; i++) {
     if (lat[i]<35 || lat[i]>37 || lon[i]<48 || lon[i]>50) region[i]=0;
   }
-  
-  
-  
-  
+   
   for (int i=0; i<nreg; i++) {
   
     // x2lat = 90.0-index/2.0;
@@ -180,35 +188,45 @@ if (argc>1) {
 
     ilat[i]=lrintf((-lly-lat[i])/dy);
     ilon[i]=lrintf((lon[i]-llx)/dx);
-  	numneigh[i]=0;
-  	for (int j=0; j<nn; j++) {
-  	  int n=neigh[j*nreg+i];
-  	  if (n>0 && region[n-1]>0) numneigh[i]+=1;
+
+    if (!has_neighbour_info) {
+  	  regnn[i]=0;
+  	  for (int j=0; j<nn; j++) {
+  	    int n=neigh[j*nreg+i];
+  	    if (n>0 && region[n-1]>0) regnn[i]+=1;
+      }
     }
     /** Output format is 
       id numcells area longitude latitude numneighbours neighid:neighboundary
     */
     ofs.unsetf(ios::floatfield); 
-    ofs << setprecision(5) << setw(5) << region[i] << " 1 " <<  setw(4) << lroundf(area[i]) << " " 
-    	<< setw(3) << ilon[i] << " " << setw(3) << ilat[i] << " " << setw(1) << numneigh[i] ;
+    ofs << setprecision(5) << setw(5) << region[i] << " 1 " <<  setw(7) << lroundf(area[i]) << " " 
+    	<< setw(3) << ilon[i] << " " << setw(3) << ilat[i] << " " << setw(1) << regnn[i] ;
     
     /* allow diagonal boundary with fraction of straight boundary */
-    float edge=1/20.0;
-    
-    if (numneigh[i]>0) {
-      for (int j=0; j<nn; j++) {
-        int n=neigh[j*nreg+i];
-        if (region[n-1]==0) continue;
-        float lon1,lon2,lat1,lat2;
-        if (n>0) {
-          ofs << setiosflags(ios::fixed) << setprecision(2) ; 
-          if (j<1) lon1=lon[i]-dx/2.0, lon2=lon1, lat1=lat[i]-dx, lat2=lat[i]+dx;
-          else if (j<4) lon1=lon[i]-dx/2.0, lon2=lon[i]+dx/2.0, lat1=lat[i]+dx, lat2=lat1;
-          else if (j<5) lon1=lon[i]+dx/2.0, lon2=lon1, lat1=lat[i]-dx, lat2=lat[i]+dx;
-          else lon1=lon[i]-dx/2.0, lon2=lon[i]+dx/2.0, lat1=lat[i]-dx, lat2=lat1;
+    if (has_neighbour_info) {
+      for (int j=0; j<regnn[i]; j++) {
+        //ofs << setiosflags(ios::fixed) << setprecision(0)  
+        ofs	<< " " << setw(5) <<  neigh[j*nreg+i] << ":" << regboundary[j*nreg+i];
+      }
+    }
+    else {
+      float edge=1/20.0;
+      if (regnn[i]>0) {
+        for (int j=0; j<nn; j++) {
+          int n=neigh[j*nreg+i];
+          if (region[n-1]==0) continue;
+          float lon1,lon2,lat1,lat2;
+          if (n>0) {
+            ofs << setiosflags(ios::fixed) << setprecision(2) ; 
+            if (j<1) lon1=lon[i]-dx/2.0, lon2=lon1, lat1=lat[i]-dx, lat2=lat[i]+dx;
+            else if (j<4) lon1=lon[i]-dx/2.0, lon2=lon[i]+dx/2.0, lat1=lat[i]+dx, lat2=lat1;
+            else if (j<5) lon1=lon[i]+dx/2.0, lon2=lon1, lat1=lat[i]-dx, lat2=lat[i]+dx;
+            else lon1=lon[i]-dx/2.0, lon2=lon[i]+dx/2.0, lat1=lat[i]-dx, lat2=lat1;
           
-          if ( j % 2 >0) ofs << " " << setw(5) << n << ":" << edge*calc_geodesic(lon1,lat1,lon2,lat2);
-          else ofs << " " << setw(5) <<  n << ":" << calc_geodesic(lon1,lat1,lon2,lat2);
+            if ( j % 2 >0) ofs << " " << setw(5) << n << ":" << edge*calc_geodesic(lon1,lat1,lon2,lat2);
+            else ofs << " " << setw(5) <<  n << ":" << calc_geodesic(lon1,lat1,lon2,lat2);
+          }
         }
       }
     }
