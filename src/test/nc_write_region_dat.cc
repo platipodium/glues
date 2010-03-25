@@ -20,7 +20,7 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
-   @date   2010-03-19
+   @date   2010-03-24
    @file nc_regions.cc
    @description This program creates the region, climate and mapping files from regions.nc (on gridcell) or
    from regions_11k_685.nc (alread mapped)
@@ -235,12 +235,12 @@ if (argc>1) {
   
   ofs.close();
  
- const int nclim=23;
+ const int nclim=ntime;
  
  ofs.open(regnppname.c_str(),ios::out);
  ofs << setiosflags(ios::fixed) << setprecision(2);
  for (int j=0; j<nclim; j++) {
-   for (int i=0; i<nreg; i++) if (region[i]>0) ofs << npp[i] << " ";
+   for (int i=0; i<nreg; i++) if (region[i]>0) ofs << npp[j*nreg+i] << " ";
    ofs << endl;
  }
  ofs.close();
@@ -248,7 +248,7 @@ if (argc>1) {
  ofs.open(reggddname.c_str(),ios::out);
  ofs << setiosflags(ios::fixed) << setprecision(2);
  for (int j=0; j<nclim; j++) {
-   for (int i=0; i<nreg; i++) if (region[i]>0) ofs << gdd[i] << " ";
+   for (int i=0; i<nreg; i++) if (region[i]>0) ofs << gdd[j*nreg+i] << " ";
    ofs <<  endl;
  }
  ofs.close();
