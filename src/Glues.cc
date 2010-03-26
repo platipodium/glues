@@ -26,6 +26,10 @@
    @brief  Main driver for GLUES simulations
 */
 
+#ifdef HAVE_CONFIG_H
+  #include "config.h"
+#endif
+
 #include "Symbols.h"
 #include "GlobalClimate.h"
 #include "Messages.h"
@@ -209,7 +213,8 @@ double simulation() {
   FILE *spr=0,*sprt=0;
 
 #ifdef HAVE_NETCDF_H
-  //NcFile ncout("test.nc",NcFile::Write);
+  NcFile ncout("test.nc",NcFile::Write);
+  gnc_write_header(ncout,numberOfRegions);
 #endif
 
   //  Exchange ex(100);
@@ -469,13 +474,8 @@ double simulation() {
     }
     
 #ifdef HAVE_NETCDF_H
-    NcFile* ncid;
-    if (ncid == NULL) {
-      /** Create and prepare file */
-      //ncid = glues::GNetcdf::open("test.nc",NcFile::Replace);
-    }
 
-	if (ncid!=NULL && ncid->is_valid()) { 
+	if (ncout.is_valid()) { 
 	  /*float * frecord = new float[numberOfRegions];
 	  for (unsigned int i=0; i< numberOfRegions; i++) frecord[i]=populations[i].Technology();
 	  glues::GNetcdf::put_var_rec(ncid,"technology",&frecord);
@@ -502,6 +502,8 @@ double simulation() {
   if(!VarActive & LocalSpread>0) fclose(spr), fclose(sprt);
 
   return calc_deviation(CivNum);
+  
+  ncout.close();
 }
 /** END of simulation() */
 
