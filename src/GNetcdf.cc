@@ -21,23 +21,29 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
    @date   2010-03-26
-   @file   GNetcdf.h
+   @file   GNetcdf.cc
 */
 
-#ifndef glues_netcdf_h
-#define glues_netcdf_h
-
-#include <iostream>
-#include <sstream>
-#ifdef HAVE_CONFIG_H
-  #include "config.h"
-#endif
+#include "GNetcdf.h"
 
 #ifdef HAVE_NETCDF_H
-#include "netcdfcpp.h"
 
-int gnc_write_header(NcFile&, int);
+int gnc_write_header(NcFile& ncfile, int nreg) {
+  if (!ncfile.is_valid()) return 1;
+  
+  const int ntime=0; // The record dimension
+  
+  ncfile.add_att("Conventions","CF-1.4");
+  ncfile.add_att("title","GLUES");
+  ncfile.add_att("history","File created");
+  ncfile.add_att("institution","GKSS-Forschungszentrum Geesthacht GmbH");
+  ncfile.add_att("source","GLUES 1.1.9 model");
+  ncfile.add_att("comment","");
+  ncfile.add_att("references","Wirtz & Lemmen (2003), Lemmen (2009)");
 
-#endif
+  
+  return 0;
+}
+
 
 #endif
