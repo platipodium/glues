@@ -33,6 +33,7 @@
 #include "callSiSi.hh"
 #include "IO.h"
 #include "Data.h"
+#include "GNetcdf.h"
 #include <vector>
 
 #ifdef HAVE_MPI_H
@@ -462,11 +463,33 @@ double simulation() {
 	for(unsigned int i=0;i<LengthOfins;i++)
 	  populations[ins[i]].Write(watchfile[i],(int)(t*ts));
       }
-    if ( !VarActive && !(t%(2*OutStep)) ) {
+    if ( !VarActive && !(t%(OutStep)) ) {
       make_store();
       fwrite(&store_vector[0],sizeof(float),num_stores*numberOfRegions,outfile);
-      for (int i=0; i<numberOfRegions; i++) sprdm[i]=0;
     }
+    
+#ifdef HAVE_NETCDF_H
+    NcFile* ncid;
+    if (ncid == NULL) {
+      /** Create and prepare file */
+      //ncid = glues::GNetcdf::open("test.nc",NcFile::Replace);
+    }
+
+	if (ncid!=NULL && ncid->is_valid()) { 
+	  /*float * frecord = new float[numberOfRegions];
+	  for (unsigned int i=0; i< numberOfRegions; i++) frecord[i]=populations[i].Technology();
+	  glues::GNetcdf::put_var_rec(ncid,"technology",&frecord);
+	  for (unsigned int i=0; i< numberOfRegions; i++) frecord[i]=populations[i].Density();
+	  glues::GNetcdf::put_var_rec(ncid,"population_density",&frecord);
+	*/
+	  /** append record of all variables */
+	}
+    
+#endif
+
+ /* Clear spread matrix */
+   for (int i=0; i<numberOfRegions; i++) sprdm[i]=0;
+ 
 
     //if (t%10==0) fprintf(stdout,"t= %f past= %f cur= %f fut= %f sah= %f\n",t*ts,mean_pastclimate_npp/numberOfRegions,mean_region_npp/numberOfRegions,mean_futureclimate_npp/numberOfRegions,mean_sahara_npp/numberOfSaharanRegions);
 

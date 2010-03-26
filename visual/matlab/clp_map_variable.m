@@ -21,7 +21,8 @@ arguments = {...
   {'movie',1},...
   {'cmap',0},...
   {'projection','miller'},...
-  {'showsites',0}
+  {'showsites',0},...
+  {'notitle',0}
 };
 
 % For Europe:
@@ -271,7 +272,7 @@ for idovar=1:nvar
   %% Add title and determine time units
   titletext=r.variables{ivar};
   if length(infix)>0 titletext=[titletext '(' infix ')']; end
-  ht=title(titletext,'interpreter','none');
+  if ~notitle ht=title(titletext,'interpreter','none'); end
  
   
   t=r.time(itstart);
@@ -288,8 +289,8 @@ for idovar=1:nvar
   pos=[0.08 0.0 0.83 0.91];
   
   %hbt=m_text(lonlim(1)+0.02*lonrange,latlim(2)-0.2*latrange,[num2str(t) ' ' timeunit],'backgroundColor','y','EdgeColor','k');
-  hbt=m_text(lonlim(1)+0.3*lonrange,latlim(2)-0.2*latrange,[num2str(t) ' ' timeunit],...
-      'color','y','FontWeight','bold','backgroundColor','none','EdgeColor','none','fontSize',15);
+  if ~notitle hbt=m_text(lonlim(1)+0.3*lonrange,latlim(2)-0.2*latrange,[num2str(t) ' ' timeunit],...
+      'color','y','FontWeight','bold','backgroundColor','none','EdgeColor','none','fontSize',15); end
        
   set(gca,'Position',pos,'box','off');
 
@@ -332,7 +333,7 @@ for idovar=1:nvar
 if (1) % colorbar
      
 cbw=0.4;  %  (relative width of colorbar)
-cbxo=0.35; %(x-offset of colorbar)
+cbxo=0.05; %(x-offset of colorbar)
 cbyo=0.04;
 cbh=0.08;
 cby=latlim(1)+(cbyo+[0,0,cbh,cbh])*(latlim(2)-latlim(1));
@@ -379,7 +380,7 @@ for it=1:length(time)
     end
   end
     
-  set(hbt,'String',[num2str(t) ' ' timeunit]);
+  if ~notitle set(hbt,'String',[num2str(t) ' ' timeunit]); end
   
   itprior=max(it-1,1);
   if it==1 ichanged=1:length(regs);
@@ -440,7 +441,7 @@ for it=1:length(time)
   plotname=[plotname sprintf('%05d_%d',12000-t,t)];
    
     
-  if mod(t,snapyear)==0
+  if mod(t-20,snapyear)==0
     ;
         %mod(it,4)==1
       plot_multi_format(gcf,plotname);
