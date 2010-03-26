@@ -150,11 +150,12 @@ AC_ARG_WITH(netcdf,
           netcdf_lib_path="${withval}/lib"
 	  netcdf_include_path="${withval}/include"
 	else
-	  netcdf_path=none
+	  netcdf_path=no
         fi	  
 	]
 )
 
+dnl if not explicitly excluded with with-netcdf=no option
 if test "x${netcdf_path}" != "no" ; then
 
    dnl save old status of affected flags
@@ -166,17 +167,24 @@ if test "x${netcdf_path}" != "no" ; then
      dnl custom directories set
      LDFLAGS="$LDFLAGS -L$netcdf_lib_path"
      CPPFLAGS="$CPPFLAGS -I$netcdf_include_path"
-     LIBS="$LIBS -lnetcdf_c++ -lnetcdf"
+     #LIBS="$LIBS -lnetcdf_c++ -lnetcdf"
    else
-     dnl automatic search, try compilers and ncdump
+     dnl automatic search, try location of ncdump
      AC_PATH_PROG(NCDUMP, ncdump, "no")
       if test "x$NCDUMP" = "xno" ; then :
+      else 
+        netcdf_path=`dirname $NCDUMP`
+        netcdf_path=`dirname $netcdf_path`
+        netcdf_lib_path=$netcdf_path/lib
+        netcdf_include_path=$netcdf_path/include
+        LDFLAGS="$LDFLAGS -L$netcdf_lib_path"
+        CPPFLAGS="$CPPFLAGS -I$netcdf_include_path"
       fi
   fi
 
    AC_CHECK_HEADERS([netcdf.h])
    AC_CHECK_HEADERS([netcdfcpp.h])
-   AC_CHECK_LIB(netcdf,_ncclose)
+   AC_CHECK_LIB(netcdf,ncclose)
    AC_CHECK_LIB(netcdf_c++,ncclose)
   
 else

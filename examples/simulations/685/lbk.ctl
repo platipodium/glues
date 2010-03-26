@@ -1,6 +1,6 @@
 # Parameter file written by XSiSi 2.0
 comment Switches for spreading
-int	LocalSpread 0
+int	LocalSpread 1
 	\d 1: Exchange between adjacent regions
 int	RemoteSpread	0
 	\d 1: Exchange between remote seashore regions (not used in v2!)

@@ -48,6 +48,7 @@ Tracer.h \
 GeographicalWorld.h \
 Continent.h  \
 IO.h \
+GNetcdf.h \
 Data.h
 
 EXTRA_DIST=Messages.cc.in
@@ -76,7 +77,8 @@ GeographicalWorld.cc \
 Continent.cc \
 GeoRegion.cc \
 GeoNeighbour.cc \
-IO.cc
+IO.cc \
+GNetcdf.cc
 
 #Events.cc 
 #dump_binary.c \
@@ -86,7 +88,7 @@ IO.cc
 
 #INCLUDES =  -I/usr/local/netcdf/gcc-4.3.1/include
 
-glues_LDADD= \
+glues_LDADD=  -lnetcdf -lnetcdf_c++ \
 	 #/usr/local/netcdf/gcc-4.3.1/lib/libnetcdf_c++.a \
 	 #/usr/local/netcdf/gcc-4.3.1/lib/libnetcdf.a \
 	#-lintl
