@@ -43,8 +43,9 @@ bool gnc_is_dim(const NcFile&, const std::string&);
 bool gnc_is_att(const NcFile&, const std::string&);
 bool gnc_is_att(const NcVar* , const std::string&);
 
-bool gnc_check_var(NcFile& ncfile, const std::string&, const int);
-bool gnc_check_var(NcFile& ncfile, const std::string&, const int, const int);
+bool gnc_check_var(NcFile&, const std::string&, const int);
+
+int gnc_write_record(NcFile&, const std::string&, const int**, const int);
 
 #endif
 

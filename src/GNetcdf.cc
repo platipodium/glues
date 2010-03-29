@@ -177,23 +177,35 @@ int gnc_write_header(NcFile& ncfile, int nreg) {
   return 0;
 }
 
-int gnc_write_record(NcFile& ncfile, std::string varname, int** data) {
+
+/** Adds a record's worth of data to the netcdf file
+  @param ncfile  Reference to netcdf file
+  @param varname Variable name as C++ string
+  @param data    Pointer to data
+  @param irecord index of record to put the data in
+*/
+int gnc_write_record(NcFile& ncfile, const std::string& varname, const int** data, const int irecord) {
 
   if (!ncfile.is_valid()) {
     cerr << "Could not open NetCDF file for appending." << endl;
     return 1;
   }
   
+
+  if (!gnc_is_var(ncfile,varname)) return 1;
+  
+  NcVar* var;
+  var=ncfile.get_var(varname.c_str());
+  var->put_rec(*data,irecord);
+
   time_t today;
   std::time(&today);
   string s1(asctime(gmtime(&today)));
   string timestring=s1.substr(0,s1.find_first_of("\n"));
 
-  if (!gnc_is_var(ncfile,varname)) return 1;
-  
-  NcVar* var;
-  var=ncfile.get_var(varname.c_str());	
+  var->add_att("date_of_modification",timestring.c_str());
 
+  return 0;
 }
 
 
@@ -237,7 +249,7 @@ bool gnc_is_dim(const NcFile& ncfile, const std::string& dimname) {
 
 /** Checks whether an attribute with name attname exists
   @param ncfile  Reference to netcdf file
-  @param dimname Attribute name as C++ string
+  @param attname Attribute name as C++ string
 */
 bool gnc_is_att(const NcFile& ncfile, const std::string& attname) {
 
@@ -258,7 +270,6 @@ bool gnc_is_att(const NcFile& ncfile, const std::string& attname) {
   @param var  Pointer to netcdf variable
   @param attname Attribute name as C++ string
 */
-
 bool gnc_is_att(const NcVar*  var, const std::string& attname) {
 
   int n=var->num_atts();
@@ -274,8 +285,12 @@ bool gnc_is_att(const NcVar*  var, const std::string& attname) {
   return false;
 }
 
-
-bool check_var(NcFile& ncfile, std::string varname,int len) {
+/** Checks whether a varialbe with lenght of one or all coordinates exists
+  @param ncfile  Reference to netCDF file
+  @param varname Variable name as C++ string
+  @param len Length of one or all dimensions
+*/
+bool gnc_check_var(const NcFile& ncfile, const std::string & varname, const int len) {
 
   if (!gnc_is_var(ncfile,varname)) return false;
   
