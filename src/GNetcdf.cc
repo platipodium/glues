@@ -25,13 +25,17 @@
 */
 
 #include "GNetcdf.h"
+#include <iostream>
+
+using namespace std;
 
 #ifdef HAVE_NETCDF_H
 
 int gnc_write_header(NcFile& ncfile, int nreg) {
-  if (!ncfile.is_valid()) return 1;
-  
-  const int ntime=0; // The record dimension
+  if (!ncfile.is_valid()) {
+    cerr << "Could not open NetCDF file for writing " << endl;
+    return 1;
+  }
   
   ncfile.add_att("Conventions","CF-1.4");
   ncfile.add_att("title","GLUES");
@@ -40,8 +44,12 @@ int gnc_write_header(NcFile& ncfile, int nreg) {
   ncfile.add_att("source","GLUES 1.1.9 model");
   ncfile.add_att("comment","");
   ncfile.add_att("references","Wirtz & Lemmen (2003), Lemmen (2009)");
-
+  ncfile.add_att("model_name","GLUES");
   
+  NcDim *regdim, *timedim;
+  if (!(regdim  = ncfile.add_dim("region", nreg))) return 1;
+  if (!(timedim = ncfile.add_dim("time"))) return 1;
+         
   return 0;
 }
 
