@@ -38,6 +38,14 @@
 
 int gnc_write_header(NcFile&, int);
 
+bool gnc_is_var(const NcFile&, const std::string&);
+bool gnc_is_dim(const NcFile&, const std::string&);
+bool gnc_is_att(const NcFile&, const std::string&);
+bool gnc_is_att(const NcVar* , const std::string&);
+
+bool gnc_check_var(NcFile& ncfile, const std::string&, const int);
+bool gnc_check_var(NcFile& ncfile, const std::string&, const int, const int);
+
 #endif
 
 #endif
