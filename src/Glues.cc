@@ -309,6 +309,12 @@ double simulation() {
   gnc_write_record(ncout,"farming_index_init",&float_record);
   for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=0;
   gnc_write_record(ncout,"economies_index_init",&float_record);
+  for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=populations[i].Region()->Area();
+  gnc_write_record(ncout,"area",&float_record);
+  for (unsigned int i=0; i<numberOfRegions; i++) int_record[i]=populations[i].Region()->Sahara();
+  gnc_write_record(ncout,"region_is_in_sahara",&int_record);
+  for (unsigned int i=0; i<numberOfRegions; i++) int_record[i]=populations[i].Region()->ContId();
+  gnc_write_record(ncout,"region_continent",&int_record);
   
 
   for (t=0; t<tmax; t++) {
@@ -522,7 +528,25 @@ double simulation() {
 
 	if (ncout.is_valid()) { 
 	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Technology();
-	  gnc_write_record(ncout,"technology",&float_record);
+	  gnc_write_record(ncout,"technology",&float_record,t);
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Qfarming();
+	  gnc_write_record(ncout,"farming",&float_record,t);
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Size();
+	  gnc_write_record(ncout,"population_size",&float_record,t);
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].RelativeGrowthrate();
+	  gnc_write_record(ncout,"relative_growth_rate",&float_record,t);
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Density();
+	  gnc_write_record(ncout,"population_density",&float_record,t);
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Ndomesticated();
+	  gnc_write_record(ncout,"economies",&float_record,t);
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Ndommax();
+	  gnc_write_record(ncout,"economies_potential",&float_record,t);
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Tlim();
+	  gnc_write_record(ncout,"temperature_limitation",&float_record,t);
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].ActFert();
+	  gnc_write_record(ncout,"actual_fertility",&float_record,t);
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].NatFert();
+	  gnc_write_record(ncout,"natural_fertility",&float_record,t);
 	}
     
 #endif
