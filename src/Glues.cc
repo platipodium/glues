@@ -146,7 +146,16 @@ int main(int argc, char* argv[])
   */
   open_watchfiles();
   outfile=store_prep_open();
-  if( outfile==NULL ) return 1;
+  if( outfile==NULL ) {
+      glues::Messages::Error();
+      SiSi::finalize();
+#ifdef HAVE_MPI_H
+      MPI::Finalize();
+#endif
+      return 1;
+  }
+   
+  
   if(RunVarInd>0) set_parvector(RunVarInd,1);
 
   dump_events();
@@ -167,7 +176,14 @@ int main(int argc, char* argv[])
   /** Run the simulation */
   
   err_i=simulation();
-
+  if (err_i<0) {
+      glues::Messages::Error();
+      SiSi::finalize();
+#ifdef HAVE_MPI_H
+      MPI::Finalize();
+#endif
+      return 1;
+  }
   /*
             screen output of global numbers
   */
@@ -203,7 +219,7 @@ int main(int argc, char* argv[])
 */
 double simulation() {
 
-
+  int status=0;
   int retval;
   int CivNum,tu=0,i,ii,sync=0;
   long t,t_desert,event_i=0;
@@ -213,8 +229,9 @@ double simulation() {
   FILE *spr=0,*sprt=0;
 
 #ifdef HAVE_NETCDF_H
-  NcFile ncout("test.nc",NcFile::Write);
-  gnc_write_header(ncout,numberOfRegions);
+  NcFile ncout("test.nc",NcFile::Replace);
+  status=gnc_write_header(ncout,numberOfRegions);
+  if (status) return -1;
 #endif
 
   //  Exchange ex(100);
@@ -238,10 +255,10 @@ double simulation() {
   GlobalClimate pastclimate(0);
   GlobalClimate futureclimate(tu);
 
-  if (!pastclimate.Update(0)) return 1;
-  if (!futureclimate.Update(tu)) return 1;
+  if (!pastclimate.Update(0)) return -1;
+  if (!futureclimate.Update(tu)) return -1;
 
-  if (!initialize_populations(1)) return 1; // initialize populations
+  if (!initialize_populations(1)) return -1; // initialize populations
   //  nd=1*(ndommaxmean+ndommaxvar+spreadm*spreadv)*ndommaxcont[0]*gammab;
   nd=0.25*fabs(ndommaxmean)*(1+ndommaxvar+spreadm*spreadv)*gammab;
 
@@ -309,9 +326,9 @@ double simulation() {
       perform the update
     */
     if (t*ts > tu ) {
-	if (!pastclimate.Update(tu)) return 0;
-	tu=tu+ClimUpdateTimes[0];
-	if (!futureclimate.Update(tu)) return 0;
+	  if (!pastclimate.Update(tu)) return -1;
+	  tu=tu+ClimUpdateTimes[0];
+	  if (!futureclimate.Update(tu)) return -1;
     }
     ice_fac=1;
     /*
@@ -511,7 +528,7 @@ double pseudo_simulation() {
   int i,n,CivNum,CivNumA;
   double ts;
 
-  if (!initialize_populations(1)) exit(1); // initialize populations
+  if (!initialize_populations(1)) return -1; // initialize populations
   /*
        Loop over all regions
   */

@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
   ncfile.add_att("title","GLUES netcdf background climate");
   ncfile.add_att("history","Glues template netcdf file");
   ncfile.add_att("institution","GKSS-Forschungszentrum Geesthacht GmbH");
-  ncfile.add_att("source","GLUES 1.1.7 model");
+  ncfile.add_att("source","GLUES 1.1.9 model");
   ncfile.add_att("comment","");
   ncfile.add_att("references","Wirtz & Lemmen (2003), Lemmen (2009)");
   
