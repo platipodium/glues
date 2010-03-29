@@ -177,5 +177,122 @@ int gnc_write_header(NcFile& ncfile, int nreg) {
   return 0;
 }
 
+int gnc_write_record(NcFile& ncfile, std::string varname, int** data) {
+
+  if (!ncfile.is_valid()) {
+    cerr << "Could not open NetCDF file for appending." << endl;
+    return 1;
+  }
+  
+  time_t today;
+  std::time(&today);
+  string s1(asctime(gmtime(&today)));
+  string timestring=s1.substr(0,s1.find_first_of("\n"));
+
+  if (!gnc_is_var(ncfile,varname)) return 1;
+  
+  NcVar* var;
+  var=ncfile.get_var(varname.c_str());	
+
+}
+
+
+/** Checks whether a variable with name varname exists
+  @param ncfile  Reference to netcdf file
+  @param varname Variable name as C++ string
+*/
+bool gnc_is_var(const NcFile& ncfile, const std::string& varname) {
+
+  int n=ncfile.num_vars();
+  NcVar* var;
+ 
+  for (int i=0; i<n; i++) {
+    var=ncfile.get_var(i);
+    string name(var->name());
+    if (name==varname) return true;
+  }
+
+  cerr << "NetCDF file does not contain variable \"" << varname << "\".\n";    
+  return false;
+}
+
+/** Checks whether a dimension with name dimname exists
+  @param ncfile  Reference to netcdf file
+  @param dimname Dimension name as C++ string
+*/
+bool gnc_is_dim(const NcFile& ncfile, const std::string& dimname) {
+
+  int n=ncfile.num_dims();
+  NcDim* dim;
+ 
+  for (int i=0; i<n; i++) {
+    dim=ncfile.get_dim(i);
+    string name(dim->name());
+    if (name==dimname) return true;
+  }
+
+  cerr << "NetCDF file does not contain dimension \"" << dimname << "\".\n";    
+  return false;
+}
+
+/** Checks whether an attribute with name attname exists
+  @param ncfile  Reference to netcdf file
+  @param dimname Attribute name as C++ string
+*/
+bool gnc_is_att(const NcFile& ncfile, const std::string& attname) {
+
+  int n=ncfile.num_atts();
+  NcAtt* att;
+ 
+  for (int i=0; i<n; i++) {
+    att=ncfile.get_att(i);
+    string name(att->name());
+    if (name==attname) return true;
+  }
+
+  cerr << "NetCDF file does not contain attribute \"" << attname << "\".\n";    
+  return false;
+}
+
+/** Checks whether an attribute with name attname exists in variable
+  @param var  Pointer to netcdf variable
+  @param attname Attribute name as C++ string
+*/
+
+bool gnc_is_att(const NcVar*  var, const std::string& attname) {
+
+  int n=var->num_atts();
+  NcAtt* att;
+ 
+  for (int i=0; i<n; i++) {
+    att=var->get_att(i);
+    string name(att->name());
+    if (name==attname) return true;
+  }
+
+  cerr << "Variable \"" << var->name() << "\" does not contain attribute \"" << attname << "\".\n";    
+  return false;
+}
+
+
+bool check_var(NcFile& ncfile, std::string varname,int len) {
+
+  if (!gnc_is_var(ncfile,varname)) return false;
+  
+  NcVar* var=ncfile.get_var(varname.c_str());
+  NcDim* dim;
+  
+  int n=var->num_dims();
+  int s=1;
+  for (int i=0; i<n; i++) {
+    dim=var->get_dim(i);
+    if (dim->size()==len) return true;
+    s*=dim->size();
+  }
+  if (s==len) return true;
+
+  cerr << "None of the dimensions of variable \"" << varname << "\" is of requested length " << len << ".\n";    
+  return false;
+}
 
 #endif
