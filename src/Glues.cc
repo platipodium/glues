@@ -313,7 +313,6 @@ double simulation() {
 
   for (t=0; t<tmax; t++) {
 
-
       mean_pastclimate_npp=0; mean_region_npp=0; mean_futureclimate_npp=0;
       mean_sahara_npp=0;
     /*
@@ -353,7 +352,21 @@ double simulation() {
 
     double numberOfSaharanRegions=0;
 
-    /**
+ 
+ /** Add a new time record to netdf file */
+ #ifdef HAVE_NETCDF_H
+
+	if (ncout.is_valid()) { 
+      NcVar* var=ncout.get_var("time");
+      double time[1];
+      time[0]=t*ts;
+      var->put_rec(time,t);
+	}
+    
+#endif
+
+ 
+   /**
        Iterate over all regions
     */
     for (i=0; i<numberOfRegions; i++) {
@@ -508,13 +521,8 @@ double simulation() {
 #ifdef HAVE_NETCDF_H
 
 	if (ncout.is_valid()) { 
-	  /*float * frecord = new float[numberOfRegions];
-	  for (unsigned int i=0; i< numberOfRegions; i++) frecord[i]=populations[i].Technology();
-	  glues::GNetcdf::put_var_rec(ncid,"technology",&frecord);
-	  for (unsigned int i=0; i< numberOfRegions; i++) frecord[i]=populations[i].Density();
-	  glues::GNetcdf::put_var_rec(ncid,"population_density",&frecord);
-	*/
-	  /** append record of all variables */
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Technology();
+	  gnc_write_record(ncout,"technology",&float_record);
 	}
     
 #endif

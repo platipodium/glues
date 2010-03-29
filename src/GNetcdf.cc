@@ -229,14 +229,37 @@ int gnc_write_record(NcFile& ncfile, const std::string& varname, float** data, c
   if (!gnc_is_var(ncfile,varname)) return 1;
   
   NcVar* var;
+  NcDim* dim;
   var=ncfile.get_var(varname.c_str());
   int ndim=var->num_dims();
   int *ndims = new int[ndim];
-  for (int i=0; i<ndim; i++) ndims[i]=var->get_dim(i)->size();
-  
-  if (irecord>=0) var->put_rec(*data,irecord);
-  else var->put(*data,ndims[0]);
-
+  int udimid = -1;
+  for (int i=0; i<ndim; i++) {
+    dim=var->get_dim(i);
+    if (dim->is_unlimited()) udimid=i;
+    ndims[i]=dim->size();
+  }
+  int *rdims = new int[ndim];
+  for (int i=0,j=0; i<ndim; i++) {
+    if (udimid == i) continue;
+    rdims[j]=ndims[i];
+  }
+  if (udimid>-1) ndim=ndim-1;
+ 
+  if (irecord>=0) {
+// TODO: for more dimensions
+    switch(ndim) {
+      case (0): var->put_rec(*data,irecord); break;
+      default: cerr << "Not implemented yet in GNetcdf.cc ll 253" << endl; return 1;
+    }
+  }
+  else switch(ndim) {
+    case (1): var->put(*data,ndims[0]); break;
+    case (2): var->put(*data,ndims[0],ndims[1]); break;
+    case (3): var->put(*data,ndims[0],ndims[1],ndims[2]); break;
+    case (4): var->put(*data,ndims[0],ndims[1],ndims[2],ndims[3]); break;
+  }
+ 
   time_t today;
   std::time(&today);
   string s1(asctime(gmtime(&today)));
