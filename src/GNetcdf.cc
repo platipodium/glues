@@ -184,7 +184,7 @@ int gnc_write_header(NcFile& ncfile, int nreg) {
   @param data    Pointer to data
   @param irecord index of record to put the data in
 */
-int gnc_write_record(NcFile& ncfile, const std::string& varname, const int** data, const int irecord) {
+int gnc_write_record(NcFile& ncfile, const std::string& varname, int** data, const int irecord) {
 
   if (!ncfile.is_valid()) {
     cerr << "Could not open NetCDF file for appending." << endl;
@@ -196,7 +196,46 @@ int gnc_write_record(NcFile& ncfile, const std::string& varname, const int** dat
   
   NcVar* var;
   var=ncfile.get_var(varname.c_str());
-  var->put_rec(*data,irecord);
+  int ndim=var->num_dims();
+  
+  if (irecord>=0) var->put_rec(*data,irecord);
+  else var->put(*data);
+
+  time_t today;
+  std::time(&today);
+  string s1(asctime(gmtime(&today)));
+  string timestring=s1.substr(0,s1.find_first_of("\n"));
+
+  var->add_att("date_of_modification",timestring.c_str());
+
+  return 0;
+}
+
+
+/** Adds a record's worth of data to the netcdf file
+  @param ncfile  Reference to netcdf file
+  @param varname Variable name as C++ string
+  @param data    Pointer to data
+  @param irecord index of record to put the data in
+*/
+int gnc_write_record(NcFile& ncfile, const std::string& varname, float** data, const int irecord) {
+
+  if (!ncfile.is_valid()) {
+    cerr << "Could not open NetCDF file for appending." << endl;
+    return 1;
+  }
+  
+
+  if (!gnc_is_var(ncfile,varname)) return 1;
+  
+  NcVar* var;
+  var=ncfile.get_var(varname.c_str());
+  int ndim=var->num_dims();
+  int *ndims = new int[ndim];
+  for (int i=0; i<ndim; i++) ndims[i]=var->get_dim(i)->size();
+  
+  if (irecord>=0) var->put_rec(*data,irecord);
+  else var->put(*data,ndims[0]);
 
   time_t today;
   std::time(&today);

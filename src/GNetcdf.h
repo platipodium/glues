@@ -45,7 +45,8 @@ bool gnc_is_att(const NcVar* , const std::string&);
 
 bool gnc_check_var(NcFile&, const std::string&, const int);
 
-int gnc_write_record(NcFile&, const std::string&, const int**, const int);
+int gnc_write_record(NcFile&, const std::string&, int**, const int irecord=-1);
+int gnc_write_record(NcFile&, const std::string&, float**, const int irecord=-1);
 
 #endif
 

@@ -48,9 +48,7 @@
 #include "netcdfcpp.h"
 #endif
 
-
 unsigned int numberOfRegions=0;
-
 
 /* Prototypes */
 
@@ -64,7 +62,6 @@ void dump_events();
 /**
   Main program incl. pre- & postprocessing
 */
-
 int main(int argc, char* argv[])
 {
 
@@ -295,6 +292,24 @@ double simulation() {
 
   double mean_pastclimate_npp=0, mean_region_npp=0;
   double mean_futureclimate_npp=0, mean_sahara_npp=0;
+  
+  
+  /** Write the record for all non time-dependent variables */
+  float * float_record = new float[numberOfRegions];
+  int   *   int_record = new   int[numberOfRegions];
+  for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=populations[i].Region()->Longitude();
+  gnc_write_record(ncout,"longitude",&float_record);
+  for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=populations[i].Region()->Latitude();
+  gnc_write_record(ncout,"latitude",&float_record);
+  for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=populations[i].Region()->Id();
+  gnc_write_record(ncout,"region",&float_record);
+  for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=0;
+  gnc_write_record(ncout,"technology_index_init",&float_record);
+  for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=0;
+  gnc_write_record(ncout,"farming_index_init",&float_record);
+  for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=0;
+  gnc_write_record(ncout,"economies_index_init",&float_record);
+  
 
   for (t=0; t<tmax; t++) {
 
