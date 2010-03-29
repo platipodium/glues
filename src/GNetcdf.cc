@@ -50,10 +50,14 @@ int gnc_write_header(NcFile& ncfile, int nreg) {
   ncfile.add_att("principal_investigator","Carsten Lemmen");
   ncfile.add_att("email","carsten.lemmen@gkss.de");
   ncfile.add_att("institution","GKSS-Forschungszentrum Geesthacht GmbH");
-  ncfile.add_att("source","GLUES 1.1.9 model");
-  ncfile.add_att("comment","");
+  ncfile.add_att("funding_source","Deutsche Forschungsgemeinschaft");
+  ncfile.add_att("funding_scheme","Priority program SPP 1266");
+  ncfile.add_att("funding_scheme_name","Interdynamik");
+  ncfile.add_att("funding_project","GLUES-QUICC");
+  ncfile.add_att("source","model");
   ncfile.add_att("references","Wirtz & Lemmen (2003), Lemmen (2009)");
   ncfile.add_att("model_name","GLUES");
+  ncfile.add_att("model_version","1.1.9");
   ncfile.add_att("date_of_creation",timestring.c_str());
    
   NcDim *regdim, *timedim;
@@ -68,6 +72,7 @@ int gnc_write_header(NcFile& ncfile, int nreg) {
   var->add_att("units","years since 01-01-01");
   var->add_att("calendar","360_day");
   var->add_att("coordinates","time");
+  var->add_att("comment","No adjustement has been made for the shift of the calendar away from present day");
   var->add_att("date_of_creation",timestring.c_str());
 
   if (!(var = ncfile.add_var("region", ncInt, regdim))) return 1;
@@ -97,6 +102,13 @@ int gnc_write_header(NcFile& ncfile, int nreg) {
   var->add_att("coordinates","lon lat");
   var->add_att("date_of_creation",timestring.c_str());
     
+  var = ncfile.add_var("area",ncFloat, regdim);
+  var->add_att("units","km^{2}");
+  var->add_att("long_name","area");
+  var->add_att("description","Area of region");
+  var->add_att("coordinates","lon lat");
+  var->add_att("date_of_creation",timestring.c_str());
+    
   var = ncfile.add_var("technology_init",ncFloat,regdim);
   var->add_att("long_name","technology_index_initialization");
   var->add_att("units","1");
@@ -120,6 +132,14 @@ int gnc_write_header(NcFile& ncfile, int nreg) {
   var->add_att("valid_min",0.0);
   var->add_att("description","Initial value for number of diverse economic strategies");
   var->add_att("coordinates","lon lat");
+  var->add_att("date_of_creation",timestring.c_str());
+
+  var = ncfile.add_var("population_density_init",ncFloat, regdim);
+  var->add_att("units","km-2");
+  var->add_att("valid_min",0.0);
+  var->add_att("long_name","population_density_init");
+  var->add_att("description","Initial value for density of population");
+  var->add_att("coordinates","time lon lat");  
   var->add_att("date_of_creation",timestring.c_str());
 
 /** Time-dependent variables */
@@ -148,21 +168,11 @@ int gnc_write_header(NcFile& ncfile, int nreg) {
   var->add_att("coordinates","time lon lat");
   var->add_att("date_of_creation",timestring.c_str());
 
-  var = ncfile.add_var("population_density",ncFloat,timedim,regdim);
-  var->add_att("units","km^-2");
-  var->add_att("long_name","population_density");
-  var->add_att("description","Population density");
+  var = ncfile.add_var("economies_potential",ncFloat,timedim,regdim);
+  var->add_att("long_name","potential_for_economies");
+  var->add_att("units","1");
   var->add_att("valid_min",0.0);
-  var->add_att("coordinates","time lon lat");
-  var->add_att("date_of_creation",timestring.c_str());
-
-  var = ncfile.add_var("gdd",ncFloat, timedim,regdim);
-  var->add_att("units","d");
-  var->add_att("long_name","growing degree days above zero");
-  var->add_att("valid_min",0.0);
-  var->add_att("valid_max",366.0);
-  var->add_att("reference_value",0);
-  var->add_att("description","");
+  var->add_att("description","Maximum potential of diverse economic strategies");
   var->add_att("coordinates","time lon lat");
   var->add_att("date_of_creation",timestring.c_str());
   
@@ -173,7 +183,51 @@ int gnc_write_header(NcFile& ncfile, int nreg) {
   var->add_att("description","Net primary production");
   var->add_att("coordinates","time lon lat");  
   var->add_att("date_of_creation",timestring.c_str());
-         
+
+  var = ncfile.add_var("population_size",ncFloat, timedim, regdim);
+  var->add_att("units","1");
+  var->add_att("valid_min",0.0);
+  var->add_att("long_name","population_size");
+  var->add_att("description","Size of population (individuals)");
+  var->add_att("coordinates","time lon lat");  
+  var->add_att("date_of_creation",timestring.c_str());
+ 
+  var = ncfile.add_var("population_density",ncFloat, timedim, regdim);
+  var->add_att("units","km-2");
+  var->add_att("valid_min",0.0);
+  var->add_att("long_name","population_density");
+  var->add_att("description","Density of population");
+  var->add_att("coordinates","time lon lat");  
+  var->add_att("date_of_creation",timestring.c_str());
+
+  var = ncfile.add_var("relative_growth_rate",ncFloat, timedim, regdim);
+  var->add_att("units","a-1");
+  var->add_att("long_name","relative_growth_rate");
+  var->add_att("description","Relative change of population density");
+  var->add_att("coordinates","time lon lat");  
+  var->add_att("date_of_creation",timestring.c_str());
+
+  var = ncfile.add_var("temperature_limitation",ncFloat, timedim, regdim);
+  var->add_att("units","1");
+  var->add_att("long_name","temperature_limitation");
+  var->add_att("description","Limitation of habitability by temperature");
+  var->add_att("coordinates","time lon lat");  
+  var->add_att("date_of_creation",timestring.c_str());
+
+  var = ncfile.add_var("actual_fertility",ncFloat, timedim, regdim);
+  var->add_att("units","unknown");
+  var->add_att("long_name","actual_fertility");
+  var->add_att("description","Fertility resulting from natural and anthropogenic effects");
+  var->add_att("coordinates","time lon lat");  
+  var->add_att("date_of_creation",timestring.c_str());
+
+  var = ncfile.add_var("natural_fertility",ncFloat, timedim, regdim);
+  var->add_att("units","unknown");
+  var->add_att("long_name","natural_fertility");
+  var->add_att("description","Fertility based on background climate");
+  var->add_att("coordinates","time lon lat");  
+  var->add_att("date_of_creation",timestring.c_str());
+ 
   return 0;
 }
 

@@ -304,11 +304,13 @@ double simulation() {
   for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=populations[i].Region()->Id();
   gnc_write_record(ncout,"region",&float_record);
   for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=0;
-  gnc_write_record(ncout,"technology_index_init",&float_record);
+  gnc_write_record(ncout,"technology_init",&float_record);
   for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=0;
-  gnc_write_record(ncout,"farming_index_init",&float_record);
+  gnc_write_record(ncout,"farming_init",&float_record);
   for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=0;
-  gnc_write_record(ncout,"economies_index_init",&float_record);
+  gnc_write_record(ncout,"economies_init",&float_record);
+  for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=0;
+  gnc_write_record(ncout,"population_density_init",&float_record);
   for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=populations[i].Region()->Area();
   gnc_write_record(ncout,"area",&float_record);
   for (unsigned int i=0; i<numberOfRegions; i++) int_record[i]=populations[i].Region()->Sahara();
@@ -365,7 +367,7 @@ double simulation() {
 	if (ncout.is_valid()) { 
       NcVar* var=ncout.get_var("time");
       double time[1];
-      time[0]=t*ts;
+      time[0]=t*ts+TimeStart;
       var->put_rec(time,t);
 	}
     
@@ -547,6 +549,8 @@ double simulation() {
 	  gnc_write_record(ncout,"actual_fertility",&float_record,t);
 	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].NatFert();
 	  gnc_write_record(ncout,"natural_fertility",&float_record,t);
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Region()->Npp();
+	  gnc_write_record(ncout,"npp",&float_record,t);
 	}
     
 #endif

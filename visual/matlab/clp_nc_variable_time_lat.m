@@ -1,13 +1,13 @@
-function clp_nc_variable(varargin)
+function clp_nc_variable_time_lat(varargin)
 
 arguments = {...
   {'latlim',[-60 80]},...
   {'lonlim',[-180 180]},...
-  {'timelim',[-9000,1960]},...
+  {'timelim',[-9500,-1000]},...
   {'lim',[-inf,inf]},...
   {'reg','all'},...
   {'discrete',0},...
-  {'vars','npp'},...
+  {'vars','actual_fertility'},...
   {'scale','absolute'},...
   {'figoffset',0},...
   {'timeunit','BP'},...
@@ -49,6 +49,7 @@ for varid=0:nvar-1
   if strcmp(varname,'lon') lon=netcdf.getVar(ncid,varid); end
   if strcmp(varname,'latitude') latit=netcdf.getVar(ncid,varid); end
   if strcmp(varname,'longitude') lonit=netcdf.getVar(ncid,varid); end
+  if strcmp(varname,'area') area=netcdf.getVar(ncid,varid); end
 end
 
 if exist('lat','var') 
@@ -99,112 +100,114 @@ end
 
 netcdf.close(ncid);
 
+if ~exist('area','var') area=ones(length(lat),1); end
+
+
 ireg=find(lat>=latlim(1) & lat<=latlim(2) & lon>=lonlim(1) & lon<=lonlim(2));
 nreg=length(ireg);
 region=region(ireg);
 lat=lat(ireg);
 lon=lon(ireg);
+area=area(ireg);
 
 switch (varname)
     case 'region_neighbour', data=(data==0) ;
     otherwise ;
 end
 
-minmax=double([min(min(min(data(ireg,:)))),max(max(max(data(ireg,:))))]);
-ilim=find(isfinite(lim));
-minmax(ilim)=lim(ilim);
-
-
-seacolor=0.7*ones(1,3);
-landcolor=0.8*ones(1,3);  
 cmap=colormap('hotcold');
 rlon=lon;
 rlat=lat;
 
-  % plot map
-  figure(varid); 
-  clf reset;
-  cmap=colormap('hotcold');
-  set(varid,'DoubleBuffer','on');    
-  set(varid,'PaperType','A4');
-  hold on;
-  pb=clp_basemap('lon',lonlim,'lat',latlim);
-  if (marble>0)
-    pm=clp_marble('lon',lonlim,'lat',latlim);
-    if pm>0 alpha(pm,marble); end
+
+%% interpolate data to lat-time
+latstep=3;
+latlim=[min(lat)-0.5 max(lat)+0.5];
+latgrid=linspace(latlim(1),latlim(2),floor((latlim(2)-latlim(1))/latstep));
+nlat=length(latgrid);
+gdata=zeros(nlat,ntime)+NaN;
+for i=1:nlat
+  ilat=find(lat>=latgrid(i)-latstep/2.0 & lat<latgrid(i)+latstep/2.0);
+  if isempty(lat) continue; end
+  %gdata(i,:)=mean(data(ireg(ilat),itime),1);   
+  areasum=sum(area(ilat));
+  gdata(i,:)=sum(data(ireg(ilat),itime).*repmat(area(ilat),1,ntime),1)/areasum;
   
-  else
-    m_coast('patch',landcolor);
-    % only needed for empty (non-marble background) to get rid of lakes
-    c=get(gca,'Children');
-    ipatch=find(strcmp(get(c(:),'Type'),'patch'));
-    npatch=length(ipatch);
-    if npatch>0
-      iwhite=find(sum(cell2mat(get(c(ipatch),'FaceColor')),2)==3);
-      if ~isempty(iwhite) set(c(ipatch(iwhite)),'FaceColor',seacolor);
-      end
-    end
-  
-  end
-
-ncol=length(colormap);
+end
 
 
-for itime=1:ntime
-  
-  resvar=round(((data(ireg,itime)-minmax(1)))./(minmax(2)-minmax(1))*(length(cmap)-1))+1;
-  resvar(resvar>length(cmap))=length(cmap);
+%% plot map
+figure(varid); 
+clf reset;
+cmap=colormap('hotcold');
+set(varid,'DoubleBuffer','on');    
+set(varid,'PaperType','A4');
+hold on;
 
-  if (discrete>0)
-    [b,i,j]=unique(resvar);
-    resvar=resvar(i);
-    rlat=lat(i);
-    rlon=lon(i);
-  end
+ncol=length(cmap);  
 
-  
+minmax=double([min(min(min(gdata))),max(max(max(gdata)))]);
+ilim=find(isfinite(lim));
+minmax(ilim)=lim(ilim);
+
+resvar=round(((gdata-minmax(1)))./(minmax(2)-minmax(1))*(length(cmap)-1))+1;
+resvar(resvar>length(cmap))=length(cmap);
+
  
-  titletext=description;
-  if (ntime>1) titletext=[titletext ' ' num2str(time(itime))]; end
-  ht=title(titletext,'interpreter','none');
-
-  if (itime>1) 
-    for i=1:ncol
-      if isfinite(p(i)) delete(p(i)); end
-    end
-  end
-  
+titletext=description;
+ht=title(titletext,'interpreter','none');
  
-  %m_plot(lon,lat,'rs','MarkerSize',0.1);
-  for i=1:ncol
-    if i==1 j=find(resvar<=1);
-    elseif i==ncol j=find(resvar>=ncol);
-    else j=find(resvar==i);
-    end
+
+contourf(time,latgrid,resvar)
+xlabel('Time (calendar year)');
+ylabel('Latitude');
+
+
+cb=colorbar;
+if length(units)>0 
+  switch (units)
+        case 'unknown', units='A.U.';
+        case '1', units='A.U.';
+        otherwise ; 
+  end
+  title(cb,units); 
+end
+
+%set(gcf,'Position',[271   233   860   451])    
+obj=findall(gcf,'-property','FontSize');
+set(obj,'FontSize',16);
+
+yt=get(cb,'YTick');
+yr=minmax(2)-minmax(1);
+ytl=scale_precision(yt/ncol*yr+minmax(1),3)';
+set(cb,'YTickLabel',num2str(ytl));
+
+xt=get(gca,'XTick');
+i0=find(xt==0);
+if ~isempty(i0)
+  xtl=get(gca,'XTickLabel');
+  len=length(xtl(i0,:));
+  xtl(i0,1:len)=' ';
+  if len<4 xtl(i0,1)='1';
+  else xtl(i0,1:4)='1 AD';
+  end
+  set(gca,'XTickLabel',xtl);
+end
     
-    if isempty(j) p(i)=NaN; continue; end
-    p(i)=m_plot(rlon(j),rlat(j),'rs','MarkerSize',0.1,'Color',cmap(i,:));  
-  end
-
-  if (itime==1)
-    cb=colorbar;
-    if length(units)>0 title(cb,units); end
-    yt=get(cb,'YTick');
-    yr=minmax(2)-minmax(1);
-    ytl=scale_precision(yt*yr+minmax(1),3)';
-    set(cb,'YTickLabel',num2str(ytl));
-  
+    
+    
     set(gcf,'UserData',cl_get_version);
  
+    %% write map to file
+    
     fdir=fullfile(d.plot,'variable',varname);
     if ~exist('fdir','dir') system(['mkdir -p ' fdir]); end
-  end
   
-  bname=[varname '_' num2str(nreg)];
+  bname=[varname '_time_lat_' num2str(nreg)];
   
-  if (ntime>1) bname = [bname '_' num2str(time(itime))]; end
+  
   plot_multi_format(gcf,fullfile(fdir,bname));
-end
+
 end
 
 
