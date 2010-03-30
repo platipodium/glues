@@ -330,7 +330,8 @@ AC_CONFIG_FILES([Makefile
   visual/matlab/lib/Makefile visual/matlab/data/Makefile 
   visual/matlab/doc/Makefile
   visual/gnuplot/Makefile visual/plots/Makefile
-  variation/Makefile doc/Makefile
+  variation/Makefile 
+  doc/Makefile doc/pangaea/Makefile
 ])
 
 if test $LOCALSISI = 1 ; then
