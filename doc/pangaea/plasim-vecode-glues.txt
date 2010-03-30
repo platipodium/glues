@@ -1,9 +1,36 @@
-Citation:	
-Jacobs, Joachim; Weber, Klaus; Zarske, Gerd; Kreutzer, Stefan; Spaeth, Gerhard (2004): Geological map of FURUBOTNABBEN, Heimefrontfjella, Antarctica (Scale 1:25,000). Alfred-Wegener-Institut für Polar- und Meeresforschung, Bremerhaven; Institut for Geologie und Dynamik der Lithosphäre, Göttingen; Bundesamt für Kartographie und Geodäsie, Frankfurt, doi:10.1594/PANGAEA.138779
-Abstract:	
-Topographic data of this geological map were obtained through stereoscopic aerial photo interpretation. The photogrammetric photo flights were undertaken in 1986 by the Institut für Angewandte Geodäsie, Frankfurt. Horizontal ground control points required for aerial photo interpretation were determined by means of Doppler satellite observation during the 2nd German Neuschwabenland Expedition 1985/86. Vertical ground control points were taken from unpublished map drafts at 1:100 000 scale by Norsk Polarinstitutt, Oslo. The elevation above mean sea level was transferred to Heimefrontfjella barometrically. For this reason assertions concerning the absolute elevation (referred to sea level) are uncertain. Contours and spot heights presented on the map were obtained from the photogrammetric evaluation of the photography taken in 1986; relative elevation data (hight differences) are accurate to approximately ±10 m.
-Coverage:	
-West: -11.7000 * East: -11.2500 * South: -74.6000 * North: -74.5000
-Minimum ORDINAL NUMBER: 1 * Maximum ORDINAL NUMBER: 3
-Event(s):	
-FURUBOTNABBEN * * Latitude: -74.5000 * Longitude: -11.7000 * Latitude 2: -74.6000 * Longitude 2: -11.2500 * Location: Heimefrontfjella, Antarctica * * Device: Geological mapping *
+Citation: 
+
+Lemmen, Carsten; Wirtz, Kai Wenzel; Haberkorn, Kerstin (2010):  Global population density,
+subsistence style, and technological progress on a 1° x 1° grid between 9000 BC and 1000 BC.
+
+Institut für Küstenforschung, GKSS-Forschungszentrum Geesthacht GmbH, Geesthacht; Institut für 
+Meteorologie, Universität Hamburg, Hamburg, doi:
+
+Abstract: 
+
+Topographic
+data of this geological map were obtained through stereoscopic aerial
+photo interpretation. The photogrammetric photo flights were undertaken
+in 1986 by the Institut für Angewandte Geodäsie, Frankfurt. Horizontal
+ground control points required for aerial photo interpretation were
+determined by means of Doppler satellite observation during the 2nd
+German Neuschwabenland Expedition 1985/86. Vertical ground control
+points were taken from unpublished map drafts at 1:100 000 scale by
+Norsk Polarinstitutt, Oslo. The elevation above mean sea level was
+transferred to Heimefrontfjella barometrically. For this reason
+assertions concerning the absolute elevation (referred to sea level) are
+uncertain. Contours and spot heights presented on the map were obtained
+from the photogrammetric evaluation of the photography taken in 1986;
+relative elevation data (hight differences) are accurate to
+approximately ±10 m. 
+
+Coverage: 
+West: -180 East: 180 South: -60 North: 80
+Minimum ORDINAL NUMBER: ??? Maximum ORDINAL NUMBER: ??? 
+
+Event(s): ???
+
+Latitude:   -60 Longitude -180
+Latitude 2: -75 Longitude 2: -11.2500 * 
+Location: Global
+Device: Model
