@@ -1,15 +1,30 @@
-/************************************************************************
- *									
- * @file  GlobalClimate.h
- * @brief Declaration of class GlobalClimate
- * @author Carsten Lemmen <c.lemmen@fz-juelich.de>
- * @author Kai Wirtz <wirtz@icbm.de>
- * @date 2003-05-21
- * 
- * This file is part of GLUES, the Global Land Use 
- * and Environmental Change Simulator					 
- *									
- ************************************************************************/
+/* GLUES GlobalClimate implementation; this file is part of
+   the Global Land Use and technological Evolution Simulator
+   
+   Copyright (C) 2008,2009,2010
+   Carsten Lemmen <carsten.lemmen@gkss.de>, Kai Wirtz <kai.wirtz@gkss.de>
+   
+   This program is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the
+   Free Software Foundation; either version 2, or (at your option) any later
+   version.
+
+   This program is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+   Public License for more details.
+
+   You should have received a copy of the GNU General Public License along
+   with this program; if not, write to the Free Software Foundation, Inc.,
+   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
+*/
+/**
+   @author Carsten Lemmen <carsten.lemmen@gkss.de>
+   @author Kai Wirtz <kai.wirtz@gkss.de>
+   @date   2010-03-30
+   @file   GlobalClimate.h
+   @brief  Input and update of climate data
+*/
 
 #ifndef global_climate_h
 #define global_climate_h
@@ -29,6 +44,7 @@ extern PopulatedRegion* regions;
 class GlobalClimate {
  protected:
   double timestamp;
+  double * timeaxis;
   glues::RegionalClimate* climate;
  
   int *map;
