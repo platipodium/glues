@@ -836,12 +836,8 @@ int init_names() {
   cout << "  Output of results to \t" << resultstring << endl;
   cout << "  Region data from   \t" << regionstring << endl;
   cout << "  Neighbour data from \t" << regionstring << endl;
-  //cout << "  Mapping data from \t" << mappingstring << endl;
-  
-  for (unsigned int i=0;i<LengthOfClimUpdateTimes; i++)
-    cout << "  Climate data at "
-	 << ClimUpdateTimes[i] << " from \t" << climatestring << endl;
-
+  cout << "  Climate data from \t" << climatestring << endl;
+ 
   return 0;
 }
 

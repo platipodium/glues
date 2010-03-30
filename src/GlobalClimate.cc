@@ -1,7 +1,7 @@
 /* GLUES GlobalClimate implementation; this file is part of
    the Global Land Use and technological Evolution Simulator
    
-   Copyright (C) 2008,2009
+   Copyright (C) 2008,2009,2010
    Carsten Lemmen <carsten.lemmen@gkss.de>, Kai Wirtz <kai.wirtz@gkss.de>
    
    This program is free software; you can redistribute it and/or modify it
@@ -21,7 +21,7 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
    @author Kai Wirtz <kai.wirtz@gkss.de>
-   @date   2009-02-10
+   @date   2010-03-30
    @file   GlobalClimate.cc
    @brief  Input and update of climate data
 */
@@ -103,38 +103,21 @@ int GlobalClimate::InitRead(char* filename)
       for (j=0; j<ncol; j++) data[i][j]=0;
   }
 
-  num=nrow;
-  //cerr << "num=" << num << endl;
-
-  // Parameter ClimUpdateTimes from *.sce Timestep, NumberUpdates
-  if(ClimUpdateTimes[0]>0)
-    num_up=(int)((TimeEnd-TimeStart)/ClimUpdateTimes[0]);
-  else
-    num_up=1;
-
   unsigned long int joffset=0;
 
   if (nrow==numberOfRegions) {
       // New files with 1 line per region
       joffset = 2;
       method=1;
-      if (num_up==1)
+      num=ncol;
+      if (ncol==1)
 	  cout << "Using static climate" << endl;
-      else if (num_up != ncol-joffset) {
-	  cerr << "\nERROR: expected " << num_up << " from SISI configuration.";
-	  cerr << " but got " << ncol << " from climate file."  << endl;
-	  return 0;
-      }
   }
   else if (ncol==numberOfRegions) {
       // Old files with 1 line per climate
-      if (num_up==1)
+      num=nrow;
+      if (nrow==1)
 	  cout << "Using static climate" << endl;
-      else if (num_up !=nrow) {
-	  cerr << "\nERROR: expected " << num_up << " from SISI configuration.";
-	  cerr << " but got " << nrow << " from climate file."  << endl;
-	  return 0;
-      }
   }
   else {
       cerr << "\nERROR: number of rows (" << nrow << ") or columns (" << ncol ;
@@ -142,8 +125,6 @@ int GlobalClimate::InitRead(char* filename)
       return 0;
   }
   
-  num=num_up;
-
   if (npp_store == NULL) npp_store  =new double[numberOfRegions*num];
   if (gdd_store == NULL) gdd_store  =new double[numberOfRegions*num];
 
