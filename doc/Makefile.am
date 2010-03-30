@@ -1,3 +1,5 @@
+SUBDIRS=pangaea
+
 # Datei, die von Doxygen bearbeitet werden soll
 EXTRA_DIST = glues.doxygen 
 # Die zu reinigenden files

@@ -39,12 +39,14 @@ GlobalClimate::GlobalClimate(double time)
 {
   timestamp = time;
   climate = new glues::RegionalClimate[numberOfRegions];
+  timeaxis = NULL;
 //  map = new int[MAPENTRIES];
 //  for (unsigned int i=0; i<MAPENTRIES; i++) map[i]=-1;
 }
 
 GlobalClimate::~GlobalClimate() {
   if (climate) delete [] climate;
+  delete timeaxis;
   //if (map) delete [] map;
 }
 
@@ -56,16 +58,11 @@ GlobalClimate::~GlobalClimate() {
 int GlobalClimate::InitRead(char* filename) 
 {
   char *charoffset,gddname[299];
-  //char c;
-  //unsigned int regionid=0;
-  unsigned int num_up=0,num=0,method=0;
+  unsigned int num=0,method=0;
   long unsigned int nrow=0,ncol=0,i=0,j=0;
   double** data;
 
-  //static const unsigned int BUFSIZE=40024;
-  //static char charbuffer [BUFSIZE];
   ifstream ififsc,ifs;
-
 
   // Read the number of rows, make this stream a separate variable ifsr
   ifstream ifsr;
@@ -80,7 +77,6 @@ int GlobalClimate::InitRead(char* filename)
       cout << "\nERROR\tFile " << filename << " appears to have 0 rows" << endl;
       return 0;
   }
-
 
   // Read the number of columns, make separate stream variable
   std::ifstream ifsc;
@@ -200,18 +196,20 @@ int GlobalClimate::InitRead(char* filename)
   } 
   ifs.close();
 
-  /*for (unsigned int j=numberOfRegions-10; j<numberOfRegions; j++) {
-      cout << regions[j].Index() ;
-      for (unsigned int i=0; i<num; i++)
-	  fprintf(stdout," %f",gdd_store[j+numberOfRegions*i]);
-      cout << endl;
-      }*/
-
   std::cout << ", found " << nrow << " x " << ncol-joffset << " climates." << std::endl;
   if ( num < nrow ) {
       std::cout << "Warning: only " << num << " climates used (check ClimateUpdateTimes parameter)" << std::endl;
   }
 
+/** Establish time axis 
+// problem with static manner of this fucntion
+  timeaxis = new double[num];
+  for (int i=0; i<num; i++) {
+    timeaxis[i]=TimeStart+(i+0.5)*((TimeEnd-TimeStart)/num);
+    cout << timeaxis[i] << " ";
+  }
+  
+  cout << endl;*/
   return num;
 }
 
@@ -234,7 +232,6 @@ int GlobalClimate::Update(double t) {
     it=floor(t/ClimUpdateTimes[0]);
     if (it>=ClimUpdateTimes[1]) it=ClimUpdateTimes[1]-1;
     
-
     for (unsigned int r=0; r<numberOfRegions; r++) {
 	
 	climate[r].Lai(0);
@@ -272,7 +269,7 @@ int GlobalClimate::Update(double t) {
 	//   cout << "Update Climate for " << regions[r]<<endl;
   }
     
-    /// cout << "Update Climate[" << it << "] for year " << it*ClimUpdateTimes[0]<< endl;
+    cout << "Update Climate[" << it << "] for year " << it*ClimUpdateTimes[0] << " / " << t << endl;
     timestamp=it*ClimUpdateTimes[0];
     //timestamp=4*ClimUpdateTimes[0];
 //  cout << "SUCCESS\n";
