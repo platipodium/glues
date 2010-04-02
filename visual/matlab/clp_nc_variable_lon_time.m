@@ -1,4 +1,4 @@
-function clp_nc_variable_time_lat(varargin)
+function clp_nc_variable_lon_time(varargin)
 
 arguments = {...
   {'latlim',[-60 80]},...
@@ -7,7 +7,7 @@ arguments = {...
   {'lim',[-inf,inf]},...
   {'reg','all'},...
   {'discrete',0},...
-  {'vars','population_density'},...
+  {'vars','migration_density'},...
   {'scale','absolute'},...
   {'figoffset',0},...
   {'timeunit','BP'},...
@@ -17,8 +17,6 @@ arguments = {...
   {'landcolor',.8*ones(1,3)},...
   {'transparency',1},...
   {'snapyear',1000},...
-  {'mult',1},...
-  {'div',1},...
   {'movie',1},...
   {'showsites',0},...
   {'file','../../src/test.nc'}
@@ -86,24 +84,6 @@ end
 data=double(netcdf.getVar(ncid,varid));
 [varname,xtype,dimids,natt] = netcdf.inqVar(ncid,varid);
 
-
-if isnumeric(mult) data=data .* mult; 
-else
-  factor=double(netcdf.getVar(ncid,netcdf.inqVarId(ncid,mult)));    
-  data = data .* repmat(factor,size(data)./size(factor));
-end
-
-if isnumeric(div) data=data ./ div; 
-else
-  factor=double(netcdf.getVar(ncid,netcdf.inqVarId(ncid,div)));    
-  data = data ./ repmat(factor,size(data)./size(factor));
-end
-
-
-if strcmp(scale,'log')
-  data=log10(data);
-end
-
 % Find time dimension
 ntime=1;
 if numel(data)>length(data)
@@ -141,26 +121,19 @@ rlat=lat;
 
 
 %% interpolate data to lat-time
-latstep=3;
-latlim=[min(lat)-0.5 max(lat)+0.5];
-latgrid=linspace(latlim(1),latlim(2),floor((latlim(2)-latlim(1))/latstep));
-nlat=length(latgrid);
-gdata=zeros(nlat,ntime)+NaN;
-for i=1:nlat
-  ilat=find(lat>=latgrid(i)-latstep/2.0 & lat<latgrid(i)+latstep/2.0);
-  if isempty(lat) continue; end
-  %gdata(i,:)=mean(data(ireg(ilat),itime),1);   
-  areasum(i)=sum(area(ilat));
-  gdata(i,:)=sum(data(ireg(ilat),itime).*repmat(area(ilat),1,ntime),1)./areasum(i);
+lonstep=10;
+lonlim=[min(lon)-0.5 max(lon)+0.5];
+longrid=linspace(lonlim(1),lonlim(2),floor((lonlim(2)-lonlim(1))/lonstep));
+nlon=length(longrid);
+gdata=zeros(nlon,ntime)+NaN;
+for i=1:nlon
+  ilon=find(lon>=longrid(i)-lonstep/2.0 & lon<longrid(i)+lonstep/2.0);
+  if isempty(lon) continue; end
+  %gdata(i,:)=mean(data(ireg(ilon),itime),1);   
+  areasum=sum(area(ilon));
+  gdata(i,:)=sum(data(ireg(ilon),itime).*repmat(area(ilon),1,ntime),1)/areasum;
   
 end
-
-
-area=repmat(areasum',1,ntime);
-
-%% Build histograms
-latsum=sum(gdata.*area,2);
-timesum=sum(gdata.*area,1);
 
 
 %% plot map
@@ -185,9 +158,9 @@ titletext=description;
 ht=title(titletext,'interpreter','none');
  
 
-contourf(time,latgrid,resvar)
-xlabel('Time (calendar year)');
-ylabel('Latitude');
+contourf(longrid,time,resvar')
+ylabel('Time (calendar year)');
+xlabel('lonitude');
 
 
 cb=colorbar;
@@ -209,16 +182,16 @@ yr=minmax(2)-minmax(1);
 ytl=scale_precision(yt/ncol*yr+minmax(1),3)';
 set(cb,'YTickLabel',num2str(ytl));
 
-xt=get(gca,'XTick');
-i0=find(xt==0);
+yt=get(gca,'YTick');
+i0=find(yt==0);
 if ~isempty(i0)
-  xtl=get(gca,'XTickLabel');
-  len=length(xtl(i0,:));
-  xtl(i0,1:len)=' ';
-  if len<4 xtl(i0,1)='1';
-  else xtl(i0,1:4)='1 AD';
+  ytl=get(gca,'YTickLabel');
+  len=length(ytl(i0,:));
+  ytl(i0,1:len)=' ';
+  if len<4 ytl(i0,1)='1';
+  else ytl(i0,1:4)='1 AD';
   end
-  set(gca,'XTickLabel',xtl);
+  set(gca,'YTickLabel',ytl);
 end
     
     
@@ -230,10 +203,7 @@ end
     fdir=fullfile(d.plot,'variable',varname);
     if ~exist('fdir','dir') system(['mkdir -p ' fdir]); end
   
-  bname=[varname '_time_lat_' num2str(nreg)];
-  
-  
-  b=axes('color','none');
+  bname=[varname '_lon_time_' num2str(nreg)];
   
   
   plot_multi_format(gcf,fullfile(fdir,bname));

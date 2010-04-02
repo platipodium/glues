@@ -46,8 +46,8 @@ if strcmp(drawmode,'optimal')
 end
 
 % TODO remove correction in lat/lon
-regionpath(:,:,1)=regionpath(:,:,1);
-regionpath(:,:,2)=regionpath(:,:,2);
+regionpath(:,:,1)=regionpath(:,:,1)+0.5;
+regionpath(:,:,2)=regionpath(:,:,2)+1;
 
 % Adjust to different orientations in regionpath file. generally, lat
 % should be decreasing and lon should be increasing

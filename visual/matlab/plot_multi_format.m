@@ -8,7 +8,7 @@ cl_register_function();
     catch end;
     try
     set(plot,'PaperPositionMode','auto');
-    %print('-dpdf','-painters',[basename '.pdf']); % -r600
+    print('-dpdf','-painters',[basename '.pdf']); % -r600
     catch end;
     try
     set(plot,'PaperPositionMode','auto');
@@ -19,7 +19,7 @@ cl_register_function();
     %print('-dpsc2','-painters','-r150',[basename '.ps']); % -r600
     catch end;
     try 
-     print('-dpng','-r300',[basename '.png']);
+    % print('-dpng','-r300',[basename '.png']);
     catch end;
     try 
     %print('-djpeg','-r600',[basename '.jpeg']);

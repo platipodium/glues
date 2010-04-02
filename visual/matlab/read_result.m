@@ -65,6 +65,7 @@ if tnum~=nstep
   else
     fprintf('Warning, unexpected number of time steps (%d)\n',tnum);
     nstep=tnum;
+    tstep=(tend-tstart)/tnum;
     tend=tstart+tstep*(tnum-1);
   end
 end
