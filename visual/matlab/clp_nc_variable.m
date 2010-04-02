@@ -7,17 +7,19 @@ arguments = {...
   {'lim',[-inf,inf]},...
   {'reg','all'},...
   {'discrete',0},...
-  {'vars','npp'},...
+  {'variables','npp'},...
   {'scale','absolute'},...
   {'figoffset',0},...
   {'timeunit','BP'},...
-  {'timestep',100},...
+  {'timestep',20},...
   {'marble',0},...
   {'seacolor',0.7*ones(1,3)},...
   {'landcolor',.8*ones(1,3)},...
   {'transparency',1},...
   {'snapyear',1000},...
   {'movie',1},...
+  {'mult',1},...
+  {'div',1},...
   {'showsites',0},...
   {'file','../../src/test.nc'}
 };
@@ -31,7 +33,7 @@ for i=1:a.length eval([a.name{i} '=' clp_valuestring(a.value{i}) ';']); end
 
 % Choose 'emea' or 'China' or 'World'
 %[regs,nreg,lonlim,latlim]=find_region_numbers(reg);
-[regs,nreg,~,~]=find_region_numbers(reg);
+[ireg,nreg,~,~]=find_region_numbers(reg);
 
 
 if ~exist(file,'file')
@@ -68,7 +70,7 @@ else
 end
 
 
-varname=vars; varid=netcdf.inqVarId(ncid,varname);
+varname=variables; varid=netcdf.inqVarId(ncid,varname);
 try
     description=netcdf.getAtt(ncid,varid,'description');
 catch
@@ -83,6 +85,19 @@ end
 data=double(netcdf.getVar(ncid,varid));
 [varname,xtype,dimids,natt] = netcdf.inqVar(ncid,varid);
 
+if isnumeric(mult) data=data .* mult; 
+else
+  factor=double(netcdf.getVar(ncid,netcdf.inqVarId(ncid,mult)));    
+  data = data .* repmat(factor,size(data)./size(factor));
+end
+
+if isnumeric(div) data=data ./ div; 
+else
+  factor=double(netcdf.getVar(ncid,netcdf.inqVarId(ncid,div)));    
+  data = data ./ repmat(factor,size(data)./size(factor));
+end
+
+
 % Find time dimension
 ntime=1;
 if numel(data)>length(data)
@@ -93,14 +108,16 @@ if numel(data)>length(data)
   if isempty(itime)
       error('Not data in specified time range')
   end
+  itime=itime([1:timestep:length(itime)]);
+  
   time=time(itime);
   ntime=length(time);
 end
 
 netcdf.close(ncid);
 
-ireg=find(lat>=latlim(1) & lat<=latlim(2) & lon>=lonlim(1) & lon<=lonlim(2));
-nreg=length(ireg);
+%ireg=find(lat>=latlim(1) & lat<=latlim(2) & lon>=lonlim(1) & lon<=lonlim(2));
+%nreg=length(ireg);
 region=region(ireg);
 lat=lat(ireg);
 lon=lon(ireg);
@@ -110,21 +127,21 @@ switch (varname)
     otherwise ;
 end
 
-minmax=double([min(min(min(data(ireg,:)))),max(max(max(data(ireg,:))))]);
+minmax=double([min(min(min(data(ireg,itime)))),max(max(max(data(ireg,itime))))]);
 ilim=find(isfinite(lim));
 minmax(ilim)=lim(ilim);
 
 
 seacolor=0.7*ones(1,3);
 landcolor=0.8*ones(1,3);  
-cmap=colormap('hotcold');
+cmap=colormap(jet(19));
 rlon=lon;
 rlat=lat;
 
   % plot map
   figure(varid); 
   clf reset;
-  cmap=colormap('hotcold');
+  cmap=colormap(jet(19));
   set(varid,'DoubleBuffer','on');    
   set(varid,'PaperType','A4');
   hold on;
@@ -150,9 +167,20 @@ rlat=lat;
 ncol=length(colormap);
 
 
-for itime=1:ntime
+
+  %% Invisible plotting of all regions
+  hp=clp_regionpath('lat',latlim,'lon',lonlim,'draw','patch','col',landcolor,'reg',reg);  
+  ival=find(hp>0);
+  %alpha(hp(ival),0);
   
-  resvar=round(((data(ireg,itime)-minmax(1)))./(minmax(2)-minmax(1))*(length(cmap)-1))+1;
+
+
+
+%% Time loop
+
+for it=1:ntime
+  
+  resvar=round(((data(ireg,itime(it))-minmax(1)))./(minmax(2)-minmax(1))*(length(cmap)-1))+1;
   resvar(resvar>length(cmap))=length(cmap);
 
   if (discrete>0)
@@ -161,19 +189,11 @@ for itime=1:ntime
     rlat=lat(i);
     rlon=lon(i);
   end
-
   
- 
   titletext=description;
-  if (ntime>1) titletext=[titletext ' ' num2str(time(itime))]; end
+  if (ntime>1) titletext=[titletext ' ' num2str(time(it))]; end
   ht=title(titletext,'interpreter','none');
 
-  if (itime>1) 
-    for i=1:ncol
-      if isfinite(p(i)) delete(p(i)); end
-    end
-  end
-  
  
   %m_plot(lon,lat,'rs','MarkerSize',0.1);
   for i=1:ncol
@@ -182,11 +202,17 @@ for itime=1:ntime
     else j=find(resvar==i);
     end
     
-    if isempty(j) p(i)=NaN; continue; end
-    p(i)=m_plot(rlon(j),rlat(j),'rs','MarkerSize',0.1,'Color',cmap(i,:));  
+    if isempty(j) continue; end
+    for ij=1:length(j)
+      h=hp(j(ij));
+      if isnan(h) continue; end
+      greyval=0.15+0.35*sqrt(i./ncol);
+      %alpha(h,greyval);
+      set(h,'FaceColor',cmap(i,:));
+    end
   end
 
-  if (itime==1)
+  if (it==1)
     cb=colorbar;
     if length(units)>0 title(cb,units); end
     yt=get(cb,'YTick');
@@ -202,8 +228,9 @@ for itime=1:ntime
   
   bname=[varname '_' num2str(nreg)];
   
-  if (ntime>1) bname = [bname '_' num2str(time(itime))]; end
-  plot_multi_format(gcf,fullfile(fdir,bname));
+  if (ntime>1) bname = [bname '_' num2str(time(it))]; end
+  %plot_multi_format(gcf,fullfile(fdir,bname));
+  pause(0.05);
 end
 end
 

@@ -551,6 +551,8 @@ double simulation() {
 	  gnc_write_record(ncout,"natural_fertility",&float_record,t);
 	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Region()->Npp();
 	  gnc_write_record(ncout,"npp",&float_record,t);
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprdm[i];
+	  gnc_write_record(ncout,"migration_density",&float_record,t);
 	}
     
 #endif

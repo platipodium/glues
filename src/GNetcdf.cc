@@ -228,6 +228,13 @@ int gnc_write_header(NcFile& ncfile, int nreg) {
   var->add_att("coordinates","time lon lat");  
   var->add_att("date_of_creation",timestring.c_str());
  
+  var = ncfile.add_var("migration_density",ncFloat, timedim, regdim);
+  var->add_att("units","km^{-2} a^{-1}");
+  var->add_att("long_name","migration_density");
+  var->add_att("description","Density of migrated population");
+  var->add_att("coordinates","time lon lat");  
+  var->add_att("date_of_creation",timestring.c_str());
+
   return 0;
 }
 

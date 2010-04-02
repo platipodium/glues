@@ -1,13 +1,14 @@
-function rdata=clp_map_variable(varargin)
+function rdata=clp_map_timing(varargin)
 
 global ivar nvar figoffset;
 
 arguments = {...
   {'latlim',[-Inf,Inf]},...
   {'lonlim',[Inf,Inf]},...
-  {'timelim',[3000]},...
+  {'timelim',[12000,500]},...
   {'reg','all'},...
-  {'vars','Density'},...
+  {'vars','Farming'},...
+  {'threshold',0.5},...
   {'scale','absolute'},...
   {'figoffset',0},...
   {'ylimit',[-Inf,Inf]},...
@@ -201,6 +202,7 @@ time=time(itime);
 retdata=zeros(nvar,itend-itstart+1,length(regs))+NaN;
 
 if numel(cmap)<3 cmap=colormap(jet(19)); end
+cmap=flipud(cmap);
 ncol=length(cmap(:,1));
 
 
@@ -210,43 +212,15 @@ for idovar=1:nvar
   data=eval(['r.' r.variables{ivar}]);
   retdata(idovar,:,:)=data(squeeze(regs),itstart:itend)';
       
-  minmax=[min(min(min(data(regs,itstart:itend)))),max(max(max(data(regs,itstart:itend))))];
-  
-  ylimit(~isfinite(ylimit))=minmax(~isfinite(ylimit));
-
-  
-  resvar=round(((data-ylimit(1)))./(ylimit(2)-ylimit(1))*(ncol-1))+1;
-  resvar(resvar>length(cmap))=length(cmap);
-  resvar(resvar<1)=1;
-  
-%% Plot timeseries in extra plot
-  figure(ivar+nvar+figoffset); 
-  clf reset;
-   
-  hold on;
-  if isbp set(gca,'XDir','reverse'); end
-  set(gca,'YLim',ylimit);
-
-  for ireg=1:length(regs)
-    plot(r.time(itstart:itend),squeeze(data(regs(ireg),itstart:itend)),'k-','color',cmap(resvar(regs(ireg),itstart),:));
-  end
-  p1=plot(r.time(itstart:itend),squeeze(data(regs(1),itstart:itend)));
-  set(p1,'Tag','timeseries','LineWidth',4);
- % title(sprint('%s (sum %f.1)',vars{ivar},sum(sum(data(regs,itend)))));
-  hold off;
  
 %% Make directory for plots and prepare files  
   
   fd=fullfile(d.plot,'variable');
   if ~exist(fd,'file') mkdir(fd); end
   
-  fd=fullfile(fd,strrep(r.variables{ivar},' ',''));
+  fd=fullfile(fd,'timing');
   if ~exist(fd,'file') mkdir(fd); end
   
-  aviname=fullfile(fd,['variable_' strrep(r.variables{ivar},' ','')]);
-  if length(infix)>0 aviname=[aviname '_' infix]; end
-  aviname=[aviname '.avi'];
-  mov=avifile(aviname);
  
 %% Plot base map  
   pathlen=sum(region.path(:,:,1)>-999,2);
@@ -279,7 +253,7 @@ for idovar=1:nvar
   end
   
   %% Add title and determine time units
-  titletext=r.variables{ivar};
+  titletext=['Time of ' r.variables{ivar} ' > ' num2str(threshold) ];
   if length(infix)>0 titletext=[titletext '(' infix ')']; end
   if ~notitle ht=title(titletext,'interpreter','none'); end
  
@@ -296,25 +270,9 @@ for idovar=1:nvar
   end
      
   pos=[0.08 0.0 0.83 0.91];
-  
-  hbtx=lonlim(2)-0.02*lonrange; %lonlim(1)+0.3*lonrange;
-  hbty=latlim(2)-0.02*latrange;
-  
-  if ~notitle hbt=m_text(hbtx,hbty,1,[num2str(t) ' ' timeunit],...
-      'color','k','FontWeight','bold','backgroundColor','white',...
-      'EdgeColor','none','fontSize',16,'HorizontalAlignment','right',...
-      'VerticalAlignment','top'); 
-  end
-       
+        
   
   set(gca,'Position',pos,'box','off');
-
-  
-  
-  cc='b' ; % base color for alpha fading
-  cchigh='r' ; % base color for highlighting
-
-  threshold=0.1;
   
   %% Invisible plotting of all regions
   hp=clp_regionpath('lat',latlim,'lon',lonlim,'draw','patch','col',landcolor,'reg',reg);  
@@ -324,27 +282,21 @@ for idovar=1:nvar
   for i=1:length(ival)
     ireg=regs(ival(i));
     if (hp(ival(i))==0) continue; end
-    set(hp(ival(i)),'ButtonDownFcn',@onclick,'UserData',squeeze(data(ireg,itstart:itend)));
     ftime=find(data(ireg,itstart:itend)>=threshold);
     if isempty(ftime) timing(ireg)=NaN; else timing(ireg)=r.time(min(ftime)); end
   end
  
+  minmax=[min(timing),max(timing)];
+  
+  ylimit(~isfinite(ylimit))=minmax(~isfinite(ylimit));
+
+  resvar=round(((timing-ylimit(1)))./(ylimit(2)-ylimit(1))*(ncol-1))+1;
+  resvar(resvar>length(cmap))=length(cmap);
+  resvar(resvar<1)=1;
+  
+ 
   if ~exist('regioncenter','var') regioncenter=region.center; end 
  
-%ishow=find(regioncenter(regs,2)>lonlim(1) & regioncenter(regs,2)<lonlim(2) ...
-%    & regioncenter(regs,1)>latlim(1) & regioncenter(regs,1)<latlim(2) ...
-%   & isfinite(timing'));
- 
-%i5=find(timing(ishow)<-5000); 
-%i6=find(timing(ishow)<-6000); 
-%i7=find(timing(ishow)<-7000); 
-%i4=find(timing(ishow)<-7000); set(tt(i4),'backgroundcolor',[1 1 1]);
-
- %&   set(hp(ishow),'FaceColor',[1 1 1],'FaceAlpha',0.1);
-  %  set(hp(ishow(i5)),'FaceColor',[1 1 0],'FaceAlpha',0.25);
-  %  set(hp(ishow(i6)),'FaceColor',[1 0.5 0],'FaceAlpha',0.25);
-  %  set(hp(ishow(i7)),'FaceColor',[1 0 0],'FaceAlpha',0.25);
-
 if (nocbar == 0) % colorbar
      
 cbw=0.4;  %  (relative width of colorbar)
@@ -376,67 +328,17 @@ end
 %% Correct the size/position of the figure when axis labels are off screen
 
 set(gca,'outerposition',[0 0 1 1]);
-%xlabel('Longitude');
-%ylabel('Latitude');
-%xp=get(get(gca,'xlabel'),'pos');
-%yp=get(get(gca,'ylabel'),'pos');
 
-
-
-for it=1:length(time)
-  t=time(it);
-  if ~isbp
-    if (t==0) t=1; end
-    if (t<0)
-          timeunit='BC';
-          t=abs(t);
-    else
-        timeunit='AD';
-    end
-  end
-    
-  if ~notitle set(hbt,'String',[num2str(t) ' ' timeunit]); end
-  
-  itprior=max(it-1,1);
-  if it==1 ichanged=1:length(regs);
-  else ichanged=find(resvar(regs,itime(it))~=resvar(regs,itime(itprior)));
-  end
-  for ir=1:length(ichanged)
-      ireg=ichanged(ir);
-      if hp(ireg)==0 continue; end
-        h=hp(ireg);
-        greyval=0.15+0.35*sqrt(resvar(regs(ireg),itime(it))./ncol);
-       alpha(h,greyval);
+for ireg=1:nreg
+   if hp(ireg)==0 continue; end
+   h=hp(ireg);
+   greyval=0.15+0.35*sqrt(resvar(regs(ireg))./ncol);
+   if isnan(greyval) continue; end
+   alpha(h,greyval);
       
-      set(hp(ireg),'FaceColor',cmap(resvar(regs(ireg),itime(it)),:));
-      %m_patch(region.path(reg,1:pathlen(reg),1),region.path(reg,1:pathlen(reg),2),cmap(resvar(reg,it),:));
-  end
-     
-     
-     % Update colorbar
-  if exist('cba','var')
-      resvarmean=repmat(mean(resvar(:,itime(it))),1,2);
-      resvarmax=repmat(max(resvar(:,itime(it))),1,2);
-      resvarmed=repmat(median(resvar(:,itime(it))),1,2);
-      lxmean=lonlim(1)+(cbxo+cbw/ncol*(resvarmean-1)+cbw/ncol/2)*(lonlim(2)-lonlim(1));
-      lxmed =lonlim(1)+(cbxo+cbw/ncol*(resvarmed -1)+cbw/ncol/2)*(lonlim(2)-lonlim(1));
-      lxmax =lonlim(1)+(cbxo+cbw/ncol*(resvarmax -1)+cbw/ncol/2)*(lonlim(2)-lonlim(1));
-      [xmean,ymean]=m_ll2xy(lxmean,cby(1,3));
-      [xmed ,ymean]=m_ll2xy(lxmed ,cby(1,3));
-      [xmax ,ymean]=m_ll2xy(lxmax ,cby(1,3));
-      ymean=repmat(ymean,1,2);
-      if ~exist('cbmean','var')
-        cbmean(1)=m_plot(lxmean,cby([1 3]),'b-');
-        cbmean(2)=m_plot(lxmax ,cby([1 3]),'r-');
-        cbmean(3)=m_plot(lxmed ,cby([1 3]),'b:');
-      else
-        set(cbmean(1),'XData',xmean);
-        set(cbmean(2),'XData',xmax);
-        set(cbmean(3),'XData',xmed);
-          
-      end
-  end
-     
+    set(hp(ireg),'FaceColor',cmap(resvar(regs(ireg)),:));
+      %m_patch(region.path(reg,1:pathlen(reg),1),region.path(reg,1:pathlen(reg),2),cmap(resvar(reg,it),:)); end
+end    
      
      
   if showsites 
@@ -455,30 +357,14 @@ for it=1:length(time)
   set(obj,'FontSize',15);
 
   
-  plotname=fullfile(fd,['map_variable_' strrep(r.variables{ivar},' ','') '_']);
+  plotname=fullfile(fd,['map_timing_' strrep(r.variables{ivar},' ','') '_']);
   plotname=[plotname sprintf('%03d_%03d_',latlim(1),latlim(2))];
   if length(infix)>0 plotname=[plotname infix '_']; end
-  %plotname=[plotname sprintf('%05d_%d',12000-t,t)];
-  plotname=[plotname sprintf('%s%05d',timeunit,t) ];
     
-  %if mod(t-20,snapyear)==0
-    ;
-        %mod(it,4)==1
-      plot_multi_format(gcf,plotname);
-  %end
-    
-    f=getframe(gcf);
-     %if (abs(tend-tstart)>10*r.tstep) mov=addframe(mov,f); end;
-    mov=addframe(mov,f);
-    fprintf('.');
-    if mod(it,50)==0 fprintf('\n'); end
-    %it=it+1;
-end % of time loop
-  %if (tend-tstart>10*r.tstep) 
-mov=close(mov); 
-  %end;
-  
+  plot_multi_format(gcf,plotname);
+      
 end % of for loop for idovar
+
 hold off;
 
 if nargout>0 
@@ -488,28 +374,3 @@ end
 return;
 end
 
-
-function offclick(gcbo,eventdata,handles)
-set(gcbo,'ButtonDownFcn',@onclick);
-set(gcbo,'EdgeColor','k');
-set(gcbo,'LineWidth',0.5);
-return;
-end
-
-function onclick(gcbo,eventdata,handles)
-global ivar nvar figoffset;
-uf=gcf;
-ud=get(gcbo,'UserData');
-set(gcbo,'EdgeColor','y');
-set(gcbo,'LineWidth',4);
-
-figure(ivar+nvar+figoffset);
-children=get(gca,'Children');
-c=get(children,'Tag');
-ic=strmatch('timeseries',c);
-pr=children(ic);
-set(pr,'YData',ud,'LineWidth',4,'Color','y');
-set(gcbo,'ButtonDownFcn',@offclick);
-figure(uf);
-return;
-end
