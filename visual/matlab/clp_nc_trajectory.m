@@ -1,27 +1,29 @@
-function clp_nc_variable_time_lat(varargin)
+function clp_nc_trajectory(varargin)
+
+%Woodland area
+%  {'latlim',[30 50]},...
+%  {'lonlim',[-108 -60]},...
+
 
 arguments = {...
-  {'latlim',[-60 80]},...
-  {'lonlim',[-180 180]},...
-  {'timelim',[-9500,-1000]},...
+%  {'latlim',[-60 80]},...
+%  {'lonlim',[-180 180]},...
+  {'latlim',[-inf inf]},...
+  {'lonlim',[-inf inf]},...
+  {'timelim',[-5000,1491]},...
   {'lim',[-inf,inf]},...
   {'reg','all'},...
   {'discrete',0},...
-  {'vars','population_density'},...
+  {'variables','population_density'},...
   {'scale','absolute'},...
   {'figoffset',0},...
   {'timeunit','BP'},...
-  {'timestep',100},...
-  {'marble',0},...
-  {'seacolor',0.7*ones(1,3)},...
-  {'landcolor',.8*ones(1,3)},...
-  {'transparency',1},...
-  {'snapyear',1000},...
+  {'timestep',1},...
+  {'sce',''},...
   {'mult',1},...
   {'div',1},...
-  {'movie',1},...
-  {'showsites',0},...
-  {'file','../../src/test.nc'}
+  {'file','../../test.nc'},...
+  {'nosum',0}
 };
 
 cl_register_function;
@@ -33,7 +35,7 @@ for i=1:a.length eval([a.name{i} '=' clp_valuestring(a.value{i}) ';']); end
 
 % Choose 'emea' or 'China' or 'World'
 %[regs,nreg,lonlim,latlim]=find_region_numbers(reg);
-[regs,nreg,~,~]=find_region_numbers(reg);
+[ireg,nreg,loli,lali]=find_region_numbers(reg);
 
 
 if ~exist(file,'file')
@@ -71,7 +73,7 @@ else
 end
 
 
-varname=vars; varid=netcdf.inqVarId(ncid,varname);
+varname=variables; varid=netcdf.inqVarId(ncid,varname);
 try
     description=netcdf.getAtt(ncid,varid,'description');
 catch
@@ -86,7 +88,6 @@ end
 data=double(netcdf.getVar(ncid,varid));
 [varname,xtype,dimids,natt] = netcdf.inqVar(ncid,varid);
 
-
 if isnumeric(mult) data=data .* mult; 
 else
   factor=double(netcdf.getVar(ncid,netcdf.inqVarId(ncid,mult)));    
@@ -100,10 +101,6 @@ else
 end
 
 
-if strcmp(scale,'log')
-  data=log10(data);
-end
-
 % Find time dimension
 ntime=1;
 if numel(data)>length(data)
@@ -114,6 +111,8 @@ if numel(data)>length(data)
   if isempty(itime)
       error('Not data in specified time range')
   end
+  itime=itime([1:timestep:length(itime)]);
+  
   time=time(itime);
   ntime=length(time);
 end
@@ -122,121 +121,85 @@ netcdf.close(ncid);
 
 if ~exist('area','var') area=ones(length(lat),1); end
 
+ilim=find(~isfinite(latlim));
+latlim(ilim)=lali(ilim);
+ilim=find(~isfinite(lonlim));
+lonlim(ilim)=loli(ilim);
 
-ireg=ireg(find(lat>=latlim(1) & lat<=latlim(2) & lon>=lonlim(1) & lon<=lonlim(2)));
+
+ireg=ireg(find(lat(ireg)>=latlim(1) & lat(ireg)<=latlim(2) & lon(ireg)>=lonlim(1) & lon(ireg)<=lonlim(2)));
 nreg=length(ireg);
 region=region(ireg);
 lat=lat(ireg);
 lon=lon(ireg);
-area=area(ireg);
+areasum=sum(area(ireg));
+area=repmat(area(ireg),1,ntime);
 
 switch (varname)
     case 'region_neighbour', data=(data==0) ;
     otherwise ;
 end
 
-cmap=colormap('hotcold');
+minmax=double([min(min(min(data(ireg,itime)))),max(max(max(data(ireg,itime))))]);
+ilim=find(isfinite(lim));
+minmax(ilim)=lim(ilim);
+
 rlon=lon;
 rlat=lat;
 
-
-%% interpolate data to lat-time
-latstep=3;
-latlim=[min(lat)-0.5 max(lat)+0.5];
-latgrid=linspace(latlim(1),latlim(2),floor((latlim(2)-latlim(1))/latstep));
-nlat=length(latgrid);
-gdata=zeros(nlat,ntime)+NaN;
-for i=1:nlat
-  ilat=find(lat>=latgrid(i)-latstep/2.0 & lat<latgrid(i)+latstep/2.0);
-  if isempty(lat) continue; end
-  %gdata(i,:)=mean(data(ireg(ilat),itime),1);   
-  areasum(i)=sum(area(ilat));
-  gdata(i,:)=sum(data(ireg(ilat),itime).*repmat(area(ilat),1,ntime),1)./areasum(i);
-  
-end
-
-
-area=repmat(areasum',1,ntime);
-
-%% Build histograms
-latsum=sum(gdata.*area,2);
-timesum=sum(gdata.*area,1);
-
-
-%% plot map
 figure(varid); 
 clf reset;
-cmap=colormap('hotcold');
+
 set(varid,'DoubleBuffer','on');    
 set(varid,'PaperType','A4');
 hold on;
 
-ncol=length(cmap);  
+data=data(ireg,itime);
+sdata=sum(data.*area,1);
+mdata=sdata/areasum; 
 
-minmax=double([min(min(min(gdata))),max(max(max(gdata)))]);
-ilim=find(isfinite(lim));
-minmax(ilim)=lim(ilim);
 
-resvar=round(((gdata-minmax(1)))./(minmax(2)-minmax(1))*(length(cmap)-1))+1;
-resvar(resvar>length(cmap))=length(cmap);
+lgray=0.8*ones(1,3);
+a1=gca;
+m_proj('miller','lat',latlim+[-12 12],'lon',lonlim + [-25 25]);
+m_coast('patch',lgray,'facealpha',0.2,'edgecolor','none');
+hold on;
+set(a1,'YTick',[],'XTick',[]);
 
- 
 titletext=description;
 ht=title(titletext,'interpreter','none');
- 
-
-contourf(time,latgrid,resvar)
-xlabel('Time (calendar year)');
-ylabel('Latitude');
 
 
-cb=colorbar;
-if length(units)>0 
-  switch (units)
-        case 'unknown', units='A.U.';
-        case '1', units='A.U.';
-        otherwise ; 
-  end
-  title(cb,units); 
+a2=axes('Color','none');
+hold on;
+p0=plot(time,data','c');
+set(gca,'Xlim',timelim,'Ylim',minmax);
+xlabel('Calendar year');
+ylabel('Density');
+
+hold on;
+p1=plot(time,mdata,'b','Linewidth',5);
+
+if (~nosum)
+  a3=axes('Color','none','YAxisLocation','right');
+  hold on;
+  p2=plot(time,sdata/1E6,'r--','Linewidth',5);
+  set(a3,'XTick',[],'Ylim',[0 10.5],'XLim',timelim);
+  ylabel('Size');
+
+  %l=legend([p1,p2],'Mean','Total','Location','NorthWest');
+  %set(l,'color','w');
 end
 
-%set(gcf,'Position',[271   233   860   451])    
-obj=findall(gcf,'-property','FontSize');
-set(obj,'FontSize',16);
+%% Print to file
+fdir=fullfile(d.plot,'variable',varname);
+if ~exist('fdir','dir') system(['mkdir -p ' fdir]); end  
+bname=['trajectory_' varname '_' num2str(nreg)];
+if length(sce)>0 bname=[bname '_' sce]; end
+plot_multi_format(gcf,fullfile(fdir,bname));
 
-yt=get(cb,'YTick');
-yr=minmax(2)-minmax(1);
-ytl=scale_precision(yt/ncol*yr+minmax(1),3)';
-set(cb,'YTickLabel',num2str(ytl));
-
-xt=get(gca,'XTick');
-i0=find(xt==0);
-if ~isempty(i0)
-  xtl=get(gca,'XTickLabel');
-  len=length(xtl(i0,:));
-  xtl(i0,1:len)=' ';
-  if len<4 xtl(i0,1)='1';
-  else xtl(i0,1:4)='1 AD';
-  end
-  set(gca,'XTickLabel',xtl);
-end
-    
-    
-    
-    set(gcf,'UserData',cl_get_version);
- 
-    %% write map to file
-    
-    fdir=fullfile(d.plot,'variable',varname);
-    if ~exist('fdir','dir') system(['mkdir -p ' fdir]); end
-  
-  bname=[varname '_time_lat_' num2str(nreg)];
-  
-  
-  b=axes('color','none');
-  
-  
-  plot_multi_format(gcf,fullfile(fdir,bname));
+fprintf('Total %d million at %d on area of %d million sqkm.\n',...
+    sdata(ntime)/1E6, time(ntime), areasum);
 
 end
 
