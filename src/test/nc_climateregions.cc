@@ -66,8 +66,8 @@ int main(int argc, char* argv[])
 
   string mapfilename="glues_map.nc";
   string regionfilename="regions.nc";
-  string transientfilename="plasim_11k.nc";
-  string filename="regions_11k.nc";
+  string transientfilename="plasim_11k-2.nc";
+  string filename="regions_11k-2.nc";
   
 /** Read the climatology, this file need to include the variables longitude, latitude,
 monthly precip and montly temperature */

@@ -67,8 +67,8 @@ int main(int argc, char* argv[])
   /** You may need to run nc_climateregions to get regions_*.nc grid file
       You may need to rund nc_add_map to have mapid information in file
    */
-  string cellfilename="regions_11k.nc";
-  string filename="regions_11k_685.nc";
+  string cellfilename="regions_11k-2.nc";
+  string filename="regions_11k-2_685.nc";
  
 /** Read the cell file, this file need to include the variables longitude, latitude,
 npp and gdd */
