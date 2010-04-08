@@ -18,6 +18,7 @@
 ## 02110-1301, USA.
 
 EXTRA_DIST= EvSeries.dat EventInRad.dat EventInReg.dat \
-regions_11k_685.dat regions_gdd_11k_685.dat regions_npp_11k_685.dat \
+regions_11k-2_685.dat regions_gdd_11k-2_685.dat regions_npp_11k-2_685.dat \
+regions_11k+2_685.dat regions_gdd_11k+2_685.dat regions_npp_11k+2_685.dat \
 README
 
