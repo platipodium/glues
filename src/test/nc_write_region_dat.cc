@@ -68,7 +68,7 @@ if (argc>1) {
 #else
   
   string prefix="regions";
-  string appendix="_11k_685";
+  string appendix="_11k-2_685";
   
   string ncfilename=prefix + appendix + ".nc";
   string regfilename=prefix + appendix + ".dat";

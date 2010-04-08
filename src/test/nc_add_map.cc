@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
 
 
   string mapfilename="glues_map.nc";
-  string cellfilename="regions_11k.nc";
+  string cellfilename="regions_11k-2.nc";
 
  /** Open map file, read id and lat/lon fields  */
  

@@ -174,6 +174,7 @@ a2=axes('Color','none');
 hold on;
 p0=plot(time,data','c');
 set(gca,'Xlim',timelim,'Ylim',minmax);
+cl_year_one(gca);
 xlabel('Calendar year');
 ylabel('Density');
 

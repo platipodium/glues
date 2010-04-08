@@ -21,7 +21,7 @@ arguments = {...
   {'mult',1},...
   {'div',1},...
   {'showsites',0},...
-  {'file','../../src/test.nc'}
+  {'file','../../test.nc'}
 };
 
 cl_register_function;
@@ -229,8 +229,8 @@ for it=1:ntime
   bname=[varname '_' num2str(nreg)];
   
   if (ntime>1) bname = [bname '_' num2str(time(it))]; end
-  %plot_multi_format(gcf,fullfile(fdir,bname));
-  pause(0.05);
+  plot_multi_format(gcf,fullfile(fdir,bname));
+  %pause(0.05);
 end
 end
 

@@ -362,6 +362,12 @@ end
   if length(infix)>0 plotname=[plotname infix '_']; end
     
   plot_multi_format(gcf,plotname);
+  
+  figure(ivar*2+figoffset)
+  ivalid=find(timing~=0 & isfinite(timing));
+  edges=[-3500:500:1500];
+  [n,bin]=histc(timing(ivalid),edges);
+  bar(edges,n,'histc');
       
 end % of for loop for idovar
 
