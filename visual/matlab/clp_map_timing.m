@@ -356,6 +356,7 @@ end
   obj=findall(gcf,'-property','FontSize');
   set(obj,'FontSize',15);
 
+  %%
   
   plotname=fullfile(fd,['map_timing_' strrep(r.variables{ivar},' ','') '_']);
   plotname=[plotname sprintf('%03d_%03d_',latlim(1),latlim(2))];
