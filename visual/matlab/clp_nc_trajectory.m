@@ -184,13 +184,18 @@ p1=plot(time,mdata,'b','Linewidth',5);
 if (~nosum)
   a3=axes('Color','none','YAxisLocation','right');
   hold on;
-  p2=plot(time,sdata/1E6,'r--','Linewidth',5);
-  set(a3,'XTick',[],'Ylim',[0 10.5],'XLim',timelim);
+  % For SAA paper
+  %p2=plot(time,sdata/1E6,'r--','Linewidth',5);
+  %set(a3,'XTick',[],'Ylim',[0 10.5],'XLim',timelim);
+  plot(time,sdata,'r--','Linewidth',5);
   ylabel('Size');
 
   %l=legend([p1,p2],'Mean','Total','Location','NorthWest');
   %set(l,'color','w');
 end
+
+% dump ascii table
+fprintf('%d %d %d\n',[time' ; mdata ; log(2)./mdata])
 
 %% Print to file
 fdir=fullfile(d.plot,'variable',varname);
