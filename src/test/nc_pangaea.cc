@@ -54,8 +54,8 @@ int main(int argc, char* argv[])
     return 1;
 #else
  
-  string input_filename="../../test.nc";
-  string region_filename="glues_map.nc";
+  string input_filename="pangaea_reg.nc";
+  string region_filename="glues_map_dim.nc";
   string output_filename="pangaea.nc";
   
   NcFile ncin(input_filename.c_str(), NcFile::ReadOnly);
@@ -84,13 +84,12 @@ int main(int argc, char* argv[])
   
   // Create dimensions
   NcDim* dim;
-  if (!(dim = ncfile.add_dim("time", 0))) return 1;
   dim=ncmap.get_dim("lat");
   ncfile.add_dim(dim->name(),dim->size());
   dim=ncmap.get_dim("lon");
   ncfile.add_dim(dim->name(),dim->size());
-return 0;
-  
+  if (!(dim = ncfile.add_dim("time", 0))) return 1;
+    
   // Copy global attributes
   for (int i=0; i<ncin.num_atts(); i++) {  
     copy_att(&ncfile,ncin.get_att(i));
@@ -101,111 +100,82 @@ return 0;
     ncfile.add_att("date_of_creation",timestring.c_str());    
   ncfile.add_att("filenames_input",(input_filename + ", " + region_filename).c_str());
   ncfile.add_att("filenames_output",output_filename.c_str());
-return 0;
   
-  // Copy time dimension and coordinate variable 
+  NcVar *var;
+  NcVar *ivar;
+  NcAtt *att;
+
+  // Copy time dimension and variable from ncin
   int ntime=ncin.get_dim("time")->size();  
   float* time = new float[ntime];
-  NcVar *var;
-  var=ncin.get_var("time");
-  var->get(time,ntime);
-  int ndim=var->num_dims();
-  ncfile.add_var(var->name(), var->type(), var->get_dim(0));
-
-return 0;
+  ivar=ncin.get_var("time");
+  var=ncfile.add_var(ivar->name(), ivar->type(),ncfile.get_dim("time"));
+  for (int i=0; i<ivar->num_atts(); i++) copy_att(var,ivar->get_att(i)); 
+  ivar->get(time,ntime);
+  var->put(time,ntime);
+  
+  // Copy lat/lon dimensions from ncmap
+  int nlat=ncmap.get_dim("lat")->size();  
+  float* lat = new float[nlat];
+  ivar=ncmap.get_var("lat");
+  var=ncfile.add_var(ivar->name(), ivar->type(),ncfile.get_dim("lat"));
+  for (int i=0; i<ivar->num_atts(); i++) copy_att(var,ivar->get_att(i)); 
+  ivar->get(lat,nlat);
+  var->put(lat,nlat);
+  
+  int nlon=ncmap.get_dim("lon")->size();  
+  float* lon = new float[nlon];
+  ivar=ncmap.get_var("lon");
+  var=ncfile.add_var(ivar->name(), ivar->type(),ncfile.get_dim("lon"));
+  for (int i=0; i<ivar->num_atts(); i++) copy_att(var,ivar->get_att(i)); 
+  ivar->get(lon,nlon);
+  var->put(lon,nlon);
+  
+ 
+  /* Get region ids */
   int nreg=ncin.get_dim("region")->size();
   float* region=new float[nreg];
   var=ncin.get_var("region");
   var->get(region,nreg);
+  
+  /* Get map ids, make all sea equal to -1 and write to region variable */
+  float* map=new float[nlon*nlat];
+  ivar=ncmap.get_var("id");
+  ivar->get(map,nlon,nlat);
+  var=ncfile.add_var("region",ncShort,ncfile.get_dim("lon"),ncfile.get_dim("lat"));
+  for (int i=0; i<nlon*nlat; i++) if (map[i]<0) map[i]=-1;
+  var->put(map,nlon,nlat);
+  
+  short* pop=new short[nreg*ntime];
+  short* tech=new short[nreg*ntime];
+  short* farm=new short[nreg*ntime];
+  short* econ=new short[nreg*ntime];
+  short* val=new short[nlon*nlat];
+  ivar=ncin.get_var("population_density");
+  ivar->get(pop,ntime,nreg);
+  ncin.get_var("technology")->get(tech,ntime,nreg);
+  ncin.get_var("farming")->get(farm,ntime,nreg);
+  ncin.get_var("economies")->get(econ,ntime,nreg);
+  
+  var=ncfile.add_var(ivar->name(),ivar->type(),ncfile.get_dim("time"),ncfile.get_dim("lon"),ncfile.get_dim("lat"));
   return 0;
-
+  for (int t=0; t<1; t++) {
+    /*for (int i=0; i<nlon*nlat; i++) {
+      val[i]=0;
+      if (map[i]>0) val[i]=pop[t+ntime*lroundf(map[i]-1)];
+    }
+    */
+    //var->put_rec(val,t);
+    cout << t << endl;
+  }
+      
+  
+  
   // Populate coordinate vars
   
-
   
   // Create coordinate variables and copy all       
-  NcVar *ncvar;
-
-{
-  NcError ncerror(NcError::silent_nonfatal);
   
-  int nvar = ncin.num_vars();
-  for (int i=0; i<nvar; i++) {
-    var=ncin.get_var(i);
-    if (ncvar=ncfile.get_var(var->name())) continue;
-    
-    int ndim=var->num_dims();
-    if (ndim==1) ncvar=ncfile.add_var(var->name(), var->type(), var->get_dim(0));
-    if (ndim==2) ncvar=ncfile.add_var(var->name(), var->type(), 
-      var->get_dim(0),var->get_dim(1));
-    if (ndim==3) ncvar=ncfile.add_var(var->name(), var->type(), 
-      var->get_dim(0),var->get_dim(1),var->get_dim(2));
-    if (ndim==4) ncvar=ncfile.add_var(var->name(), var->type(), 
-      var->get_dim(0),var->get_dim(1),var->get_dim(2),var->get_dim(3));
-    if (ndim==5) ncvar=ncfile.add_var(var->name(), var->type(), 
-      var->get_dim(0),var->get_dim(1),var->get_dim(2),var->get_dim(3),var->get_dim(4));
-  }
- }
- 
- // For each target variable, look for corresponding attributes in source file and copy them
- for (int i=0; i<ncfile.num_vars(); i++) {
-   var=ncfile.get_var(i);
-   if (ncvar=ncin.get_var(var->name())) {
-     for (int i=0; i<ncvar->num_atts(); i++) {  
-       copy_att(var,ncvar->get_att(i));
-     }
-   }
- }
-  
- var=ncfile.get_var("time");
-  for (int i=0; i<ntime; i++) var->put_rec(ncfile.rec_dim(),time+i,i);
-  //netcdf_copyvar(ncfile,ncrvar);  
-  
-  var=ncfile.get_var("region");
-  //dim=var->get_dim(0);
-  for (int i=0; i<nreg; i++)  var->put(region,nreg);  
-
-  string s;
-  vector<string>::iterator ivar;
-  char data[nreg*sizeof(float)];
-  float* result = (float*) data;
-  int i;
-  
-  {
-  NcError ncerror(NcError::silent_nonfatal);
-
-  for (int itime=0; itime<ntime; itime++) 
-  
-    
-    var=ncfile.get_var((*ivar).c_str());
-    if (!var) {
-      if (!strcmp((*ivar).c_str(),"Technology")) s="technology";
-      else if (!strcmp((*ivar).c_str(),"Farming")) s="farming";
-      else if (!strcmp((*ivar).c_str(),"Agricultures")) s="economies"; 
-      else if (!strcmp((*ivar).c_str(),"Resistance")) s="resistance"; 
-      else if (!strcmp((*ivar).c_str(),"Density")) s="population_density";
-      else if (!strcmp((*ivar).c_str(),"Migration")) s="migration_rate";
-      else if (!strcmp((*ivar).c_str(),"Climate")) s="climate";
-      else if (!strcmp((*ivar).c_str(),"CivStart")) s="time_of_high_civilization";
-      else if (!strcmp((*ivar).c_str(),"Birthrate")) s="rate_of_birth";
-      var=ncfile.get_var(s.c_str());
-        var->add_att("date_of_modification",timestring.c_str());
-      
-    }
-    
-    //cout << (*ivar) << "/" << s << "t=" << time[itime] << " r=" ; 
-    result=(float*)data;
-    //var->put_rec(result,itime);
-
-      var->add_att("glues_name",(*ivar).c_str());
-      var->add_att("glues_order",i);
-
-    //for (i=0; i<nreg; i+=137) cout << result[i] << ",";
-    //cout << endl;
-    
-    i++;
-  }
-
   
   ncin.close();
   ncmap.close();
