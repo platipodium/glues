@@ -48,13 +48,12 @@ done
 OUT=pangaea_reg.nc
 rm -f $OUT
 
-ncrcat -O ${BASE}_ra_??.nc $OUT
-ncrcat -O $OUT ${BASE}_ra_???.nc $OUT
+ncrcat -O ${BASE}_ra_?.nc ${BASE}_ra_??.nc ${BASE}_ra_???.nc $OUT
 ncrcat -O $OUT ${BASE}_ra_1???.nc $OUT
 
 rm -f ${BASE}_ra_*.nc
 
-ncap2 -O -s "farming=pack_byte(farming);technology=pack_byte(technology);economies=pack_byte(economies);population_density=pack_short(population_density)" $OUT $OUT
+#ncap2 -O -s "farming=pack_byte(farming);technology=pack_byte(technology);economies=pack_byte(economies);population_density=pack_short(population_density)" $OUT $OUT
 
 
 exit
