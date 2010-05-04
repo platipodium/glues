@@ -82,13 +82,13 @@ int main(int argc, char* argv[])
   string s1(asctime(gmtime(&today)));
   string timestring=s1.substr(0,s1.find_first_of("\n"));
   
-  // Create dimensions
+  // Create dimensions, CF-conventions desires T,Z,Y,X (time,altitude,latitude,longitude)
   NcDim* dim;
+  if (!(dim = ncfile.add_dim("time", 0))) return 1;
   dim=ncmap.get_dim("lat");
   ncfile.add_dim(dim->name(),dim->size());
   dim=ncmap.get_dim("lon");
   ncfile.add_dim(dim->name(),dim->size());
-  if (!(dim = ncfile.add_dim("time", 0))) return 1;
     
   // Copy global attributes
   for (int i=0; i<ncin.num_atts(); i++) {  
@@ -139,37 +139,61 @@ int main(int argc, char* argv[])
   var->get(region,nreg);
   
   /* Get map ids, make all sea equal to -1 and write to region variable */
-  float* map=new float[nlon*nlat];
+  float* id=new float[nlon*nlat];
+  short* map=new short[nlon*nlat];
   ivar=ncmap.get_var("id");
-  ivar->get(map,nlon,nlat);
-  var=ncfile.add_var("region",ncShort,ncfile.get_dim("lon"),ncfile.get_dim("lat"));
-  for (int i=0; i<nlon*nlat; i++) if (map[i]<0) map[i]=-1;
-  var->put(map,nlon,nlat);
+  ivar->get(id,nlon,nlat);
+  for (int ilo=0; ilo<nlon; ilo++) for (int ila=0; ila<nlat; ila++) {
+    map[ilo*nlat+ila]=id[ilo*nlat+ila];
+    if (map[ilo*nlat+ila]<0) map[ilo*nlat+ila]=-1;
+  }
+  
+  var=ncfile.add_var("region",ncShort,ncfile.get_dim("lat"),ncfile.get_dim("lon"));
+  var->put(map,nlat,nlon);
   
   short* pop=new short[nreg*ntime];
   short* tech=new short[nreg*ntime];
   short* farm=new short[nreg*ntime];
   short* econ=new short[nreg*ntime];
-  short* val=new short[nlon*nlat];
+  short* pval=new short[nlon*nlat];
+  short* eval=new short[nlon*nlat];
+  short* fval=new short[nlon*nlat];
+  short* tval=new short[nlon*nlat];
   ivar=ncin.get_var("population_density");
   ivar->get(pop,ntime,nreg);
   ncin.get_var("technology")->get(tech,ntime,nreg);
   ncin.get_var("farming")->get(farm,ntime,nreg);
   ncin.get_var("economies")->get(econ,ntime,nreg);
   
-  var=ncfile.add_var(ivar->name(),ivar->type(),ncfile.get_dim("time"),ncfile.get_dim("lon"),ncfile.get_dim("lat"));
-  return 0;
-  for (int t=0; t<1; t++) {
-    /*for (int i=0; i<nlon*nlat; i++) {
-      val[i]=0;
-      if (map[i]>0) val[i]=pop[t+ntime*lroundf(map[i]-1)];
-    }
-    */
-    //var->put_rec(val,t);
-    cout << t << endl;
-  }
-      
+  ncfile.add_var("population_density",ncShort,ncfile.get_dim("time"),ncfile.get_dim("lat"),ncfile.get_dim("lon"));
+  ncfile.add_var("economies",ncShort,ncfile.get_dim("time"),ncfile.get_dim("lat"),ncfile.get_dim("lon"));
+  ncfile.add_var("technology",ncShort,ncfile.get_dim("time"),ncfile.get_dim("lat"),ncfile.get_dim("lon"));
+  ncfile.add_var("farming",ncShort,ncfile.get_dim("time"),ncfile.get_dim("lat"),ncfile.get_dim("lon"));
   
+  // ncfile technology(time,lon,lat): tech[it][ilo][ila]=tech[it*nlon*nlat+ilo*nlat+ila]
+  // ncin technology(time,region): tech[it][ireg]=tech[it*nreg+ireg]
+  // ncmap technology(lon,lat): tech[ilo][ila]=tech[ilo*nreg+ireg]
+  
+  int ireg;
+  //ntime=1;
+  for (int it=0; it<ntime; it++) {
+    for (int ilo=0; ilo<nlon; ilo++) for (int ila=0; ila<nlat; ila++) {
+      pval[ilo*nlat+ila]=0;
+      tval[ilo*nlat+ila]=0;
+      fval[ilo*nlat+ila]=0;
+      eval[ilo*nlat+ila]=0;
+      if (map[ilo*nlat+ila]>0) {
+        ireg=lroundf(map[ilo*nlat+ila])-1;
+        pval[ilo*nlat+ila]= pop[it*nreg+ireg];
+        tval[ilo*nlat+ila]=tech[it*nreg+ireg];
+      }
+    }
+    
+    ncfile.get_var("population_density")->put_rec(pval,it);
+    ncfile.get_var("technology")->put_rec(tval,it);
+    cout << it << endl;
+  }
+        
   
   // Populate coordinate vars
   
