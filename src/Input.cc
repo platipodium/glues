@@ -917,24 +917,16 @@ int open_watchfiles() {
 
   for(i=0; i<LengthOfins; i++) {
     watchfilename.assign(datapath);
-    //watchreg[0]='\0';
-    //if(ins[i]<1) ins[i]=1;
-    //sprintf(watchreg,"%4d",ins[i]);
-    //sprintf(watchreg,"%03d",i);
-    //watchfilename.append(watchreg);
-    //watchfilename.append(watchstring);
-
+ 
     sprintf(watchreg,"pop_%04d.tsv\0",ins[i]);
     watchfilename.append(watchreg);
 
     cout<<" writing population "<<ins[i]<<" to "<<watchreg<<endl;
     if (!(watchfile[i] = fopen(watchfilename.c_str(),"w"))) {
       cout << "\nERROR\tCould not open output file " << watchfilename << " for writing\n";
-      exit(0);
+      return 1;
     }
     writeresultheader(watchfile[i],ins[i]);
-
-
   }
 
   return 0;

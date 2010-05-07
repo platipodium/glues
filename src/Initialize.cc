@@ -331,7 +331,7 @@ int read_data() {
   cout << "Read " << nregion << " regions" << endl;
   
   //for (unsigned int i; i<numberOfRegions; i++) cout << regions[i].Index() << "/" << regions[i].Id() << endl; 
-  if (!read_neighbours()) return 0;  // calculate neighbour regions 
+  if (!read_neighbours()) return 1;  // calculate neighbour regions 
 
   /** Debug neighbours 
   for (unsigned int i; i<numberOfRegions; i++) {
@@ -345,15 +345,15 @@ int read_data() {
   // for remapping of regions
   // if (!read_mapping()) return 0;
 
-  if (GlobalClimate::InitRead(climatestring) < 1) return 0;
+  if (GlobalClimate::InitRead(climatestring) < 1) return 1;
 
 // for (unsigned int i; i<numberOfRegions; i++) cerr << regions[i] << endl; 
 
   
-  if (!read_proxyevents()) return 0;  //  
+  if (!read_proxyevents()) return 1;  //  
 
   //cout << "No proxy events. TODO: Initialize.cc ll297 " << endl;
-  if (!read_SiteRegfile()) return 0;  //  
+  if (!read_SiteRegfile()) return 1;  //  
 
   char fname[199], *radn;
 
@@ -370,10 +370,10 @@ int read_data() {
     strcpy(radn,"eventradius.tsv");
   }
 
-  //if (!read_SiteRadfile()) return 0;  //  
+  //if (!read_SiteRadfile()) return 1;  //  
   for (unsigned int j=0; j<(unsigned int)MaxProxyReg; j++) RegSiteRad[j]=(int *)(malloc(numberOfRegions*sizeof(int)));
 
-  if (read_region_eventradius(std::string(fname),RegSiteRad)==0) return 0;
+  if (read_region_eventradius(std::string(fname),RegSiteRad)==0) return 1;
   
   /* --------------------------------------------------------------- */
   /* if environmental conditions change, update region information
@@ -387,11 +387,9 @@ int read_data() {
  // out_vegetation();
  // out_boxes();
   //cout << "No proxy events. TODO: Initialize.cc ll.312 " << endl;
-  if (!set_events()) return 0;
-  
-
-  
-  return 1;
+  if (!set_events()) return 1;
+ 
+  return 0;
 }
 
 /*--------------------------------------------*/
@@ -506,7 +504,7 @@ int initialize() {
   //    generate_varlist();
   for (int i=0; i<numberOfRegions; i++) sprdm[i]=0;
 
-  return 1;
+  return 0;
 }
 
 int generate_varlist() {

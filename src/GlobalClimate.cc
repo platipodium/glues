@@ -269,7 +269,7 @@ int GlobalClimate::Update(double t) {
 	//   cout << "Update Climate for " << regions[r]<<endl;
   }
     
-    cout << "Update Climate[" << it << "] for year " << it*ClimUpdateTimes[0] << " / " << t << endl;
+    //cout << "Update Climate[" << it << "] for year " << it*ClimUpdateTimes[0] << " / " << t << endl;
     timestamp=it*ClimUpdateTimes[0];
     //timestamp=4*ClimUpdateTimes[0];
 //  cout << "SUCCESS\n";
