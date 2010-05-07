@@ -1,13 +1,9 @@
 Citation: 
-Lemmen, Carsten; Wirtz, Kai W. (2010):  Global population density,
-subsistence style, and technological progress on a 1° x 1° grid between 9500 BC and 2000 BC.
-
-Institut für Küstenforschung, GKSS-Forschungszentrum Geesthacht GmbH, Geesthacht
-
-When using this data, cite the original publication 
 Lemmen, Carsten (2009): World distribution of land cover changes during Pre- and 
 Protohistoric Times and estimation of induced carbon releases, 
 Géomorphologie : relief, processus, environnement, 4/2009
+
+Institut für Küstenforschung, GKSS-Forschungszentrum Geesthacht GmbH, Geesthacht
 
 Abstract: 
 Global population density, subsistence style, and technological progress for the period
@@ -17,11 +13,18 @@ is visible in the transition from hunting-gathering to agropastoral life style i
 world regions.  This transition is based on an increase of domesticated plant and animal
 resources and technological progress, and can sustain much higher population densities
 than the foraging life style.
+
+The advent of agriculture creates an areal demand for growing crops; where the crop area
+is occupied by forest in potential vegetation estimated with a dynamical global vegetation
+model (VECODE), the aboveground and belowground carbon pools are reallocated; the net
+release of carbon to the atmosphere is calculated.
+
 Initial values for each prognostic variable are identical at simulation start (9500 BC),
 but the background vegetation varies.  Vegetation productivity in terms of net primary 
 production (NPP) was derived from Climber-2 climate anomalies on the IIASA database for 
 mean monthly precipitation and temperature and subsequent application of the
 Miami model.
+
 Data are presented as 50-year averages with time indicating the central year of each 50-
 year period (i.e. -2425 denotes the period 2450 BC - 2401 BC), and geographically
 on a half degree grid with latitude and longitude values denoting the central value

@@ -43,6 +43,7 @@ timelim=[3000 2980];
 %vars={'Density'}; timelim=[3000 2980]; ylim=[0,8];
 %vars={'GluesDeforestation'}; timelim=[3000 2980]; ylim=[0,40];
 vars={'GluesCropfraction'}; timelim=[4000 3980]; ylim=[0,15];
+vars={'GluesDeforestation'}; timelim=[4000 3980]; ylim=[0,50];
 %vars={'GluesCropfraction'}; timelim=[7000 6980]; ylim=[0,15];
 %vars={'Density'}; timelim=[5000 4980]; ylim=[0,8];
 %vars={'GluesDeforestation'}; timelim=[5000 4980]; ylim=[0,40];
