@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
 #endif
 
 /** Parse the simulation parameters in the SiSi configuration.
-  There should be in the future an alternative configuration which
+  @todo There should be in the future an alternative configuration which
   does not rely on SiSi.  This could be achieved with a converter from SiSi 
   to Namelist and vice versa, or with a parallel development */
   if( !SiSi::parseSimulation(argc, argv) ) {
@@ -105,8 +105,9 @@ int main(int argc, char* argv[])
 #ifdef HAVE_MPI_H
       mpi_rank==0 &&
 #endif
-/** Read in the basic geographical region definitions*/
-      !read_data() ) {
+/** Read in the basic geographical region definitions
+*/
+      read_data() ) {
       glues::Messages::Error();
       SiSi::finalize();
 #ifdef HAVE_MPI_H
@@ -127,9 +128,8 @@ int main(int argc, char* argv[])
   for (unsigned int i=0; i<LengthOfins; i++) ins[i]=newins[i];
   delete [] newins;
 
-
 /** Initialize the Events and populations */
-  if( !initialize() ) {
+  if ( initialize() ) {
       glues::Messages::Error();
       SiSi::finalize();
 #ifdef HAVE_MPI_H
@@ -141,7 +141,15 @@ int main(int argc, char* argv[])
   /**
      opens array of ascii & binary result files
   */
-  open_watchfiles();
+  if ( open_watchfiles() ) {
+      glues::Messages::Error();
+      SiSi::finalize();
+#ifdef HAVE_MPI_H
+      MPI::Finalize();
+#endif
+      return 1;
+  }
+
   outfile=store_prep_open();
   if( outfile==NULL ) {
       glues::Messages::Error();
