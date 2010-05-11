@@ -21,7 +21,7 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
    @author Kai Wirtz <kai.wirtz@gkss.de>
-   @date   2010-02-24
+   @date   2010-05-07
    @file   Glues.cc
    @brief  Main driver for GLUES simulations
 */
@@ -160,11 +160,9 @@ int main(int argc, char* argv[])
       return 1;
   }
    
-  
   if(RunVarInd>0) set_parvector(RunVarInd,1);
 
   dump_events();
-
 
   /*std::vector<RegionalPopulation> population;
   std::vector<RegionalPopulation>::iterator p_iter;
@@ -178,7 +176,9 @@ int main(int argc, char* argv[])
  glues::Data data(numberOfRegions,population); */
 
     
-  /** Run the simulation */
+  /** Run the simulation, return value on error is negative, positive return
+      value indicates the goodness of the simulation
+      */
   
   err_i=simulation();
   if (err_i<0) {
@@ -301,7 +301,7 @@ double simulation() {
   double mean_pastclimate_npp=0, mean_region_npp=0;
   double mean_futureclimate_npp=0, mean_sahara_npp=0;
   
-  
+#ifdef HAVE_NETCDF_H  
   /** Write the record for all non time-dependent variables */
   float * float_record = new float[numberOfRegions];
   int   *   int_record = new   int[numberOfRegions];
@@ -325,7 +325,7 @@ double simulation() {
   gnc_write_record(ncout,"region_is_in_sahara",&int_record);
   for (unsigned int i=0; i<numberOfRegions; i++) int_record[i]=populations[i].Region()->ContId();
   gnc_write_record(ncout,"region_continent",&int_record);
-  
+#endif
 
   for (t=0; t<tmax; t++) {
 

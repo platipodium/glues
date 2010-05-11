@@ -135,6 +135,7 @@ clp_basemap.m \
 clp_map_variable.m \
 clp_marble.m \
 clp_pop_trajectories.m \
+clp_pop_trajectories_nam.m \
 clp_regionpath.m \
 clp_traj_variable.m \
 cl_i2lli.m cl_lli2i.m
