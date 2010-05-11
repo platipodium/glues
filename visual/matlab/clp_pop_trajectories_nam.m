@@ -1,4 +1,4 @@
-function rdata=clp_pop_trajectories(varargin)
+function rdata=clp_pop_trajectories_nam(varargin)
 
 global ivar nvar figoffset;
 
@@ -74,21 +74,21 @@ netcdf.close(ncid);
 
 
 %% Read arve region mapping
-arvefile='/h/lemmen/projects/glues/tex/2010/holopop/arve/popregions6.nc';
-ncid=netcdf.open(arvefile,'NOWRITE');
-
-aid=netcdf.getVar(ncid,netcdf.inqVarId(ncid,'z'));
-alat=netcdf.getVar(ncid,netcdf.inqVarId(ncid,'lat'));
-alon=netcdf.getVar(ncid,netcdf.inqVarId(ncid,'lon'));
-
-
-arvekey='/h/lemmen/projects/glues/tex/2010/holopop/arve/pop_region_key2.txt';
-fid = fopen(arvekey);
-C = textscan(fid, '  %d %s');
-key = C{1};
-name = C{2};
-fclose(fid);
-
+% arvefile='/h/lemmen/projects/glues/tex/2010/holopop/arve/popregions6.nc';
+% ncid=netcdf.open(arvefile,'NOWRITE');
+% 
+% aid=netcdf.getVar(ncid,netcdf.inqVarId(ncid,'z'));
+% alat=netcdf.getVar(ncid,netcdf.inqVarId(ncid,'lat'));
+% alon=netcdf.getVar(ncid,netcdf.inqVarId(ncid,'lon'));
+% 
+% 
+% arvekey='/h/lemmen/projects/glues/tex/2010/holopop/arve/pop_region_key2.txt';
+% fid = fopen(arvekey);
+% C = textscan(fid, '  %d %s');
+% key = C{1};
+% name = C{2};
+% fclose(fid);
+% 
 %%
 
 time=r.time;

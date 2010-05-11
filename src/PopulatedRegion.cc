@@ -69,7 +69,7 @@ int PopulatedRegion::CivStart(long tc) {
     else GlobCivStart=48000;
     
     if(!VarActive)
-      cout << "GlobCivStart at " << GlobCivStart << endl;
+      cout << "GlobCivStart at simulation year " << GlobCivStart << endl;
   }
 
 /* ------------------------------------------------------- */
@@ -143,7 +143,7 @@ int PopulatedRegion::CivStart(long tc) {
    GlobDev+=difftot;
    GlobDevNum++;
    OldCivHit[civind]=0;
-   if(!VarActive & 0)
+   if(!VarActive )
      {
      cout <<"Ind. CivStart "<<id<<" at "<<tc<<" near to "<<civind<<"\tw err ";
      cout <<diffdist*Space2Time<<"+"<<difftime<<"\t->"<<GlobDev<< endl;
