@@ -92,18 +92,26 @@ figure(1);
 clf reset;
 m_proj('miller','lat',[latmin latmax]);
 hold on;
-m_coast;
+m_coast('patch',cmap(1,:));
 m_grid;
 
+res=0.5;
+dlat=[-res/2 -res/2 +res/2 +res/2 -res/2 NaN];
+dlon=[-res/2 +res/2 +res/2 -res/2 -res/2 NaN];
+
 %% Time loop
-for itime=1:10:ntime
+for itime=ntime:10:ntime
     
   title(num2str(time(itime)));
   for icol=1:ncol
     %if (itime>1 && exist('p','var') && length(p)>=icol && ishandle(p(icol))) delete(p(icol)); end
     ic=find(col(:,itime)==icol);
-    if isempty(ic) continue; end
-    p(icol)=m_plot(lonit(ic),latit(ic),'ks','color',cmap(icol,:),'MarkerSize',0.1);
+    nk=length(ic);
+    if nk<1 continue; end
+    %lon=reshape((lonit(ic)*dlon)',nk*6,1);
+    %lat=reshape((latit(ic)*dlat)',nk*6,1);
+    p(icol)=m_plot(lonit(ic),latit(ic),'ks','MarkerFaceColor',cmap(icol,:),'MarkerEdgeColor','none','MarkerSize',2.0);%,'MarkerSize',0.1,'MarkerEdgeColor','none');
+    %p(icol)=m_patch(lon,lat,cmap(icol,:));
   end
   pause(0.01);
 end
