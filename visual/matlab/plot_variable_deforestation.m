@@ -37,7 +37,7 @@ figoffset=0;
 %vars={'GluesNaturalForest'};
 % Figure 2 in paper
 vars={'Density','GluesDeforestation'};
-timelim=[3000 2980];
+timelim=[4000 4980];
 
 % For Gaillard et al paper
 %vars={'Density'}; timelim=[3000 2980]; ylim=[0,8];

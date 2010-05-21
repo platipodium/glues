@@ -1,5 +1,8 @@
 function cl_year_one(ax)
+
+cl_register_function;
 % Corrects a zero year on an x axis to 1 AD
+if ~exist('ax','var') ax=gca; end
 
 xt=get(ax,'XTick');
 i0=find(xt==0);
