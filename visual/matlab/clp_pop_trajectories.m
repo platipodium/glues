@@ -119,7 +119,7 @@ resvar=data;
 
   
 regions={'sam','nam','old','afr','emea','chi','sea','med','eur','ind'};
-regions={'nam'};
+regions={'all'};
 nregions=length(regions);
 
 cmap=colormap(jet(nregions));
@@ -146,7 +146,7 @@ clf reset;
   p(iregion)=plot(r.time(itstart:itend),squeeze(sum(data(ifound,itstart:itend),1)));
   l=legend(regions,'location','northwest');
   
-  %if strcmp(regions{iregion},'nam') 
+  if strcmp(regions{iregion},'nam') 
       %% Read Peros data
       fperos='/h/lemmen/projects/glues/tex/2010/saa/Peros2010_population.tsv';
       peros=dlmread(fperos,',',8,0);
@@ -163,7 +163,7 @@ clf reset;
       l=legend([regions,'Peros (2010)'],'location','northwest');
       
       
-  %end
+  end
   
   set(gca,'Xlim',[tmin,tmax]);
  
@@ -223,7 +223,7 @@ for iregion=1:nregions
   p(iregion)=plot(xdata,ydata);
   l=legend(regions,'location','northwest');
   
-  %if strcmp(regions{iregion},'nam') 
+  if strcmp(regions{iregion},'nam') 
       %% Read Peros data
       fperos='/h/lemmen/projects/glues/tex/2010/saa/Peros2010_density.tsv';
       peros=dlmread(fperos,',',7,0);
@@ -239,7 +239,7 @@ for iregion=1:nregions
       px=plot([-1000,-1000],minmax,'k:');
       hold off;
       l=legend([p(iregion),pp],[regions,'Peros (2010)'],'location','northwest');
-  %end
+  end
   
   set(gca,'Xlim',[tmin,tmax]);
  
