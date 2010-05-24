@@ -21,7 +21,7 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
    @author Kai Wirtz <kai.wirtz@gkss.de>
-   @date   2008-01-28
+   @date   2010-05-24
    @file   RegionalPopulation.h
    @brief  Definition of regional population
 */
@@ -31,6 +31,7 @@
 
 #include "Symbols.h"
 #include "Globals.h"
+#include <cmath>
 
 /** Prototype section */
 class PopulatedRegion;
@@ -87,6 +88,8 @@ class RegionalPopulation {
   double NatFert()	const   {return naturalfertility;}
   double CultIndex() 	const   {return ndomesticated*qfarming;}
   double Biondommax()     const   {return biondommax;}
+  double SubsistenceIntensity() const {return sqrt(technology)*(1-qfarming)+
+    (tlim*technology)*ndomesticated*qfarming; }
   PopulatedRegion* Region() const	{return region;}
   Tracer* Origin() {return origin;}
   double Size() const { return size; }

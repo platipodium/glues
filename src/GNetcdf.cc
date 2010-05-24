@@ -235,6 +235,13 @@ int gnc_write_header(NcFile& ncfile, int nreg) {
   var->add_att("coordinates","time lon lat");  
   var->add_att("date_of_creation",timestring.c_str());
 
+  var = ncfile.add_var("subsistence_intensity",ncFloat, timedim, regdim);
+  var->add_att("units",1);
+  var->add_att("long_name","subsistence_intensity");
+  var->add_att("description","Intensity of per capita land use");
+  var->add_att("coordinates","time lon lat");  
+  var->add_att("date_of_creation",timestring.c_str());
+
   return 0;
 }
 
