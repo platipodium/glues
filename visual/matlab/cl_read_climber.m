@@ -11,7 +11,7 @@ function cl_read_climber
 
 cl_register_function;
 
-filename='tran.dat';
+filename='data/tran.dat';
 
 if ~exist(filename,'file');
   error('Could not find climber data file ''tran.dat''');
@@ -28,68 +28,70 @@ end
 %   */
 % 
 
-fid=fopen(filename,'rb');
+fid=fopen(filename,'r','b');
+data=fread(fid,inf,'float32=>single');
+fclose(fid);
 
-  for (y=0; y<NY; y++) {
-    for (m=0; m<NM; m++) {
-
-      for (la=0; la<NLA; la++) {
-	offset=y*(NLA*NLO)+la*(NLO);
-	fread(raw,sizeof(float),NLO,in);
-
-	for (lo=0; lo<NLO; lo++) {
-#ifndef BIG_ENDIAN
-	  big2little4((void*)(&raw[lo]));
-#endif
-	  tmp[la*NLO+lo]+=(raw[lo]*10.0);  /* convert to centigrade */
-          gdd[offset+lo]+=(raw[lo]>7);
-	  /*if (lo < 20) printf("%5d",temp[offset+lo]);*/
-	}
-     }
-      
-      for (la=0; la<NLA; la++) {
-	offset=y*(NLA*NLO)+la*(NLO);
-	fread(raw,4,NLO,in);
-	
-	/*printf("%5d%5d%5d ",y,m,la);*/
-	for (lo=0; lo<NLO; lo++) {
-#ifndef BIG_ENDIAN
-	  big2little4((void*)(&raw[lo]));
-#endif
-	  prec[offset+lo]+=iroundf(raw[lo]*30.); /* convert to monthly*/
-	  /*if (lo < 20) printf("%5d",prec[offset+lo]);*/
-	}
-	/*printf("\n");*/
-      }
-  
-      /* Skip npp data for now */
-      if (y*m < (NY-1)*(NM-1)) fseek(in,4*NLA*NLO,SEEK_CUR);
-    }
-
-    /* Correct to annual mean from annual sum */
-    for (la=0; la<NLA; la++) for (lo=0; lo<NLO; lo++) {
-      temp[y*(NLA*NLO)+la*NLO+lo]=iroundf((double)tmp[la*NLO+lo]/NM);
-
-      tmp[la*NLO+lo]=0.0;
-    }
-  }
-  fclose(in);
+ndata=length(data);
+nlat=36;
+nlon=70;
+nm=12;
+nvar=3;
+ny=ndata/(nlat*nlon*nm*nvar);
 
 
+lat=fliplr(87.5-[0:(nlat-1)]*180.0/nlat);
+lon=-177.42857+[0:(nlon-1)]*360.0/nlon;
 
+
+%climate=reshape(data,ny,nm,nvar,nlat,nlon);
+climate=reshape(data,nlon,nlat,nvar,nm,ny);
+temp=squeeze(climate(:,:,1,:,:));
+prec=squeeze(climate(:,:,2,:,:));
+npp=squeeze(climate(:,:,3,:,:));
+
+npp(npp>9000)=NaN;
+
+atemp=double(squeeze(mean(temp,3)));
+aprec=double(squeeze(sum(temp,3)));
+anpp=double(squeeze(mean(npp,3)));
+
+
+%% reshape data
+
+%vars=data(1:3*nlat*nlon*nm);
+%var=reshape(vars,nlon,nlat,nvar,nm);
+
+%prec=double(squeeze(var(:,:,2,:)));
+%temp=double(squeeze(var(:,:,1,:)));
+%npp=double(squeeze(var(:,:,3,:)));
+
+figure(1);
+clf reset;
+m_proj('miller');
+m_coast; hold on;
+
+for m=1:20:ny 
+ p=m_pcolor(lon,lat,squeeze(anpp(:,:,m))'); 
+ pause(0.03);
+end
+
+figure(2);
+clf reset;
+hold on;
+pcolor(1:ny,lat,(squeeze(mean(aprec,1))));
+
+
+d=aprec;
+figure(3);
+clf reset;
+hold on;
+plot(1:ny,squeeze(mean(mean(d,2),1)),'b-');
+plot(1:ny,squeeze(min(min(d))),'b-');
+plot(1:ny,squeeze(max(max(d))),'b-');
 
 
 return
-tran=load(filename,'-ascii');
-
-
-% Data is lower-left coded, change to center
-    eval(['lon=' par '(:,1)+0.25;']); 
-    eval(['lat=' par '(:,2)+0.25;']); 
-
-    
-  eval([par '= ' par '(:,3:end);']);
-  
   
 save('-v6','climber',parameters{:},'lon','lat');
 
