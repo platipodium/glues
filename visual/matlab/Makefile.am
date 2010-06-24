@@ -122,6 +122,7 @@ cl_dump_landcells.m \
 cl_dump_result.m \
 cl_dump_regionpath.m \
 cl_get_iiasa.m \
+cl_get_mmap.m \
 cl_npp_lieth.m \
 cl_read_iiasa.m \
 clp_cluster.m \
