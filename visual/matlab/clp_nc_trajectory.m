@@ -10,11 +10,11 @@ arguments = {...
 %  {'lonlim',[-180 180]},...
   {'latlim',[-inf inf]},...
   {'lonlim',[-inf inf]},...
-  {'timelim',[-5000,1491]},...
+  {'timelim',[-9000,-1000]},...
   {'lim',[-inf,inf]},...
   {'reg','all'},...
   {'discrete',0},...
-  {'variables','population_density'},...
+  {'variables','subsistence_intensity'},...
   {'scale','absolute'},...
   {'figoffset',0},...
   {'timeunit','BP'},...
@@ -140,6 +140,8 @@ switch (varname)
     otherwise ;
 end
 
+data=data*0.04;
+
 minmax=double([min(min(min(data(ireg,itime)))),max(max(max(data(ireg,itime))))]);
 ilim=find(isfinite(lim));
 minmax(ilim)=lim(ilim);
@@ -181,6 +183,19 @@ ylabel('Density');
 hold on;
 p1=plot(time,mdata,'b','Linewidth',5);
 
+
+if 1==1 %% only for SI / qfarming
+  threshold=1/3.0;
+  fdata=data;
+  fdata(factor(ireg,itime)<threshold)=0;
+  fmdata=sum(fdata.*area,1)/areasum;
+  
+  fdata(factor(ireg,itime)<threshold)=NaN;
+  p2=plot(time,fdata','g')
+  p3=plot(time,fmdata,'r:','linewidth',5);
+end
+  
+
 if (~nosum)
   a3=axes('Color','none','YAxisLocation','right');
   hold on;
@@ -195,7 +210,7 @@ if (~nosum)
 end
 
 % dump ascii table
-fprintf('%d %d %d\n',[time' ; mdata ; log(2)./mdata])
+%fprintf('%d %d %d\n',[time' ; mdata ; log(2)./mdata])
 
 %% Print to file
 fdir=fullfile(d.plot,'variable',varname);
