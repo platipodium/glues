@@ -49,3 +49,4 @@ visual/plots/**.*
 visual/matlab/result*mat
 visual/matlab/cl_journal.txt
 visual/matlab/iiasa*
+visual/matlab/m_map*
