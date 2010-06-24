@@ -10,13 +10,16 @@ url='http://www.eos.ubc.ca/%7Erich';
 zipname='m_map';
 version='1.4';
 
-if ~exist(zipname,'file')
-  [filename,status] = urlwrite(fullfile(url,[zipname '.' version '.zip',[zipname '.zip']);
+if ~exist(fullfile(pwd,zipname),'file')
+  [filename,status] = urlwrite(fullfile(url,[zipname version '.zip']),[zipname '.zip']);
+
+  if exist(filename,'file')
+     unzip(filename);     
+     addpath(fullfile(pwd,zipname));
+  end
 end
 
-if exist(filename,'file')
-   unzip(filename);
-end
+
 
 return
 
