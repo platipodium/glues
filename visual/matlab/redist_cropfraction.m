@@ -79,7 +79,9 @@ dlon=[-res/2 +res/2 +res/2 -res/2 -res/2 NaN];
 
 %itime=find(time==-1000);
 %for itime=itime
+
 for itime=ntime:25:ntime
+
 
  [a ictime]=min(abs(ctime-time(itime)));
 
@@ -180,7 +182,9 @@ colormap(cmap);
   end
   %pause(0.01);
   name=sprintf('redist_cropfraction_%05d',ceil(time(itime)));
+
   colorbar('SouthOutside');
+
   plot_multi_format(gcf,name);
   
 end
