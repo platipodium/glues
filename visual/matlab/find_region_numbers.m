@@ -24,8 +24,10 @@ while iarg<=nargin
     case 'lat'
       latlim=varargin{iarg+1};
       iarg=iarg+1;
+      if (length(latlim)==1) latlim(2)=latlim(1); end
     case 'lon'
       lonlim=varargin{iarg+1};
+      if (length(lonlim)==1) lonlim(2)=lonlim(1); end
       iarg=iarg+1;
     case 'lbk'
       lonlim=[6,42];

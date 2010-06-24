@@ -35,8 +35,11 @@ for i=1:a.length eval([a.name{i} '=' clp_valuestring(a.value{i}) ';']); end
 
 % Choose 'emea' or 'China' or 'World'
 %[regs,nreg,lonlim,latlim]=find_region_numbers(reg);
+if isnumeric(reg) 
+  ireg=reg; nreg=length(reg); lali=latlim; loli=lonlim;
+else
 [ireg,nreg,loli,lali]=find_region_numbers(reg);
-
+end
 
 if ~exist(file,'file')
     error('File does not exist');
@@ -90,14 +93,14 @@ data=double(netcdf.getVar(ncid,varid));
 
 if isnumeric(mult) data=data .* mult; 
 else
-  factor=double(netcdf.getVar(ncid,netcdf.inqVarId(ncid,mult)));    
-  data = data .* repmat(factor,size(data)./size(factor));
+  ffactor=double(netcdf.getVar(ncid,netcdf.inqVarId(ncid,mult)));    
+  data = data .* repmat(ffactor,size(data)./size(ffactor));
 end
 
 if isnumeric(div) data=data ./ div; 
 else
-  factor=double(netcdf.getVar(ncid,netcdf.inqVarId(ncid,div)));    
-  data = data ./ repmat(factor,size(data)./size(factor));
+  ffactor=double(netcdf.getVar(ncid,netcdf.inqVarId(ncid,div)));    
+  data = data ./ repmat(ffactor,size(data)./size(ffactor));
 end
 
 
@@ -187,10 +190,10 @@ p1=plot(time,mdata,'b','Linewidth',5);
 if 1==1 %% only for SI / qfarming
   threshold=1/3.0;
   fdata=data;
-  fdata(factor(ireg,itime)<threshold)=0;
+  fdata(ffactor(ireg,itime)<threshold)=0;
   fmdata=sum(fdata.*area,1)/areasum;
   
-  fdata(factor(ireg,itime)<threshold)=NaN;
+  fdata(ffactor(ireg,itime)<threshold)=NaN;
   p2=plot(time,fdata','g')
   p3=plot(time,fmdata,'r:','linewidth',5);
 end
