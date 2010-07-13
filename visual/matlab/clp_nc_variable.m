@@ -1,4 +1,4 @@
-function clp_nc_variable(varargin)
+function [retdata,basename]=clp_nc_variable(varargin)
 
 arguments = {...
   {'latlim',[-60 80]},...
@@ -21,7 +21,12 @@ arguments = {...
   {'mult',1},...
   {'div',1},...
   {'showsites',0},...
-  {'file','../../test.nc'}
+  {'file','../../test.nc'},...
+  {'retdata',NaN},...
+  {'basename','variable'},...
+  {'nocolor',0},...
+  {'ncol',19},...
+  {'nogrid',0}
 };
 
 cl_register_function;
@@ -97,6 +102,8 @@ else
   data = data ./ repmat(factor,size(data)./size(factor));
 end
 
+if length(timelim)==1 timelim(2)=timelim(1); end
+
 
 % Find time dimension
 ntime=1;
@@ -134,18 +141,24 @@ minmax(ilim)=lim(ilim);
 
 seacolor=0.7*ones(1,3);
 landcolor=0.8*ones(1,3);  
-cmap=colormap(jet(19));
+
+
+if (nocolor==0) cmap=colormap(jet(ncol));
+else cmap=colormap(flipud(gray(ncol)));
+end
 rlon=lon;
 rlat=lat;
 
   % plot map
   figure(varid); 
   clf reset;
-  cmap=colormap(jet(19));
+  if (nocolor==0) cmap=colormap(jet(ncol));
+  else cmap=colormap(flipud(gray(ncol)));
+  end
   set(varid,'DoubleBuffer','on');    
   set(varid,'PaperType','A4');
   hold on;
-  pb=clp_basemap('lon',lonlim,'lat',latlim);
+  pb=clp_basemap('lon',lonlim,'lat',latlim,'nogrid',nogrid);
   if (marble>0)
     pm=clp_marble('lon',lonlim,'lat',latlim);
     if pm>0 alpha(pm,marble); end
@@ -173,8 +186,6 @@ ncol=length(colormap);
   ival=find(hp>0);
   %alpha(hp(ival),0);
   
-
-
 
 %% Time loop
 
@@ -205,7 +216,7 @@ for it=1:ntime
     if isempty(j) continue; end
     for ij=1:length(j)
       h=hp(j(ij));
-      if isnan(h) continue; end
+      if isnan(h) || h==0 continue; end
       greyval=0.15+0.35*sqrt(i./ncol);
       %alpha(h,greyval);
       set(h,'FaceColor',cmap(i,:));
@@ -213,7 +224,7 @@ for it=1:ntime
   end
 
   if (it==1)
-    cb=colorbar;
+    cb=colorbar('FontSize',15);
     if length(units)>0 title(cb,units); end
     yt=get(cb,'YTick');
     yr=minmax(2)-minmax(1);
@@ -225,6 +236,9 @@ for it=1:ntime
     fdir=fullfile(d.plot,'variable',varname);
     if ~exist('fdir','dir') system(['mkdir -p ' fdir]); end
   end
+  
+  obj=findall(gcf,'-property','FontSize');
+  set(obj,'FontSize',15);
   
   bname=[varname '_' num2str(nreg)];
   

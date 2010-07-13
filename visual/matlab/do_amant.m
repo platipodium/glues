@@ -1,6 +1,20 @@
 % Skript to produce the figures for the american antiquity paper presented
 % at saa
 
+
+% Figure 4 US density maps
+
+%%
+ustime=[-3000 -2000 -1000 0 500 1000];
+usletter='abcdef'
+for i=1:length(ustime)
+  [d,b]=clp_nc_variable('var','population_density','timelim',ustime(i),'latlim',[16 48],'lonlim',[-126 -68],'lim',[0 1],'nogrid',1);
+  [d,n,e]=fileparts(b);
+  plot_multi_format(gcf,fullfile(d,['lemmen_fig4' usletter(i) '_color']));
+end
+
+return
+
 % Figure 7 histogram of timing
 [d,b]=clp_woodland_histogram('nocolor',1);
 [d,n,e]=fileparts(b);
