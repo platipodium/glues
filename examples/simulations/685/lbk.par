@@ -17,7 +17,7 @@ float	overexp	0.01
 float	kappa	550.0
 	\d NPP where fertility=0.5 and biodiversity is maximal
 	\v 
-float	gdd_opt	0.7
+float	gdd_opt 0.7
 	\d GDD/365 with maximal abundance of domesticables
 	\v 
 float	omega	0.04
