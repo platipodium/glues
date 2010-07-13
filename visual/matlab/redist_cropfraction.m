@@ -18,21 +18,21 @@ time=-9500:20:1980;
 %% Read grid file
   file='../../src/test/regions_11k.nc';
   ncid=netcdf.open(file,'NC_NOWRITE');
-  varid=netcdf.inqVarId(ncid,'npp');
+  varid=netcdf.inqVarID(ncid,'npp');
   npp=netcdf.getVar(ncid,varid);
   npp=single(npp);
-  varid=netcdf.inqVarId(ncid,'gdd');
+  varid=netcdf.inqVarID(ncid,'gdd');
   gdd=netcdf.getVar(ncid,varid);
   gdd=single(gdd);
-varid=netcdf.inqVarId(ncid,'area');
+varid=netcdf.inqVarID(ncid,'area');
 %area=netcdf.getVar(ncid,varid);
-varid=netcdf.inqVarId(ncid,'map_id');
+varid=netcdf.inqVarID(ncid,'map_id');
 map=netcdf.getVar(ncid,varid);
-varid=netcdf.inqVarId(ncid,'lat');
+varid=netcdf.inqVarID(ncid,'lat');
 latit=netcdf.getVar(ncid,varid);
-varid=netcdf.inqVarId(ncid,'time');
+varid=netcdf.inqVarID(ncid,'time');
 ctime=netcdf.getVar(ncid,varid);
-varid=netcdf.inqVarId(ncid,'lon');
+varid=netcdf.inqVarID(ncid,'lon');
 lonit=netcdf.getVar(ncid,varid);
 netcdf.close(ncid);
 
@@ -40,9 +40,9 @@ netcdf.close(ncid);
 %% REad arve grid file
 %   file='/h/lemmen/projects/glues/tex/2010/holopop/arve/biome4out.nc';
 %   ncid=netcdf.open(file,'NC_NOWRITE');
-%   varid=netcdf.inqVarId(ncid,'npp');
+%   varid=netcdf.inqVarID(ncid,'npp');
 %   npp=netcdf.getVar(ncid,varid);
-%   varid=netcdf.inqVarId(ncid,'gdd0');
+%   varid=netcdf.inqVarID(ncid,'gdd0');
 %   gdd=netcdf.getVar(ncid,varid);
 % netcdf.close(ncid);
 

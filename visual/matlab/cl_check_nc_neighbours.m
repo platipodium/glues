@@ -11,13 +11,13 @@ if ~exist(file,'file')
 end
 ncid=netcdf.open(file,'NC_NOWRITE');
 
-region=netcdf.getVar(ncid,netcdf.inqVarId(ncid,'region'));
-neigh=netcdf.getVar(ncid,netcdf.inqVarId(ncid,'region_neighbour'));
-nneigh=netcdf.getVar(ncid,netcdf.inqVarId(ncid,'number_of_neighbours'));
-lat=netcdf.getVar(ncid,netcdf.inqVarId(ncid,'lat'));
-lon=netcdf.getVar(ncid,netcdf.inqVarId(ncid,'lon'));
-ncell=netcdf.getVar(ncid,netcdf.inqVarId(ncid,'number_of_gridcells'));
-cells=netcdf.getVar(ncid,netcdf.inqVarId(ncid,'gridcells'))';
+region=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'region'));
+neigh=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'region_neighbour'));
+nneigh=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'number_of_neighbours'));
+lat=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'lat'));
+lon=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'lon'));
+ncell=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'number_of_gridcells'));
+cells=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'gridcells'))';
 netcdf.close(ncid);
 
 file='../../src/test/regions_11k.nc';
@@ -25,9 +25,9 @@ if ~exist(file,'file')
     error('File does not exist');
 end
 ncid=netcdf.open(file,'NC_NOWRITE');
-latit=netcdf.getVar(ncid,netcdf.inqVarId(ncid,'lat'));
-lonit=netcdf.getVar(ncid,netcdf.inqVarId(ncid,'lon'));
-mapid=netcdf.getVar(ncid,netcdf.inqVarId(ncid,'map_id'));
+latit=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'lat'));
+lonit=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'lon'));
+mapid=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'map_id'));
 netcdf.close(ncid);
 
 figure(1); 

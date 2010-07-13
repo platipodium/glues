@@ -68,7 +68,7 @@ for infix={pmask,tmask,nmask}
   for ivar=0:nvar-1
     [varname,xtype,dimids,natt] = netcdf.inqVar(ncid,ivar);
     try
-      ovar=netcdf.inqVarId(ncout,varname);
+      ovar=netcdf.inqVarID(ncout,varname);
       continue;
     catch ('MATLAB:netcdf:inqVarID:variableNotFound');
     end

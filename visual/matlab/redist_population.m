@@ -8,11 +8,11 @@ clear all;
 
 file='../../test.nc';
 ncid=netcdf.open(file,'NC_NOWRITE');
-varid=netcdf.inqVarId(ncid,'population_density');
+varid=netcdf.inqVarID(ncid,'population_density');
 pop=netcdf.getVar(ncid,varid);
-varid=netcdf.inqVarId(ncid,'time');
+varid=netcdf.inqVarID(ncid,'time');
 time=netcdf.getVar(ncid,varid);
-varid=netcdf.inqVarId(ncid,'region');
+varid=netcdf.inqVarID(ncid,'region');
 r_id=netcdf.getVar(ncid,varid)+1;
 netcdf.close(ncid);
 
@@ -20,21 +20,21 @@ netcdf.close(ncid);
 %% Read grid file
 file='../../src/test/regions_11k.nc';
 ncid=netcdf.open(file,'NC_NOWRITE');
-varid=netcdf.inqVarId(ncid,'npp');
+varid=netcdf.inqVarID(ncid,'npp');
 npp=netcdf.getVar(ncid,varid);
 npp=single(npp(:,110));
-varid=netcdf.inqVarId(ncid,'gdd');
+varid=netcdf.inqVarID(ncid,'gdd');
 gdd=netcdf.getVar(ncid,varid);
 gdd=single(gdd(:,110));
-varid=netcdf.inqVarId(ncid,'area');
+varid=netcdf.inqVarID(ncid,'area');
 area=netcdf.getVar(ncid,varid);
-varid=netcdf.inqVarId(ncid,'map_id');
+varid=netcdf.inqVarID(ncid,'map_id');
 map=netcdf.getVar(ncid,varid);
-varid=netcdf.inqVarId(ncid,'region');
+varid=netcdf.inqVarID(ncid,'region');
 c_id=netcdf.getVar(ncid,varid);
-varid=netcdf.inqVarId(ncid,'lat');
+varid=netcdf.inqVarID(ncid,'lat');
 latit=netcdf.getVar(ncid,varid);
-varid=netcdf.inqVarId(ncid,'lon');
+varid=netcdf.inqVarID(ncid,'lon');
 lonit=netcdf.getVar(ncid,varid);
 netcdf.close(ncid);
 

@@ -68,7 +68,7 @@ end
 
 %% Read area from netcdf file
 ncid=netcdf.open('../../src/test/regions_11k_685.nc','NOWRITE');
-varid=netcdf.inqVarId(ncid,'area');
+varid=netcdf.inqVarID(ncid,'area');
 area=netcdf.getVar(ncid,varid);
 netcdf.close(ncid);
 
@@ -77,9 +77,9 @@ netcdf.close(ncid);
 % arvefile='/h/lemmen/projects/glues/tex/2010/holopop/arve/popregions6.nc';
 % ncid=netcdf.open(arvefile,'NOWRITE');
 % 
-% aid=netcdf.getVar(ncid,netcdf.inqVarId(ncid,'z'));
-% alat=netcdf.getVar(ncid,netcdf.inqVarId(ncid,'lat'));
-% alon=netcdf.getVar(ncid,netcdf.inqVarId(ncid,'lon'));
+% aid=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'z'));
+% alat=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'lat'));
+% alon=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'lon'));
 % 
 % 
 % arvekey='/h/lemmen/projects/glues/tex/2010/holopop/arve/pop_region_key2.txt';

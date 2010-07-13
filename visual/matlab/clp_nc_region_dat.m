@@ -33,11 +33,11 @@ if ~exist(file,'file')
 end
 ncid=netcdf.open(file,'NC_NOWRITE');
 
-varname='region'; varid=netcdf.inqVarId(ncid,varname);
+varname='region'; varid=netcdf.inqVarID(ncid,varname);
 region=netcdf.getVar(ncid,varid);
-varname='region_neighbour'; varid=netcdf.inqVarId(ncid,varname);
+varname='region_neighbour'; varid=netcdf.inqVarID(ncid,varname);
 neigh=netcdf.getVar(ncid,varid);
-varname='number_of_neighbours'; varid=netcdf.inqVarId(ncid,varname);
+varname='number_of_neighbours'; varid=netcdf.inqVarID(ncid,varname);
 nneigh=netcdf.getVar(ncid,varid);
 
 
@@ -80,7 +80,7 @@ else
 end
 
 
-varname=vars; varid=netcdf.inqVarId(ncid,varname);
+varname=vars; varid=netcdf.inqVarID(ncid,varname);
 try
     description=netcdf.getAtt(ncid,varid,'description');
 catch
