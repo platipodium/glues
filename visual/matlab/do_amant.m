@@ -2,10 +2,13 @@
 % at saa
 
 % Figure 7 histogram of timing
-% clp_woodland_histogram;
+[d,b]=clp_woodland_histogram('nocolor',1);
+[d,n,e]=fileparts(b);
+plot_multi_format(gcf,fullfile(d,'lemmen_fig7_gray'));
 
-
-
+[d,b]=clp_woodland_histogram;
+[d,n,e]=fileparts(b);
+plot_multi_format(gcf,fullfile(d,'lemmen_fig7_color'));
 
 
 %% Figure 6 nospread trajectories
