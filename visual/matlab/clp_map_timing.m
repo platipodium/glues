@@ -13,7 +13,7 @@ arguments = {...
   {'figoffset',0},...
   {'ylimit',[-Inf,Inf]},...
   {'timeunit','BP'},...
-  {'timestep',100},...
+  {'timestep',1},...
   {'marble',0},...
   {'seacolor',0.7*ones(1,3)},...
   {'landcolor',.8*ones(1,3)},...
@@ -24,7 +24,8 @@ arguments = {...
   {'projection','miller'},...
   {'showsites',0},...
   {'notitle',0}...
-  {'nocbar',0}
+  {'nocbar',0},...
+  {'ncol',19};
 };
 
 % For Europe:
@@ -175,8 +176,8 @@ if all(r.time>=0)
   tend=max([r.tstart+toffset,timelim(2)]);
   r.time=r.time+toffset;
 else
-  tstart=max([r.tstart,2000-timelim(1)]);
-  tend=min([r.tend,2000-timelim(2)]);
+  tstart=max([r.tstart,timelim(1)]);
+  tend=min([r.tend,timelim(2)]);
   timeunit='AD';
   isbp=0;
 end
@@ -196,12 +197,14 @@ else
   itime=itstart;
 end
   
+if isempty(itime) error('No timing found in specified interval'); end
+
 if itime(end)~=itend itime=[itime itend]; end
 time=time(itime);
 
 retdata=zeros(nvar,itend-itstart+1,length(regs))+NaN;
 
-if numel(cmap)<3 cmap=colormap(jet(19)); end
+if numel(cmap)<3 cmap=colormap(jet(ncol)); end
 cmap=flipud(cmap);
 ncol=length(cmap(:,1));
 
@@ -283,7 +286,7 @@ for idovar=1:nvar
     ireg=regs(ival(i));
     if (hp(ival(i))==0) continue; end
     ftime=find(data(ireg,itstart:itend)>=threshold);
-    if isempty(ftime) timing(ireg)=NaN; else timing(ireg)=r.time(min(ftime)); end
+    if isempty(ftime) timing(ireg)=NaN; else timing(ireg)=time(min(ftime)); end
   end
  
   minmax=[min(timing),max(timing)];
@@ -300,13 +303,17 @@ for idovar=1:nvar
 if (nocbar == 0) % colorbar
      
 cbw=0.4;  %  (relative width of colorbar)
-cbxo=0.05; %(x-offset of colorbar)
-cbyo=0.04;
-cbh=0.08;
+cbxo=0.07; %(x-offset of colorbar)
+cbyo=0.95;
+cbh=0.05;
 cby=latlim(1)+(cbyo+[0,0,cbh,cbh])*(latlim(2)-latlim(1));
 cbx=lonlim(1)+(cbxo+[0,cbw,cbw,0])*(lonlim(2)-lonlim(1));
+cbyw=latlim(1)+(cbyo+[-2.2*cbh,-2.2*cbh,cbh,cbh])*(latlim(2)-latlim(1));
+cbxw=lonlim(1)+(cbxo+[-cbxo,cbw+cbxo,cbw+cbxo,-cbxo])*(lonlim(2)-lonlim(1));
 
-m_patch(cbx,cby,'w');
+
+m_patch(cbxw,cbyw,'w');
+m_patch(cbx,cby,'w','EdgeColor','none');
 for i=1:ncol
   cba(i)=m_patch(lonlim(1)+(cbxo+cbw/ncol*(i-1)+[0,cbw/ncol,cbw/ncol,0])*(lonlim(2)-lonlim(1)),cby,cmap(i,:),'EdgeColor','none');
   greyval=0.15+0.35*sqrt(i./ncol);
@@ -320,10 +327,15 @@ cbtv=scale_precision(ylimit(1):(ylimit(2)-ylimit(1))/4.0:ylimit(2),2);
 j=0;
 for i=0:ncol/4:ncol
     j=j+1;
-    m_text(lonlim(1)+(cbxo+cbw/ncol*i)*(lonlim(2)-lonlim(1)),cby(end),num2str(cbtv(j)),...
-        'horiz','center','vertical','bottom');
+    cbt(j)=m_text(lonlim(1)+(cbxo+cbw/ncol*i)*(lonlim(2)-lonlim(1)),cby(1)-5*cbh,num2str(cbtv(j)),...
+        'horiz','center','vertical','top');
 end
+
+cbt(j+1)=m_text(0.5*(cbx(1)+cbx(2)),0.92*cby(1),'Calendar year','horiz','center','vertical','top');
 end
+
+
+
 
 %% Correct the size/position of the figure when axis labels are off screen
 
@@ -355,6 +367,8 @@ end
 
   obj=findall(gcf,'-property','FontSize');
   set(obj,'FontSize',15);
+  
+  set(cbt,'FontSize',11);
 
   %%
   
@@ -364,12 +378,14 @@ end
     
   plot_multi_format(gcf,plotname);
   
+  if 1==0
   figure(ivar*2+figoffset)
   ivalid=find(timing~=0 & isfinite(timing));
   edges=[-3500:500:1500];
   [n,bin]=histc(timing(ivalid),edges);
   bar(edges,n,'histc');
-      
+  end    
+  
 end % of for loop for idovar
 
 hold off;

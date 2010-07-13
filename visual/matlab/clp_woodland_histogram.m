@@ -43,7 +43,7 @@ if ~exist(file,'file')
 end
 ncid=netcdf.open(file,'NC_NOWRITE');
 
-varname='region'; varid=netcdf.inqVarId(ncid,varname);
+varname='region'; varid=netcdf.inqVarID(ncid,varname);
 region=netcdf.getVar(ncid,varid);
 
 [ndim nvar natt udimid] = netcdf.inq(ncid); 
@@ -73,7 +73,7 @@ else
 end
 
 
-varname=variables; varid=netcdf.inqVarId(ncid,varname);
+varname=variables; varid=netcdf.inqVarID(ncid,varname);
 try
     description=netcdf.getAtt(ncid,varid,'description');
 catch
@@ -93,8 +93,8 @@ data=double(netcdf.getVar(ncid,varid));
 ntime=1;
 if numel(data)>length(data)
   idimid=find(udimid==dimids);
-  tid=netcdf.inqVarId(ncid,netcdf.inqDim(ncid,udimid));
-  time=netcdf.getvar(ncid,tid);
+  tid=netcdf.inqVarID(ncid,netcdf.inqDim(ncid,udimid));
+  time=netcdf.getVar(ncid,tid);
   itime=find(time>=timelim(1) & time<=timelim(2));
   if isempty(itime)
       error('Not data in specified time range')
@@ -183,9 +183,21 @@ file=['/h/lemmen/projects/glues/tex/2010/saa/card/table_Woodland.csv'];
  p5=bar(edges,n/max(n),'histc');
  set(p5,'Facecolor','none','LineWidth',4,'EdgeColor','b');
  
-
 fprintf('Site data max %d of %d\n',max(nw),sum(nw));
 
+
+ytl=get(gca,'YTickLabel');
+ytl(1,:)='   ';
+ytl=ytl(:,2:3);
+ytl(6,:)=' 1';
+set(gca,'YTickLabel',ytl);
+
+xtl=get(gca,'XTickLabel');
+xtl(1,:)=' ';
+set(gca,'XTickLabel',xtl);
+
+xlabel('Calendar year');
+ylabel('Relative frequency');
 
 plot_multi_format(gcf,plotname);
   
