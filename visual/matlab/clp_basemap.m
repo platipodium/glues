@@ -10,6 +10,7 @@ arguments = {...
   {'nocoast',0},...
   {'lonlim',[-180 180]},...
   {'projection','equidistant'}...
+  {'nogrid',0}
 };
 
 [args,rargs]=clp_arguments(varargin,arguments);
@@ -33,11 +34,18 @@ if ~ishold(gcf) clf reset; end
 
 set(gcf,'userdata',cl_get_version);
 
-m_grid;%('backcolor',color_sea);
+%if (nogrid==0) m_grid; end%('backcolor',color_sea);
+if (nogrid==0)
+    m_grid;
+else
+    m_grid('XTick',[],'Ytick',[]);
+end
+
 if ~nocoast
     m_coast;
   % m_coast('patch',color_land);
 end
+
 
 hold on;
 
