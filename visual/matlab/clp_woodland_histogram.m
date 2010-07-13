@@ -1,4 +1,4 @@
-function rdata=clp_nc_woodland_histogram(varargin)
+function [retdata,basename]=clp_nc_woodland_histogram(varargin)
 
 arguments = {...
   {'latlim',[30 50]},...
@@ -23,7 +23,10 @@ arguments = {...
   {'showsites',0},...
   {'notitle',0}...
   {'nocbar',0}...
-  {'file','../../test.nc'}
+  {'file','../../test.nc'},...
+  {'nocolor',0},...
+  {'retdata',NaN},...
+  {'basename','woodland_histogram'}
 };
 
 cl_register_function;
@@ -32,6 +35,13 @@ cl_register_function;
 for i=1:a.length eval([a.name{i} '=' clp_valuestring(a.value{i}) ';']); end
 
 [d,f]=get_files;
+
+
+if (nocolor==0)
+    lc={'b' 'r'};
+else
+    lc={repmat(0.7,3,1) repmat(0.3,3,1)}
+end
 
 % Choose 'emea' or 'China' or 'World'
 %[regs,nreg,lonlim,latlim]=find_region_numbers(reg);
@@ -146,7 +156,7 @@ ivalid=find(isfinite(timing));
 edges=[timelim(1)-100:500:timelim(2)+100];
 [n,bin]=histc(timing(ivalid),edges);
 p2=bar(edges,n/max(n),'histc');
-set(p2,'FaceAlpha',0.7);
+set(p2,'FaceAlpha',0.7,'FaceColor',lc{1});
 set(gca,'Xlim',[timelim(1)-100 timelim(2)+100],'Ylim',[0 1.1]);
 cl_year_one(gca);
 
@@ -178,10 +188,10 @@ file=['/h/lemmen/projects/glues/tex/2010/saa/card/table_Woodland.csv'];
  [nw,bin]=histc(1950-age,wedges);
  hold on;
  p4=bar(wedges,nw/max(nw),'histc');
- set(p4,'Facecolor','r','FaceAlpha',0.7);
+ set(p4,'Facecolor',lc{2},'FaceAlpha',0.7);
  
  p5=bar(edges,n/max(n),'histc');
- set(p5,'Facecolor','none','LineWidth',4,'EdgeColor','b');
+ set(p5,'Facecolor','none','LineWidth',4,'EdgeColor',lc{1});
  
 fprintf('Site data max %d of %d\n',max(nw),sum(nw));
 
@@ -202,6 +212,9 @@ ylabel('Relative frequency');
 plot_multi_format(gcf,plotname);
   
 hold off;
+
+if nargout>0 retdata=data; end
+if nargout>1 basename=plotname; end
 
 return;
 end
