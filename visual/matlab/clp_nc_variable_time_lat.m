@@ -41,7 +41,7 @@ if ~exist(file,'file')
 end
 ncid=netcdf.open(file,'NC_NOWRITE');
 
-varname='region'; varid=netcdf.inqVarId(ncid,varname);
+varname='region'; varid=netcdf.inqVarID(ncid,varname);
 region=netcdf.getVar(ncid,varid);
 
 [ndim nvar natt udimid] = netcdf.inq(ncid); 
@@ -71,7 +71,7 @@ else
 end
 
 
-varname=vars; varid=netcdf.inqVarId(ncid,varname);
+varname=vars; varid=netcdf.inqVarID(ncid,varname);
 try
     description=netcdf.getAtt(ncid,varid,'description');
 catch
@@ -89,13 +89,13 @@ data=double(netcdf.getVar(ncid,varid));
 
 if isnumeric(mult) data=data .* mult; 
 else
-  factor=double(netcdf.getVar(ncid,netcdf.inqVarId(ncid,mult)));    
+  factor=double(netcdf.getVar(ncid,netcdf.inqVarID(ncid,mult)));    
   data = data .* repmat(factor,size(data)./size(factor));
 end
 
 if isnumeric(div) data=data ./ div; 
 else
-  factor=double(netcdf.getVar(ncid,netcdf.inqVarId(ncid,div)));    
+  factor=double(netcdf.getVar(ncid,netcdf.inqVarID(ncid,div)));    
   data = data ./ repmat(factor,size(data)./size(factor));
 end
 
@@ -108,7 +108,7 @@ end
 ntime=1;
 if numel(data)>length(data)
   idimid=find(udimid==dimids);
-  tid=netcdf.inqVarId(ncid,netcdf.inqDim(ncid,udimid));
+  tid=netcdf.inqVarID(ncid,netcdf.inqDim(ncid,udimid));
   time=netcdf.getvar(ncid,tid);
   itime=find(time>=timelim(1) & time<=timelim(2));
   if isempty(itime)

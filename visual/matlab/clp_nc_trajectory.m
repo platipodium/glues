@@ -96,7 +96,7 @@ else
 end
 
 
-varname=variables; varid=netcdf.inqVarId(ncid,varname);
+varname=variables; varid=netcdf.inqVarID(ncid,varname);
 try
     description=netcdf.getAtt(ncid,varid,'description');
 catch
@@ -113,13 +113,13 @@ data=double(netcdf.getVar(ncid,varid));
 
 if isnumeric(mult) data=data .* mult; 
 else
-  ffactor=double(netcdf.getVar(ncid,netcdf.inqVarId(ncid,mult)));    
+  ffactor=double(netcdf.getVar(ncid,netcdf.inqVarID(ncid,mult)));    
   data = data .* repmat(ffactor,size(data)./size(ffactor));
 end
 
 if isnumeric(div) data=data ./ div; 
 else
-  ffactor=double(netcdf.getVar(ncid,netcdf.inqVarId(ncid,div)));    
+  ffactor=double(netcdf.getVar(ncid,netcdf.inqVarID(ncid,div)));    
   data = data ./ repmat(ffactor,size(data)./size(ffactor));
 end
 
@@ -128,7 +128,7 @@ end
 ntime=1;
 if numel(data)>length(data)
   idimid=find(udimid==dimids);
-  tid=netcdf.inqVarId(ncid,netcdf.inqDim(ncid,udimid));
+  tid=netcdf.inqVarID(ncid,netcdf.inqDim(ncid,udimid));
   time=netcdf.getvar(ncid,tid);
   itime=find(time>=timelim(1) & time<=timelim(2));
   if isempty(itime)

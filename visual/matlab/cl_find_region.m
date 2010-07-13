@@ -21,11 +21,11 @@ for i=1:a.length eval([a.name{i} '=' clp_valuestring(a.value{i}) ';']); end
 if ~exist(file,'file') error('File does not exist'); end
 
 ncid=netcdf.open(file,'NC_NOWRITE');
-varid=netcdf.inqVarId(ncid,'latitude');
+varid=netcdf.inqVarID(ncid,'latitude');
 lat=netcdf.getVar(ncid,varid);
-varid=netcdf.inqVarId(ncid,'longitude');
+varid=netcdf.inqVarID(ncid,'longitude');
 lon=netcdf.getVar(ncid,varid);
-%varid=netcdf.inqVarId(ncid,'region');
+%varid=netcdf.inqVarID(ncid,'region');
 %region=netcdf.getVar(ncid,varid);
 
 if length(lonlim)==1 lonlim(2)=lonlim(1); end

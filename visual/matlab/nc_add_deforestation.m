@@ -5,10 +5,10 @@ cl_register_function;
 resultfile='../../test.nc';
 
 ncid=netcdf.open(resultfile,'NC_WRITE');
-farming=single(netcdf.getVar(ncid,netcdf.inqVarId(ncid,'farming')));
-density=single(netcdf.getVar(ncid,netcdf.inqVarId(ncid,'population_density')));
-time=netcdf.getVar(ncid,netcdf.inqVarId(ncid,'time'))';
-area=netcdf.getVar(ncid,netcdf.inqVarId(ncid,'area'));
+farming=single(netcdf.getVar(ncid,netcdf.inqVarID(ncid,'farming')));
+density=single(netcdf.getVar(ncid,netcdf.inqVarID(ncid,'population_density')));
+time=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'time'))';
+area=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'area'));
 netcdf.close(ncid);
 
 
