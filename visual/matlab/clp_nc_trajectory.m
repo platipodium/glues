@@ -1,4 +1,4 @@
-function clp_nc_trajectory(varargin)
+function [retdata,basename]=clp_nc_trajectory(varargin)
 
 %Woodland area
 %  {'latlim',[30 50]},...
@@ -10,6 +10,8 @@ arguments = {...
 %  {'lonlim',[-180 180]},...
   {'latlim',[-inf inf]},...
   {'lonlim',[-inf inf]},...
+  {'xcoord','lon'},...
+  {'ycoord','lat'},...
   {'timelim',[-9000,-1000]},...
   {'lim',[-inf,inf]},...
   {'reg','all'},...
@@ -23,7 +25,10 @@ arguments = {...
   {'mult',1},...
   {'div',1},...
   {'file','../../test.nc'},...
-  {'nosum',0}
+  {'nosum',0},...
+  {'nocolor',0},...
+  {'retdata',NaN},...
+  {'basename','trajectory'}
 };
 
 cl_register_function;
@@ -32,6 +37,18 @@ cl_register_function;
 for i=1:a.length eval([a.name{i} '=' clp_valuestring(a.value{i}) ';']); end
 
 [d,f]=get_files;
+
+% Color selection
+if (nocolor==0)
+  lc={'c' 'b' 'g' 'r'};
+  ls='---:';
+  lw=[1 5 5 5];
+else
+  lc={repmat(0.4,3,1) 'k' 'k' 'k'};
+  ls='---:';
+  lw=[1 5 5 5];
+end
+
 
 % Choose 'emea' or 'China' or 'World'
 %[regs,nreg,lonlim,latlim]=find_region_numbers(reg);
@@ -46,17 +63,20 @@ if ~exist(file,'file')
 end
 ncid=netcdf.open(file,'NC_NOWRITE');
 
-varname='region'; varid=netcdf.inqVarId(ncid,varname);
-region=netcdf.getVar(ncid,varid);
 
 [ndim nvar natt udimid] = netcdf.inq(ncid); 
 for varid=0:nvar-1
   [varname,xtype,dimids,natts]=netcdf.inqVar(ncid,varid);
-  if strcmp(varname,'lat') lat=netcdf.getVar(ncid,varid); end
-  if strcmp(varname,'lon') lon=netcdf.getVar(ncid,varid); end
-  if strcmp(varname,'latitude') latit=netcdf.getVar(ncid,varid); end
-  if strcmp(varname,'longitude') lonit=netcdf.getVar(ncid,varid); end
-  if strcmp(varname,'area') area=netcdf.getVar(ncid,varid); end
+  if strcmp(varname,ycoord), lat=netcdf.getVar(ncid,varid); end
+  if strcmp(varname,xcoord), lon=netcdf.getVar(ncid,varid); end
+  if strcmp(varname,'latitude'), latit=netcdf.getVar(ncid,varid); end
+  if strcmp(varname,'longitude'), lonit=netcdf.getVar(ncid,varid); end
+  if strcmp(varname,'area'), area=netcdf.getVar(ncid,varid); end
+  if strcmp(varname,'region'), region=netcdf.getVar(ncid,varid); end
+end
+
+if ~exist('region','var')
+  region=1:length(lat);
 end
 
 if exist('lat','var') 
@@ -67,7 +87,7 @@ else
   if exist('latit','var') lat=latit; end
 end
 
-if exist('lon','var') 
+if exist('lon','var')
   if length(lon)~=(region)
     if exist('lonit','var') lon=lonit; end
   end
@@ -143,7 +163,7 @@ switch (varname)
     otherwise ;
 end
 
-data=data*0.04;
+%data=data*0.04;
 
 minmax=double([min(min(min(data(ireg,itime)))),max(max(max(data(ireg,itime))))]);
 ilim=find(isfinite(lim));
@@ -167,9 +187,12 @@ mdata=sdata/areasum;
 lgray=0.8*ones(1,3);
 a1=gca;
 m_proj('miller','lat',latlim+[-12 12],'lon',lonlim + [-25 25]);
-m_coast('patch',lgray,'facealpha',0.2,'edgecolor','none');
+m_coast('patch',lgray,'facealpha',0.3,'edgecolor','none');
 hold on;
-set(a1,'YTick',[],'XTick',[]);
+xl=get(gca,'Xlim');
+yl=get(gca,'Ylim');
+set(a1,'YTick',[],'XTick',[],'FontSize',15);
+set(a1,'Xlim',xl,'Ylim',yl);
 
 titletext=description;
 ht=title(titletext,'interpreter','none');
@@ -177,40 +200,44 @@ ht=title(titletext,'interpreter','none');
 
 a2=axes('Color','none');
 hold on;
-p0=plot(time,data','c');
-set(gca,'Xlim',timelim,'Ylim',minmax);
+p0=plot(time,data','k-','Color',lc{1},'LineStyle',ls(1),'LineWidth',lw(1));
+set(gca,'Xlim',timelim,'Ylim',minmax,'FontSize',15);
 cl_year_one(gca);
-xlabel('Calendar year');
-ylabel('Density');
+xlabel('Calendar year','FontSize',15);
+ylabel('Density','FontSize',15);
 
 hold on;
-p1=plot(time,mdata,'b','Linewidth',5);
+p1=plot(time,mdata,'k-','Color',lc{2},'LineStyle',ls(2),'Linewidth',lw(2));
 
 
-if 1==1 %% only for SI / qfarming
+
+if 1==0 %% only for SI / qfarming
   threshold=1/3.0;
   fdata=data;
   fdata(ffactor(ireg,itime)<threshold)=0;
   fmdata=sum(fdata.*area,1)/areasum;
   
   fdata(ffactor(ireg,itime)<threshold)=NaN;
-  p2=plot(time,fdata','g')
-  p3=plot(time,fmdata,'r:','linewidth',5);
+  p2=plot(time,fdata','k-','Color',lc{3},'LineStyle',ls(3))
+  p3=plot(time,fmdata,'k-','Color',lc{4},'LineStyle',ls(4),'linewidth',5);
 end
   
 
 if (~nosum)
-  a3=axes('Color','none','YAxisLocation','right');
+  a3=axes('Color','none','YAxisLocation','right','FontSize',15);
+
   hold on;
   % For SAA paper
-  %p2=plot(time,sdata/1E6,'r--','Linewidth',5);
-  %set(a3,'XTick',[],'Ylim',[0 10.5],'XLim',timelim);
-  plot(time,sdata,'r--','Linewidth',5);
-  ylabel('Size');
+  p2=plot(time,sdata/1E6,'k-','Color',lc{4},'Linewidth',5,'LineStyle','--');
+  set(a3,'XTick',[],'Ylim',[0 10.5],'XLim',timelim,'FontSize',15);
+  ylabel('Size','FontSize',15);
 
   %l=legend([p1,p2],'Mean','Total','Location','NorthWest');
   %set(l,'color','w');
 end
+
+obj=findall(gcf,'-property','FontSize');
+set(obj,'FontSize',15);
 
 % dump ascii table
 %fprintf('%d %d %d\n',[time' ; mdata ; log(2)./mdata])
@@ -224,6 +251,9 @@ plot_multi_format(gcf,fullfile(fdir,bname));
 
 fprintf('Total %d million at %d on area of %d million sqkm.\n',...
     sdata(ntime)/1E6, time(ntime), areasum);
+
+if nargout>1 basename=fullfile(fdir,bname); end
+if nargout>0 retdata=data; end
 
 end
 

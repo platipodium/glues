@@ -1,8 +1,9 @@
 ## Process this file with automake to produce Makefile.in
 ## This makefile is part of the glues distribution
 ##
-## Copyright (C) 2007,2008, 2009 Carsten Lemmen <carsten.lemmen@gkss.de>
-##                         GKSS-Forschungszentrum Geesthacht GmbH
+## Copyright (C) 2007,2008, 2009, 2010
+## Carsten Lemmen <carsten.lemmen@gkss.de>
+## GKSS-Forschungszentrum Geesthacht GmbH
 ##
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -36,7 +37,6 @@ libtool: $(LIBTOOL_DEPS)
 #pkgconfig_DATA= $(PACKAGE)-$(VERSION).pc
 
 .PHONY: snapshot
-
 
 # Snapshot (rule from gtkextras)
 snapshot:
