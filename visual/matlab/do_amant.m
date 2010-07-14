@@ -1,8 +1,21 @@
 % Skript to produce the figures for the american antiquity paper presented
 % at saa
 
+%% Figure 1 World timing map 
+[d,b]=clp_nc_variable('var','farming','timelim',[-7000,1490],'latlim',[-50 75],'lonlim',[-140 150],...
+    'nogrid',1,'threshold',0.5,'file','../../amant_base.nc','flip',1);
+ax=get(gcf,'Children');
+axes(ax(2));
+yt=get(gca,'YTick');
+ytl=str2num(get(gca,'YTickLabel'));
+yt=0:1.0/6.0:1.0
+ytl=yt.*(ytl(3)-ytl(1))+ytl(1);
+set(gca,'YTick',yt,'YTickLabel',num2str(ytl'));
+[d,n,e]=fileparts(b);
+plot_multi_format(gcf,fullfile(d,['lemmen_fig1_color']));
 
 
+return
 %% Figure 2 World density maps at 1000 BC for different scenarios
 [d,b]=clp_nc_variable('var','population_density','timelim',-1000,'latlim',[-50 75],'lonlim',[-140 150],...
     'lim',[0 6],'nogrid',1,'file','../../amant_base.nc');

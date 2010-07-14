@@ -26,7 +26,9 @@ arguments = {...
   {'basename','variable'},...
   {'nocolor',0},...
   {'ncol',19},...
-  {'nogrid',0}
+  {'nogrid',0},...
+  {'threshold',NaN},...
+  {'flip',0}
 };
 
 cl_register_function;
@@ -39,7 +41,6 @@ for i=1:a.length eval([a.name{i} '=' clp_valuestring(a.value{i}) ';']); end
 % Choose 'emea' or 'China' or 'World'
 %[regs,nreg,lonlim,latlim]=find_region_numbers(reg);
 [ireg,nreg,~,~]=find_region_numbers(reg);
-
 
 if ~exist(file,'file')
     error('File does not exist');
@@ -104,7 +105,6 @@ end
 
 if length(timelim)==1 timelim(2)=timelim(1); end
 
-
 % Find time dimension
 ntime=1;
 if numel(data)>length(data)
@@ -117,6 +117,7 @@ if numel(data)>length(data)
   end
   itime=itime([1:timestep:length(itime)]);
   
+  alltime=time;
   time=time(itime);
   ntime=length(time);
 end
@@ -134,27 +135,46 @@ switch (varname)
     otherwise ;
 end
 
-minmax=double([min(min(min(data(ireg,itime)))),max(max(max(data(ireg,itime))))]);
-ilim=find(isfinite(lim));
-minmax(ilim)=lim(ilim);
+if isfinite(threshold)
+  %% plot timing maps
+  ntime=1;
+  timing=(data>=threshold)*1.0;
+  timing(timing==0)=NaN;
+  timing=timing.*repmat(alltime',nreg,1);
+  timing(isnan(timing))=inf;
+  timing=min(timing,[],2);
+  data=timing;
+  data(isinf(data))=NaN;
+  description=['Timing of '  varname];
+  minmax=timelim;
+  itime=1;
+  units='Calendar year';
+else 
+  minmax=double([min(min(min(data(ireg,itime)))),max(max(max(data(ireg,itime))))]);
+  ilim=find(isfinite(lim));
+  minmax(ilim)=lim(ilim);
+end
 
 
 seacolor=0.7*ones(1,3);
 landcolor=0.8*ones(1,3);  
 
-
-if (nocolor==0) cmap=colormap(jet(ncol));
-else cmap=colormap(flipud(gray(ncol)));
+if (nocolor==0)
+  colmap=jet(ncol);
+else
+  colmap=flipud(gray(ncol));
 end
+if (flip==1) colmap=flipud(colmap); end
+
+cmap=colormap(colmap);
+
 rlon=lon;
 rlat=lat;
 
   % plot map
   figure(varid); 
   clf reset;
-  if (nocolor==0) cmap=colormap(jet(ncol));
-  else cmap=colormap(flipud(gray(ncol)));
-  end
+  cmap=colormap(colmap);
   set(varid,'DoubleBuffer','on');    
   set(varid,'PaperType','A4');
   hold on;
