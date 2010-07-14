@@ -246,6 +246,10 @@ for it=1:ntime
   plot_multi_format(gcf,fullfile(fdir,bname));
   %pause(0.05);
 end
+
+if nargout>0 retdata=data; end
+if nargout>1 basename=fullfile(fdir,bname); end
+
 end
 
 

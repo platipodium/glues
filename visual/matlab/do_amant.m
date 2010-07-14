@@ -9,6 +9,13 @@ ustime=[-3000 -2000 -1000 0 500 1000];
 usletter='abcdef'
 for i=1:length(ustime)
   [d,b]=clp_nc_variable('var','population_density','timelim',ustime(i),'latlim',[16 48],'lonlim',[-126 -68],'lim',[0 1],'nogrid',1);
+  ax=get(gcf,'Children');
+  axes(ax(2));
+  if ustime(i)==0 ustime(i)=1; end
+  if ustime(i)<0 bcad='BC'; else bcad='AD'; end
+  %patch([0.3 0.5 0.5 0.3],[0.93 0.93 0.98 0.98],'w','EdgeColor','none');
+  text(0.49,0.975,sprintf('%d %s',abs(ustime(i)),bcad),'Vertical','top','Horizontal','right',...
+      'FontSize',13,'FontWeight','bold','background','w');
   [d,n,e]=fileparts(b);
   plot_multi_format(gcf,fullfile(d,['lemmen_fig4' usletter(i) '_color']));
 end
