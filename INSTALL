@@ -18,3 +18,21 @@ This will install the binaries glues region and random_variation into
 $PREFIX/bin, where the default prefix is $HOME/opt
 
 Instead, run the local script run.sh to start the example simulation.
+
+
+Problems and how to get around them
+=========================================
+
+Problems are documented in the bug database on sourceforge.net.  If you encounter a problem in the
+installation or compilation of GLUES, please consult the tracker for existing bugs and how to get 
+around them.  If the issue has not been documented, please create a new item with a description of the
+error message and how to reproduce it.
+
+1) ./configure no permission to execute 
+   Just make configure executable, i.e. chmod +x ./configure
+
+2) sisi directory cannot be found
+  Download the sisi package from the GLUES sourceforge site and compile it separately, then, set
+  the path to sisi as a configure option
+  > ./configure --with-sisi=/path/to/your/sisi/location
+

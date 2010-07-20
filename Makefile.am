@@ -24,7 +24,7 @@ LIBTOOL_DEPS = @LIBTOOL_DEPS@
 
 ACLOCAL_AMFLAGS = -I config
 
-EXTRA_DIST = ChangeLog run.sh bootstrap BUGS
+EXTRA_DIST = ChangeLog run.sh run-krisen.sh run-amant.sh bootstrap BUGS
 
 SUBDIRS = src config examples variation visual doc #po intl
 
