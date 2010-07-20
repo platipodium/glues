@@ -20,9 +20,7 @@ arguments = {...
   {'movie',1},...
   {'mult',1},...
   {'div',1},...
-  {'showsites',0},...
-  {'file','../../test.nc'},...
-  {'retdata',NaN},...
+  {'file','../../test.nc'},...%  {'retdata',NaN},...
   {'basename','variable'},...
   {'nocolor',0},...
   {'ncol',19},...
@@ -185,15 +183,18 @@ rlat=lat;
   
   else
     m_coast('patch',landcolor);
+    set(gca,'Tag','m_coast');
     % only needed for empty (non-marble background) to get rid of lakes
     c=get(gca,'Children');
     ipatch=find(strcmp(get(c(:),'Type'),'patch'));
     npatch=length(ipatch);
     if npatch>0
       iwhite=find(sum(cell2mat(get(c(ipatch),'FaceColor')),2)==3);
-      if ~isempty(iwhite) set(c(ipatch(iwhite)),'FaceColor',seacolor);
+      if ~isempty(iwhite) 
+        set(c(ipatch(iwhite)),'FaceColor',seacolor);
+        set(c(ipatch(iwhite)),'Tag','Lake');
       end
-    end
+    end    
   
   end
 
@@ -267,7 +268,12 @@ for it=1:ntime
   %pause(0.05);
 end
 
-if nargout>0 retdata=data; end
+if nargout>0 
+  retdata.value=data; 
+  retdata.lat=lat;
+  retdata.lon=lon;
+  retdata.time=time;
+end
 if nargout>1 basename=fullfile(fdir,bname); end
 
 end

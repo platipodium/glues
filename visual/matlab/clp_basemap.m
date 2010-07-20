@@ -40,10 +40,12 @@ if (nogrid==0)
 else
     m_grid('XTick',[],'Ytick',[]);
 end
+set(gca,'Tag','m_grid');
 
 if ~nocoast
     m_coast;
   % m_coast('patch',color_land);
+  set(gca,'Tag','m_coast');
 end
 
 
