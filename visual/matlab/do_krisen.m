@@ -7,9 +7,10 @@
 timelim=[-7500,-2500];
 latlim=[30 60];
 lonlim=[-15 45];
+threshold=0.5;
 
 [data,b]=clp_nc_variable('var','farming','timelim',[-7500,-2500],'latlim',[30 60],'lonlim',[-15 45],...
-    'nogrid',1,'threshold',0.5,'file','../../krisen_base.nc','flip',1,'ncol',10,...
+    'nogrid',1,'threshold',threshold,'file','../../krisen_base.nc','flip',1,'ncol',10,...
     'nocolor',1,'seacolor','none','figoffset',1);
 ax=get(gcf,'Children');
 axes(ax(2));
@@ -34,7 +35,7 @@ set(whites,'FaceColor',[0.99 0.99 0.99]);
 plot_multi_format(gcf,fullfile(d,['krisen_fig4a_gray']));
 
 [data,b]=clp_nc_variable('var','farming','timelim',[-7500,-2500],'latlim',[30 60],'lonlim',[-15 45],...
-    'nogrid',1,'threshold',0.5,'file','../../krisen_nofluc.nc','flip',1,'ncol',10,...
+    'nogrid',1,'threshold',threshold,'file','../../krisen_nofluc.nc','flip',1,'ncol',10,...
     'nocolor',1,'seacolor','none','figoffset',1);
 ax=get(gcf,'Children');
 axes(ax(2));

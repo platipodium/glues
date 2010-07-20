@@ -113,9 +113,10 @@ if isstruct(data)
   %%
   error_s=error_s(isfinite(error_s));
   error_e=error_e(isfinite(error_e));
+  ne=lenght(error_s);
   
-  fprintf('Site      error: mean %4d / abs mean %4d years\n',round(mean(error_s)),round(mean(abs(error_s))));
-  fprintf('Early     error: mean %4d / abs mean %4d years\n',round(mean(error_e)),round(mean(abs(error_e))));
+  fprintf('Site      error: mean %4d, r2=%d / abs mean %4d years\n',round(mean(error_s)),round(error_s.^2/(ne-1)),round(mean(abs(error_s))));
+  fprintf('Early     error: mean %4d, r2=%d / abs mean %4d years\n',round(mean(error_e)),round(error_e.^2/(ne-1)),round(mean(abs(error_e))));
    
   %% Loop over all region data
   for i=1:ns
