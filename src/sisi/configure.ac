@@ -3,6 +3,9 @@
 
 AC_PREREQ([2.65])
 AC_INIT([SiSi], [2.0], [carsten.lemmen@gkss.de])
+
+AM_INIT_AUTOMAKE([SiSi],[2.0])
+
 AC_CONFIG_SRCDIR([include/cppinc.h])
 AC_CONFIG_HEADERS([config.h])
 

@@ -1,5 +1,7 @@
 subdirs=control src include lib
 
+EXTRA_DIST=configure.ac 
+NOINST_SCRIPTS=configure bootstrap
 
 # Target Operating System
 # Change this according to your needs
