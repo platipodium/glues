@@ -1,4 +1,4 @@
-subdirs=control src include
+subdirs=control src include lib
 
 
 # Target Operating System

@@ -3,7 +3,7 @@
 # GLUES weekly test for distribution version
 
 if  [ "x$1" == "x" ] ; then
-  VERSION=1.1.6
+  VERSION=1.1.10
 else
   VERSION=$1
 fi

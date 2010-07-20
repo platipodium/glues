@@ -1,6 +1,6 @@
-# Main Makefile for GLUES.
+# Subsidiary makefile for GLUES 
 
-# Copyright (C) 2007,2008,2009
+# Copyright (C) 2007,2008,2009,2010
 # Carsten Lemmen, GKSS-Forschungszentrum Geesthacht GmbH
 
 ## This program is free software; you can redistribute it and/or modify
