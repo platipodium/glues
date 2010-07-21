@@ -26,7 +26,6 @@ noinst_HEADERS = ./common/CharacterHandler.hh\
 ./common/FilenameHandling.hh\
 ./common/StringHandler.hh\
 ./cppinc.h\
-./cppinc.h.orig\
 ./datastructures/ArrayParameter.hh\
 ./datastructures/BooleanParameter.hh\
 ./datastructures/CharParameter.hh\
