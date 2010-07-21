@@ -14,6 +14,12 @@ AC_PROG_CXX
 AC_PROG_CC
 AC_PROG_MAKE_SET
 AC_PROG_RANLIB
+AC_PROG_INSTALL
+AC_PROG_AWK
+AC_PROG_CPP
+AC_PROG_MKDIR_P
+AC_PROG_LIBTOOL
+
 
 # Checks for libraries.
 # FIXME: Replace `main' with a function in `-lm':
@@ -36,8 +42,10 @@ AC_CONFIG_FILES([Makefile
                  include/development/Makefile
                  include/math/Makefile
                  include/memory/Makefile
+                 include/iostreams/Makefile
                  include/tree/Makefile
                  include/twowaylist/Makefile
+                 lib/Makefile
                  src/Makefile
                  src/common/Makefile
                  src/datastructures/Makefile
