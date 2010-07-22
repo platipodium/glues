@@ -22,7 +22,7 @@
 
 LIBTOOL_DEPS = @LIBTOOL_DEPS@
 
-ACLOCAL_AMFLAGS = -I ../../config
+ACLOCAL_AMFLAGS = -I config
 
 EXTRA_DIST = ChangeLog BUGS MANIFEST TODO VERSION Makefile.am-todo Makefile.todo bootstrap
 

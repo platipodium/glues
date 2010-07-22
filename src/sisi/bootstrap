@@ -24,7 +24,7 @@
 AUTORECONF=`which autoreconf`
 
 if test -x $AUTORECONF  ; then 
-  aclocal -I ../../config && autoheader \
+  aclocal -I ./config && autoheader \
   && automake --foreign --add-missing --copy\
   && autoconf
 else

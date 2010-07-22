@@ -24,6 +24,8 @@ LIBTOOL_DEPS = @LIBTOOL_DEPS@
 
 ACLOCAL_AMFLAGS = -I config
 
+AM_CPPFLAGS = -I ./src/sisi
+ 
 EXTRA_DIST = ChangeLog run.sh run-krisen.sh run-amant.sh bootstrap BUGS
 
 SUBDIRS = src config examples variation visual doc #po intl
