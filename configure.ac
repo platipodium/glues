@@ -121,6 +121,7 @@ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
    ],[
  AC_MSG_RESULT(no)
  AC_MSG_ERROR([SiSi header can't be found, please set --with-sisi option.])
+ 
 ])
 
 # FIXME	AC_DEFINE(HAVE_SISI,[],"Whether we have the SiSi package")],
@@ -339,9 +340,6 @@ if test $LOCALSISI = 1 ; then
 fi
  
 #  po/Makefile.in
-#  src/sisi/Makefile
-#  src/sisi/src/Makefile
-#  src/sisi/include/Makefile
 
 AC_OUTPUT
 
