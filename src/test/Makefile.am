@@ -1,6 +1,7 @@
 # Makefile for GLUES sources.
 
-# Copyright (C) 2008,2009 Carsten Lemmen, GKSS-Forschungszentrum Geesthacht
+# Copyright (C) 2008,2009,2010
+# Carsten Lemmen <carsten.lemmen@gkss.de>, GKSS-Forschungszentrum Geesthacht
 
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -21,16 +22,14 @@ TESTS= test_GeoRegion test_LandRegion test_Population \
 	test_TechnologyTrait test_CulturePopulation test_CultureRegion \
 	test_IO test_netcdf
 
-check_PROGRAMS = test_GeoRegion test_LandRegion test_Population \
-	test_TechnologyTrait test_CulturePopulation test_CultureRegion \
-test_IO test_netcdf
+check_PROGRAMS = $(TESTS)
 
 noinst_HEADERS = ../GeoRegion.h ../GeoNeighbour.h ../Symbols.h ../LandRegion.h \
 	../Constants.h ../LocalClimate.h ../Population.h ../EffectiveVariable.h \
 	../TechnologyTrait.h ../CulturePopulation.h ../CultureRegion.h \
 	../FarmingQuotaTrait.h ../DomesticationFractionTrait.h
 
-EXTRA_DIST = georegions.tsv test_IO.tsv
+EXTRA_DIST = georegions.tsv test_IO.tsv test_glues_distribution.sh test_glues_build.sh
 
 noinst_SCRIPTS = test_glues_build.sh test_glues_distribution.sh
 
