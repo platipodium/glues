@@ -12,12 +12,12 @@
 Tracer::Tracer(int size)
 {
     length=size;
-    spectrum=(char*)malloc(size*sizeof(char));
+    spectrum=new char[size];
 }
     
 Tracer::~Tracer()
 {
-    if (spectrum != NULL) free(spectrum);
+    if (spectrum != NULL) delete spectrum;
     length=0;
 }
 
