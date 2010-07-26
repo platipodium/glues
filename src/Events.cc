@@ -1,7 +1,7 @@
 /* GLUES climate events; this file is part of
    the Global Land Use and technological Evolution Simulator
    
-   Copyright (C) 2009
+   Copyright (C) 2009,2010
    Carsten Lemmen <carsten.lemmen@gkss.de>, Kai Wirtz <kai.wirtz@gkss.de>
 
    This program is free software; you can redistribute it and/or modify it
@@ -21,12 +21,11 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
    @author Kai W Wirtz <kai.wirtz@gkss.de
-   @date   2009-01-30
+   @date   2010-07-26
    @file   Events.cc
 */
 
 #include "Events.h"
-#include <cstdlib>
 
 /**
    @return number of sites
@@ -51,9 +50,13 @@ unsigned long int glues::Events()
 
     cerr << numberOfSites << " sites x " << numberOfEvents << " events\n!";
 
-    EventTime= (double *)(malloc(numberOfSites*numberOfEvents*sizeof(double)));
-    EventSerMax = (double *)(malloc(numberOfSites*sizeof(double)));
-    EventSerMin = (double *)(malloc(numberOfSites*sizeof(double)));
+    /**EventTime= (double *)(std::malloc(numberOfSites*numberOfEvents*sizeof(double)));
+    EventSerMax = (double *)(std::malloc(numberOfSites*sizeof(double)));
+    EventSerMin = (double *)(std::malloc(numberOfSites*sizeof(double))); */
+    
+    EventTime   = new double(numberOfSites*numberOfEvents);
+    EventSerMax = new double(numberOfSites);
+    EventSerMin = new double(numberOfSites);
     
     ifs.seekg(0);
     // Read to the end to see how many regions there are
