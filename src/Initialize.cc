@@ -62,6 +62,12 @@ int set_events()
     EventRegNum = (int *)(malloc(numberOfRegions*sizeof(int)));
     EventSeries = (double *)(malloc(MaxEvent*MaxProxyReg*sizeof(double)));
     EventWeight = (double *)(malloc(MaxEvent*MaxProxyReg*sizeof(double)));
+
+    /*EventRegTime= new double(numberOfRegions*MaxEvent);
+    EventRegInd = new int(numberOfRegions);
+    EventRegNum = new int(numberOfRegions);
+    EventSeries = new double(MaxEvent*MaxProxyReg);
+    EventWeight = new double(MaxEvent*MaxProxyReg); */
     
     /** Test correctness of EventInReg file */
     if (1) {
