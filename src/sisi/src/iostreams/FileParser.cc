@@ -301,7 +301,8 @@ bool FileParser::readBoolean(bool& bvalue) {
  *  comments first). A sentence ends with '\r', '\n', '\\' or the
  *  comment character.<BR> Returns false if an error occurs. */
 bool FileParser::readSentence(String& svalue) {
-  ostringstream tmp;
+  ostrstream tmp;
+  char* temp;
   int  c;
   overreadCommentsAndWhiteSpaces();              // Overreads comments.
   while( good() && (char)(c=_readChar())!='\r' && c!='\n' && c!='\\' &&
@@ -309,13 +310,8 @@ bool FileParser::readSentence(String& svalue) {
     tmp << (char) c;
   putBack(c);
   tmp << ends;
-  
-  const char *cstr = tmp.str().c_str();
-  int l=tmp.str().length();
-  char* temp=new char[l];
-  for (int i=0; i<tmp.str().length(); i++) temp[i]=cstr[i];
+  temp = tmp.str();
   svalue = temp;
-
   free(temp);       // Speicherbereich wieder freigeben.
 #ifdef __FILEPARSER_DEBUG__
   cout << "FileParser: reads sentence: " << svalue << endl;
@@ -326,20 +322,16 @@ bool FileParser::readSentence(String& svalue) {
 /** Reads the rest of line from stream (removes white spaces from both ends).
  *  Returns false if an error occurs. */
 bool FileParser::readLine(String& svalue) {
-  ostringstream tmp;
+  ostrstream tmp;
+  char* temp;
   int  c;
   
   while( good() && (char)(c=_readChar())!='\n' && c!='\r' )
     tmp << (char) c;
   putBack(c);
   tmp << ends;
-
-  const char *cstr = tmp.str().c_str();
-  int l=tmp.str().length();
-  char* temp=new char[l];
-  for (int i=0; i<tmp.str().length(); i++) temp[i]=cstr[i];
+  temp = tmp.str();
   svalue = temp;
-
   free(temp);       // Speicherbereich wieder freigeben.
 #ifdef __FILEPARSER_DEBUG__
   cout << "FileParser: reads line: "<< svalue << endl;
@@ -474,9 +466,10 @@ bool FileParser::good() { return ( _input && _input->good() ); }
  *  The stream will be closed, if number of maximum errors is reached. */
 String FileParser::buildErrorMessage(const char* msg,
 				     const char* readString) {
-  ostringstream tmp;
-  ostringstream result;
+  ostrstream tmp;
+  ostrstream result;
   String r;
+  char* temp;
   result << "File " << _filename << " (line " << _line << "): "
 	 << msg;
   if( readString == NULL ) {
@@ -497,12 +490,7 @@ String FileParser::buildErrorMessage(const char* msg,
   else
     tmp << readString;
   tmp << ends;
-  
-  const char *cstr = tmp.str().c_str();
-  int l=tmp.str().length();
-  char* temp=new char[l];
-  for (int i=0; i<tmp.str().length(); i++) temp[i]=cstr[i];
-
+  temp = tmp.str();
   if( strlen(temp) > 0 )
     result << ": \"" << temp << "\"";
   free(temp);       // Speicherbereich wieder freigeben.
@@ -510,12 +498,7 @@ String FileParser::buildErrorMessage(const char* msg,
   if( _errorCounter >= _maxErrors )
     close();
   result << ends;
-
-  const char* bstr = result.str().c_str();
-  l=result.str().length();
-  temp=new char[l];
-  for (int i=0; i<l; i++) temp[i]=bstr[i];
-  
+  temp = result.str();
   r = temp;
   free(temp);
   return r;
@@ -581,7 +564,8 @@ String FileParser::_readIdentifier() {
  *  Words are ending with characters not allowed in identifiers. */
 String FileParser::_readIdentifier(int number) {
   String result;
-  ostringstream tmp;
+  ostrstream tmp;
+  char* temp;
   int counter = 0;
   int c;
   
@@ -604,13 +588,7 @@ String FileParser::_readIdentifier(int number) {
     if( !good() || (!isalnum(c) && c!='_') ) {
       putBack(c);
       tmp << ends;
-  
-      const char *cstr = tmp.str().c_str();
-      int l=tmp.str().length();
-      char* temp=new char[l];
-      for (int i=0; i<tmp.str().length(); i++) temp[i]=cstr[i];
-  
-  
+      temp = tmp.str();
       result = temp;
       free(temp);       // Speicherbereich wieder freigeben.
       return result;
@@ -619,11 +597,7 @@ String FileParser::_readIdentifier(int number) {
   }
   while( number==0 || ++counter<number );
   tmp << ends;
- 
-  const char *cstr = tmp.str().c_str();
-  int l=tmp.str().length();
-  char* temp=new char[l];
-  for (int i=0; i<tmp.str().length(); i++) temp[i]=cstr[i];
+  temp = tmp.str();
   result = temp;
   free(temp);       // Speicherbereich wieder freigeben.
   return result;

@@ -328,30 +328,42 @@ String String::operator+(const char c) const {
 }
 
 String String::operator+(const int i) const {
-  ostringstream tmp;
+  ostrstream tmp;
+  char* temp;
   tmp << _value << i << ends;
-  String result = tmp.str().c_str();
+  temp = tmp.str();
+  String result = (const char*) temp;
+  free(temp);
   return result;
 }
 
 String String::operator+(const unsigned i) const {
-  ostringstream tmp;
+  ostrstream tmp;
+  char* temp;
   tmp << _value << i << ends;
-  String result = tmp.str().c_str();
+  temp = tmp.str();
+  String result = (const char*) temp;
+  free(temp);
   return result;
 }
 
 String String::operator+(const long l) const {
-  ostringstream tmp;
+  ostrstream tmp;
+  char* temp;
   tmp << _value << l << ends;
-  String result = tmp.str().c_str();
+  temp = tmp.str();
+  String result = (const char*) temp;
+  free(temp);
   return result;
 }
 
 String String::operator+(const double d) const {
-  ostringstream tmp;
+  ostrstream tmp;
+  char* temp;
   tmp << _value << d << ends;
-  String result = tmp.str().c_str();
+  temp = tmp.str();
+  String result = (const char*) temp;
+  free(temp);
   return result;
 }
 
@@ -364,17 +376,13 @@ ostream& operator<< (ostream& out, const String& s)
 istream& operator>> (istream& in, String& s)
 {
   char c;
-  ostringstream tmp;
+  ostrstream tmp;
+  char* temp;
   while( in.good() && (c=in.get())!='"' && c!='\n' )
     tmp << c;
   tmp << ends;
-  
-  const char *cstr = tmp.str().c_str();
-  int l=tmp.str().length();
-  char* temp=new char[l];
-  for (int i=0; i<tmp.str().length(); i++) temp[i]=cstr[i];
-  s = (char*)temp;
+  temp = tmp.str();
+  s = temp;
   free(temp);       // Speicherbereich wieder freigeben.
-
   return in;
 }
