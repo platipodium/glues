@@ -50,9 +50,9 @@ unsigned long int glues::Events()
 
     cerr << numberOfSites << " sites x " << numberOfEvents << " events\n!";
 
-    /**EventTime= (double *)(std::malloc(numberOfSites*numberOfEvents*sizeof(double)));
-    EventSerMax = (double *)(std::malloc(numberOfSites*sizeof(double)));
-    EventSerMin = (double *)(std::malloc(numberOfSites*sizeof(double))); */
+    /**EventTime= (double *)(std::std::malloc(numberOfSites*numberOfEvents*sizeof(double)));
+    EventSerMax = (double *)(std::std::malloc(numberOfSites*sizeof(double)));
+    EventSerMin = (double *)(std::std::malloc(numberOfSites*sizeof(double))); */
     
     EventTime   = new double(numberOfSites*numberOfEvents);
     EventSerMax = new double(numberOfSites);
