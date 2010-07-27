@@ -24,6 +24,7 @@ libtool
 make.log
 autom4te.cache/*
 aclocal.m4
+confdefs.h
 config.h.in
 config.h
 config.log
@@ -48,6 +49,18 @@ doc/latex/*[0-eg-z]
 spread_glob.dat
 examples/**.log
 examples/**.err
+examples/simulations/62483/onekbc.sce
+examples/simulations/62483/onekbc.sim
+examples/simulations/685/lbk.sce
+examples/simulations/685/lbk.sim
+examples/simulations/eurolbk/lbk.sce
+examples/simulations/eurolbk/lbk.sim
+examples/simulations/plasim/plasim.sce
+examples/simulations/plasim/plasim.sim
+grid.sh
+run.sh
+time-stamp
+visual/matlab/get_files.m
 visual/plots/**.*
 visual/matlab/result*mat
 visual/matlab/cl_journal.txt
