@@ -18,6 +18,7 @@ syntax:glob
 **/lib/*.la
 **/lib/*.a
 **/lib/*.dylib
+.deps/**
 **DS_Store
 stamp-h1
 libtool
