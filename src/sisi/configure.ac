@@ -38,6 +38,7 @@ AC_FUNC_ERROR_AT_LINE
 AC_CHECK_FUNCS([sqrt])
 
 AC_CONFIG_FILES([Makefile
+                 config/Makefile
                  include/Makefile
                  include/common/Makefile
                  include/datastructures/Makefile
