@@ -31,7 +31,6 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
-//#include <strstream> /* This causes a deprecated warning indicating that it should be replaced by <sstream> */
 #include <sstream>
 using namespace std;
 

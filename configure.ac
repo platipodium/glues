@@ -235,9 +235,10 @@ AC_CHECK_HEADER(cstring, , GLUES_ERROR([The standard <cstring> header file could
 #   void *malloc ();
 #    /* Allocate an N-byte block of memory from the heap. If N is zero, allocate a 1-byte block. */
 #    void * rpl_malloc (size_t n) { if (n == 0) n = 1; return malloc (n); } 
-AC_FUNC_MALLOC
+#AC_FUNC_MALLOC
 # AC_LIBOBJ(malloc.c)
 # AC_CONFIG_LIBOBJ_DIR (arch)
+# This can cause a nasty bug ::malloc not found
 
 AC_CHECK_FUNCS([pow exp sqrt strstr strrchr])
 
