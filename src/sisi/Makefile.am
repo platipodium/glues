@@ -44,20 +44,21 @@ snapshot:
 
 SRCDIR      = src
 
+VERSIONFILE = Version.cc
 
-LIBOBJECTS  =   $(SRCDIR)/Version.o \
-                $(SRCDIR)/platform.o \
-                $(SRCDIR)/common/date.o \
-                $(SRCDIR)/datastructures/Parameter.o \
-                $(SRCDIR)/datastructures/ParameterType.o \
-                $(SRCDIR)/datastructures/String.o \
-                $(SRCDIR)/development/MessageHandler.o \
-                $(SRCDIR)/development/ResultElement.o \
-                $(SRCDIR)/development/ResultReader.o \
-                $(SRCDIR)/development/ResultWriter.o \
-                $(SRCDIR)/iostreams/FileParser.o \
-                $(SRCDIR)/iostreams/SiSiParser.o \
-                $(SRCDIR)/math/Random.o
+LIBOBJECTS  =   $(SRCDIR)/$(VERSIONFILE) \
+                $(SRCDIR)/platform.cc \
+                $(SRCDIR)/common/date.cc \
+                $(SRCDIR)/datastructures/Parameter.cc \
+                $(SRCDIR)/datastructures/ParameterType.cc \
+                $(SRCDIR)/datastructures/String.cc \
+                $(SRCDIR)/development/MessageHandler.cc \
+                $(SRCDIR)/development/ResultElement.cc \
+                $(SRCDIR)/development/ResultReader.cc \
+                $(SRCDIR)/development/ResultWriter.cc \
+                $(SRCDIR)/iostreams/FileParser.cc \
+                $(SRCDIR)/iostreams/SiSiParser.cc \
+                $(SRCDIR)/math/Random.cc
 
 INCOBJECTS = \
 include/common/CharacterHandler.hh \
@@ -104,8 +105,28 @@ include/twowaylist/TwoWayListIntElement.hh \
 include/twowaylist/TwoWayListStringElement.hh \
 include/Version.hh
 
+
+$(VERSIONFILE):
+	@echo -n "Creating file \"$(VERSIONFILE)\" from VERSION ... "; \
+	  echo "// Generated automatically from VERSION by 'make version'" \
+	    >$(VERSIONFILE); \
+	  echo                                       >>$(VERSIONFILE); \
+	  echo "#include \"Version.hh\""             >>$(VERSIONFILE); \
+	  echo                                       >>$(VERSIONFILE); \
+	  echo "const char* Version::ProgramName    = " \
+	       "\"$(PRGNAME)\";"                     >>$(VERSIONFILE); \
+	  echo "const char* Version::Number         = " \
+	       "\"$(VERSION)\";"                     >>$(VERSIONFILE); \
+	  echo "const char* Version::Program        = " \
+	       "\"$(PRGNAME) $(VERSION)\";"          >>$(VERSIONFILE); \
+	  echo "const char* Version::CompletionTime = " \
+	       "\"$(COMPLETIONTIME)\";"              >>$(VERSIONFILE); \
+	  echo done.
+
+
+
 lib_LTLIBRARIES = libSiSi.la
 libSiSi_la_LIBADD =
 libSiSi_la_LDFLAGS = -rpath '$(libdir)' -version-info 2:0:0 -no-undefined
-libSiSi_la_SOURCES = $(LIBOBJECTS)
+libSiSi_la_SOURCES = $(LIBOBJECTS) include/datastructures/ParameterType.hh
 include_HEADERS = $(INCOBJECTS)

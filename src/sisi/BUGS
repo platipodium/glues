@@ -3,6 +3,4 @@ The bug tracker can be found at https://sourceforge.net/tracker/?group_id=273839
 For bug  ID: 3032970 ar: no archive members specified
 the following workaround should do it
 
-ar cruvs .libs/libSiSi.a `find . -name *.o`
-cp .libs/libSiSi.a lib/libSiSi2.0.a
-echo 'all:' > Makefile
+	
