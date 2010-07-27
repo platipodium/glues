@@ -119,9 +119,14 @@ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 ]])],[AC_MSG_RESULT(yes)
       LIBS="$LIBS -lSiSi2.0"
    ],[
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
+#include "Version.hh"
+]])],[AC_MSG_RESULT(yes)
+      LIBS="$LIBS -lSiSi"
+   ],[
  AC_MSG_RESULT(no)
  AC_MSG_ERROR([SiSi header can't be found, please set --with-sisi option.])
- 
+ ])
 ])
 
 # FIXME	AC_DEFINE(HAVE_SISI,[],"Whether we have the SiSi package")],
@@ -257,14 +262,6 @@ else
   AC_DEFINE(WITH_DOXYGEN,"$DOXYGEN")
 fi
 
-
-
-# TODO: separate configuration in sisi only if a local sisi is required
-#if test -d $srcdir/src/sisi; then
-#AC_CONFIG_SUBDIRS(src/sisi)
-#fi
-
-
 dnl Remove also many MACROS (AC_DEFINE) which are unused by GLUES
 dnl and pollute (and slow down because libtool has to parse them) the build.
 if test -f confdefs.h; then
@@ -285,7 +282,6 @@ if test -f confdefs.h; then
   sed '/#define __PROTOTYPES/d' <confdefs.h >confdefs.tmp
   mv confdefs.tmp confdefs.h
 fi
-
 
 dnl configure HEADERS, COMMANDS, LINKS, and FILES
 
