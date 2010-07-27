@@ -59,8 +59,53 @@ LIBOBJECTS  =   $(SRCDIR)/Version.o \
                 $(SRCDIR)/iostreams/SiSiParser.o \
                 $(SRCDIR)/math/Random.o
 
+INCOBJECTS = \
+include/common/CharacterHandler.hh \
+include/common/ClassObject.hh \
+include/common/date.hh \
+include/common/FilenameHandling.hh \
+include/common/StringHandler.hh \
+include/datastructures/ArrayParameter.hh \
+include/datastructures/BooleanParameter.hh \
+include/datastructures/CharParameter.hh \
+include/datastructures/CommentParameter.hh \
+include/datastructures/FloatParameter.hh \
+include/datastructures/InfoType.hh \
+include/datastructures/IntParameter.hh \
+include/datastructures/ListParameter.hh \
+include/datastructures/Parameter.hh \
+include/datastructures/ParameterType.hh \
+include/datastructures/ResultParameter.hh \
+include/datastructures/String.hh \
+include/datastructures/StringParameter.hh \
+include/datastructures/TableParameter.hh \
+include/development/EmitCxxCode.hh \
+include/development/LogFile.hh \
+include/development/MessageHandler.hh \
+include/development/OutputStream.hh \
+include/development/ResultElement.hh \
+include/development/ResultReader.hh \
+include/development/ResultWriter.hh \
+include/development/SiSi.hh \
+include/iostreams/FileParser.hh \
+include/iostreams/SiSiParser.hh \
+include/math/Math.hh \
+include/math/Random.hh \
+include/math/Round.hh \
+include/memory/ArrayChecker.hh \
+include/memory/MemoryHandler.hh \
+include/platform.hh \
+include/tree/Node.hh \
+include/tree/Tree.hh \
+include/twowaylist/TwoWayList.hh \
+include/twowaylist/TwoWayListElement.hh \
+include/twowaylist/TwoWayListFloatElement.hh \
+include/twowaylist/TwoWayListIntElement.hh \
+include/twowaylist/TwoWayListStringElement.hh \
+include/Version.hh
 
 lib_LTLIBRARIES = libSiSi.la
-# libSiSi_la_LIBADD =
-libSiSi_la_LDFLAGS = -version-info 2:0:0 -no-undefined
+libSiSi_la_LIBADD =
+libSiSi_la_LDFLAGS = -rpath '$(libdir)' -version-info 2:0:0 -no-undefined
 libSiSi_la_SOURCES = $(LIBOBJECTS)
+include_HEADERS = $(INCOBJECTS)
