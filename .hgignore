@@ -38,6 +38,10 @@ config/*.m4
 src/glues
 src/region/region
 src/variation/random_variation
+src/sisi/INSTALL
+src/sisi/COPYING
+src/sisi/config/config.*
+src/sisi/config/ltmain.sh
 doc/**.html
 doc/**.css
 doc/**.png
