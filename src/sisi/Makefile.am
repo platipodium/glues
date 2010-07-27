@@ -44,9 +44,7 @@ snapshot:
 
 SRCDIR      = src
 
-VERSIONFILE = Version.cc
-
-LIBOBJECTS  =   $(SRCDIR)/$(VERSIONFILE) \
+LIBOBJECTS  =   $(SRCDIR)/Version.cc \
                 $(SRCDIR)/platform.cc \
                 $(SRCDIR)/common/date.cc \
                 $(SRCDIR)/datastructures/Parameter.cc \
@@ -104,26 +102,6 @@ include/twowaylist/TwoWayListFloatElement.hh \
 include/twowaylist/TwoWayListIntElement.hh \
 include/twowaylist/TwoWayListStringElement.hh \
 include/Version.hh
-
-
-$(VERSIONFILE):
-	@echo -n "Creating file \"$(VERSIONFILE)\" from VERSION ... "; \
-	  echo "// Generated automatically from VERSION by 'make version'" \
-	    >$(VERSIONFILE); \
-	  echo                                       >>$(VERSIONFILE); \
-	  echo "#include \"Version.hh\""             >>$(VERSIONFILE); \
-	  echo                                       >>$(VERSIONFILE); \
-	  echo "const char* Version::ProgramName    = " \
-	       "\"$(PRGNAME)\";"                     >>$(VERSIONFILE); \
-	  echo "const char* Version::Number         = " \
-	       "\"$(VERSION)\";"                     >>$(VERSIONFILE); \
-	  echo "const char* Version::Program        = " \
-	       "\"$(PRGNAME) $(VERSION)\";"          >>$(VERSIONFILE); \
-	  echo "const char* Version::CompletionTime = " \
-	       "\"$(COMPLETIONTIME)\";"              >>$(VERSIONFILE); \
-	  echo done.
-
-
 
 lib_LTLIBRARIES = lib/libSiSi.la
 lib_libSiSi_la_LIBADD =
