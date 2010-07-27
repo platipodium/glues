@@ -23,10 +23,13 @@ stamp-h1
 libtool
 make.log
 autom4te.cache/*
+aclocal.m4
+config.h.in
 config.h
 config.log
 config.status
 configure
+config/depcomp
 config/config.*
 config/install-sh
 config/missing
