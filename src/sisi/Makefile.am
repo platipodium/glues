@@ -125,8 +125,9 @@ $(VERSIONFILE):
 
 
 
-lib_LTLIBRARIES = libSiSi.la
-libSiSi_la_LIBADD =
-libSiSi_la_LDFLAGS = -rpath '$(libdir)' -version-info 2:0:0 -no-undefined
-libSiSi_la_SOURCES = $(LIBOBJECTS) include/datastructures/ParameterType.hh
+lib_LTLIBRARIES = lib/libSiSi.la
+lib_libSiSi_la_LIBADD =
+lib_libSiSi_la_LDFLAGS = -rpath '$(libdir)' -version-info 2:0:0 -no-undefined
+lib_libSiSi_la_CPPFLAGS = -I./include
+lib_libSiSi_la_SOURCES = $(LIBOBJECTS) include/datastructures/ParameterType.hh
 include_HEADERS = $(INCOBJECTS)

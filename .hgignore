@@ -43,6 +43,7 @@ src/sisi/COPYING
 src/sisi/config/config.**
 src/sisi/config/ltmain.sh
 src/sisi/.deps/**
+src/sisi/lib/.dirstamp
 doc/**.html
 doc/**.css
 doc/**.png
