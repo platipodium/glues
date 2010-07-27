@@ -20,7 +20,7 @@
 
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
    @author Kai W Wirtz <kai.wirtz@gkss.de
-   @date   20010-02-24
+   @date   20010-07-27
    @file Input.cc 
    @brief Input/output routines 
 */
@@ -293,7 +293,10 @@ unsigned int read_SiteRegfile()
       return 0;
     }
     
-    for (j=0; j<(unsigned int)MaxProxyReg; j++) RegSiteInd[j]=(int *)(std::malloc(numberOfRegions*sizeof(int)));
+    for (j=0; j<(unsigned int)MaxProxyReg; j++) {
+      RegSiteInd[j]=(int *)(std::malloc(numberOfRegions*sizeof(int)));
+      //RegSiteInd[j]=new int[numberOfRegions];
+    }
 
     ifs.open(filename.c_str(),ios::in);
     n=read_ascii_table(ifs,RegSiteInd);
