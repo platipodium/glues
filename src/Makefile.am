@@ -22,7 +22,7 @@ SUBDIRS=sisi test variation patch region
 
 bin_PROGRAMS = glues
 
-glues_DEPENDENCIES = sisi/lib/libSiSi2.0.a
+glues_DEPENDENCIES = sisi/lib/libSiSi.a
 
 noinst_HEADERS = \
 Symbols.h \
