@@ -372,11 +372,9 @@ istream& operator>> (istream& in, String& s)
   const char *cstr = tmp.str().c_str();
   int l=tmp.str().length();
   char* temp=new char[l];
-  
-  for (int i=0; i<tmp.str().length(); i++)
-    temp[i]=cstr[i];
-  
+  for (int i=0; i<tmp.str().length(); i++) temp[i]=cstr[i];
   s = (char*)temp;
   free(temp);       // Speicherbereich wieder freigeben.
+
   return in;
 }
