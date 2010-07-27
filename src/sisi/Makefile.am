@@ -26,7 +26,7 @@ ACLOCAL_AMFLAGS = -I config
 
 EXTRA_DIST = ChangeLog BUGS MANIFEST TODO VERSION Makefile.am-todo Makefile.todo bootstrap
 
-SUBDIRS = include lib src
+SUBDIRS = include lib src config
 
 # Rule for rebuilding libtool if necessary
 libtool: $(LIBTOOL_DEPS)
