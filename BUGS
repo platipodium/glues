@@ -1,6 +1,7 @@
 The bug tracker can be found at https://sourceforge.net/tracker/?group_id=273839&atid=1163811
 
-
+Quickfix of SiSi2.0 not found:
+for F in `find . -name Makefile`; do gsed -i 's/SiSi2.0/SiSi/g' $F ; done
 
 20090814
  * wrong results on grpsrv05
