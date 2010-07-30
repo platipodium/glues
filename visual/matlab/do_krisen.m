@@ -6,7 +6,7 @@ timelim=[-9500,-1500];
 latlim=[45,50];
 lonlim=[18,20];
 
-file='../../krisen_base.nc';
+file='../../krisen_nofluc.nc';
 
 [p,b]=clp_nc_trajectory('var','population_density','timelim',timelim,'latlim',latlim,'lonlim',lonlim,...
     'nocolor',1,'file',file,'nosum',1,'nearest',1);
