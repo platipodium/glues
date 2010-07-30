@@ -418,48 +418,40 @@ double simulation() {
       }
 
      /**
-	 Add climate events according to proxy data for each region only if
-	 global synchronization is switched off (local parameter sync)
-         and fluctuation intensity is greater than zero (SISI parameter flucampl)
-      */
+	   Add climate events according to proxy data for each region only if
+	   global synchronization is switched off (local parameter sync)
+       and fluctuation intensity is greater than zero (SISI parameter flucampl)
+     */
       //cout << "No proxy events. TODO: Initialize.cc ll.312 " << endl;
      if(!sync && flucampl>0) {
-	   //t_old = SimInit-*(EventRegTime+i*MaxEvent+EventRegInd[i])-t*ts;  // check for updated index to event series
-	   //t_new = t*ts-SimInit+*(EventRegTime+i*MaxEvent+EventRegInd[i]+1);
-
+	
 	   double t_old = 1950-*(EventRegTime+i*MaxEvent+EventRegInd[i])-TimeStart;
 	   double t_new = 1950-*(EventRegTime+i*MaxEvent+EventRegInd[i]+1)-TimeStart;
 	   
-	   /** Only advance pointer if valid (EventRegInd>0) and closer */
-	   //if ((EventRegInd[i+1]>0) && ((t_old + t_new) < 2*t*ts)) { 
-	   if (((t_old + t_new) < 2*t*ts)) { 
-	     EventRegInd[i]++;
-         //cout << "================== " << i << " " << i+1 << endl;
-       }
-	   //omt=(SimInit-*(EventRegTime+i*MaxEvent+EventRegInd[i])-t*ts)/flucperiod;
+	   /** 
+	     Advance event pointer if next event closer 
+	     Then calculate time difference to event (as variable omt) and
+	     relax this with exp function and breadth flucperiod 
+	   */
+	   if (((t_old + t_new) < 2*t*ts)) EventRegInd[i]++;
+    
 	   omt=(1950-*(EventRegTime+i*MaxEvent+EventRegInd[i])-TimeStart-t*ts)/flucperiod;
-	   
 	   fluc=1-flucampl*exp(-omt*omt);
-	//if(t%10==10 && (i==79||i==82|| i==150) )
-	if (i==140) //(fluc < 1 & 0)
-	  {
-	  	cout << i << " "<< t*ts << " " << TimeStart+t*ts << " " << EventRegInd[i] << " ";
-	  	cout << "fluc=" << fluc << " om=" << omt << " tr=" << t_old << "-" << t_new << std::endl; 
-	    }
-      }
-     //fluc=1.0;
-
-
+	   
+	   if (0&i==140)  cout << i << " "<< t*ts << " " << TimeStart+t*ts << " " << EventRegInd[i]
+	  		<< " fluc=" << fluc << " om=" << omt << " tr=" << t_old << "-" << t_new << std::endl; 
+     }
+ 
       /**
-	 Emulation of climate transition after LGM in Northern Hemisphere controlled with
-	 parameter param::LGMHoloTrans
+	   Emulation of climate transition after LGM in Northern Hemisphere controlled with
+	   parameter param::LGMHoloTrans
       */
       if(t_glac >0 && LGMHoloTrans ) {
-	float lat=regions[i].Latitude();
-	float icef=IceFac(regions[i].Latitude(),regions[i].Longitude());
+	    float lat=regions[i].Latitude();
+	    float icef=IceFac(regions[i].Latitude(),regions[i].Longitude());
 	//if(i%100==-50 & t%10==0)
 	//printf("%1.0f reg %d lat=%1.2f\t%1.2f\tif=%1.1f tg=%1.1f\tfac=%1.2f\n",t*ts,i,lat,fluc,icef,t_glac,icef+(1-icef)*(1-t_glac));
-	fluc*= icef+(1-icef)*(1-t_glac);
+	    fluc*= icef+(1-icef)*(1-t_glac);
       }
 
       /**
