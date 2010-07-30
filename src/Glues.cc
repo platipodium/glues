@@ -333,6 +333,7 @@ double simulation() {
 
       mean_pastclimate_npp=0; mean_region_npp=0; mean_futureclimate_npp=0;
       mean_sahara_npp=0;
+      fluc=1;
     /*
       synchronous global fluctuations/unfavorable
       conditions
