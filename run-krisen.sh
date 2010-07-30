@@ -25,10 +25,9 @@ $X $SIM
 cp $R.out ${R}_base.out
 cp $T.nc krisen_base.nc
 
-exit
 # Remove climate disruptions
 $SED -i '/flucampl/s/0\.4/0.0/' $DAT
-$SED -i '/float.*gammab/s/0\.0040/0.0037195/' $PAR 
+#$SED -i '/float.*gammab/s/0\.0040/0.0037195/' $PAR 
 $X $SIM
 cp $R.out ${R}_nofluc.out
 cp $T.nc krisen_nofluc.nc
