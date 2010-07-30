@@ -15,7 +15,7 @@ set(gca,'YTick',yt,'YTickLabel',num2str(ytl'));
 plot_multi_format(gcf,fullfile(d,['lemmen_fig1_color']));
 
 
-return
+%return
 %% Figure 2 World density maps at 1000 BC for different scenarios
 [d,b]=clp_nc_variable('var','population_density','timelim',-1000,'latlim',[-50 75],'lonlim',[-140 150],...
     'lim',[0 6],'nogrid',1,'file','../../amant_base.nc');
@@ -63,7 +63,7 @@ text(2.48,01.26,'Too seasonal','Vertical','top','Horizontal','right',...
 plot_multi_format(gcf,fullfile(d,['lemmen_fig2c_color']));
 
    
-return
+%return
 
 %% Figure 3 Europe density maps
 eutime=[10000 8000 7000 6000 5500 5000 4500 4000];

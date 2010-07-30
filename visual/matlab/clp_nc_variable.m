@@ -108,7 +108,7 @@ ntime=1;
 if numel(data)>length(data)
   idimid=find(udimid==dimids);
   tid=netcdf.inqVarID(ncid,netcdf.inqDim(ncid,udimid));
-  time=netcdf.getvar(ncid,tid);
+  time=netcdf.getVar(ncid,tid);
   itime=find(time>=timelim(1) & time<=timelim(2));
   if isempty(itime)
       error('Not data in specified time range')
