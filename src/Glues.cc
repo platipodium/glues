@@ -333,22 +333,13 @@ double simulation() {
 
       mean_pastclimate_npp=0; mean_region_npp=0; mean_futureclimate_npp=0;
       mean_sahara_npp=0;
-      fluc=1;
-    /*
-      synchronous global fluctuations/unfavorable
-      conditions
-    */
-    //    flucperiod=1500*0.4/(flucampl+0.01);
-    /*    omt=cos(t*ts*PI/flucperiod);
-	  fluc=1-flucampl*omt*omt*omt*omt;
-	  if(fluc<0) fluc=0;
-    */
-//    t_glac = (SimInit-t*ts-t_glac_end)/(SimInit-t_glac_end);
 
     t_glac = (t_glac_end-TimeStart-t*ts)/ (t_glac_end-TimeStart);
 
-  /** TODO make this reappear based on TimeStart not SimInit
-    if(sync) {
+  /** TODO make this reappear based on TimeStart not SimInit, synchronous global fluctuations
+    for all regions*/
+
+/*    if(sync) {
       if (SimInit-event_time[event_i]-t*ts<t*ts-SimInit+event_time[event_i+1]) event_i++;
       omt=(SimInit-event_time[event_i]-t*ts)/flucperiod;
       fluc=1-flucampl*exp(-omt*omt);
@@ -424,7 +415,8 @@ double simulation() {
        and fluctuation intensity is greater than zero (SISI parameter flucampl)
      */
       //cout << "No proxy events. TODO: Initialize.cc ll.312 " << endl;
-     if(!sync && flucampl>0) {
+     if (!sync) fluc=1;
+     if (!sync && flucampl>0) {
 	
 	   double t_old = 1950-*(EventRegTime+i*MaxEvent+EventRegInd[i])-TimeStart;
 	   double t_new = 1950-*(EventRegTime+i*MaxEvent+EventRegInd[i]+1)-TimeStart;
