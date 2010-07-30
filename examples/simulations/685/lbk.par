@@ -24,7 +24,7 @@ float	omega	0.04
 	\d Specific decrease in food productivity due to artisans
 	\v 
 comment gammab 0.0040 reduced to 3.7195 for nonfluc
-float	gammab 0.0040
+float	gammab 0.0037195
 	\u 1/y
 	\d Specific population growth rate, This should be corrected with the 0.929875 fluc factor
 	\v 
