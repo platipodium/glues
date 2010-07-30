@@ -19,7 +19,7 @@ T=test
 
 # base simulation
 $SED -i '/LocalSpread/s/LocalSpread.*$/LocalSpread 1/' $CTL
-$SED -i '/flucampl/s/flucampl.*$/flucampl 0.0/' $DAT
+$SED -i '/flucampl/s/flucampl.*$/flucampl 0.4/' $DAT
 $SED -i '/gdd_opt/s/gdd_opt.*$/gdd_opt 0.7/' $PAR
 $SED -i '/spreadv/s/spreadv.*$/spreadv 0.002/' $PAR
 $SED -i '/spreadm/s/spreadm.*$/spreadm 100/' $OPAR
@@ -47,11 +47,11 @@ cp $R.out ${R}_nospread.out
 cp $T.nc amant_nospread.nc
 $SED -i '/LocalSpread/s/0/1/' $CTL
 
-# Add climate disruptions
+# Remove climate disruptions
 $SED -i '/flucampl/s/0\.0/0.4/' $DAT
 $X $SIM
-cp $R.out ${R}_events.out
-cp $T.nc amant_events.nc
+cp $R.out ${R}_nofluc.out
+cp $T.nc amant_nofluc.nc
 $SED -i '/flucampl/s/0\.4/0.0/' $DAT
 
 # return to base setup
