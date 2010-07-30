@@ -28,7 +28,8 @@ arguments = {...
   {'nosum',0},...
   {'nocolor',0},...
   {'retdata',NaN},...
-  {'basename','trajectory'}
+  {'basename','trajectory'},...
+  {'nearest',0}
 };
 
 cl_register_function;
@@ -149,8 +150,11 @@ latlim(ilim)=lali(ilim);
 ilim=find(~isfinite(lonlim));
 lonlim(ilim)=loli(ilim);
 
-
-ireg=ireg(find(lat(ireg)>=latlim(1) & lat(ireg)<=latlim(2) & lon(ireg)>=lonlim(1) & lon(ireg)<=lonlim(2)));
+inbounds=find(lat(ireg)>=latlim(1) & lat(ireg)<=latlim(2) & lon(ireg)>=lonlim(1) & lon(ireg)<=lonlim(2));
+if isempty(inbounds) && (nearest==1)
+  error('Not Implemented yet');
+else ireg=ireg(inbounds);
+end
 nreg=length(ireg);
 region=region(ireg);
 lat=lat(ireg);

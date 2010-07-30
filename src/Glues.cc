@@ -228,8 +228,8 @@ double simulation() {
   int retval;
   int CivNum,tu=0,i,ii,sync=0;
   long t,t_desert,event_i=0;
-  double SimInit=12000,event_time[12]={10500,8200,7100,5500,3500,2400,600,-999},t_glac_end=8000;
-  double c_i,ts,nd,omt,fer,tarea,actualfertility,t_old,t_new,t_glac;
+  double event_time[12]={10500,8200,7100,5500,3500,2400,600,-999},t_glac_end=8000;
+  double c_i,ts,nd,omt,fer,tarea,actualfertility,t_glac;
   double tot_spr_t=0;
   FILE *spr=0,*sprt=0;
 
@@ -242,8 +242,7 @@ double simulation() {
   //  Exchange ex(100);
 
   if (TimeStart<0) {
-      SimInit=-10000;
-      for (i=0; i<12; i++) event_time[i]=2000-event_time[i];
+      for (i=0; i<12; i++) event_time[i]=1950-event_time[i];
       t_glac_end=2000-t_glac_end;
   }
 
@@ -275,9 +274,12 @@ double simulation() {
   else ts=TimeStep;
   tmax=(long)((TimeEnd-TimeStart)/ts);
   OutStep=(int)(OutputStep/ts);
-  t_desert=(long)((SimInit-5500)/ts);
 
-  if (TimeStart < 0) t_desert=(long)((TimeEnd-TimeStart-5500)/ts); // new time
+
+  //t_desert=(long)((SimInit-5500)/ts); Old time definition
+  /** Desert occurs at 5500 BP */
+  t_desert=(long)((-5500-TimeStart)/ts); // new time
+  if (t_desert<0) t_desert=0;
 
   /**
      Open  files analysis of spread
@@ -340,17 +342,18 @@ double simulation() {
 	  fluc=1-flucampl*omt*omt*omt*omt;
 	  if(fluc<0) fluc=0;
     */
-    t_glac = (SimInit-t*ts-t_glac_end)/(SimInit-t_glac_end);
+//    t_glac = (SimInit-t*ts-t_glac_end)/(SimInit-t_glac_end);
 
-    if (TimeStart < 0 ) t_glac = (t_glac_end-TimeStart-t*ts)/ (t_glac_end-TimeStart);
+    t_glac = (t_glac_end-TimeStart-t*ts)/ (t_glac_end-TimeStart);
 
+  /** TODO make this reappear based on TimeStart not SimInit
     if(sync) {
-      if(SimInit-event_time[event_i]-t*ts<t*ts-SimInit+event_time[event_i+1]) event_i++;
+      if (SimInit-event_time[event_i]-t*ts<t*ts-SimInit+event_time[event_i+1]) event_i++;
       omt=(SimInit-event_time[event_i]-t*ts)/flucperiod;
       fluc=1-flucampl*exp(-omt*omt);
       //      fprintf(stdout,"Sync Ev_i=%d Ev_t=%f omt=%f fluc=%f\n",event_i,SimInit-event_time[event_i]-t*ts,omt,fluc);
     }
-
+*/
     /*
       Check whether we need to update climate information, if so
       perform the update
@@ -420,19 +423,28 @@ double simulation() {
          and fluctuation intensity is greater than zero (SISI parameter flucampl)
       */
       //cout << "No proxy events. TODO: Initialize.cc ll.312 " << endl;
-     if(!sync) {
-	t_old = SimInit-*(EventRegTime+i*MaxEvent+EventRegInd[i])-t*ts;  // check for updated index to event series
-	t_new = t*ts-SimInit+*(EventRegTime+i*MaxEvent+EventRegInd[i]+1);
-	if(t_old<t_new) EventRegInd[i]++;
+     if(!sync && flucampl>0) {
+	   //t_old = SimInit-*(EventRegTime+i*MaxEvent+EventRegInd[i])-t*ts;  // check for updated index to event series
+	   //t_new = t*ts-SimInit+*(EventRegTime+i*MaxEvent+EventRegInd[i]+1);
 
-	omt=(SimInit-*(EventRegTime+i*MaxEvent+EventRegInd[i])-t*ts)/flucperiod;
-	fluc=1-flucampl*exp(-omt*omt);
+	   double t_old = 1950-*(EventRegTime+i*MaxEvent+EventRegInd[i])-TimeStart;
+	   double t_new = 1950-*(EventRegTime+i*MaxEvent+EventRegInd[i]+1)-TimeStart;
+	   
+	   /** Only advance pointer if valid (EventRegInd>0) and closer */
+	   //if ((EventRegInd[i+1]>0) && ((t_old + t_new) < 2*t*ts)) { 
+	   if (((t_old + t_new) < 2*t*ts)) { 
+	     EventRegInd[i]++;
+         //cout << "================== " << i << " " << i+1 << endl;
+       }
+	   //omt=(SimInit-*(EventRegTime+i*MaxEvent+EventRegInd[i])-t*ts)/flucperiod;
+	   omt=(1950-*(EventRegTime+i*MaxEvent+EventRegInd[i])-TimeStart-t*ts)/flucperiod;
+	   
+	   fluc=1-flucampl*exp(-omt*omt);
 	//if(t%10==10 && (i==79||i==82|| i==150) )
-	if (fluc < 1 & 0)
+	if (i==140) //(fluc < 1 & 0)
 	  {
-	    cout<<t*ts<<"\t"<<i<<":"<<EventRegInd[i]<<" fluc="<<fluc<<" om="<<omt<<"\t t1=";
-	    cout<<*(EventRegTime+i*MaxEvent+EventRegInd[i])<<"\t t2=";
-	    cout<<*(EventRegTime+i*MaxEvent+EventRegInd[i]+1)<<endl;
+	  	cout << i << " "<< t*ts << " " << TimeStart+t*ts << " " << EventRegInd[i] << " ";
+	  	cout << "fluc=" << fluc << " om=" << omt << " tr=" << t_old << "-" << t_new << std::endl; 
 	    }
       }
      //fluc=1.0;
