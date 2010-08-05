@@ -294,7 +294,7 @@ unsigned int read_SiteRegfile()
     }
     
     for (j=0; j<(unsigned int)MaxProxyReg; j++) {
-      RegSiteInd[j]=(int *)(std::malloc(numberOfRegions*sizeof(int)));
+      RegSiteInd[j]=(int *)(malloc(numberOfRegions*sizeof(int)));
       //RegSiteInd[j]=new int[numberOfRegions];
     }
 
@@ -508,9 +508,9 @@ unsigned int read_proxyevents()
 
     cerr << numberOfSites << " sites x " << MaxEvent << " events\n!";
 
-    EventTime= (double *)(std::malloc(numberOfSites*MaxEvent*sizeof(double)));
-    EventSerMax = (double *)(std::malloc(numberOfSites*sizeof(double)));
-    EventSerMin = (double *)(std::malloc(numberOfSites*sizeof(double)));
+    EventTime= (double *)(malloc(numberOfSites*MaxEvent*sizeof(double)));
+    EventSerMax = (double *)(malloc(numberOfSites*sizeof(double)));
+    EventSerMin = (double *)(malloc(numberOfSites*sizeof(double)));
     
     ifstream ifs2;
     ifs2.open(filename.c_str(),ios::in);

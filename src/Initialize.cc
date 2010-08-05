@@ -57,11 +57,11 @@ int set_events()
 /*----------------------------------------------------------------------*/
 /*   allocate memory for region specific Index and event-Time arrays    */
 /*----------------------------------------------------------------------*/
-    EventRegTime= (double *)(std::malloc(numberOfRegions*MaxEvent*sizeof(double)));
-    EventRegInd = (int *)(std::malloc(numberOfRegions*sizeof(int)));
-    EventRegNum = (int *)(std::malloc(numberOfRegions*sizeof(int)));
-    EventSeries = (double *)(std::malloc(MaxEvent*MaxProxyReg*sizeof(double)));
-    EventWeight = (double *)(std::malloc(MaxEvent*MaxProxyReg*sizeof(double)));
+    EventRegTime= (double *)(malloc(numberOfRegions*MaxEvent*sizeof(double)));
+    EventRegInd = (int *)(malloc(numberOfRegions*sizeof(int)));
+    EventRegNum = (int *)(malloc(numberOfRegions*sizeof(int)));
+    EventSeries = (double *)(malloc(MaxEvent*MaxProxyReg*sizeof(double)));
+    EventWeight = (double *)(malloc(MaxEvent*MaxProxyReg*sizeof(double)));
 
     /*EventRegTime= new double(numberOfRegions*MaxEvent);
     EventRegInd = new int(numberOfRegions);
@@ -377,7 +377,7 @@ int read_data() {
   }
 
   //if (!read_SiteRadfile()) return 1;  //  
-  for (unsigned int j=0; j<(unsigned int)MaxProxyReg; j++) RegSiteRad[j]=(int *)(std::malloc(numberOfRegions*sizeof(int)));
+  for (unsigned int j=0; j<(unsigned int)MaxProxyReg; j++) RegSiteRad[j]=(int *)(malloc(numberOfRegions*sizeof(int)));
 
   if (read_region_eventradius(std::string(fname),RegSiteRad)==0) return 1;
   

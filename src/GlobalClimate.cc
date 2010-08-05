@@ -93,9 +93,9 @@ int GlobalClimate::InitRead(char* filename)
   }
 
   // Create data field
-  data=(double**)std::malloc(nrow*sizeof(double*));
+  data=(double**)malloc(nrow*sizeof(double*));
   for (i=0; i<nrow; i++) {
-      data[i]=(double*)std::malloc(ncol*sizeof(double));
+      data[i]=(double*)malloc(ncol*sizeof(double));
       for (j=0; j<ncol; j++) data[i][j]=0;
   }
 
