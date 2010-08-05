@@ -22,9 +22,14 @@ SUBDIRS=sisi test variation patch region
 
 bin_PROGRAMS = glues
 
-#glues_DEPENDENCIES = sisi/lib/libSiSi2.0.a sisi/lib/libSiSi.la
-glues_DEPENDENCIES = sisi/lib/libSiSi.la
-
+if LOCALSISI
+  glues_DEPENDENCIES = sisi/lib/libSiSi.la
+  FOREIGN_SISI =
+else
+  glues_DEPENDENCIES =
+  FOREIGN_SISI = -lSiSi2.0
+endif
+  
 noinst_HEADERS = \
 Symbols.h \
 Input.h \
@@ -89,7 +94,8 @@ GNetcdf.cc
 
 #INCLUDES =  -I/usr/local/netcdf/gcc-4.3.1/include
 
-glues_LDADD=  -lnetcdf -lnetcdf_c++ \
+
+glues_LDADD=  -lnetcdf -lnetcdf_c++ $(FOREIGN_SISI)\
 	 #/usr/local/netcdf/gcc-4.3.1/lib/libnetcdf_c++.a \
 	 #/usr/local/netcdf/gcc-4.3.1/lib/libnetcdf.a \
 	#-lintl
