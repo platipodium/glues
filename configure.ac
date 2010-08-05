@@ -120,14 +120,14 @@ AC_MSG_CHECKING(for SiSi's Version.hh)
 AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 #include "Version.hh"
 ]])],[AC_MSG_RESULT(yes)
-      LIBS="$LIBS -lSiSi2.0"
-      SISILIBNAME=SiSi2.0
+      LIBS="$LIBS -lSiSi"
+      SISILIBNAME=SiSi
    ],[
 AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 #include "Version.hh"
 ]])],[AC_MSG_RESULT(yes)
-      LIBS="$LIBS -lSiSi"
-      SISILIBNAME=SiSi
+      LIBS="$LIBS -lSiSi2.0"
+      SISILIBNAME=SiSi2.0
    ],[
  AC_MSG_RESULT(no)
  AC_MSG_ERROR([SiSi header can't be found, please set --with-sisi option.])
