@@ -34,6 +34,7 @@ dnl defining version and package
 ALL_LINGUAS="en de"
 #AM_GNU_GETTEXT
 AM_INIT_AUTOMAKE([glues],[GLUES_VERSION])
+AM_SILENT_RULES 
 #AM_MAINTAINER_MODE
 
 dnl Optimization or debug
@@ -100,6 +101,8 @@ if test -z ${sisi_path} ; then
   LOCALSISI=1
 fi
 AC_SUBST(LOCALSISI)
+
+AM_CONDITIONAL(LOCALSISI,$LOCALSISI==1)
 
 dnl SiSi include and libary paths
 test -z ${sisi_include_path} && sisi_include_path="${sisi_path}/include"
