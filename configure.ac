@@ -59,7 +59,7 @@ AC_PROG_CXX(["ccache g++" g++ c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r x
 AC_LANG([C++])
 AC_PROG_CC # for region package
 # AC_PROG_AWK
-AC_PROG_RANLIB # for sisi (move to sisi configure?)
+# AC_PROG_RANLIB # for sisi (move to sisi configure?)
 
 #AC_ARG_VAR (variable, description)
 #Declare variable is a precious variable, and include its description in the variable section of `./configure --help'. 
@@ -102,7 +102,7 @@ if test -z ${sisi_path} ; then
 fi
 AC_SUBST(LOCALSISI)
 
-AM_CONDITIONAL(LOCALSISI,$LOCALSISI==1)
+AM_CONDITIONAL(LOCALSISI,test $LOCALSISI == 1)
 
 dnl SiSi include and libary paths
 test -z ${sisi_include_path} && sisi_include_path="${sisi_path}/include"
@@ -121,16 +121,20 @@ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 #include "Version.hh"
 ]])],[AC_MSG_RESULT(yes)
       LIBS="$LIBS -lSiSi2.0"
+      SISILIBNAME=SiSi2.0
    ],[
 AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 #include "Version.hh"
 ]])],[AC_MSG_RESULT(yes)
       LIBS="$LIBS -lSiSi"
+      SISILIBNAME=SiSi
    ],[
  AC_MSG_RESULT(no)
  AC_MSG_ERROR([SiSi header can't be found, please set --with-sisi option.])
  ])
 ])
+
+AC_SUBST(SISILIBNAME)
 
 # FIXME	AC_DEFINE(HAVE_SISI,[],"Whether we have the SiSi package")],
 dnl Check if we can link with SiSi
@@ -176,7 +180,6 @@ if test "x${netcdf_path}" != "no" ; then
      dnl custom directories set
      LDFLAGS="$LDFLAGS -L$netcdf_lib_path"
      CPPFLAGS="$CPPFLAGS -I$netcdf_include_path"
-     #LIBS="$LIBS -lnetcdf_c++ -lnetcdf"
    else
      dnl automatic search, try location of ncdump
      AC_PATH_PROG(NCDUMP, ncdump, "no")
