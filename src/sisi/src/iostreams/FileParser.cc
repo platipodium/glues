@@ -114,6 +114,8 @@ String FileParser::open(const char* filename) {
   if( _input != NULL )
     delete _input;
   _filename              = FilenameHandling::convertToPlatform(filename);
+  
+  std::cerr << filename << " *********** versus ********** " << _filename << std::endl;
   _directory             = FilenameHandling::getParent(_filename);
   _line                  = 1;
   _errorCounter          = 0;

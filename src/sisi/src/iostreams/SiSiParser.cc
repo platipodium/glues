@@ -75,6 +75,7 @@ String SiSiParser::parseSimulation(TwoWayList& list, const char* filename) {
   TwoWayList* includeFiles;
   Parameter* par = NULL;
   TwoWayListStringElement* el = NULL;
+  cerr << filename << endl; 
   String message = parser.open(filename);
   if( message.compareTo("OK") != 0 )
     return message;
