@@ -70,6 +70,10 @@
 #ifndef _FloatParameter_hh_
 #define _FloatParameter_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "datastructures/Parameter.hh"
 #include "datastructures/ParameterType.hh"
 #include "iostreams/FileParser.hh"

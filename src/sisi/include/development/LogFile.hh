@@ -63,6 +63,10 @@
 #ifndef _LogFile_hh_
 #define _LogFile_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "cppinc.h"
 #include "Version.hh"
 #include "common/date.hh"

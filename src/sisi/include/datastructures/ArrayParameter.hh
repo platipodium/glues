@@ -131,6 +131,10 @@
 #ifndef _ArrayParameter_hh_
 #define _ArrayParameter_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "cppinc.h"
 #include "platform.hh"
 #include "common/StringHandler.hh"

@@ -107,6 +107,10 @@
 #ifndef _String_hh_
 #define _String_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "cppinc.h"
 #include "platform.hh"
 

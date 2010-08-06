@@ -52,6 +52,10 @@
 
 #ifndef _platform_hh_
 #define _platform_hh_
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 
 // Define bool for older Borland Compiler:
 

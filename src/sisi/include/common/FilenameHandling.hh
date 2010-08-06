@@ -78,6 +78,10 @@
 #ifndef __FilenameHandling_hh__
 #define __FilenameHandling_hh__
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "platform.hh"
 #include "datastructures/String.hh"
 

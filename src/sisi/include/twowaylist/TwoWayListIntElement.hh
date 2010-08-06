@@ -61,6 +61,10 @@
 #ifndef _TwoWayListIntElement_hh_
 #define _TwoWayListIntElement_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "twowaylist/TwoWayListElement.hh"
 
 class TwoWayListIntElement: public TwoWayListElement

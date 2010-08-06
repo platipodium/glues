@@ -45,6 +45,10 @@
 #ifndef _Math_hh_
 #define _Math_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 class Math {
 public:
   static double min(double x1, double x2) {

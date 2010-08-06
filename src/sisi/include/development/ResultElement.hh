@@ -60,6 +60,9 @@
 #ifndef _ResultElement_hh_
 #define _ResultElement_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "datastructures/ArrayParameter.hh"
 #include "datastructures/FloatParameter.hh"
 #include "datastructures/IntParameter.hh"

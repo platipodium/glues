@@ -57,6 +57,10 @@
 #ifndef _ParameterType_hh_
 #define _ParameterType_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "datastructures/String.hh"
 
 class ParameterType

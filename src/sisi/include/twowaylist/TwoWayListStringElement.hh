@@ -64,8 +64,13 @@
 //
 /////////////////////////////////////////////////////////////////////////////
 
+
 #ifndef _TwoWayListStringElement_hh_
 #define _TwoWayListStringElement_hh_
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include "datastructures/String.hh"
 #include "twowaylist/TwoWayListElement.hh"

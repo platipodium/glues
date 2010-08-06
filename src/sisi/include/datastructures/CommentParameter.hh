@@ -68,6 +68,10 @@
 #ifndef _CommentParameter_hh_
 #define _CommentParameter_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "datastructures/Parameter.hh"
 #include "datastructures/ParameterType.hh"
 #include "datastructures/String.hh"

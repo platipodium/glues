@@ -58,6 +58,9 @@
 #ifndef _ResultReader_hh_
 #define _ResultReader_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "platform.hh"
 #include "datastructures/String.hh"
 #include "datastructures/TableParameter.hh"

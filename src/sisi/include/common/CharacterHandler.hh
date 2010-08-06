@@ -46,6 +46,10 @@
 #ifndef _CharacterHandler_hh_
 #define _CharacterHandler_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "cppinc.h"
 #include "platform.hh"
 
