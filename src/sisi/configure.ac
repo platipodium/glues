@@ -1,8 +1,8 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.65])
-AC_INIT([SiSi], [2.0], [carsten.lemmen@gkss.de])
+AC_PREREQ([2.59])
+AC_INIT([SiSi], [2.0a], [carsten.lemmen@gkss.de])
 
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_MACRO_DIR([config])'
@@ -54,7 +54,7 @@ AC_PROG_RANLIB
 AC_PROG_INSTALL
 AC_PROG_AWK
 AC_PROG_CPP
-AC_PROG_MKDIR_P
+#AC_PROG_MKDIR_P
 AC_PROG_LIBTOOL
 
 # Specific DEBUG settings for sisi
