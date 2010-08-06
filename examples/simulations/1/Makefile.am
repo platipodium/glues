@@ -17,5 +17,5 @@
 ## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 ## 02110-1301, USA.
 
-EXTRA_DIST=lbk.sim lbk.ctl lbk.dat lbk.init lbk.opar lbk.par lbk.sce
+EXTRA_DIST=lbk.sim lbk.ctl lbk.dat lbk.init lbk.opar lbk.par lbk.sce.in
 
