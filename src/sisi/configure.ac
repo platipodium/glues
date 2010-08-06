@@ -8,6 +8,12 @@ AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_MACRO_DIR([config])'
 AM_INIT_AUTOMAKE([SiSi],[2.0])
 
+dnl automake-1.11 has AM_SILENT_RULES but we need to be 
+dnl able to build on sunray as well which have 1.9
+dnl the silent rule is switched on and can be disabled
+dnl with ./configure --disable-silent-rules
+m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
+
 AC_CONFIG_SRCDIR([include/cppinc.h])
 AC_CONFIG_HEADERS([config.h])
 
