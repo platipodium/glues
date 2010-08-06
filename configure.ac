@@ -250,8 +250,20 @@ if test "x${netcdf_path}" != "no" ; then
       fi
   fi
 
-   AC_CHECK_HEADERS([netcdf.h])
-   AC_CHECK_HEADERS([netcdfcpp.h])
+dnl Include a generic call to check headers for autoconf
+dnl version < 2.64, i.e. include fourth argument to the macro,
+dnl see http://www.gnu.org/software/hello/manual/
+dnl /autoconf/Present-But-Cannot-Be-Compiled.html
+   AC_CHECK_HEADERS([netcdf.h],[],[],
+       [[#ifdef HAVE_NETCDF_H
+         #include <netcdf.h>
+         #endif
+       ]])
+   AC_CHECK_HEADERS([netcdfcpp.h],[],[],
+       [[#ifdef HAVE_NETCDFCPP_H
+         #include <netcdfcpp.h>
+         #endif
+       ]])
    AC_CHECK_LIB(netcdf,ncclose)
    AC_CHECK_LIB(netcdf_c++,ncclose)
   
