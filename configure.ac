@@ -3,38 +3,28 @@ dnl Process this file with autoconf to produce a configure script.
 dnl Minimum version of autoconf required
 AC_PREREQ(2.59)
 
-
-# From R package:
-## We want to get the version number from file 'VERSION' (rather than
-## specifying the version info in 'configure.ac'.  Hence, we need a bit
-## of M4 magic.  Note that M4 esyscmd has a trailing newline because the
-## shell command output has one, hence the patsubst() trick.
-#m4_define([R_VERSION],
-#          m4_bpatsubst(m4_esyscmd([cat VERSION]),
-#                      [\([0-9.]*\)\(\w\|\W\)*],
-#                       [\1]))
-
-dnl Versioning: please increase micro version at each running version
 dnl only m4 macros are allowed before AC_INIT
-
-m4_define([GLUES_MICRO_VERSION],15)
-m4_define([GLUES_MINOR_VERSION],1)
-m4_define([GLUES_MAJOR_VERSION],1)
+dnl get version from file VERSION with some m4 magic
+m4_define([GLUES_MICRO_VERSION],
+ m4_bpatsubst(m4_esyscmd([cat VERSION]),
+ [\([0-9]*\)\.\([0-9]*\)\.\([0-9a-z]*\)\(\w\|\W\)*],[\3]))
+m4_define([GLUES_MINOR_VERSION],
+ m4_bpatsubst(m4_esyscmd([cat VERSION]),
+ [\([0-9]*\)\.\([0-9]*\)\.\([0-9a-z]*\)\(\w\|\W\)*],[\2]))
+m4_define([GLUES_MAJOR_VERSION],
+ m4_bpatsubst(m4_esyscmd([cat VERSION]),
+ [\([0-9]*\)\.\([0-9]*\)\.\([0-9a-z]*\)\(\w\|\W\)*],[\1]))
 m4_define([GLUES_VERSION],[GLUES_MAJOR_VERSION.GLUES_MINOR_VERSION.GLUES_MICRO_VERSION])
 
-# Macro: AC_INIT (package, version, [bug-report], [tarname])
-# Process any command-line arguments and perform various initializations and verifications.
-# Set the name of the package and its version. These are typically used in `--version' support, including that of configure. The optional argument bug-report should be the email to which users should send bug reports. The package tarname differs from package: the latter designates the full package name (e.g., `GNU Autoconf'), while the former is meant for distribution tar ball names (e.g., `autoconf'). It defaults to package with `GNU ' stripped, lower-cased, and all characters other than alphanumerics and underscores are changed to `-'.
-# Defines AC_PACKAGE_NAME, PACKAGE_NAME, AC_PACKAGE_TARNAME, PACKAGE_TARNAME
-# Defines AC_PACKAGE_VERSION, PACKAGE_VERSION, AC_PACKAGE_STRING, PACKAGE_STRING
-# Defines AC_PACKAGE_BUGREPORT, PACKAGE_BUGREPORT
+dnl Defines AC_PACKAGE_NAME, PACKAGE_NAME, AC_PACKAGE_TARNAME, PACKAGE_TARNAME
+dnl Defines AC_PACKAGE_VERSION, PACKAGE_VERSION, AC_PACKAGE_STRING, PACKAGE_STRING
+dnl Defines AC_PACKAGE_BUGREPORT, PACKAGE_BUGREPORT
 AC_INIT([GLUES],[GLUES_VERSION],[carsten.lemmen@gkss.de],[glues])
 
 #AC_COPYRIGHT broken on autoconf 2.61 sunray
 #AC_COPYRIGHT ([[Carsten Lemmen and Kai W. Wirtz, GKSS-Forschungszentrum Geesthacht GmbH]])
 
-dnl configuring options
-
+dnl configuring options for auxiliary directories
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_SRCDIR([src/Glues.cc])
 
@@ -42,7 +32,6 @@ dnl configuration actions
 
 # change the default prefix from /usr/local 
 AC_PREFIX_DEFAULT([$HOME/opt])
-
 
 dnl defining version and package
 AM_INIT_AUTOMAKE([glues],[GLUES_VERSION])
