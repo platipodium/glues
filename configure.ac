@@ -17,7 +17,7 @@ AC_PREREQ(2.59)
 dnl Versioning: please increase micro version at each running version
 dnl only m4 macros are allowed before AC_INIT
 
-m4_define([GLUES_MICRO_VERSION],14)
+m4_define([GLUES_MICRO_VERSION],15)
 m4_define([GLUES_MINOR_VERSION],1)
 m4_define([GLUES_MAJOR_VERSION],1)
 m4_define([GLUES_VERSION],[GLUES_MAJOR_VERSION.GLUES_MINOR_VERSION.GLUES_MICRO_VERSION])
@@ -45,11 +45,17 @@ AC_PREFIX_DEFAULT([$HOME/opt])
 
 
 dnl defining version and package
+AM_INIT_AUTOMAKE([glues],[GLUES_VERSION])
+
+dnl automake-1.11 has AM_SILENT_RULES but we need to be 
+dnl able to build on sunray as well which have 1.9
+dnl the silent rule is switched on and can be disabled
+dnl with ./configure --disable-silent-rules
+m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
+
+#AM_MAINTAINER_MODE
 ALL_LINGUAS="en de"
 #AM_GNU_GETTEXT
-AM_INIT_AUTOMAKE([glues],[GLUES_VERSION])
-AM_SILENT_RULES 
-#AM_MAINTAINER_MODE
 
 dnl Platform configuration
 AC_CANONICAL_HOST
