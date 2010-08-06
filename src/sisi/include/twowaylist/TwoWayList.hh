@@ -45,6 +45,10 @@
 #ifndef _TwoWayList_hh_
 #define _TwoWayList_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "twowaylist/TwoWayListElement.hh"
 
 class TwoWayList

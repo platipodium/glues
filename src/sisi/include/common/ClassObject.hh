@@ -77,6 +77,10 @@
 #ifndef _ClassObject_hh_
 #define _ClassObject_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "cppinc.h"
 
 class ClassObject

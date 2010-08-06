@@ -79,6 +79,10 @@
 #ifndef _MessageHandler_hh_
 #define _MessageHandler_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "cppinc.h"
 #include "datastructures/String.hh"
 

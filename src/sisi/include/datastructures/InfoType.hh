@@ -70,6 +70,10 @@
 #ifndef _InfoType_hh_
 #define _InfoType_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "cppinc.h"
 #include "datastructures/String.hh"
 #include "twowaylist/TwoWayListElement.hh"

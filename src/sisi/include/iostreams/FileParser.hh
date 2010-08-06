@@ -85,6 +85,9 @@
 #ifndef _FileParser_hh_
 #define _FileParser_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "cppinc.h"
 #include "datastructures/String.hh"
 

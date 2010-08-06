@@ -1,6 +1,10 @@
 #ifndef CPPINC_H
 #define CPPINC_H
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #ifdef USE_DEPRECATED_STANDARD_LIBRARY_HEADERS
 
 #include <ctype.h>

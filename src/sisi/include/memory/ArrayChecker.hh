@@ -86,6 +86,10 @@
 #define _ArrayChecker_hh_
 
 #include "cppinc.h"
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 
 template <class X> class Array {
 public:

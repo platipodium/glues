@@ -68,6 +68,10 @@
 #ifndef _StringParameter_hh_
 #define _StringParameter_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "common/StringHandler.hh"
 #include "datastructures/Parameter.hh"
 #include "datastructures/ParameterType.hh"

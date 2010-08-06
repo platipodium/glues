@@ -55,6 +55,9 @@
 #ifndef _SiSi_hh_
 #define _SiSi_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include <iostreams/SiSiParser.hh>       
 #include <development/LogFile.hh>        
 #include <development/MessageHandler.hh> 

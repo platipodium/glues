@@ -1,5 +1,19 @@
 dnl Process this file with autoconf to produce a configure script.
 
+dnl Minimum version of autoconf required
+AC_PREREQ(2.59)
+
+
+# From R package:
+## We want to get the version number from file 'VERSION' (rather than
+## specifying the version info in 'configure.ac'.  Hence, we need a bit
+## of M4 magic.  Note that M4 esyscmd has a trailing newline because the
+## shell command output has one, hence the patsubst() trick.
+#m4_define([R_VERSION],
+#          m4_bpatsubst(m4_esyscmd([cat VERSION]),
+#                      [\([0-9.]*\)\(\w\|\W\)*],
+#                       [\1]))
+
 dnl Versioning: please increase micro version at each running version
 dnl only m4 macros are allowed before AC_INIT
 
@@ -15,7 +29,6 @@ m4_define([GLUES_VERSION],[GLUES_MAJOR_VERSION.GLUES_MINOR_VERSION.GLUES_MICRO_V
 # Defines AC_PACKAGE_VERSION, PACKAGE_VERSION, AC_PACKAGE_STRING, PACKAGE_STRING
 # Defines AC_PACKAGE_BUGREPORT, PACKAGE_BUGREPORT
 AC_INIT([GLUES],[GLUES_VERSION],[carsten.lemmen@gkss.de],[glues])
-AC_PREREQ(2.59)
 
 #AC_COPYRIGHT broken on autoconf 2.61 sunray
 #AC_COPYRIGHT ([[Carsten Lemmen and Kai W. Wirtz, GKSS-Forschungszentrum Geesthacht GmbH]])
@@ -30,12 +43,49 @@ dnl configuration actions
 # change the default prefix from /usr/local 
 AC_PREFIX_DEFAULT([$HOME/opt])
 
+
 dnl defining version and package
 ALL_LINGUAS="en de"
 #AM_GNU_GETTEXT
 AM_INIT_AUTOMAKE([glues],[GLUES_VERSION])
 AM_SILENT_RULES 
 #AM_MAINTAINER_MODE
+
+dnl Platform configuration
+AC_CANONICAL_HOST
+AC_DEFINE_UNQUOTED(GLUES_PLATFORM, "${host}",
+[Define this to be the canonical name (cpu-vendor-os) of your system.])
+AC_DEFINE_UNQUOTED(GLUES_CPU, "${host_cpu}",
+[Define this to be the name of the CPU of your system.])
+AC_DEFINE_UNQUOTED(GLUES_VENDOR, "${host_vendor}",
+[Define this to be the name of the vendor of your system.])
+AC_DEFINE_UNQUOTED(GLUES_OS, "${host_os}",
+[Define this to be the name of the OS of your system.])
+
+GLUES_PLATFORM="${host}"
+AC_SUBST(GLUES_PLATFORM)
+GLUES_OS="${host_os}"
+AC_SUBST(GLUES_OS)
+
+case "${host_os}" in
+  mingw*|windows*|winnt)
+    AC_DEFINE(Win32, 1,
+              [Define according to your operating system type.])
+    GLUES_OSTYPE="windows"
+    ;;
+  *)
+    AC_DEFINE(__UNIX__, 1,
+              [Define according to your operating system type.])
+    GLUES_OSTYPE="unix"
+   ;;
+esac
+AC_SUBST(GLUES_OSTYPE)
+
+dnl End of platform configuration
+
+
+
+
 
 dnl Optimization or debug
 AC_DEFINE([DEBUG], [], [Debugging enabled])

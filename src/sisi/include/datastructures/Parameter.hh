@@ -90,6 +90,10 @@
 #ifndef _Parameter_hh_
 #define _Parameter_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "common/CharacterHandler.hh"
 #include "datastructures/InfoType.hh"
 #include "datastructures/ParameterType.hh"

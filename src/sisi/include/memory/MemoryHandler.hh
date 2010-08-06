@@ -109,6 +109,9 @@
 #ifndef _MemoryHandler_hh_
 #define _MemoryHandler_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "cppinc.h"
 
 //#define __MEMORYHANDLER_STATISTICS__

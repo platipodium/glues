@@ -106,6 +106,9 @@
 #ifndef _ResultWriter_hh_
 #define _ResultWriter_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "cppinc.h"
 #include "platform.hh"
 #include "datastructures/ResultParameter.hh" // For DEFAULT_PRECISION (MAX).

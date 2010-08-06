@@ -49,6 +49,9 @@
 #ifndef _Random_hh_
 #define _Random_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "cppinc.h"
 #include <math.h>
 

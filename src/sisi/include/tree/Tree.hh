@@ -45,6 +45,9 @@
 #ifndef _Tree_hh_
 #define _Tree_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "Tree/Node.hh"
 
 class Tree

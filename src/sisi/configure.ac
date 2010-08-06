@@ -11,6 +11,41 @@ AM_INIT_AUTOMAKE([SiSi],[2.0])
 AC_CONFIG_SRCDIR([include/cppinc.h])
 AC_CONFIG_HEADERS([config.h])
 
+dnl Platform configuration
+AC_CANONICAL_HOST
+AC_DEFINE_UNQUOTED(SISI_PLATFORM, "${host}",
+[Define this to be the canonical name (cpu-vendor-os) of your system.])
+AC_DEFINE_UNQUOTED(SISI_CPU, "${host_cpu}",
+[Define this to be the name of the CPU of your system.])
+AC_DEFINE_UNQUOTED(SISI_VENDOR, "${host_vendor}",
+[Define this to be the name of the vendor of your system.])
+AC_DEFINE_UNQUOTED(SISI_OS, "${host_os}",
+[Define this to be the name of the OS of your system.])
+
+SISI_PLATFORM="${host}"
+AC_SUBST(SISI_PLATFORM)
+SISI_OS="${host_os}"
+AC_SUBST(SISI_OS)
+
+case "${host_os}" in
+  mingw*|windows*|winnt)
+    AC_DEFINE(Win32, 1,
+              [Define according to your operating system type.])
+    SISI_OSTYPE="windows"
+    ;;
+  *)
+    AC_DEFINE(__UNIX__, 1,
+              [Define according to your operating system type.])
+    SISI_OSTYPE="unix"
+   ;;
+esac
+AC_SUBST(SISI_OSTYPE)
+
+dnl End of platform configuration
+
+
+
+
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_CC
@@ -22,6 +57,15 @@ AC_PROG_CPP
 AC_PROG_MKDIR_P
 AC_PROG_LIBTOOL
 
+# Specific DEBUG settings for sisi
+AC_DEFINE([__DESTRUCTOR_DEBUG__],[0],
+[Debug information on destructors in ResultElement and ResultReader])
+AC_DEFINE([__FILEPARSER_DEBUG__],[0],
+[Debug information in FileParser])
+AC_DEFINE([__SISSIPARSER_DEBUG__],[0],
+[Debug information in SiSiParser])
+AC_DEFINE([__STRING_DESTRUCTOR_DEBUG__],[0],
+[Debug information on String])
 
 # Checks for libraries.
 # FIXME: Replace `main' with a function in `-lm':

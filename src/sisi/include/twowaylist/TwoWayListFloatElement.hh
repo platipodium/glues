@@ -61,6 +61,10 @@
 #ifndef _TwoWayListFloatElement_hh_
 #define _TwoWayListFloatElement_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "twowaylist/TwoWayListElement.hh"
 
 class TwoWayListFloatElement: public TwoWayListElement

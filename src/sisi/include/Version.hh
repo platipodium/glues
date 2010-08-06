@@ -45,6 +45,10 @@
 //
 /////////////////////////////////////////////////////////////////////////////
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #ifndef _Version_hh_
 #define _Version_hh_
 

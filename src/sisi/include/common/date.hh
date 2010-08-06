@@ -46,6 +46,10 @@
 #ifndef _date_hh_
 #define _date_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "datastructures/String.hh"
 
 class Date

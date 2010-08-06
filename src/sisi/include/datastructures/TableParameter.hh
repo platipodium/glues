@@ -108,6 +108,10 @@
 #ifndef _TableParameter_hh_
 #define _TableParameter_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "common/StringHandler.hh"
 #include "datastructures/ListParameter.hh"
 

@@ -56,7 +56,9 @@
 #ifndef _SiSiParser_hh_
 #define _SiSiParser_hh_
 
-// #define __SISSIPARSER_DEBUG__
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include "datastructures/Parameter.hh"
 #include "datastructures/String.hh"

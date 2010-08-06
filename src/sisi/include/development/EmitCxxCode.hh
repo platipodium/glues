@@ -49,6 +49,10 @@
 #ifndef _EmitCxxCode_hh_
 #define _EmitCxxCode_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "platform.hh"
 #include "datastructures/String.hh"
 #include "twowaylist/TwoWayList.hh"

@@ -70,6 +70,10 @@
 #ifndef _TwoWayListElement_hh_
 #define _TwoWayListElement_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "cppinc.h"
 
 class TwoWayList;

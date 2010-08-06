@@ -98,6 +98,10 @@
 #ifndef _ListParameter_hh_
 #define _ListParameter_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "datastructures/ArrayParameter.hh"
 #include "datastructures/Parameter.hh"
 #include "datastructures/ParameterType.hh"
@@ -145,7 +149,7 @@ public:
 	     != NULL ) {
 #ifdef __DESTRUCTOR_DEBUG__
 	cout << "    ";
-	el->print(cout);
+	el->printValue(cout);
 	cout << END_OF_LINE;
 #endif
 	delete el;

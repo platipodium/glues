@@ -89,6 +89,10 @@
 #ifndef _ResultParameter_hh_
 #define _ResultParameter_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "datastructures/Parameter.hh"
 #include "datastructures/ParameterType.hh"
 #include "iostreams/FileParser.hh"

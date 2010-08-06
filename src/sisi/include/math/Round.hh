@@ -55,6 +55,9 @@
 #ifndef _Round_hh_
 #define _Round_hh_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "cppinc.h"
 #include "datastructures/String.hh"
 
