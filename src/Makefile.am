@@ -83,10 +83,10 @@ IO.cc \
 GNetcdf.cc
 
 if LOCALSISI
-  glues_LDADD=  -lnetcdf -lnetcdf_c++
+  glues_LDADD=  -lnetcdf_c++ -lnetcdf
 #/usr/local/netcdf/gcc-4.3.1/lib/libnetcdf_c++.a \
 #/usr/local/netcdf/gcc-4.3.1/lib/libnetcdf.a \
 #-lintl
 else
-  glues_LDADD=  -lnetcdf -lnetcdf_c++ -lSiSi2.0
+  glues_LDADD=  -lnetcdf_c++ -lnetcdf -lSiSi2.0
 endif
