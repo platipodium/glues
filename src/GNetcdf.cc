@@ -57,7 +57,7 @@ int gnc_write_header(NcFile& ncfile, int nreg) {
   ncfile.add_att("source","model");
   ncfile.add_att("references","Wirtz & Lemmen (2003), Lemmen (2009)");
   ncfile.add_att("model_name","GLUES");
-  ncfile.add_att("model_version","1.1.9");
+  ncfile.add_att("model_version",VERSION);
   ncfile.add_att("date_of_creation",timestring.c_str());
    
   NcDim *regdim, *timedim;
