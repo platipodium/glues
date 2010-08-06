@@ -85,6 +85,9 @@
 #include "development/MessageHandler.hh"
 #include "iostreams/FileParser.hh"
 
+#include<sstream>
+#include<strstream> // deprecated
+
 /** Initializes FileParser and opens the file with the name filename. */
 FileParser::FileParser(String filename) {
   _maxErrors             = 5;
