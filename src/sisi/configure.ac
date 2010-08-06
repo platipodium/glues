@@ -58,14 +58,14 @@ AC_PROG_MKDIR_P
 AC_PROG_LIBTOOL
 
 # Specific DEBUG settings for sisi
-AC_DEFINE([__DESTRUCTOR_DEBUG__],[0],
-[Debug information on destructors in ResultElement and ResultReader])
-AC_DEFINE([__FILEPARSER_DEBUG__],[0],
-[Debug information in FileParser])
-AC_DEFINE([__SISSIPARSER_DEBUG__],[0],
-[Debug information in SiSiParser])
-AC_DEFINE([__STRING_DESTRUCTOR_DEBUG__],[0],
-[Debug information on String])
+#AC_DEFINE([__DESTRUCTOR_DEBUG__],[0],
+#[Debug information on destructors in ResultElement and ResultReader])
+#AC_DEFINE([__FILEPARSER_DEBUG__],[0],
+#[Debug information in FileParser])
+#AC_DEFINE([__SISSIPARSER_DEBUG__],[0],
+#[Debug information in SiSiParser])
+#AC_DEFINE([__STRING_DESTRUCTOR_DEBUG__],[0],
+#[Debug information on String])
 
 # Checks for libraries.
 # FIXME: Replace `main' with a function in `-lm':
