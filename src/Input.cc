@@ -565,9 +565,25 @@ vector<PopulatedRegion>::size_type  RegionProperties(vector<PopulatedRegion> reg
 #ifdef HAVE_NETCDF_H
   NcFile ncin(regionstring.c_str(),NcFile::ReadOnly);
   if (ncin.is_valid() ){
-  
+    /* Read non-time dependent variables */
+    NcVar* var;
+    var=ncin.get_var("npp"); double npp; var->get(&npp,1);
+    var=ncin.get_var("temperature_limitation"); double tlim; var->get(&tlim,1);
+    var=ncin.get_var("region");  int region_id; var->get(&region_id,1);
+    var=ncin.get_var("contid");  int contid; var->get(&contid,1);
+    var=ncin.get_var("area"); double area; var->get(&area,1);
+    var=ncin.get_var("lat"); double lat; var->get(&lat,1);
+    var=ncin.get_var("lon"); double lon; var->get(&lon,1);
+    
+    const double lai=0;
+    
     for (i=0; i<numberOfRegions; i++)  {
+           
+      PopulatedRegion* popregion = new PopulatedRegion(npp,tlim,lai,region_id,
+        contid,area,lat,lon); 
       region.push_back(PopulatedRegion());
+      regions[i] = *popregion;
+
     }
     ncin.close();
     return region.size();
@@ -613,6 +629,21 @@ vector<PopulatedRegion>::size_type  RegionProperties(vector<PopulatedRegion> reg
 
 int read_neighbours() {
 
+  cout << _("Reading neighbor info from file ") << regionstring ;
+#ifdef HAVE_NETCDF_H
+  NcFile ncin(regionstring.c_str(),NcFile::ReadOnly);
+  if (ncin.is_valid()) {
+    NcDim* dim=ncin.get_dim("region");
+ 
+  // numneigh neighid distance ease
+/*        regions[i].AddNeighbour(&regions[in],neigh_boundary,1);
+        if (in < i) regions[in].AddNeighbour(&regions[i],
+						     neigh_boundary,1);   ncin.close();
+*/    std::cout << " OK" << std::endl;;
+    return 1;
+  }
+#endif
+
   static const unsigned int BUFSIZE=1024;
   static char charbuffer[BUFSIZE];
   char c;
@@ -623,7 +654,6 @@ int read_neighbours() {
   int neighid;
   float neigh_boundary,neigh_distance;
 
-  cout << "Reading neighbor info from file " << regionstring ;
   ifs.open(regionstring.c_str(),ios::in);
  
   if (ifs.bad()) {
@@ -636,7 +666,6 @@ int read_neighbours() {
 //  for (unsigned int i; i<numberOfRegions; i++) cout << regions[i].Index() << "/" << regions[i].Id() << endl; 
   for (unsigned int i; i<numberOfRegions; i++) idmap[regions[i].Id()]=i;
  
-
   unsigned int i=0;
 
   
