@@ -633,13 +633,29 @@ int read_neighbours() {
 #ifdef HAVE_NETCDF_H
   NcFile ncin(regionstring.c_str(),NcFile::ReadOnly);
   if (ncin.is_valid()) {
-    NcDim* dim=ncin.get_dim("region");
- 
-  // numneigh neighid distance ease
-/*        regions[i].AddNeighbour(&regions[in],neigh_boundary,1);
-        if (in < i) regions[in].AddNeighbour(&regions[i],
-						     neigh_boundary,1);   ncin.close();
-*/    std::cout << " OK" << std::endl;;
+    NcDim* rdim=ncin.get_dim("region");
+    NcDim* ndim=ncin.get_dim("neighbour");
+    NcVar* var=ncin.get_var("number_of_neighbours");
+    int* number_of_neighbours = new int(rdim->size());
+    var->get(number_of_neighbours,rdim->size());
+    var=ncin.get_var("region_neighbour");
+    int* neighbour=new int(rdim->size()*ndim->size());
+    var->get(neighbour,rdim->size()*ndim->size());
+    var=ncin.get_var("region_boundary");
+    double* boundary=new double(rdim->size()*ndim->size());
+    var->get(boundary,rdim->size()*ndim->size());
+    
+    for (int i=0; i<rdim->size(); i++) {
+      if (number_of_neighbours[i]==0) continue ;
+      for (int j=0; j<ndim->size(); j++) {
+        if (neighbour[i*ndim->size()+j]==0) break;
+        PopulatedRegion* neighid;
+        neighid=&regions[neighbour[i*ndim->size()+j]];
+        regions[i].AddNeighbour(neighid,boundary[i*ndim->size()+j],1);
+        regions[j].AddNeighbour(regions+i,boundary[i*ndim->size()+j],1);
+      }
+    }
+    std::cout << " OK" << std::endl;;
     return 1;
   }
 #endif
