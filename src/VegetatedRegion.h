@@ -39,6 +39,8 @@ public:
     VegetatedRegion(std::istream&);
     VegetatedRegion(const std::string&);
     VegetatedRegion(const VegetatedRegion&); 
+    VegetatedRegion(double,double,double,
+      unsigned int,unsigned int,double,double,double);
     ~VegetatedRegion();
     
 	/** Accessor methods */

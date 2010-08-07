@@ -20,7 +20,7 @@
 
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
    @author Kai W Wirtz <kai.wirtz@gkss.de
-   @date   20010-07-27
+   @date   20010-08-07
    @file Input.cc 
    @brief Input/output routines 
 */
@@ -36,6 +36,9 @@
 #include <cassert>	
 #include "Globals.h"
 #include "AsciiTable.h"
+#ifdef HAVE_NETCDF_H
+#include "netcdfcpp.h"
+#endif
 
 #include "Input.h"
 
@@ -154,14 +157,24 @@ double hyper(double kap, double np, int n) {
 
 unsigned int RegionNumber() {
 
+  unsigned int number=0;
+
+#ifdef HAVE_NETCDF_H
+  NcFile ncin(regionstring.c_str(),NcFile::ReadOnly);
+  if (ncin.is_valid()) {
+    NcDim* dim=ncin.get_dim("region");
+    number=(unsigned int)dim->size();
+    cout << number << _(" regions") << " OK" << endl;
+    return number;
+  }
+#endif
+
   static const unsigned int BUFSIZE=1024;
   static char charbuffer[BUFSIZE];
   char c;
-  unsigned int number=0;
   
   ifstream ifs;
   
-  cout << _("Reading file ") << regionstring << " ... ";
   ifs.open(regionstring.c_str(),ios::in);
   if (ifs.bad() || ! ifs.is_open()) {
     cout << _("ERROR") << endl;
@@ -546,11 +559,20 @@ vector<PopulatedRegion>::size_type  RegionProperties(vector<PopulatedRegion> reg
   numberOfRegions=RegionNumber();
   assert(numberOfRegions>0);
   
-  if (numberOfRegions < 1 ) return 0;
-
   regions = new PopulatedRegion[numberOfRegions];
-  
   region.clear();
+
+#ifdef HAVE_NETCDF_H
+  NcFile ncin(regionstring.c_str(),NcFile::ReadOnly);
+  if (ncin.is_valid() ){
+  
+    for (i=0; i<numberOfRegions; i++)  {
+      region.push_back(PopulatedRegion());
+    }
+    ncin.close();
+    return region.size();
+  }
+#endif
 
   ifs.open(regionstring.c_str(),ios::in);
   assert(ifs.good());
@@ -576,8 +598,9 @@ vector<PopulatedRegion>::size_type  RegionProperties(vector<PopulatedRegion> reg
       
       region.push_back(PopulatedRegion(regions[i]));
       // todo: add index generation
-      cout << i++ << endl;;
-  }
+      //cout << i++ << endl;;
+      i++;
+   }
  
   ifs.close();
   cout << " OK\n";

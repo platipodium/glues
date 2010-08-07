@@ -20,7 +20,7 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
-   @date   2010-03-29
+   @date   2010-08-07
    @file   GNetcdf.cc
 */
 
@@ -242,6 +242,20 @@ int gnc_write_header(NcFile& ncfile, int nreg) {
   var->add_att("coordinates","time lon lat");  
   var->add_att("date_of_creation",timestring.c_str());
 
+  var = ncfile.add_var("region_is_in_sahara",ncShort,regdim);
+  var->add_att("units","");
+  var->add_att("long_name","region_is_in_sahara");
+  var->add_att("description","Indicates whether region is located in Sahara");
+  var->add_att("coordinates","time lon lat");  
+  var->add_att("date_of_creation",timestring.c_str());
+
+  var = ncfile.add_var("region_continent",ncShort,regdim);
+  var->add_att("units","");
+  var->add_att("long_name","region_continent");
+  var->add_att("description","Continent id where the region is located in");
+  var->add_att("coordinates","lon lat");  
+  var->add_att("date_of_creation",timestring.c_str());
+
   return 0;
 }
 
@@ -259,7 +273,6 @@ int gnc_write_record(NcFile& ncfile, const std::string& varname, int** data, con
     return 1;
   }
   
-
   if (!gnc_is_var(ncfile,varname)) return 1;
   
   NcVar* var;

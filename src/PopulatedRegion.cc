@@ -37,6 +37,15 @@ PopulatedRegion::PopulatedRegion(const std::string& line)
     population=0;
 }
 
+PopulatedRegion::PopulatedRegion(double npp,double tlim,double lai,
+  unsigned int index,unsigned int contid, double area, double lat,
+  double lon) 
+  : VegetatedRegion::VegetatedRegion(npp,tlim,lai,index,contid,area,
+    lat,lon) {
+  civstart=0;
+  population=0;
+}
+
 PopulatedRegion::PopulatedRegion(const PopulatedRegion& pr) 
     : VegetatedRegion(pr) {
     civstart=pr.civstart;
