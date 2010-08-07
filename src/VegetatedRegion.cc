@@ -37,6 +37,14 @@ VegetatedRegion::VegetatedRegion(const std::string& line )
   continent=0;
 }  
 
+VegetatedRegion::VegetatedRegion(double npp,double tlim,double lai,
+  unsigned int index,unsigned int contid, double area, double lat,double lon) 
+  : GeographicalRegion(index,contid,area,lat,lon) {
+  climate.Npp(npp);
+  climate.Tlim(tlim);
+  climate.Lai(lai);  
+}
+
 VegetatedRegion::VegetatedRegion(const VegetatedRegion& vr) 
     : GeographicalRegion(vr) {
     climate=vr.climate;

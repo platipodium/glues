@@ -33,6 +33,9 @@ class PopulatedRegion : public VegetatedRegion {
     PopulatedRegion();
     PopulatedRegion(std::istream&);
     PopulatedRegion(const std::string& line);
+    PopulatedRegion(double,double,double,
+      unsigned int,unsigned int,double,double,double);
+
     PopulatedRegion(const PopulatedRegion&);
     ~PopulatedRegion();
     long CivStart() const		{return civstart;}

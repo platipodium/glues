@@ -21,13 +21,13 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
    @author Kai Wirtz <kai.wirtz@gkss.de>
-   @date   2010-05-07
+   @date   2010-08-07
    @file   Glues.cc
    @brief  Main driver for GLUES simulations
 */
 
 #ifdef HAVE_CONFIG_H
-  #include "config.h"
+#include "config.h"
 #endif
 
 #include "Symbols.h"
