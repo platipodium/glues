@@ -568,14 +568,15 @@ vector<PopulatedRegion>::size_type  RegionProperties(vector<PopulatedRegion> reg
     /* Read non-time dependent variables */
     NcVar* var;
     var=ncin.get_var("npp"); double npp; var->get(&npp,1);
-    var=ncin.get_var("temperature_limitation"); double tlim; var->get(&tlim,1);
+    var=ncin.get_var("gdd"); double gdd; var->get(&gdd,1);
     var=ncin.get_var("region");  int region_id; var->get(&region_id,1);
-    var=ncin.get_var("contid");  int contid; var->get(&contid,1);
+    var=ncin.get_var("region_continent");  int contid; var->get(&contid,1);
     var=ncin.get_var("area"); double area; var->get(&area,1);
     var=ncin.get_var("lat"); double lat; var->get(&lat,1);
     var=ncin.get_var("lon"); double lon; var->get(&lon,1);
     
     const double lai=0;
+    double tlim=gdd/365.0;
     
     for (i=0; i<numberOfRegions; i++)  {
            
@@ -646,8 +647,10 @@ int read_neighbours() {
     var->get(boundary,rdim->size()*ndim->size());
     
     for (int i=0; i<rdim->size(); i++) {
+      cerr << endl << i ; 
       if (number_of_neighbours[i]==0) continue ;
       for (int j=0; j<ndim->size(); j++) {
+        cerr << " " << neighbour[i*ndim->size()+j] ;   
         if (neighbour[i*ndim->size()+j]==0) break;
         PopulatedRegion* neighid;
         neighid=&regions[neighbour[i*ndim->size()+j]];
