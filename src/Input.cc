@@ -565,28 +565,34 @@ vector<PopulatedRegion>::size_type  RegionProperties(vector<PopulatedRegion> reg
 #ifdef HAVE_NETCDF_H
   NcFile ncin(regionstring.c_str(),NcFile::ReadOnly);
   if (ncin.is_valid() ){
-    /* Read non-time dependent variables */
-    NcVar* var;
-    var=ncin.get_var("npp"); double npp; var->get(&npp,1);
-    var=ncin.get_var("gdd"); double gdd; var->get(&gdd,1);
-    var=ncin.get_var("region");  int region_id; var->get(&region_id,1);
+    // Read non-time dependent variables 
+    NcVar *var=NULL;
+    NcDim *rdim=ncin.get_dim("region");
+    NcDim *tdim=ncin.get_dim("time");
+    int nreg=rdim->size();
+    assert(numberOfRegions==nreg);
+ 
+/*    var=ncin.get_var("region"); int* region_id=new int(nreg); var->get(region_id,nreg);    
     var=ncin.get_var("region_continent");  int contid; var->get(&contid,1);
     var=ncin.get_var("area"); double area; var->get(&area,1);
     var=ncin.get_var("lat"); double lat; var->get(&lat,1);
     var=ncin.get_var("lon"); double lon; var->get(&lon,1);
-    
+    var=ncin.get_var("npp"); double* npp=new double(nreg); //var->get(npp,nreg);
+    var=ncin.get_var("gdd"); double gdd; var->get(&gdd,nreg);
+  
     const double lai=0;
     double tlim=gdd/365.0;
     
     for (i=0; i<numberOfRegions; i++)  {
            
-      PopulatedRegion* popregion = new PopulatedRegion(npp,tlim,lai,region_id,
+      PopulatedRegion* popregion = new PopulatedRegion(npp[i],tlim,lai,(unsigned int)region_id[i],
         contid,area,lat,lon); 
       region.push_back(PopulatedRegion());
       regions[i] = *popregion;
 
     }
     ncin.close();
+    delete region_id,delete npp;*/
     return region.size();
   }
 #endif
@@ -639,7 +645,9 @@ int read_neighbours() {
     NcVar* var=ncin.get_var("number_of_neighbours");
     int* number_of_neighbours = new int(rdim->size());
     var->get(number_of_neighbours,rdim->size());
-    var=ncin.get_var("region_neighbour");
+    cerr << " " << rdim->size() << " x " << ndim->size() << endl;
+    /* Next lines commented due to memory leak errors */
+    /*var=ncin.get_var("region_neighbour");
     int* neighbour=new int(rdim->size()*ndim->size());
     var->get(neighbour,rdim->size()*ndim->size());
     var=ncin.get_var("region_boundary");
@@ -657,7 +665,7 @@ int read_neighbours() {
         regions[i].AddNeighbour(neighid,boundary[i*ndim->size()+j],1);
         regions[j].AddNeighbour(regions+i,boundary[i*ndim->size()+j],1);
       }
-    }
+    }*/
     std::cout << " OK" << std::endl;;
     return 1;
   }
