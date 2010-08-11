@@ -127,7 +127,7 @@ int gnc_write_header(NcFile& ncfile, int nreg) {
   var->add_att("date_of_creation",timestring.c_str());
  
   var = ncfile.add_var("economies_init",ncFloat,regdim);
-  var->add_att("long_name","economy_diversity");
+  var->add_att("long_name","economy_diversity_initialization");
   var->add_att("units","1");
   var->add_att("valid_min",0.0);
   var->add_att("description","Initial value for number of diverse economic strategies");
@@ -137,7 +137,7 @@ int gnc_write_header(NcFile& ncfile, int nreg) {
   var = ncfile.add_var("population_density_init",ncFloat, regdim);
   var->add_att("units","km-2");
   var->add_att("valid_min",0.0);
-  var->add_att("long_name","population_density_init");
+  var->add_att("long_name","population_density_initialization");
   var->add_att("description","Initial value for density of population");
   var->add_att("coordinates","time lon lat");  
   var->add_att("date_of_creation",timestring.c_str());
