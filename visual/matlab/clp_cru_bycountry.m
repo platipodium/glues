@@ -2,7 +2,7 @@ function [retdata,basename]=clp_cru_bycountry(varargin)
 
 
 arguments = {...
-  {'timelim',[1901,2000]},...
+  {'timelim',[1901,2010]},...
   {'lim',[-inf,inf]},...
   {'variable','pre'},...
   {'country','pakistan'},...
@@ -51,6 +51,10 @@ xlabel('Year');
 title(['Monthly rainfall CRU TS 2.0 by country ' country]);
 
 set(gca,'XLim',[year(1)-1,year(end)+1],'Ylim',[0 120]);
+retdata.year=year;
+retdata.annual=aprec;
+retdata.wetseason=sprec(:,2);
+
 
 print('-dpng',['cru_rain_' country]);
 
@@ -63,12 +67,13 @@ yfft=fft(aprec,nfft)/nyear;
 freq=1/2.0*linspace(0,1,nfft/2+1);
 
 % Plot single-sided amplitude spectrum.
-plot(freq,2*abs(yfft(1:nfft/2+1))) 
+plot(freq,log(2*abs(yfft(1:nfft/2+1)))) 
 title('Single-Sided Amplitude Spectrum of annual precipitation')
 xlabel('Frequency (1/a)')
-ylabel('|P(freq)|');
+ylabel('ln|P(freq)|');
 
 
+print('-dpng',['cru_rain_frequency_' country]);
 
 
 

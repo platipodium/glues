@@ -43,6 +43,9 @@ xlabel('Year');
 if isinf(lim) lim=[0 2]; end
 set(gca,'XLim',[year(end)-1,year(1)+1],'Ylim',lim);
 
+retdata.year=year;
+retdata.thick=thick;
+
 print('-dpng',['indus_varves']);
 
 
