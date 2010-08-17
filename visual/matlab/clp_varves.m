@@ -22,12 +22,14 @@ filename=fullfile('data','datasets','SO90-39KG-56KA_varve_stack.tsv');
 if ~exist(filename,'file') error('File does not exist'); end
 
 d=load(filename,'-ascii');
-ybp=d(:,1);
 year=d(:,2);
-depth=d(:,3);
-thick=d(:,4); % varve thickness
+itime=find(year>=timelim(1) & year<=timelim(2));
+year=year(itime);
+ybp=d(itime,1);
+depth=d(itime,3);
+thick=d(itime,4); % varve thickness
 
-figure(1);
+figure(2);
 clf reset;
 hold on
 
@@ -38,7 +40,8 @@ plot(year,thick,'m-','LineWidth',2);
 title(['Indus discharge from core SO90-56KA/39KG']);
 ylabel('Varve thickness');
 xlabel('Year');
-set(gca,'XLim',[year(end)-1,year(1)+1],'Ylim',[0 2]);
+if isinf(lim) lim=[0 2]; end
+set(gca,'XLim',[year(end)-1,year(1)+1],'Ylim',lim);
 
 print('-dpng',['indus_varves']);
 
