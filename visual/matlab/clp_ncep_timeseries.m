@@ -56,7 +56,7 @@ for iyear=1:nyear
     if (m==2 & leap(iyear)) im=[im,60];
     elseif (m>2 & leap(iyear)) im=im+1;
     end
-    [im(1),im(end)]
+    %[im(1),im(end)]
     mprec(m+(iyear-1)*12,:,:)=sum(d.p(im,ilat,ilon),1);
   end
   aprec(iyear,:,:)=sum(d.p(:,ilat,ilon),1);
@@ -84,15 +84,15 @@ plot(mtime,mmprec,'b','linewidth',2);
 plot(years,maprec/12,'r','linewidth',4);
 hold off
 
-title('Monthly rainfall NCEP 36N 63W');
+title(['Monthly NCEP rainfall ',sprintf('%.1f-%.1fN %.1f-%.1fE',latlim,lonlim)]);
 
-print('-dpng','ncep_rain');
-
+[d,f]=get_files;
+varname=variable;
 
 %% Print to file
 fdir=fullfile(d.plot,'variable',varname);
 if ~exist('fdir','dir') system(['mkdir -p ' fdir]); end  
-bname=['ncep_timeseries_' varname];
+bname=['ncep_timeseries_' varname '_' sprintf('%d-%dN_%d-%dE',latlim,lonlim)];
 plot_multi_format(gcf,fullfile(fdir,bname));
 
 if nargout>1 basename=fullfile(fdir,bname); end

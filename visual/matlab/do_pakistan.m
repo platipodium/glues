@@ -1,4 +1,28 @@
-function do_pakistan
+ function do_pakistan
+
+
+v=clp_varves('timelim',[1901,2010]);
+r=clp_cru_bycountry('timelim',[1901,2010]);
+
+figure(5); clf reset;
+v.year=flipud(v.year);
+v.thick=flipud(v.thick);
+plot(v.year,v.thick*100,'r-','Linewidth',4);
+
+hold on;
+plot(r.year,r.wetseason,'c-','LineWidth',1);
+plot(r.year,movavg(r.year,r.wetseason,3),'b-','LineWidth',2);
+legend('Varve thickness','Wet season rain','3-year running');
+
+iyear=1:length(v.year);
+[s,p]=corrcoef([v.thick(iyear),r.wetseason(iyear),r.annual(iyear)]);
+[i,j]=find(p<0.05);
+
+
+title('Indus varve thickness and Pakistan rainfall');
+plot_multi_format(5,'varves_and_rainfall');
+
+return
 
 % Plot SWAT valley data
 variables='pre';
@@ -47,5 +71,9 @@ clp_nc_timeseries('nosum',nosum,'mult',mult,'lim',lim,'latlim',[24,30],'lonlim',
 title('Sindh rainfall from CRU TS3.0');
 plot_multi_format(gcf,'precipitation_sindh');
 
+
+clp_ncep_timeseries('latlim',[24,30],'lonlim',[67,72],'lim',[0 200]);
+clp_ncep_timeseries('latlim',[30,33],'lonlim',[70,77],'lim',[0 200]);
+clp_ncep_timeseries('latlim',[33,37],'lonlim',[70,76],'lim',[0 200]);
 
 end
