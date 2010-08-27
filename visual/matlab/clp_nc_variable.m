@@ -188,7 +188,7 @@ rlat=lat;
     c=get(gca,'Children');
     ipatch=find(strcmp(get(c(:),'Type'),'patch'));
     npatch=length(ipatch);
-    if npatch>0
+    if npatch>1
       iwhite=find(sum(cell2mat(get(c(ipatch),'FaceColor')),2)==3);
       if ~isempty(iwhite) 
         set(c(ipatch(iwhite)),'FaceColor',seacolor);

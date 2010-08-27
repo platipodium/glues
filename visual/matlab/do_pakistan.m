@@ -1,6 +1,10 @@
- function do_pakistan
+function do_pakistan
 
+ 
+%clp_nc_timeseries('file','../../src/test/plasim_11k.nc','latlim',[24,37],'lonlim',[67,76],'variable','lsp');
+ 
 
+%return
 v=clp_varves('timelim',[1901,2010]);
 r=clp_cru_bycountry('timelim',[1901,2010]);
 
@@ -17,6 +21,9 @@ legend('Varve thickness','Wet season rain','3-year running');
 iyear=1:length(v.year);
 [s,p]=corrcoef([v.thick(iyear),r.wetseason(iyear),r.annual(iyear)]);
 [i,j]=find(p<0.05);
+
+plot([1964:2010],repmat(60,47,1),'y-','LineWidth',10);
+text(1980,60,'Dams','Color','k','FontSize',15);
 
 
 title('Indus varve thickness and Pakistan rainfall');
