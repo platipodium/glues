@@ -59,6 +59,10 @@ for varid=0:nvar-1
           jstime=jstimeoffset+datenum(0.0,double(time)+1,-1.0);
           if isinf(timelim) timelim=[min(time),max(time)]; end
           jstimelim=jstimeoffset+datenum(0.0,double(timelim)+1,-1.0);
+        case 'days'
+          jstime=jstimeoffset+datenum(0.0,0.0,double(time));
+          if isinf(timelim) timelim=[min(time),max(time)]; end
+          jstimelim=jstimeoffset+datenum(0.0,0.0,double(timelim));
         %case 'years',jstime=jstimeoffset+datenum(double(time));
       end
       tunit=timescale{1};
