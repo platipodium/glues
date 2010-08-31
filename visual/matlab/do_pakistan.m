@@ -1,6 +1,16 @@
 function do_pakistan
 
+
+clp_single_redfit('file','data/indus_varves_red.mat','lim',[-50,30],'freqlim',[1/5000 1/5],'xticks',30);
+plot_multi_format(1,'../plots/indus_varves_red');
+
+clp_single_redfit('file','data/indus_varves_red.mat','lim',[-50,30],'freqlim',[1/5000 1/30]);
+plot_multi_format(1,'../plots/indus_varves_red_centennial');
+clp_single_redfit('file','data/indus_varves_red.mat','lim',[-50,30],'freqlim',[1/30 1/5]);
+plot_multi_format(1,'../plots/indus_varves_red_decadal');
  
+return
+
 %clp_nc_timeseries('file','../../src/test/plasim_11k.nc','latlim',[24,37],'lonlim',[67,76],'variable','lsp');
  
 

@@ -32,5 +32,11 @@ end
 filename=fullfile('data','indus_varves.mat');
 save('-v6',filename,'ybp','year','depth','thick');
 
+filename=fullfile('data','indus_varves.tsv');
+fid=fopen(filename,'w');
+fprintf(fid,'%d\t%f\n',[round(ybp*1000); thick]);
+
+fclose(fid);
+
 return
 end
