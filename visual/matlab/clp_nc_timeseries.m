@@ -117,6 +117,14 @@ else
 end
 
 
+if all(lon>=0) && any(lon>180)
+  islonpos=1;
+  lon(lon>180)=lon(lon>180)-360;
+  [lon,sortlon]=sort(lon);
+  lonlen=length(lon);
+else islonpos=0;
+end
+
 % If data is organized along lon dimension
 if any(dimids==londimid) && length(lon)>1
   ilon=find(lon>=lonlim(1) & lon<=lonlim(2));
@@ -129,15 +137,24 @@ else
   nlon=1;
 end
 
-if (dimids==[londimid latdimid timedimid])
+if (~islonpos & dimids==[londimid latdimid timedimid])
   start=[ilon(1) ilat(1) itime(1)]-1;
   count=[nlon nlat ntime];
   stride=[1 1 timestep];
+elseif (islonpos & dimids==[londimid latdimid timedimid])
+  start=[1 ilat(1) itime(1)]-1;
+  count=[lonlen nlat ntime];
+  stride=[1 1 timestep];    
 else
   error('Not implemented');
 end
 
 data=double(netcdf.getVar(ncid,varid,start,count,stride));
+
+if islonpos
+   data=data(sortlon,:,:);
+   data=data(ilon,:,:);
+end
 
 if isnumeric(mult) data=data .* mult; 
 else
