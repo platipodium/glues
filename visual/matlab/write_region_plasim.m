@@ -5,7 +5,7 @@ cl_register_function();
 matfile='regionmap_685.mat';
 
 %climatefile='plasim_klima.mat';
-climatefile='plasim_10k.mat';
+climatefile='../../src/test/plasim_11k.mat';
 
 if ~exist(climatefile,'file') 
   warning('No climate change information found / %s missing. writing static climate',climatefile);
@@ -77,7 +77,10 @@ lat=[0:nlat-1]/nlat*180-90+90/nlat;
 lat=fliplr(lat);
 
 plasim.nppl=cl_npp_lieth(mean(plasim.temp,3),sum(plasim.precip,3));
+
+%% Old version: number of days
 plasim.gdd=sum(plasim.temp>0,3)*30.;
+%plasim.gdd0=sum((plasim.temp>0).*plasim.temp),3)*30;
 
 for ireg=1:nreg
   % select all cells of this region
