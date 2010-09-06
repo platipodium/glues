@@ -5,7 +5,7 @@ function [production,share,carbon,p]=cl_vecode(temp,prec,gdd0,co2)
 % Input arguments (required) 
 %  t temperature (anuual mean, degree C)
 %  p prescipitation (annual sum, mm)
-%  g growing degree days above zero
+%  g growing degree days above zero (sum of temperatures above zero)
 %
 % [prod,share,carbon] = VECODE(t,p,g,c
 % Optional input argument 
@@ -16,7 +16,7 @@ function [production,share,carbon,p]=cl_vecode(temp,prec,gdd0,co2)
 %  share fraction of forest, grass, desert
 %  carbon carbon stock in leaves, stems, soil
 
-% copyright 2009 Carsten Lemmen
+% copyright 2009,2010 Carsten Lemmen
 % GKSS-Forschungzentrum Geesthacht
 % This software is released under GPL
 
@@ -26,7 +26,11 @@ function [production,share,carbon,p]=cl_vecode(temp,prec,gdd0,co2)
     warning('Arguments missing','Please provide temp, prec, gdd0 information');
     temp=25;
     prec=8850;
-    gdd0=360;
+    gdd0=3600; % Year-round 10 degree
+  end
+  
+  if max(gdd0)<361
+      warning('Did you provide gdd instead of gdd0? Please double-check your input!');
   end
   
   if ~exist('co2','var') co2=280; end
@@ -200,8 +204,8 @@ p.ADES     = 0.0011;
 p.ALPHA    = 7000;
 p.BETA     = 0.005;
 p.GAMMA    = 0.00017;
-p.GDD0MIN  = 90.;        % /* decreased by factor 10 from Brovkin */
-p.GDD0MAX  = 180.;       % /* decreased by factor 10 from Brovkin */
+p.GDD0MIN  = 900.;       
+p.GDD0MAX  = 1800.;      
 p.FSHAREMAX= 1.0;
 
 p.c1t=0.046;

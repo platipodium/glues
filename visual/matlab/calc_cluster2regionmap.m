@@ -35,7 +35,7 @@ iiasa=load('iiasa');
 
  prec=iiasa.prec(ivalid,:);
  tmean=iiasa.tmean(ivalid,:);
- gdd=sum(tmean>0,2)*30.;
+ [gdd,gdd0,gdd5]=clc_gdd(tmean);
  prec=sum(prec,2);
  tmean=mean(tmean,2);
  npp=cl_npp_lieth(tmean,prec);
@@ -74,6 +74,7 @@ for ireg=1:nreg
     region.npp(ireg,1)=sum(npp(inreg).*w)/sum(w);
     region.prec(ireg,1)=sum(prec(inreg).*w)/sum(w);
     region.gdd(ireg,1)=sum(gdd(inreg).*w)/sum(w);
+    region.gdd0(ireg,1)=sum(gdd0(inreg).*w)/sum(w);
 end
 
 regionmapfile=sprintf('regionmap_%d.mat',nreg);

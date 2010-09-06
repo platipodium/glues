@@ -49,8 +49,8 @@ end
 
 iiasa.temp=mean(iiasa.tmean,2);
 iiasa.precip=sum(iiasa.prec,2);
-iiasa.gdd=sum(iiasa.tmean>0,2)*30.;
-[production,share,carbon,p]=cl_vecode(iiasa.temp,iiasa.precip,iiasa.gdd);
+[iiasa.gdd,iiasa.gdd0,iiasa.gdd5]=clc_gdd(iiasa.tmean);
+[production,share,carbon,p]=cl_vecode(iiasa.temp,iiasa.precip,iiasa.gdd0);
 
 iiasa.npp=production.npp;
 
@@ -85,6 +85,7 @@ niiasa=length(iiasa.npp);
 for i=1:niiasa 
     iiasa.nppmap(iiasa.ilon(i),iiasa.ilat(i))=iiasa.npp(i);
     iiasa.gddmap(iiasa.ilon(i),iiasa.ilat(i))=iiasa.gdd(i);
+    iiasa.gdd0map(iiasa.ilon(i),iiasa.ilat(i))=iiasa.gdd0(i);
     iiasa.tempmap(iiasa.ilon(i),iiasa.ilat(i))=iiasa.temp(i);
     iiasa.precmap(iiasa.ilon(i),iiasa.ilat(i))= iiasa.precip(i);
     fsharemap(iiasa.ilon(i),iiasa.ilat(i))=fshare(i);
@@ -126,6 +127,7 @@ for ireg=1:nreg
   
   climate.npp(ireg)=calc_geo_mean(land.lat(inreg),iiasa.nppmap(land.map(inreg)));
   climate.gdd(ireg)=calc_geo_mean(land.lat(inreg),iiasa.gddmap(land.map(inreg)));
+  climate.gdd0(ireg)=calc_geo_mean(land.lat(inreg),iiasa.gdd0map(land.map(inreg)));
   climate.prec(ireg)=calc_geo_mean(land.lat(inreg),iiasa.precmap(land.map(inreg)));
   climate.temp(ireg)=calc_geo_mean(land.lat(inreg),iiasa.tempmap(land.map(inreg)));
   climate.fshare(ireg)=calc_geo_mean(land.lat(inreg),fsharemap(land.map(inreg)));

@@ -11,11 +11,10 @@ end
 iiasa=load(iiasafile);
 
 temp=mean(iiasa.tmean,2);
-gdd=sum(iiasa.tmean>0,2)*30;
+[gdd,gdd0,gdd5]=clc_gdd(iiasa.tmean);
 prec=sum(iiasa.prec,2);
 lat=iiasa.lat;
 lon=iiasa.lon;
-       
        
 
 latlim=[-10,70];%[-60,70];
@@ -29,16 +28,17 @@ lon=lon(valid);
 temp=temp(valid);
 prec=prec(valid);
 gdd=gdd(valid);
+gdd0=gdd0(valid);
 
 
-[production,share,carbon,p]=cl_vecode(temp,prec,gdd,280);
-[prod2,share2,carbon2]=cl_vecode_grass(temp,prec,gdd,280);
+[production,share,carbon,p]=cl_vecode(temp,prec,gdd0,280);
+[prod2,share2,carbon2]=cl_vecode_grass(temp,prec,gdd0,280);
 
 carbon.total=carbon.soil+carbon.litter+carbon.stem+carbon.leaf;
 carbon2.total=carbon2.soil+carbon2.litter+carbon2.stem+carbon2.leaf;
 carbon.above=100*(carbon.stem+carbon.leaf)./carbon.total;
 
-var.val={temp,gdd,prec,share.forest,share.desert,production.npp,...
+var.val={temp,gdd0,prec,share.forest,share.desert,production.npp,...
     production.lai,carbon.leaf,carbon.stem,carbon.litter,...
     carbon.soil,carbon.total,carbon.above,carbon2.total,carbon.total-carbon2.total};
 
@@ -60,7 +60,7 @@ var.title={'IIASA temperature',
            'Vecode conversion C'};
 var.prec=[3 3 4 3 3 3 3 3 3 3 3 3 3 3 3];
 var.min=[-25,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-var.max=[25,360,3000,1,1,1500,4,0.2,200,200,200,500,100,500,200];
+var.max=[25,11000,3000,1,1,1500,4,0.2,200,200,200,500,100,500,200];
 
 
 for ivar=1:nvar
