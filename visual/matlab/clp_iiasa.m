@@ -22,7 +22,8 @@ iiasa=load(matfile);
 
 prec=sum(iiasa.prec,2);
 temp=mean(iiasa.tmean,2);
-gdd=30*sum(iiasa.tmean>0,2);
+[gdd,gdd0,gdd5]=clc_gdd(iiasa.tmean);
+%=30*sum(iiasa.tmean>0,2);
 npp=cl_npp_lieth(temp,prec);
 
 lon=iiasa.lon;
@@ -50,6 +51,8 @@ lat=[1:nlat]/2-90.25;
 
 nmap=zeros(nlon,nlat)-NaN;
 gmap=nmap;
+gmap0=nmap;
+gmap5=nmap;
 
 for i=1:nlat
    j=find(ilat==i);
@@ -57,6 +60,8 @@ for i=1:nlat
    
    nmap(ilon(j),i)=npp(j);
    gmap(ilon(j),i)=gdd(j);
+   gmap0(ilon(j),i)=gdd0(j);
+   gmap5(ilon(j),i)=gdd5(j);
 end
 latlimits=[-58,80];
 
@@ -74,14 +79,37 @@ title('IIASA NPP (Lieth)');
 plot_multi_format(gcf,fullfile(d.plot,['iiasa_npp']));
 hold off;
 
+%%
 figure(2);
+clf reset;
+m_pcolor(lon,lat,gmap0');
+hold on;
+set(gca,'clim',[0 3000]);
+shading flat;
+m_coast; m_grid; colorbar('Ylim',[0,3000]);
+title('IIASA GDD_0');
+plot_multi_format(gcf,fullfile(d.plot,['iiasa_gdd0']));
+
+%%
+figure(3);
+clf reset;
+m_pcolor(lon,lat,gmap5');
+hold on;
+set(gca,'clim',[0 3000]);
+shading flat;
+m_coast; m_grid; colorbar('Ylim',[0,3000]);
+title('IIASA GDD_5');
+plot_multi_format(gcf,fullfile(d.plot,['iiasa_gdd5']));
+
+
+figure(4);
 clf reset;
 m_pcolor(lon,lat,gmap');
 hold on;
 set(gca,'clim',[0 360]);
 shading flat;
 m_coast; m_grid; colorbar('Ylim',[0,360]);
-title('IIASA GDD_0');
+title('IIASA GDD');
 plot_multi_format(gcf,fullfile(d.plot,['iiasa_gdd']));
 
 return
