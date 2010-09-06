@@ -23,7 +23,7 @@ nlon=length(lon);
 nlat=length(lat);
 ntime=length(time);
 
-gdd=squeeze(sum(climber.temp>0,2)*30);
+[gdd,gdd0,gdd5]=clc_gdd(climber.temp);
 npp=squeeze(mean(climber.npp,2))*1000;
 prec=squeeze(sum(climber.prec,2));
 temp=squeeze(mean(climber.temp,2));
@@ -39,10 +39,11 @@ for i=1:ntime
     mnppl(i)=calc_geo_mean(glat(nh,:),squeeze(nppl(i,:,nh))');
     mnpp(i)=calc_geo_mean(glat(nh,:),squeeze(npp(i,:,nh))');
     mgdd(i)=calc_geo_mean(glat(nh,:),squeeze(gdd(i,:,nh))');
+    mgdd0(i)=calc_geo_mean(glat(nh,:),squeeze(gdd0(i,:,nh))');
 end
 mnpp=squeeze(mnpp);
 mgdd=squeeze(mgdd);
-
+mgdd0=squeeze(mgdd0);
 
 time(find(time==0))=1;
 

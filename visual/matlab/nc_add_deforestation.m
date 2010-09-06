@@ -38,7 +38,7 @@ b34f=repmat(climate.b34f',1,ntime);
 b34g=repmat(climate.b34g',1,ntime);
 
 % 
-% [production,share,carbon,p]=cl_vecode(iiasa.temp,iiasa.precip,iiasa.gdd);
+% [production,share,carbon,p]=cl_vecode(iiasa.temp,iiasa.precip,iiasa.gdd0);
 % fshare=share.forest;
 % gshare=share.grass;
 % b12f=p.b1t+p.b2t;
