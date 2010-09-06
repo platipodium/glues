@@ -34,6 +34,7 @@ hp=hp(iv); hc=hc(iv);
 p=polyfit(hp,hc,3);
 
 % the above is leading to nothing ...
+
 % Visual inspection of full-scale agricultural societeis in mesopotamia
 cpf=0.02; % km2 per farmer
 
@@ -54,9 +55,9 @@ b34f=repmat(climate.b34f',1,r.nstep);
 b34g=repmat(climate.b34g',1,r.nstep);
 
 
+% carbon is calculated as t/ha
 naturalcarbon=b12f.*fshare+b12g.*gshare ...
     +b34f.*fshare+b34g.*gshare;
-
 remainingcarbon=b12f.*(fshare-cropfraction) ...
     +b12g.*(gshare+cropfraction) ...
     +b34f.*(fshare-cropfraction)...

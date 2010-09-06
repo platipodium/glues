@@ -43,6 +43,9 @@ while iarg<=nargin
           lonlim=[-20,60];
           latlim=[-40,20];
       
+      case 'cam'
+          lonlim=[-100,-40];
+          latlim=[0,25];
       case 'sam'
           lonlim=[-80,-20];
           latlim=[-60,15];
