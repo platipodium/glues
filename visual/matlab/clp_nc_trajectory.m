@@ -97,31 +97,50 @@ else
 end
 
 
-varname=variables; varid=netcdf.inqVarID(ncid,varname);
-try
+if ischar(variables)
+  varname=variables; varid=netcdf.inqVarID(ncid,varname);
+  try
     description=netcdf.getAtt(ncid,varid,'description');
-catch
+  catch
     description=varname;
-end
+  end
 
-try
+  try
     units=netcdf.getAtt(ncid,varid,'units');
-catch
+  catch
     units='';
+  end
+  data=double(netcdf.getVar(ncid,varid));
+  [varname,xtype,dimids,natt] = netcdf.inqVar(ncid,varid);
+elseif isnumeric(variables)
+  data=variables;
+  description='1';
+  units='';
+  varname='1';
 end
-data=double(netcdf.getVar(ncid,varid));
-[varname,xtype,dimids,natt] = netcdf.inqVar(ncid,varid);
 
-if isnumeric(mult) data=data .* mult; 
+
+if isnumeric(mult) 
+  data=data .* mult;
+  if (mult~=1) varname=[varname '_mult_' num2str(mult)]; end
 else
   ffactor=double(netcdf.getVar(ncid,netcdf.inqVarID(ncid,mult)));    
-  data = data .* repmat(ffactor,size(data)./size(ffactor));
+  if (length(data)>1) data = data .* repmat(ffactor,size(data)./size(ffactor));
+  else data = data .* ffactor;
+  end
+  varname=[varname '_mult_' mult];  
 end
 
-if isnumeric(div) data=data ./ div; 
+
+if isnumeric(div) 
+  data=data ./ div; 
+  if (div~=1) varname=[varname '_div_' num2str(div)]; end
 else
   ffactor=double(netcdf.getVar(ncid,netcdf.inqVarID(ncid,div)));    
-  data = data ./ repmat(ffactor,size(data)./size(ffactor));
+  if (length(data)>1) data = data ./ repmat(ffactor,size(data)./size(ffactor));
+  else data=data ./ ffactor;
+  end
+  varname=[varname '_div_' div];
 end
 
 
@@ -176,6 +195,7 @@ minmax(ilim)=lim(ilim);
 rlon=lon;
 rlat=lat;
 
+varid=varid+figoffset;
 figure(varid); 
 clf reset;
 
@@ -222,7 +242,7 @@ if 1==0 %% only for SI / qfarming
   fmdata=sum(fdata.*area,1)/areasum;
   
   fdata(ffactor(ireg,itime)<threshold)=NaN;
-  p2=plot(time,fdata','k-','Color',lc{3},'LineStyle',ls(3))
+  p2=plot(time,fdata','k-','Color',lc{3},'LineStyle',ls(3));
   p3=plot(time,fmdata,'k-','Color',lc{4},'LineStyle',ls(4),'linewidth',5);
 end
   
