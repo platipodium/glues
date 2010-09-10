@@ -83,7 +83,7 @@ end
 
 %% Figure 4 US density maps
 ustime=[-3000 -2000 -1000 0 500 1000];
-usletter='abcdef'
+usletter='abcdef';
 for i=1:length(ustime)
   [d,b]=clp_nc_variable('var','population_density','timelim',ustime(i),'latlim',[16 48],'lonlim',[-126 -68],'lim',[0 2],'nogrid',1);
   ax=get(gcf,'Children');

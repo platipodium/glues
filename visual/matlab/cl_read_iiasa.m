@@ -41,7 +41,7 @@ save('-v6','iiasa',parameters{:},'lon','lat');
 nid=length(lat);
 
 if (1)
-  ncid=netcdf.create('iiasa.nc','NC_WRITE');
+  ncid=netcdf.create('iiasa.nc','NOCLOBBER');
   mondim=netcdf.defDim(ncid,'month',12);
   netcdf.defVar(ncid,'month','NC_BYTE',mondim);
   iddim=netcdf.defDim(ncid,'id',nid);

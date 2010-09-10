@@ -1,4 +1,4 @@
-function [retdata,basename]=clp_nc_trajectory(varargin)
+function [retdata,basename,currentaxis]=clp_nc_trajectory(varargin)
 
 %Woodland area
 %  {'latlim',[30 50]},...
@@ -7,9 +7,10 @@ function [retdata,basename]=clp_nc_trajectory(varargin)
 
 arguments = {...
 %  {'latlim',[-60 80]},...
-%  {'lonlim',[-180 180]},...
+ % {'lonlim',[-180 180]},...
   {'latlim',[-inf inf]},...
   {'lonlim',[-inf inf]},...
+  {'dlat',0.3},...
   {'xcoord','lon'},...
   {'ycoord','lat'},...
   {'timelim',[-9000,-1000]},...
@@ -26,10 +27,12 @@ arguments = {...
   {'div',1},...
   {'file','../../test.nc'},...
   {'nosum',0},...
+  {'showmap',2},...
   {'nocolor',0},...
   {'retdata',NaN},...
   {'basename','trajectory'},...
-  {'nearest',0}
+  {'nearest',0},...
+  {'noprint',0},...
 };
 
 cl_register_function;
@@ -195,32 +198,36 @@ minmax(ilim)=lim(ilim);
 rlon=lon;
 rlat=lat;
 
-varid=varid+figoffset;
-figure(varid); 
-clf reset;
+%% Figure creation
+% Create new figure
+  varid=varid+figoffset;
+  figure(varid); 
+  clf reset;
 
-set(varid,'DoubleBuffer','on');    
-set(varid,'PaperType','A4');
+  set(varid,'DoubleBuffer','on');    
+  set(varid,'PaperType','A4');
+  
 hold on;
 
 data=data(ireg,itime);
 sdata=sum(data.*area,1);
 mdata=sdata/areasum; 
 
-
 lgray=0.8*ones(1,3);
-a1=gca;
-m_proj('miller','lat',latlim+[-12 12],'lon',lonlim + [-25 25]);
-m_coast('patch',lgray,'facealpha',0.3,'edgecolor','none');
-hold on;
-xl=get(gca,'Xlim');
-yl=get(gca,'Ylim');
-set(a1,'YTick',[],'XTick',[],'FontSize',15);
-set(a1,'Xlim',xl,'Ylim',yl);
-
-titletext=description;
-ht=title(titletext,'interpreter','none');
-
+if (showmap>0)
+  a1=gca;
+  mlim=dlat*(max(latlim(2)-latlim(1),lonlim(2)-lonlim(1))*[-1 1]);
+  mlatlim=[max([latlim(1)+mlim(1),-90]),min([latlim(2)+mlim(2),90])];
+  mlonlim=[max([lonlim(1)+mlim(1),-180]),min([lonlim(2)+mlim(2),180])];
+  m_proj('miller','lat',mlatlim,'lon',mlonlim);
+  m_coast('patch',lgray,'facealpha',0.3,'edgecolor','none');
+  m_line(lonlim([1 2 2 1 1]),latlim([1 1 2 2 1]),'Color','r','LineStyle','--');
+  hold on;
+  xl=get(gca,'Xlim');
+  yl=get(gca,'Ylim');
+  set(a1,'YTick',[],'XTick',[],'FontSize',15);
+  set(a1,'Xlim',xl,'Ylim',yl);
+end
 
 a2=axes('Color','none');
 hold on;
@@ -229,11 +236,18 @@ set(gca,'Xlim',timelim,'Ylim',minmax,'FontSize',15);
 cl_year_one(gca);
 xlabel('Calendar year','FontSize',15);
 ylabel('Density','FontSize',15);
+titletext=description;
+ht=title(titletext,'interpreter','none');
 
 hold on;
 p1=plot(time,mdata,'k-','Color',lc{2},'LineStyle',ls(2),'Linewidth',lw(2));
 
-
+if (showmap==2)
+  pos=get(a2,'position');
+  pscale=0.3;
+  set(a1,'position',[pos(1)+(1-pscale)*pos(3) pos(2)+(1-pscale)*pos(4) pscale*pos(3) pscale*pos(4)])    
+    
+end
 
 if 1==0 %% only for SI / qfarming
   threshold=1/3.0;
@@ -266,16 +280,19 @@ set(obj,'FontSize',15);
 % dump ascii table
 %fprintf('%d %d %d\n',[time' ; mdata ; log(2)./mdata])
 
-%% Print to file
+%% print to file
 fdir=fullfile(d.plot,'variable',varname);
 if ~exist('fdir','dir') system(['mkdir -p ' fdir]); end  
 bname=['trajectory_' varname '_' num2str(nreg)];
 if length(sce)>0 bname=[bname '_' sce]; end
-plot_multi_format(gcf,fullfile(fdir,bname));
-
+if ~noprint
+  plot_multi_format(gcf,fullfile(fdir,bname));
+end
+  
 fprintf('Total %d million at %d on area of %d million sqkm.\n',...
     sdata(ntime)/1E6, time(ntime), areasum);
 
+if nargout>2 currentaxis=a2; end
 if nargout>1 basename=fullfile(fdir,bname); end
 if nargout>0 retdata=data; end
 
