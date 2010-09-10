@@ -1,9 +1,9 @@
 function [retdata,basename]=clp_nc_variable(varargin)
 
 arguments = {...
-  {'latlim',[-60 80]},...
-  {'lonlim',[-180 180]},...
-  {'timelim',[-9000,1960]},...
+  {'latlim',[-inf inf]},...
+  {'lonlim',[-inf inf]},...
+  {'timelim',[-inf,inf]},...
   {'lim',[-inf,inf]},...
   {'reg','all'},...
   {'discrete',0},...
@@ -26,7 +26,10 @@ arguments = {...
   {'ncol',19},...
   {'nogrid',0},...
   {'threshold',NaN},...
-  {'flip',0}
+  {'flip',0},...
+  {'showtime',1},...
+  {'showstat',1},...
+  {'scenario',''}
 };
 
 cl_register_function;
@@ -37,8 +40,7 @@ for i=1:a.length eval([a.name{i} '=' clp_valuestring(a.value{i}) ';']); end
 [d,f]=get_files;
 
 % Choose 'emea' or 'China' or 'World'
-%[regs,nreg,lonlim,latlim]=find_region_numbers(reg);
-[ireg,nreg,~,~]=find_region_numbers(reg);
+[ireg,nreg,loli,lali]=find_region_numbers(reg);
 
 if ~exist(file,'file')
     error('File does not exist');
@@ -119,6 +121,7 @@ if numel(data)>length(data)
   time=time(itime);
   ntime=length(time);
 end
+if ntime==1 && ~exist('itime','var') itime=1; end
 
 netcdf.close(ncid);
 
@@ -169,6 +172,16 @@ cmap=colormap(colmap);
 rlon=lon;
 rlat=lat;
 
+iinf=isinf(lonlim);
+if exist('loli','var') lonlim(iinf)=loli(iinf); else lonlim=[-180 180]; end
+iinf=isinf(latlim);
+if exist('lali','var') latlim(iinf)=lali(iinf); else latlim=[-60 80]; end
+
+if isinf(lonlim(1)) lonlim(1)=-180; end
+if isinf(lonlim(2)) lonlim(2)= 180; end
+if isinf(latlim(1)) latlim(1)=-60; end
+if isinf(latlim(2)) latlim(2)=80; end
+
   % plot map
   figure(varid); 
   clf reset;
@@ -212,7 +225,15 @@ ncol=length(colormap);
 
 for it=1:ntime
   
-  resvar=round(((data(ireg,itime(it))-minmax(1)))./(minmax(2)-minmax(1))*(length(cmap)-1))+1;
+  if minmax(2)>minmax(1)
+    resvar=round(((data(ireg,itime(it))-minmax(1)))./(minmax(2)-minmax(1))*(length(cmap)-1))+1;
+  else
+    resvar=data(ireg,itime(it))*0+1;
+    ncol=1;
+    cmap=repmat(seacolor/2.0,2,1);
+    colormap(cmap);
+  end
+    
   resvar(resvar>length(cmap))=length(cmap);
 
   if (discrete>0)
@@ -247,23 +268,48 @@ for it=1:ntime
   if (it==1)
     cb=colorbar('FontSize',15);
     if length(units)>0 title(cb,units); end
-    yt=get(cb,'YTick');
-    yr=minmax(2)-minmax(1);
-    ytl=scale_precision(yt*yr+minmax(1),3)';
-    set(cb,'YTickLabel',num2str(ytl));
-  
-    set(gcf,'UserData',cl_get_version);
- 
+    if minmax(2)>minmax(1)
+      yt=get(cb,'YTick');
+      yr=minmax(2)-minmax(1);
+      ytl=scale_precision(yt*yr+minmax(1),3)';
+      set(cb,'YTickLabel',num2str(ytl));
+    else
+      cb=colorbar('FontSize',15,'Ytick',minmax(1));
+    end
     fdir=fullfile(d.plot,'variable',varname);
     if ~exist('fdir','dir') system(['mkdir -p ' fdir]); end
+  end
+    
+  set(gcf,'UserData',cl_get_version);
+ 
+  if (showtime>0)
+    m_text(lonlim(1)+0.02*(lonlim(2)-lonlim(1)),latlim(1)+0.02*(latlim(2)-latlim(1)),num2str(time(it)),...
+        'VerticalAlignment','bottom','HorizontalAlignment','left','background','w')
+  end
+ %% 
+ 
+ 
+  if (showstat>0)
+      s(1)=min(data(ireg,itime(it)));
+      s(3)=max(data(ireg,itime(it)));
+      s(2)=median(data(ireg,itime(it)));
+      s=scale_precision(s,3);
+      statstr=sprintf('%.2f:%.2f:%.2f',s);
+      m_text(lonlim(2)-0.02*(lonlim(2)-lonlim(1)),latlim(1)+0.02*(latlim(2)-latlim(1)),statstr,...
+        'VerticalAlignment','bottom','HorizontalAlignment','right','background','w','tag','Statistics')  
   end
   
   obj=findall(gcf,'-property','FontSize');
   set(obj,'FontSize',15);
+  obj=findall(gcf,'tag','Statistics');
+  set(obj,'FontSize',10);
   
+  %%
   bname=[varname '_' num2str(nreg)];
+  if length(scenario)>0 bname=[bname '_' scenario]; end
   
-  if (ntime>1) bname = [bname '_' num2str(time(it))]; end
+  
+  if (ntime>1 || showtime>0) bname = [bname '_' num2str(time(it))]; end
   plot_multi_format(gcf,fullfile(fdir,bname));
   %pause(0.05);
 end

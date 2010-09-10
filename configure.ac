@@ -393,6 +393,7 @@ AC_CONFIG_FILES([Makefile
   visual/matlab/Makefile visual/matlab/get_files.m visual/matlab/startup.m
   visual/matlab/lib/Makefile visual/matlab/data/Makefile 
   visual/matlab/doc/Makefile
+  visual/tex/Makefile
   visual/gnuplot/Makefile visual/plots/Makefile
   variation/Makefile 
   doc/Makefile doc/pangaea/Makefile

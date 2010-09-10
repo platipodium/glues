@@ -70,6 +70,7 @@ ncol=720;
 nrow=360;
 iiasa.nppmap=zeros(ncol,nrow)-NaN;
 iiasa.gddmap=iiasa.nppmap;
+iiasa.gdd0map=iiasa.nppmap;
 iiasa.tempmap=iiasa.nppmap;
 iiasa.precmap=iiasa.nppmap;
 
@@ -113,6 +114,7 @@ end
 nclim=1;
 climate.npp=zeros(nreg,nclim);
 climate.gdd=climate.npp;
+climate.gdd0=climate.npp;
 
 if ~exist('land','var')
   land.region=regionnumber;
