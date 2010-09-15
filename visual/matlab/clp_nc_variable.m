@@ -140,14 +140,17 @@ if isfinite(threshold)
   %% plot timing maps
   ntime=1;
   timing=(data>=threshold)*1.0;
-  timing(timing==0)=NaN;
-  timing=timing.*repmat(alltime',nreg,1);
+  izero=find(timing==0);
+  timing(izero)=NaN;
+  timing=timing.*repmat(alltime',size(data,1),1);
   timing(isnan(timing))=inf;
   timing=min(timing,[],2);
   data=timing;
   data(isinf(data))=NaN;
   description=['Timing of '  varname];
   minmax=timelim;
+  if isinf(minmax(1)) minmax(1)=min(data); end
+  if isinf(minmax(2)) minmax(2)=max(data); end
   itime=1;
   units='Calendar year';
 else 
@@ -261,7 +264,7 @@ for it=1:ntime
       if isnan(h) || h==0 continue; end
       greyval=0.15+0.35*sqrt(i./ncol);
       %alpha(h,greyval);
-      set(h,'FaceColor',cmap(i,:));
+      set(h,'FaceColor',cmap(i,:),'tag','region_patch');
     end
   end
 
@@ -290,9 +293,10 @@ for it=1:ntime
  
  
   if (showstat>0)
-      s(1)=min(data(ireg,itime(it)));
-      s(3)=max(data(ireg,itime(it)));
-      s(2)=median(data(ireg,itime(it)));
+      isfin=isfinite(data(ireg,itime(it)));
+      s(1)=min(data(ireg(isfin),itime(it)));
+      s(3)=max(data(ireg(isfin),itime(it)));
+      s(2)=median(data(ireg(isfin),itime(it)));
       s=scale_precision(s,3);
       statstr=sprintf('%.2f:%.2f:%.2f',s);
       m_text(lonlim(2)-0.02*(lonlim(2)-lonlim(1)),latlim(1)+0.02*(latlim(2)-latlim(1)),statstr,...
