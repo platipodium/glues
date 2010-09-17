@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# this script runs the scenarios for the American Antiquity paper,
-# corresponding routines for visualisation is do_amant.m
+# this script runs the scenarios for the GRL land use paper,
+# corresponding routines for visualisation is do_landuse.m
 
 SED=gsed
 X=src/glues
@@ -16,6 +16,7 @@ OPAR=$P.opar
 R=$S/results
 PAR=$P.par
 T=test
+O=landuse
 
 # base simulation
 $SED -i '/LocalSpread/s/LocalSpread.*$/LocalSpread 1/' $CTL
@@ -24,47 +25,40 @@ $SED -i '/gdd_opt/s/gdd_opt.*$/gdd_opt 0.7/' $PAR
 $SED -i '/spreadv/s/spreadv.*$/spreadv 0.002/' $PAR
 $SED -i '/spreadm/s/spreadm.*$/spreadm 100/' $OPAR
 $X $SIM
-cp $R.out ${R}_base.out
-cp $T.nc amant_base.nc
-ncap2 -A -s 'landuse[time,region]=population_density[time,region]*sqrt(technology)/subsistence_intensity;cropfraction[time,region]=landuse/0.1*0.02*farming;cropfraction_static[time,region]=0.02*population_density*farming' amant_base.nc amant_base.nc &
+cp $R.out ${R}_fluc04.out
+cp $T.nc ${O}_fluc04.nc
+ncap2 -A -s 'landuse[time,region]=population_density[time,region]*sqrt(technology)/subsistence_intensity;cropfraction[time,region]=landuse/0.1*0.02*farming;cropfraction_static[time,region]=0.02*population_density*farming' ${O}_fluc04.nc ${O}_fluc04.nc &
 
 
-# Remove climate disruptions
-$SED -i '/flucampl/s/0\.4/0.0/' $DAT
+# Lessen climate disruptions
+$SED -i '/flucampl/s/0\.4/0.1/' $DAT
 $X $SIM
 cp $R.out ${R}_nofluc.out
 cp $T.nc amant_nofluc.nc
-ncap2 -A -s 'landuse[time,region]=population_density[time,region]*sqrt(technology)/subsistence_intensity;cropfraction[time,region]=landuse/0.1*0.02*farming;cropfraction_static[time,region]=0.02*population_density*farming' amant_nofluc.nc amant_nofluc.nc &
-$SED -i '/flucampl/s/0\.0/0.4/' $DAT
+cp $R.out ${R}_fluc01.out
+cp $T.nc ${O}_fluc01.nc
+ncap2 -A -s 'landuse[time,region]=population_density[time,region]*sqrt(technology)/subsistence_intensity;cropfraction[time,region]=landuse/0.1*0.02*farming;cropfraction_static[time,region]=0.02*population_density*farming' ${O}_fluc01.nc ${O}_fluc01.nc &
 
-
-# Too seasonal simulation
-$SED -i '/gdd_opt/s/0\.7/0.4/' $PAR
+# Increase climate disruptions
+$SED -i '/flucampl/s/0\.1/0.9/' $DAT
 $X $SIM
-cp $R.out ${R}_subpolar.out
-cp $T.nc amant_subpolar.nc
+cp $R.out ${R}_nofluc.out
+cp $T.nc amant_nofluc.nc
+cp $R.out ${R}_fluc09.out
+cp $T.nc ${O}_fluc09.nc
+ncap2 -A -s 'landuse[time,region]=population_density[time,region]*sqrt(technology)/subsistence_intensity;cropfraction[time,region]=landuse/0.1*0.02*farming;cropfraction_static[time,region]=0.02*population_density*farming' ${O}_fluc09.nc ${O}_fluc09.nc &
 
-# Too tropical simulation
-$SED -i '/gdd_opt/s/0\.4/1.0/' $PAR
+# Remove climate disruptions
+$SED -i '/flucampl/s/0\.9/0.0/' $DAT
 $X $SIM
-cp $R.out ${R}_tropical.out
-cp $T.nc amant_tropical.nc
-$SED -i '/gdd_opt/s/1\.0/0.7/' $PAR
-
-# Remove spread
-$SED -i '/LocalSpread/s/1/0/' $CTL
-$X $SIM
-cp $R.out ${R}_nospread.out
-cp $T.nc amant_nospread.nc
-$SED -i '/LocalSpread/s/0/1/' $CTL
+cp $R.out ${R}_nofluc.out
+cp $T.nc amant_nofluc.nc
+cp $R.out ${R}_fluc00.out
+cp $T.nc ${O}_fluc00.nc
+ncap2 -A -s 'landuse[time,region]=population_density[time,region]*sqrt(technology)/subsistence_intensity;cropfraction[time,region]=landuse/0.1*0.02*farming;cropfraction_static[time,region]=0.02*population_density*farming' ${O}_fluc00.nc ${O}_fluc00.nc &
 
 # return to base setup
-$SED -i '/spreadv/s/spreadv.*$/spreadv 0.002/' $PAR
-$SED -i '/spreadm/s/spreadm.*$/spreadm 100/' $OPAR
-$SED -i '/LocalSpread/s/LocalSpread.*$/LocalSpread 1/' $CTL
 $SED -i '/flucampl/s/flucampl.*$/flucampl 0.4/' $DAT
-$SED -i '/gdd_opt/s/gdd_opt.*$/gdd_opt 0.7/' $PAR
-
 
 exit
 

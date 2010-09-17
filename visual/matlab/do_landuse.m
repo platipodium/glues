@@ -3,8 +3,32 @@ function do_landuse
 %
 %
 
-file='../../amant_base.nc';
-scenario='reference';
+file='../../landuse_fluc04.nc';
+scenario='fluc04';
+timelim=[-5500 -2000];
+reg=143;
+
+%% Originating variables (for China only)
+clp_nc_trajectory('file',file,'scenario',scenario,'var','population_density','reg',reg,'timelim',timelim);
+%clp_nc_trajectory('file',file,'scenario',scenario,'var','economies','reg',reg,'timelim',timelim);
+clp_nc_trajectory('file',file,'scenario',scenario,'var','subsistence_intensity','reg',reg,'timelim',timelim);
+%clp_nc_trajectory('file',file,'scenario',scenario,'var','technology','reg',reg,'timelim',timelim);
+clp_nc_trajectory('file',file,'scenario',scenario,'var','landuse','reg',reg,'timelim',timelim);
+%clp_nc_trajectory('file',file,'scenario',scenario,'var','cropfraction','reg',reg,'timelim',timelim);
+clp_nc_trajectory('file',file,'scenario',scenario,'var','temperature_limitation','reg',reg,'timelim',timelim
+
+clp_nc_trajectory('file',file,'scenario',scenario,'var','cropfraction_static','reg',reg,'timelim',timelim);
+
+
+
+
+
+
+
+
+return
+file='../../landuse_fluc09.nc';
+scenario='fluc09';
 
 %% Originating variables (for China only)
 clp_nc_trajectory('file',file,'scenario',scenario,'var','population_density','reg','chi','timelim',[-9000 -1000]);
@@ -162,4 +186,32 @@ fclose(fid);
 %% return to main
 
 return;
+
+
+
+%%
+
+file='../../landuse_fluc04.nc';
+scenario='fluc04';
+timelim=[-9500 2000];
+
+ncid=netcdf.open(file,'NOWRITE');
+varid=netcdf.inqVarID(ncid,'population_density');p=netcdf.getVar(ncid,varid);
+varid=netcdf.inqVarID(ncid,'farming');f=netcdf.getVar(ncid,varid);
+varid=netcdf.inqVarID(ncid,'technology');t=netcdf.getVar(ncid,varid);
+varid=netcdf.inqVarID(ncid,'area');area=netcdf.getVar(ncid,varid);
+varid=netcdf.inqVarID(ncid,'time');time=netcdf.getVar(ncid,varid);
+varid=netcdf.inqVarID(ncid,'cropfraction_static');cf=netcdf.getVar(ncid,varid);
+varid=netcdf.inqVarID(ncid,'npp');npp=netcdf.getVar(ncid,varid);
+nppstar=450;  %NPP where LAE = 1	450
+x=npp./nppstar;
+fep=2*x./(1+x.^2);
+
+
+netcdf.close(ncid);
+
+
+
+
+
 end

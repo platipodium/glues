@@ -1,5 +1,36 @@
 function do_pakistan
 
+lonlim=[60,80];
+latlim=[22 38];
+clp_topography('latlim',latlim,'lonlim',lonlim);
+m_proj('equidistant','lat',latlim,'lon',lonlim);
+
+%%
+file='../../src/test/plasim_11k.nc';
+ncid=netcdf.open(file,'NOWRITE');
+varid=netcdf.inqVarID(ncid,'lat'); lat=netcdf.getVar(ncid,varid);
+varid=netcdf.inqVarID(ncid,'lon'); lon=netcdf.getVar(ncid,varid);
+netcdf.close(ncid);
+
+halflat=mean([lat(2:end)';lat(1:end-1)']);
+halflon=mean([lon(2:end)';lon(1:end-1)']);
+lon(lon>180)=lon(lon>180)-360;
+halflon(halflon>180)=halflon(halflon>180)-360;
+
+ilat=find(halflat>=latlim(1) & halflat<=latlim(2));
+ilon=find(halflon>=lonlim(1) & halflon<=lonlim(2));
+
+for i=1:length(ilat)
+  m_plot(lonlim,repmat(halflat(ilat(i)),1,2),'w-');
+end
+for i=1:length(ilon)
+  m_plot(repmat(halflon(ilon(i)),1,2),latlim,'w-');
+end
+
+%%
+return
+
+
 
 clp_single_redfit('file','data/indus_varves_red.mat','lim',[-50,30],'freqlim',[1/5000 1/5],'xticks',30);
 plot_multi_format(1,'../plots/indus_varves_red');
