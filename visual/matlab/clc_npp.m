@@ -1,9 +1,9 @@
 function [npp,npp_p,npp_t,lp,lt]=clc_npp(temp,prec)
-%CL_NPP_LIETH calculates net primary production from temp and precip
-%   NPP=CL_NPP_LIETH(TEMP,PREC) calculates the net primary production (npp)
+%CLC_NPP calculates net primary production from temp and precip
+%   NPP=CLC_NPP(TEMP,PREC) calculates the net primary production (npp)
 %   based on the limitation model of Lieth (1972).
 %
-%   [NPP,NPP_P,NPP_T,LP,LT]=NPP=CL_NPP_LIETH(TEMP,PREC) returns in addition
+%   [NPP,NPP_P,NPP_T,LP,LT]=CLC_NPP(TEMP,PREC) returns in addition
 %   the functional dependence of npp on precip, on temperature and the 
 %   associated climate sensitivities
 %  
@@ -18,6 +18,8 @@ function [npp,npp_p,npp_t,lp,lt]=clc_npp(temp,prec)
 %   Lieth's formula is also know as the Miami model.  The code is 
 %   based on the implementation by V. Brovkin (1997) in VECODE
 
+% Copyright 2010
+% Carsten Lemmen, GKSS-Forschungszentrum Geesthacht GmbH
 
 cl_register_function();
 

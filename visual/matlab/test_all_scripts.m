@@ -48,7 +48,7 @@ cl_plot_marble_timing_tb
 cl_plot_marble_variable
 cl_read_iiasa
 cl_register_function
-cl_vecode
+clc_vecode
 cl_yellow
 clm_polygon
 clm_vector
