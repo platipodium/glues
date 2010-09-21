@@ -21,11 +21,6 @@ clp_nc_trajectory('file',file,'scenario',scenario,'var','cropfraction_static','r
 
 
 
-
-
-
-
-
 return
 file='../../landuse_fluc09.nc';
 scenario='fluc09';

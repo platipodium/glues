@@ -1,4 +1,4 @@
-function clp_iiasa_vecode
+function clp_iiasa_vecode(varargin)
 
 cl_register_function;
 
@@ -16,7 +16,6 @@ prec=sum(iiasa.prec,2);
 lat=iiasa.lat;
 lon=iiasa.lon;
        
-
 latlim=[-10,70];%[-60,70];
 lonlim=[-25,80];%[-150,150];
 ncol=64;
@@ -31,16 +30,14 @@ gdd=gdd(valid);
 gdd0=gdd0(valid);
 
 
-[production,share,carbon,p]=cl_vecode(temp,prec,gdd0,280);
-[prod2,share2,carbon2]=cl_vecode_grass(temp,prec,gdd0,280);
+[production,share,carbon,p]=clc_vecode(temp,prec,gdd0,280);
 
 carbon.total=carbon.soil+carbon.litter+carbon.stem+carbon.leaf;
-carbon2.total=carbon2.soil+carbon2.litter+carbon2.stem+carbon2.leaf;
 carbon.above=100*(carbon.stem+carbon.leaf)./carbon.total;
 
 var.val={temp,gdd0,prec,share.forest,share.desert,production.npp,...
     production.lai,carbon.leaf,carbon.stem,carbon.litter,...
-    carbon.soil,carbon.total,carbon.above,carbon2.total,carbon.total-carbon2.total};
+    carbon.soil,carbon.total,carbon.above};
 
 nvar=length(var.val);
 var.title={'IIASA temperature',
@@ -55,13 +52,10 @@ var.title={'IIASA temperature',
            'Vecode Litter C',
            'Vecode Soil C',
            'Vecode Total C',
-           'Vecode above %',
-           'Vecode Grass C',
-           'Vecode conversion C'};
-var.prec=[3 3 4 3 3 3 3 3 3 3 3 3 3 3 3];
-var.min=[-25,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-var.max=[25,11000,3000,1,1,1500,4,0.2,200,200,200,500,100,500,200];
-
+           'Vecode above %'};
+var.prec=[3 3 4 3 3 3 3 3 3 3 3 3 3];
+var.min=[-25,0,0,0,0,0,0,0,0,0,0,0,0];
+var.max=[25,11000,3000,1,1,1500,4,0.2,200,200,200,500,100];
 
 for ivar=1:nvar
     val=var.val{ivar};
@@ -101,8 +95,7 @@ for ivar=15:nvar
   %set(cp,'Color',[0.5 0.5 0.5],'Interpreter','none','VerticalAlignment','bottom');
   %plot_multi_format(gcf,fullfile(d.plot,['iiasa_',var.name{ivar}]));
 
-  
-  
+   
 end
 
 return;

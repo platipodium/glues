@@ -1,5 +1,5 @@
-function [production,share,carbon,p]=cl_vecode(temp,prec,gdd0,co2)
-% [prod,share,carbon] = VECODE(t,p,g)
+function [production,share,carbon,p]=clc_vecode(temp,prec,gdd0,co2)
+% [prod,share,carbon] = CLC_VECODE(t,p,g)
 % is the matlab implementation of V. Brovkins's VECODE
 % dynamical vegetation model
 % Input arguments (required) 
@@ -7,7 +7,7 @@ function [production,share,carbon,p]=cl_vecode(temp,prec,gdd0,co2)
 %  p prescipitation (annual sum, mm)
 %  g growing degree days above zero (sum of temperatures above zero)
 %
-% [prod,share,carbon] = VECODE(t,p,g,c
+% [prod,share,carbon] = CLC_VECODE(t,p,g,c)
 % Optional input argument 
 %  c carbon dioxide concentration (ppmv)
 % 
@@ -16,7 +16,7 @@ function [production,share,carbon,p]=cl_vecode(temp,prec,gdd0,co2)
 %  share fraction of forest, grass, desert
 %  carbon carbon stock in leaves, stems, soil
 
-% copyright 2009,2010 Carsten Lemmen
+% Copyright 2009,2010 Carsten Lemmen
 % GKSS-Forschungzentrum Geesthacht
 % This software is released under GPL
 

@@ -50,7 +50,7 @@ end
 iiasa.temp=mean(iiasa.tmean,2);
 iiasa.precip=sum(iiasa.prec,2);
 [iiasa.gdd,iiasa.gdd0,iiasa.gdd5]=clc_gdd(iiasa.tmean);
-[production,share,carbon,p]=cl_vecode(iiasa.temp,iiasa.precip,iiasa.gdd0);
+[production,share,carbon,p]=clc_vecode(iiasa.temp,iiasa.precip,iiasa.gdd0);
 
 iiasa.npp=production.npp;
 
