@@ -28,7 +28,7 @@ if exist(['data.' varname],'var')
 elseif (strcmp(varname,'npp'))
     temp=mean(data.tmean,2);
     prec=sum(data.prec,2);
-    value=cl_npp_lieth(temp,prec);
+    value=clc_npp(temp,prec);
 else 
     error('I don''t know how to handle this variable name');
 end

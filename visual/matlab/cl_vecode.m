@@ -99,7 +99,7 @@ desertshare(vp)=1.03/(1.0+p.ADES.*db2(vp).*db2(vp)-0.03);
 desertshare(desertshare<0)=0;
 
 % Lieth's npp
-npp=cl_npp_lieth(temp,prec);
+npp=clc_npp(temp,prec);
 npp=vecode_co2_enrichment(npp,co2);
 
 

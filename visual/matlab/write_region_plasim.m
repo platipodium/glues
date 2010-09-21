@@ -76,7 +76,7 @@ plasim.npp(find(plasim.npp<=0))=NaN;
 lat=[0:nlat-1]/nlat*180-90+90/nlat;
 lat=fliplr(lat);
 
-plasim.nppl=cl_npp_lieth(mean(plasim.temp,3),sum(plasim.precip,3));
+plasim.nppl=clc_npp(mean(plasim.temp,3),sum(plasim.precip,3));
 
 %% Old version: number of days
 plasim.gdd=sum(plasim.temp>0,3)*30.;

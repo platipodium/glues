@@ -70,7 +70,7 @@ prec(find(prec<0))=0;
 prange=2000;
 trange=max(tmean)-min(tmean);
 
-[npp,nppp,nppt,lp,lt]=cl_npp_lieth(tmean,prec);
+[npp,nppp,nppt,lp,lt]=clc_npp(tmean,prec);
 nmax=max(max(npp));
 sensitivity=-lp/trange;
 it=find(lt>0);

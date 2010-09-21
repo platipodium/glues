@@ -7,7 +7,8 @@ function clp_iiasa
 %
 %   See also CL_READ_IIASA
 %
-% Copyright 2009 Carsten Lemmen <carsten.lemmen@gkss.de>
+% Copyright 2009,2010
+% Carsten Lemmen <carsten.lemmen@gkss.de>
 
 cl_register_function;
 
@@ -23,13 +24,11 @@ iiasa=load(matfile);
 prec=sum(iiasa.prec,2);
 temp=mean(iiasa.tmean,2);
 [gdd,gdd0,gdd5]=clc_gdd(iiasa.tmean);
-%=30*sum(iiasa.tmean>0,2);
-npp=cl_npp_lieth(temp,prec);
+npp=clc_npp(temp,prec);
 
 lon=iiasa.lon;
 lat=iiasa.lat;
 latlim=[-58,80];
-
 
 figure(1);
 clf reset;
@@ -52,12 +51,16 @@ lat=[1:nlat]/2-90.25;
 nmap=zeros(nlon,nlat)-NaN;
 gmap=nmap;
 gmap0=nmap;
+tmap=nmap;
+pmap=nmap;
 gmap5=nmap;
 
 for i=1:nlat
    j=find(ilat==i);
    if isempty(j) continue; end
    
+   pmap(ilon(j),i)=prec(j);
+   tmap(ilon(j),i)=temp(j);
    nmap(ilon(j),i)=npp(j);
    gmap(ilon(j),i)=gdd(j);
    gmap0(ilon(j),i)=gdd0(j);
@@ -111,6 +114,28 @@ shading flat;
 m_coast; m_grid; colorbar('Ylim',[0,360]);
 title('IIASA GDD');
 plot_multi_format(gcf,fullfile(d.plot,['iiasa_gdd']));
+
+figure(5);
+clf reset;
+m_pcolor(lon,lat,tmap');
+hold on;
+set(gca,'clim',[-5 30]);
+shading flat;
+m_coast; m_grid; colorbar('Ylim',[-5 30]);
+title('IIASA Annual mean temperature');
+plot_multi_format(gcf,fullfile(d.plot,['iiasa_atemp']));
+
+figure(6);
+clf reset;
+m_pcolor(lon,lat,pmap');
+hold on;
+set(gca,'clim',[0 2000]);
+shading flat;
+m_coast; m_grid; colorbar('Ylim',[0,2000]);
+title('IIASA Annual precipitation');
+plot_multi_format(gcf,fullfile(d.plot,['iiasa_aprec']));
+
+
 
 return
 end

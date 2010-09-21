@@ -41,7 +41,7 @@ cl_get_iiasa
 cl_init
 cl_load
 cl_mmax
-cl_npp_lieth
+clc_npp
 cl_plot_distance_timing
 cl_plot_marble
 cl_plot_marble_timing_tb
