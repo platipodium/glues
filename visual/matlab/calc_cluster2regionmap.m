@@ -38,7 +38,7 @@ iiasa=load('iiasa');
  [gdd,gdd0,gdd5]=clc_gdd(tmean);
  prec=sum(prec,2);
  tmean=mean(tmean,2);
- npp=cl_npp_lieth(tmean,prec);
+ npp=clc_npp(tmean,prec);
 
  
 

@@ -10,6 +10,8 @@ file='../../src/test/plasim_11k.nc';
 ncid=netcdf.open(file,'NOWRITE');
 varid=netcdf.inqVarID(ncid,'lat'); lat=netcdf.getVar(ncid,varid);
 varid=netcdf.inqVarID(ncid,'lon'); lon=netcdf.getVar(ncid,varid);
+varid=netcdf.inqVarID(ncid,'time'); time=netcdf.getVar(ncid,varid);
+varid=netcdf.inqVarID(ncid,'lsp'); prec=netcdf.getVar(ncid,varid);
 netcdf.close(ncid);
 
 halflat=mean([lat(2:end)';lat(1:end-1)']);
@@ -26,6 +28,17 @@ end
 for i=1:length(ilon)
   m_plot(repmat(halflon(ilon(i)),1,2),latlim,'w-');
 end
+
+ilat=find(lat>=latlim(1) & lat<=latlim(2));
+ilon=find(lon>=lonlim(1) & lon<=lonlim(2));
+
+prec=prec(ilon,ilat,:,:);
+
+p=reshape(prec,[length(ilon) length(ilat) 12 220]);
+ap=sum(p,3);
+figure(2);
+plot(1:220,squeeze(ap(3,3,:)),'b-');
+
 
 %%
 return

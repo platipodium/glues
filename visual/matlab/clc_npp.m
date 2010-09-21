@@ -1,4 +1,4 @@
-function [npp,npp_p,npp_t,lp,lt]=cl_npp_lieth(temp,prec)
+function [npp,npp_p,npp_t,lp,lt]=clc_npp(temp,prec)
 %CL_NPP_LIETH calculates net primary production from temp and precip
 %   NPP=CL_NPP_LIETH(TEMP,PREC) calculates the net primary production (npp)
 %   based on the limitation model of Lieth (1972).
