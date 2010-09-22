@@ -12,7 +12,7 @@ function [production,share,carbon,p]=clc_vecode(temp,prec,gdd0,co2)
 %  c carbon dioxide concentration (ppmv)
 % 
 % Output arguments
-%  prod production variables (nep, npp)
+%  prod production variables (lai, nppt, nppg)
 %  share fraction of forest, grass, desert
 %  carbon carbon stock in leaves, stems, soil
 
@@ -35,7 +35,7 @@ function [production,share,carbon,p]=clc_vecode(temp,prec,gdd0,co2)
   
   if ~exist('co2','var') co2=280; end
 
-  p=initpar;
+  p=initcpar;
   [production,share,p]=ccparam(temp,prec,gdd0,co2,p);
   p=ccstat(production,share,p);
   [production,share,carbon,p]=climpar(production,share,p);
@@ -83,7 +83,7 @@ forestshare(vf)=p.FSHAREMAX;
 vd=find(gdd0<100.0);
 desertshare(vd)=1.0;
 
-% slow decrease of desert when gdd0>00
+% slow decrease of desert when gdd0>100
 vd=find(gdd0>=100.0 & gdd0<p.GDD0MIN)
 desertshare(vd)=(p.GDD0MIN-gdd0(vd))/(p.GDD0MIN-100.);
 
@@ -91,7 +91,7 @@ desertshare(vd)=(p.GDD0MIN-gdd0(vd))/(p.GDD0MIN-100.);
 prc=p.ACR*exp((p.GAMMA*gdddiff)/2.0);
 vm=find(gdd0>=p.GDD0MAX & prec<prc);
 desertshare(vm)=1.0;
-foresetshare(vm)=0.0;
+forestshare(vm)=0.0;
 
 db2=(prec-prc)./exp(p.GAMMA*gdddiff);
 vp=find(gdd0>=p.GDD0MAX & prec>=prc);
@@ -100,19 +100,23 @@ desertshare(desertshare<0)=0;
 
 % Lieth's npp
 npp=clc_npp(temp,prec);
-npp=vecode_co2_enrichment(npp,co2);
+%npp=vecode_co2_enrichment(npp,co2);
+
+% CO2 enrichment
+nppt=npp*(1.0+(p.betat.*log(co2/280.)))
+nppg=npp*(1.0+(p.betag.*log(co2/280.)))
 
 
 % allocation factors and residence time of leaves biomass
-p.k1t=p.c1t+p.c2t./(1+p.c3t*npp);
-p.k1g=p.c1g+p.c2g./(1+p.c3g*npp);
+p.k1t=p.c1t+p.c2t./(1+p.c3t*nppt);
+p.k1g=p.c1g+p.c2g./(1+p.c3g*nppg);
 
-p.t1t=p.d1t+p.d2t./(1+p.d3t*npp);
-p.t1g=p.d1g+p.d2g./(1+p.d3g*npp);
+p.t1t=p.d1t+p.d2t./(1+p.d3t*nppt);
+p.t1g=p.d1g+p.d2g./(1+p.d3g*nppg);
 
 %   residence time of stems and roots biomass
-p.t2t=p.e1t+p.e2t./(1+p.e3t*npp);
-p.t2g=p.e1g+p.e2g./(1+p.e3g*npp);
+p.t2t=p.e1t+p.e2t./(1+p.e3t*nppt);
+p.t2g=p.e1g+p.e2g./(1+p.e3g*nppg);
 
 %   residence time of fast carbon pool
 p.t3t=16*exp(-p.ps5*(temp-p.soilt));
@@ -132,7 +136,8 @@ share.forest = forestshare;
 share.desert = desertshare;
 share.grass = 1-share.forest-share.desert;
 
-production.npp=npp;
+production.nppt=nppt;
+production.nppg=nppg;
 
 return;
 end
@@ -175,15 +180,16 @@ end
 function p=ccstat(production,share,p)
 % Calculation of equilibrium storage
 
-npp=production.npp/100;
+nppt=production.nppt/100.;
+nppg=production.nppg/100.;
 
 % leaves
-p.b1t=p.k1t.*p.t1t.*npp;
-p.b1g=p.k1g.*p.t1g.*npp;
+p.b1t=p.k1t.*p.t1t.*nppt;
+p.b1g=p.k1g.*p.t1g.*nppg;
 
 % stems and roots;
-p.b2t=(1-p.k1t).*p.t2t.*npp;
-p.b2g=(1-p.k1g).*p.t2g.*npp;
+p.b2t=(1-p.k1t).*p.t2t.*nppt;
+p.b2g=(1-p.k1g).*p.t2g.*nppg;
 
 % litter
 p.b3t=(p.k0t.*p.b1t./p.t1t+p.k2t./p.t2t.*p.b2t).*p.t3t;
@@ -197,16 +203,17 @@ return;
 end
 
 
-function p=initpar
+function p=initcpar
 
 p.ACR      = 28.;
 p.ADES     = 0.0011;
 p.ALPHA    = 7000;
-p.BETA     = 0.005;
+p.BETA     = 0.005; % see betag and betat below
 p.GAMMA    = 0.00017;
-p.GDD0MIN  = 900.;       
+p.GDD0MIN  = 1000.; % adjusted up from 900, LOVECLIM2.1       
 p.GDD0MAX  = 1800.;      
-p.FSHAREMAX= 1.0;
+p.FSHAREMAX= 0.9;  % adusted down from 1.0, LOVECLIM2.1
+p.NPPMAX=1.3;
 
 p.c1t=0.046;
 p.c2t=0.58;
@@ -233,12 +240,12 @@ p.f1g=0.34;
 p.f2g=17.8;
 p.f3g=50.;
 p.k2t=1.;
-p.k3t=0.017;
+p.k3t=0.025; % up from 0.017, LOVECLIM2.1
 p.k0t=0.6;
 p.k0g=0.2;
 p.k2g=0.55;
 p.k4g=0.025;
-p.k3g=0.013;
+p.k3g=0.025; % up from 0.013, LOVECLIM2.1
 p.t3g=1.;
 p.t1tn=4;
 p.t1td=1;
@@ -247,6 +254,42 @@ p.dentd=20;
 p.dentn=6;
 p.ps5=0.04;
 p.soilt=5;
+
+
+
+% Below new parameters from LOVECLIM2.1
+p.acwd=100;
+p.acwt=100;
+p.acwg=100;
+p.acwn=100;
+
+p.zrd=1.0;
+p.zrt=1.0;
+p.zrg=0.6;
+p.zrn=0.6;
+
+p.rsd=0;
+p.rst=300;
+p.rsg=130;
+p.rsn=160;
+
+% from veget.par parameter file
+p.prcmin=0.0005; % daily precip threshold (m) in warm areas
+p.bmtdry=0.01;   % soilwater threshold (m) for tpsdry
+p.tmxdry=220.;   % threshold (m) above which dryness affects vegetation
+p.dtrdry=30.;    % time interval (d) for transition tmxdry->tmxdry+dtrdry
+                 % if tpsdry > tmxdry+dtrdry => Precip is reduced by rpfdry
+p.rpfdry=0.5;    % reduction factor for precip if above
+
+
+p.albet=[0.13 0.13 0.13 0.13]; % tree albedos in seasons wssf
+p.albeg=[0.20 0.20 0.20 0.20]; % grass albedos in seasons wssf
+p.albed=[0.33 0.33 0.33 0.33]; % desert albedos in seasons wssf
+p.albegc=[-.06 -.04 -.02 -.04]; % steppe albedo change in seasons
+p.albedc=[0.07 0.07 0.07 0.07]; % sahara albedo change in seasons 
+p.gamma2=0.00025; % lower limit for vegetation sustainance
+p.betat=0.25/log(2); % co2 enrichment factor tree
+p.betag=0.25/log(2); % co2 enrichment factor grass
 
 return;
 end
