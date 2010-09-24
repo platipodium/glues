@@ -3,7 +3,7 @@
 # this script runs the scenarios for the Umweltkrisen paper,
 # corresponding routines for visualisation is do_krisen.m
 
-SED=gsed
+SED=sed
 X=src/glues
 P=examples/simulations/685/lbk
 S=examples/setup/685
