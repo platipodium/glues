@@ -4,9 +4,8 @@ function cl_register_function
 %  each calling function's file name is written in a single line to 
 %  the journal file.
 
-% Author Carsten Lemmen <carsten.lemmen@gkss.de>
-% Date 2009-05-09
-
+% Copyright 2009,2010
+% Carsten Lemmen <carsten.lemmen@gkss.de>
 
 journal_fname='cl_journal.txt';
 
