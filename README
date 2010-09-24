@@ -1,28 +1,46 @@
-#---------------------------------------------------------------
-# This it GLUES, the Global Land Use and Environmental Simulator
-#
-# Authors: Carsten Lemmen <c.lemmen@fz-juelich.de>
-#          Kai W. Wirtz   <wirtz@icbm.de>
-#-----------------------------------------------------------
-#
-# This file ./README
-#
-To convert from FZJ to ICBM directory structure, use the
-provided script fzj2icbm.ksh
+README file for the Global Land Use and technological Evolution Simulator (GLUES)
 
-To convert form ICBM to FZJ directory sturcture, use the
-provided script icbm2fzj.ksh
+= Installation =
 
-Otherwise, you need to adjust the glues path (where GLUES is installed
-on your system) and the SiSi path (where SiSi is installed on your
-system) manually.
+Glues is set up for building on many platforms.  To facilitate cross-platform compatibility, the
+GNU autotools are used.
 
-Files that need to be adjusted are given below
+== Quick install ==
 
-./simulations/*.sce
-./simulations/*.sim
-./simulations/README
-./Makefile
-./src/Makefile
+From the .tgz distribution archive, run the file ./configure, then make
 
-# EOF
+> ./configure && make
+
+You should (but you can) not install GLUES in your system, rather use the provided example scripts run*.sh do execute glues.
+
+== More detailed installation ==
+
+ 1. If you downloaded the developer's version via mercurial CVS, you don't have a ./configure script.  You can
+    create this with the ./bootstrap shell script. 
+
+> ./bootstrap
+
+ 2. Run ./configure, you can find generic help on configure options in the file INSTALL.
+
+> ./configure
+
+ 3. If there are WARNING messages at the end of ./configure, please see below, otherwise, continue to building
+
+ 4. Run make (preferably gnu make) to build the glues system,  you should end up with an executable glues in 
+    the directory src.
+
+
+== Warnings and errors during installation ==
+
+ 1. WARNING: no configuration information is in src/sisi  
+    There is no ./configure in the subdirectory sisi; this is only needed if you don't have the sisi library
+    installed elsewhere on your system, i.e., if you need a new build of sisi
+
+    Go to src/sisi and issue ./bootstrap, if you get errors, run autoreconf -fvi, then ./bootstrap again
+
+> (cd src/sisi; ./bootstrap || autoreconf -fvi && ./boostrap)
+> (cd src/sisi; ./configure && gmake )
+
+ 2. Doxygen not found but required to build documentation
+    There is no doxygen on this system, and the documentation will not be build.  This doesn't prevent you from
+    running GLUES.  If you need the API documentation, install doxygen, and run configure again.
