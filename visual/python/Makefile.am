@@ -20,3 +20,4 @@
 
 SUBDIRS = 
 EXTRA_DIST=
+all:
