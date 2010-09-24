@@ -52,3 +52,19 @@ You should (but you can) not install GLUES in your system, rather use the provid
 
  3. Cannot find -lSiSi
     You might have to copy the libSiSi.* files to src/sisi/lib (see above 1.)
+
+== What do do if you don't get sisi to build or run ==
+
+ 1. Download the sisi package from the sourceforge site
+    https://sourceforge.net/projects/glues/files/sisi/SiSi2.2.tgz/download
+
+ 2. Unpack the .tgz file and change to sisi directory
+
+ 3. run {{{ gmake lib }}} to make the sisi library
+
+ 4. copy lib/libsisi.* to your systems library directory, ranlib libsisi.*
+
+ 5. copy include to your systems include directory
+
+ 6. ./configure --with-sisi=<directory where you copied sisi lib and include> in glues directory
+ 
