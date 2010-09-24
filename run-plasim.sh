@@ -2,7 +2,7 @@
 
 # this script runs the setup with npp from plasim
 
-SED=gsed
+SED=sed
 X=src/glues
 P=examples/simulations/plasim/plasim
 S=examples/setup/plasim

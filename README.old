@@ -1,0 +1,28 @@
+#---------------------------------------------------------------
+# This it GLUES, the Global Land Use and Environmental Simulator
+#
+# Authors: Carsten Lemmen <c.lemmen@fz-juelich.de>
+#          Kai W. Wirtz   <wirtz@icbm.de>
+#-----------------------------------------------------------
+#
+# This file ./README
+#
+To convert from FZJ to ICBM directory structure, use the
+provided script fzj2icbm.ksh
+
+To convert form ICBM to FZJ directory sturcture, use the
+provided script icbm2fzj.ksh
+
+Otherwise, you need to adjust the glues path (where GLUES is installed
+on your system) and the SiSi path (where SiSi is installed on your
+system) manually.
+
+Files that need to be adjusted are given below
+
+./simulations/*.sce
+./simulations/*.sim
+./simulations/README
+./Makefile
+./src/Makefile
+
+# EOF
