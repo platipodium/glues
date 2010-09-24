@@ -1,7 +1,7 @@
 /* GLUES regional population class; this file is part of
    the Global Land Use and technological Evolution Simulator
    
-   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008,2009
+   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008,2009,2010
    Carsten Lemmen <carsten.lemmen@gkss.de>, Kai Wirtz <kai.wirtz@gkss.de>
 
    This program is free software; you can redistribute it and/or modify it
@@ -23,7 +23,7 @@
    @author Kai Wirtz <kai.wirtz@gkss.de>
    @file  RegionalPopulation.cc
    @brief  Definition of regional population
-   @date 2003-04-29
+   
 */
 
 /** PREPROCESSOR section **/
@@ -53,6 +53,7 @@ RegionalPopulation::RegionalPopulation() {
   size=0;
 }
 
+
 RegionalPopulation::RegionalPopulation(double s, double f,
      double t,double nd,double ge, double re,
      double bnm,double nf,double tl, PopulatedRegion* r)
@@ -77,6 +78,29 @@ RegionalPopulation::RegionalPopulation(double s, double f,
    @brief Destructor
 */
 RegionalPopulation::~RegionalPopulation() { ;
+}
+
+void
+RegionalPopulation::Density(double pop) 
+{ 
+  density = pop;
+  if (region != NULL) size=region->Area()*density; 
+  else size=0;
+}
+
+void
+RegionalPopulation::Size(double s) 
+{ 
+  size=s;
+  if (region != NULL) density=size/region->Area(); 
+  else density=0;
+}
+
+double
+RegionalPopulation::Size() const 
+{ 
+  if (region != NULL) return region->Area()*density; 
+  else return 0;
 }
 
 /**
@@ -385,6 +409,7 @@ int RegionalPopulation::Update()
   qfarming      = max(ev[2],InitQfarm);
   resist        = max(ev[3],minval[3]);
   density       = max(ev[4],minval[4]);
+  if (region != NULL) size=density*region->Area();
   germs         = max(ev[5],minval[5]);
   
   /** 

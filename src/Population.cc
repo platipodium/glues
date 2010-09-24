@@ -1,7 +1,7 @@
 /* GLUES  population class; this file is part of
    the Global Land Use and technological Evolution Simulator
    
-   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008
+   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008,2009,2010
    Carsten Lemmen <carsten.lemmen@gkss.de>, Kai Wirtz <kai.wirtz@gkss.de>
 
    This program is free software; you can redistribute it and/or modify it
@@ -21,9 +21,8 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
    @author Kai Wirtz <kai.wirtz@gkss.de>
-   @file  RegionalPopulation.cc
-   @brief  Definition of population
-   @date 2008-08-21
+   @file   Population.cc
+   @brief  Implementation of population
 */
 
 #include "Population.h"

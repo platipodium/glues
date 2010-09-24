@@ -21,7 +21,6 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
    @author Kai Wirtz <kai.wirtz@gkss.de>
-   @date   2008-08-21
    @file   Population.h
    @brief  Definition of population
 */
