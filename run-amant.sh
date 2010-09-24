@@ -3,7 +3,7 @@
 # this script runs the scenarios for the American Antiquity paper,
 # corresponding routines for visualisation is do_amant.m
 
-SED=gsed
+SED=sed
 X=src/glues
 P=examples/simulations/685/lbk
 S=examples/setup/685
