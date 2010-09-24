@@ -258,7 +258,8 @@ glues::IO::read_ascii_table(std::istream& is, float** table_float,
               break;
             }
 
-          fvalue = strtof(word.c_str(), NULL);
+          //fvalue = strtof(word.c_str(), NULL);
+          fvalue = atof(word.c_str());
 
           if (table_float[irow - row_offset - 1] == 0)
             {
@@ -349,7 +350,9 @@ glues::IO::read_ascii_table(std::istream& is, float* f,
               break;
             }
 
-          fvalue = strtof(word.c_str(), NULL);
+          // strtof not portable?? (problems with pgi)
+          //fvalue = strtof(word.c_str(), NULL);
+          fvalue = atof(word.c_str());
 
           if (f[irow - row_offset - 1] == 0)
             {
