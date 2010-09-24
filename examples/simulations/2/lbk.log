@@ -1,4 +1,4 @@
 # Logfile for simulations written by SiSi 2.0
-Program         "./src/glues"
-SimulationStart "Fri Sep 24 14:50:04 2010"
-SimulationEnd   "Fri Sep 24 14:50:04 2010"
+Program         "/local/home/lemmen/devel/glues/src/glues"
+SimulationStart "Fri Sep 24 17:30:25 2010"
+SimulationEnd   "Fri Sep 24 17:30:28 2010"

@@ -21,7 +21,7 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
    @author Kai Wirtz <kai.wirtz@gkss.de>
-   @date   2010-03-30
+   @date   2010-09-24
    @file   GlobalClimate.cc
    @brief  Input and update of climate data
 */
