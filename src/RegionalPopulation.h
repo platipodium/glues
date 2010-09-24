@@ -21,7 +21,7 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
    @author Kai Wirtz <kai.wirtz@gkss.de>
-   @date   2010-05-24
+   @date   2010-09-24
    @file   RegionalPopulation.h
    @brief  Definition of regional population
 */
@@ -63,8 +63,6 @@ class RegionalPopulation {
   Tracer* origin;
   double birthrate,deathrate; 
 
-	
-
  public:
   RegionalPopulation(double,double,double,double,double,double,double,
 		     double,double,PopulatedRegion*);
@@ -73,7 +71,8 @@ class RegionalPopulation {
   
   
   double Density()        const   {return density;}
-  void   Density(double pop) { density = pop; }
+  void   Density(double);
+  void   Size(double);
   double Growthrate()     const	{return rgr;}
   double Technology()     const	{return technology;}
   double Qfarming()	const	{return qfarming;}
@@ -92,7 +91,7 @@ class RegionalPopulation {
     (tlim*technology)*ndomesticated*qfarming; }
   PopulatedRegion* Region() const	{return region;}
   Tracer* Origin() {return origin;}
-  double Size() const { return size; }
+  double Size() const;
 
   double RatesOfChange(double*);
   double Grow(void);
