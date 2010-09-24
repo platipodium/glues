@@ -39,8 +39,15 @@ You should (but you can) not install GLUES in your system, rather use the provid
     Go to src/sisi and issue ./bootstrap, if you get errors, run autoreconf -fvi, then ./bootstrap again
 
 > (cd src/sisi; ./bootstrap || autoreconf -fvi && ./boostrap)
+   
+    Rund ./configure and make, and put the libraries into the lib directory
+
 > (cd src/sisi; ./configure && gmake )
+> (cp src/sisi/lib/.libs/libSiSi* src/sisi/lib/)
+
 
  2. Doxygen not found but required to build documentation
     There is no doxygen on this system, and the documentation will not be build.  This doesn't prevent you from
     running GLUES.  If you need the API documentation, install doxygen, and run configure again.
+
+ 3. Cannot find -lSiSi
