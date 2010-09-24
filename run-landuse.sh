@@ -3,7 +3,7 @@
 # this script runs the scenarios for the GRL land use paper,
 # corresponding routines for visualisation is do_landuse.m
 
-SED=gsed
+SED=sed
 X=src/glues
 P=examples/simulations/685/lbk
 S=examples/setup/685
