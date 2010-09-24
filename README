@@ -62,9 +62,16 @@ You should (but you can) not install GLUES in your system, rather use the provid
 
  3. run {{{ gmake lib }}} to make the sisi library
 
- 4. copy lib/libsisi.* to your systems library directory, ranlib libsisi.*
+ 4. copy lib/libsisi.* to your systems library directory, ranlib libsisi.* and make an alias of this library
+    under the name libSiSi.* and under the name libSiSi2.0.*
 
  5. copy include to your systems include directory
+ 
+ 6. Go back to your glues distribution
+
+ 7. Create an empty Makefil in src/sisi
+
+> echo 'all:' > src/sisi/Makefile
 
  6. ./configure --with-sisi=<directory where you copied sisi lib and include> in glues directory
  
