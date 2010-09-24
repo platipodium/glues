@@ -101,9 +101,10 @@ for ivar=1:nvar
   ytl=str2num(get(cb,'YTickLabel'));
   set(cb,'YTickLabel',num2str(scale_precision(ytl*var.range(ivar)+var.min(ivar),var.prec(ivar))));
   v=cl_get_version;
-  cptext=sprintf('%s, created %s by %s (%s)',v.copy,datestr(datenum(v.time),'YYMMDD'),v.file,v.version);
-  cp=text(min(get(gca,'Xlim')),min(get(gca,'Ylim')),cptext);
-  set(cp,'Color',[0.5 0.5 0.5],'Interpreter','none','VerticalAlignment','bottom');
+  stamptext=sprintf('%s, created by %s (%s)',v.copy,v.file,v.version);
+  stamp=text(min(get(gca,'Xlim')),min(get(gca,'Ylim')),stamptext);
+  set(stamp,'Color',repmat(0.5,1,3),'Interpreter','none','VerticalAlignment','bottom');
+  clp_stamp;
   plot_multi_format(gcf,fullfile(d.plot,['iiasa_vecode_',var.name{ivar}]));
 
    
