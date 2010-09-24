@@ -43,7 +43,7 @@ You should (but you can) not install GLUES in your system, rather use the provid
     Rund ./configure and make, and put the libraries into the lib directory
 
 > (cd src/sisi; ./configure && gmake )
-> (cp src/sisi/lib/.libs/libSiSi* src/sisi/lib/)
+> (cp src/sisi/lib/.libs/libSiSi* src/sisi/lib/) 
 
 
  2. Doxygen not found but required to build documentation
@@ -51,3 +51,4 @@ You should (but you can) not install GLUES in your system, rather use the provid
     running GLUES.  If you need the API documentation, install doxygen, and run configure again.
 
  3. Cannot find -lSiSi
+    You might have to copy the libSiSi.* files to src/sisi/lib (see above 1.)
