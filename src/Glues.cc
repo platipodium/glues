@@ -39,6 +39,9 @@
 #include "Data.h"
 #include "GNetcdf.h"
 #include <vector>
+#include <iostream.h>
+#include <fstream.h>
+#include <string.h>
 
 #ifdef HAVE_MPI_H
 #include "mpi.h"
@@ -64,10 +67,31 @@ void dump_events();
 */
 int main(int argc, char* argv[])
 {
-
   
-  double err_i;
+  /** 1. Check whether valid arguments were passed to the main program.
+      Currently, the only valid argument count is 2, with value(1) a
+      string denoting the file name of the configuration file. 
+      Also check whether the file can be openened */
+  if (argc!=2) {
+    glues::Messages::Error(); 
+    return 1;
+  }
 
+  std::string configfilename(argv[1]);
+  size_t pos=configfilename.rfind('.');
+  size_t len=configfilename.length();
+  std::string ext=configfilename.substr(pos+1,len-pos-1);
+
+  std::ifstream ifs;
+  ifs.open(configfilename.c_str(),ios::in);
+  if (ifs.bad()) {
+    glues::Messages::Error();
+    return 1;
+  }
+  ifs.close();
+
+
+  /** 2. Define MPI and internationalization packages */
 #ifdef HAVE_MPI_H
   MPI::Init(argc,argv);
   int mpi_rank=MPI::COMM_WORLD.Get_Rank();
@@ -81,31 +105,44 @@ int main(int argc, char* argv[])
   textdomain (PACKAGE);
 #endif
 
-/** Parse the simulation parameters in the SiSi configuration.
+
+/** 3. Parse the simulation parameters in the SiSi configuration.
   @todo There should be in the future an alternative configuration which
   does not rely on SiSi.  This could be achieved with a converter from SiSi 
   to Namelist and vice versa, or with a parallel development */
-  if( !SiSi::parseSimulation(argc, argv) ) {
+
+  if (!ext.compare("sim")) {
+    if( !SiSi::parseSimulation(argc, argv) ) {
 #ifdef HAVE_MPI_H
       if (mpi_rank==0)
 #endif
-	  glues::Messages::Error();
+	glues::Messages::Error();
 
       SiSi::finalize();
       return 1;
+    }
   }
-
+  /*  else if (ext.compare("nc")) {
+    // not implemented yet 
+    }*/
+  else { 
+#ifdef HAVE_MPI_H
+    if (mpi_rank==0)
+#endif
+      glues::Messages::Error();
+    return 1;
+  }
 
 #ifdef HAVE_MPI_H
   if (mpi_rank==0)
 #endif
-      glues::Messages::Welcome();
-
+    glues::Messages::Welcome();
+  
   if (
 #ifdef HAVE_MPI_H
       mpi_rank==0 &&
 #endif
-/** Read in the basic geographical region definitions
+  /** Read in the basic geographical region definitions
 */
       read_data() ) {
       glues::Messages::Error();
@@ -180,7 +217,7 @@ int main(int argc, char* argv[])
       value indicates the goodness of the simulation
       */
   
-  err_i=simulation();
+  double err_i=simulation();
   if (err_i<0) {
       glues::Messages::Error();
       SiSi::finalize();
