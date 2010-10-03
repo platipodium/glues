@@ -2,10 +2,10 @@
 comment Scenario specific numbers and file names
 int	CoastRegNo	0
 comment Dateipfad fuer Eingabe
-string  datapath        "/local/home/lemmen/devel/glues/examples/simulations/2/../../.././examples/setup/2/"
+string  datapath        "/Users/lemmen/devel/glues/examples/setup/1/"
 comment Dateiname fuer Eingabe
-string	regiondata	"regions_80_2.dat"
-string	mappingdata	"mapping_80_2.dat"
+string	regiondata	"regions_80_1.dat"
+string	mappingdata	"mapping_80_1.dat"
 comment Dateinamen fuer Ausgabe
 string	resultfilename	"results.out"
 string	watchstring	"watch.res"
@@ -14,12 +14,12 @@ comment Region numbers to inspect
 array	ins
 	\d region index to inspect (<N_INSPECT)85
 	typeOfArray	int
-	dimension 2	
+	dimension 1	
 data
-	1 2
+	1
 end
 comment Cimate updates 
-string	climatefile	"reg_npp_80_2.dat"
+string	climatefile	"reg_npp_80_1.dat"
 array	ClimUpdateTimes
 	\d 1:TimeStep  2:NumberOfUpdates
 	typeOfArray	int
