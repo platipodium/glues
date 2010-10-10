@@ -1,56 +1,44 @@
-function cl_plot_distance_timing(varargin)
+function clp_distance_timing(varargin)
 
 cl_register_function();
+
+arguments = {...
+  {'vars','Farming'},...
+  {'modus','absolute'},...
+  {'resultfilename','results'},...
+  {'scenario',''},...
+  {'lonlim',[0,36]},...
+  {'timelim',[11000,3100]},...
+  {'timeunit','BP'},...
+  {'lonlim',[0,36]},...
+  {'figoffset',0}
+};
+
+[a,rargs]=clp_arguments(varargin,arguments);
+for i=1:a.length eval([a.name{i} '=' clp_valuestring(a.value{i}) ';']); end
 
 [d,f]=get_files;
 retdata=NaN;
 
 % Choose 'emea' or 'China' or 'World'
-[regs,nreg,lonlim,latlim]=find_region_numbers('EMEA','lon',[0,36]);
+[regs,nreg,lonlim,latlim]=find_region_numbers('EMEA','lon',lonlim);
 
 regs=regs(find(regs<300 & regs>120 & regs~=204));
 nreg=length(regs);
 hregs=[272,243,256,254,212,217,184,179,171,147,143,123,200]';
 
-
 figoffset=0;
-
-vars={'Farming'};
-
-mode='absolute';
-resultfilename='results';
-
-  for iarg=1:nargin 
-    if all(isletter(varargin{iarg}))
-    switch lower(varargin{iarg}(1:3))
-      case 'var'
-        vars=varargin{iarg+1};
-
-        case 'mod'
-            mode=vararbin{iarg+1};
-        case 'res'
-             resultfilename=varargin{iarg+1};
-        case 'sce'
-            scenario=varargin{iarg+1};
-     end
-    iarg=iarg+2;
-     end
-  end
-  
   
 if ~exist('timelim','var') timelim=[11000,3100]; end;
 if ~exist('timeunit','var') timeunit='BP'; end;
-if exist('scenario','var')
-    resultfilename=[resultfilename '_' scenario];
+if (length(scenario)>0)
+  resultfilename=[resultfilename '_' scenario];
 end
-
 
 load(['regionpath_' num2str(685)]);
 if ~exist('region','var')
     region.path=regionpath;
 end
-
-
 
 if exist([resultfilename '.mat'],'file') load(resultfilename); else 
     fprintf('Cannot find file %s\n',resultfilename);
@@ -171,7 +159,7 @@ for idovar=1:nvar
 
    retdata(idovar,:,:)=data(squeeze(regs),itstart:itend)';
     
-   switch mode
+   switch modus
       case 'absolute', ;
       otherwise ;
    end 
