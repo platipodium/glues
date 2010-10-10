@@ -39,6 +39,9 @@
 #include "Data.h"
 #include "GNetcdf.h"
 #include <vector>
+#include <iostream.h>
+#include <fstream.h>
+#include <string.h>
 
 #ifdef HAVE_MPI_H
 #include "mpi.h"
@@ -64,10 +67,31 @@ void dump_events();
 */
 int main(int argc, char* argv[])
 {
-
   
-  double err_i;
+  /** 1. Check whether valid arguments were passed to the main program.
+      Currently, the only valid argument count is 2, with value(1) a
+      string denoting the file name of the configuration file. 
+      Also check whether the file can be openened */
+  if (argc!=2) {
+    glues::Messages::Error(); 
+    return 1;
+  }
 
+  std::string configfilename(argv[1]);
+  size_t pos=configfilename.rfind('.');
+  size_t len=configfilename.length();
+  std::string ext=configfilename.substr(pos+1,len-pos-1);
+
+  std::ifstream ifs;
+  ifs.open(configfilename.c_str(),ios::in);
+  if (ifs.bad()) {
+    glues::Messages::Error();
+    return 1;
+  }
+  ifs.close();
+
+
+  /** 2. Define MPI and internationalization packages */
 #ifdef HAVE_MPI_H
   MPI::Init(argc,argv);
   int mpi_rank=MPI::COMM_WORLD.Get_Rank();
@@ -81,31 +105,116 @@ int main(int argc, char* argv[])
   textdomain (PACKAGE);
 #endif
 
-/** Parse the simulation parameters in the SiSi configuration.
+
+/** 3. Parse the simulation parameters in the SiSi configuration.
   @todo There should be in the future an alternative configuration which
   does not rely on SiSi.  This could be achieved with a converter from SiSi 
   to Namelist and vice versa, or with a parallel development */
-  if( !SiSi::parseSimulation(argc, argv) ) {
+  
+  if (!ext.compare("sim")) {
+    if ( SiSi::parseSimulation(argc, argv) ) {
+      
+#ifdef HAVE_NETCDF_H
+      std::string configncfilename=configfilename.substr(0,pos).append(".nc");
+      NcFile ncparam(configncfilename.c_str(),NcFile::Replace);
+
+      time_t today;
+      std::time(&today);
+      string s1(asctime(gmtime(&today)));
+      string timestring=s1.substr(0,s1.find_first_of("\n"));
+      ncparam.add_att("Conventions","CF-1.4");
+      ncparam.add_att("title","GLUES parameter/restart file");
+      ncparam.add_att("history","File created");
+      ncparam.add_att("address","Max-Planck-Str 1, 21502 Geesthacht, Germany");
+      ncparam.add_att("principal_investigator","Carsten Lemmen");
+      ncparam.add_att("email","carsten.lemmen@gkss.de");
+      ncparam.add_att("institution","GKSS-Forschungszentrum Geesthacht GmbH");
+      ncparam.add_att("funding_source","Deutsche Forschungsgemeinschaft");
+      ncparam.add_att("funding_scheme","Priority program SPP 1266");
+      ncparam.add_att("funding_scheme_name","Interdynamik");
+      ncparam.add_att("funding_project","GLUES-QUICC");
+      ncparam.add_att("source","model");
+      ncparam.add_att("references","Wirtz & Lemmen (2003), Lemmen (2009)");
+      ncparam.add_att("model_name","GLUES");
+      ncparam.add_att("model_version",VERSION);
+      ncparam.add_att("date_of_creation",timestring.c_str());
+      
+      ncparam.add_att("param_Time",Time);
+      ncparam.add_att("param_TimeStart",TimeStart);
+      ncparam.add_att("param_TimeEnd",TimeEnd);
+      ncparam.add_att("param_TimeStep",TimeStep);      
+      ncparam.add_att("param_OutputStep",OutputStep);
+      ncparam.add_att("param_CultIndex",CultIndex);
+      ncparam.add_att("param_Space2Time",Space2Time);
+      ncparam.add_att("param_storetime",storetim);
+      ncparam.add_att("param_RelChange",RelChange);
+      ncparam.add_att("param_InitTechnology",InitTechnology);
+      ncparam.add_att("param_InitNdomast",InitNdomast);
+      ncparam.add_att("param_InitQfarm",InitQfarm);
+      ncparam.add_att("param_InitDensity",InitDensity);
+      ncparam.add_att("param_deltan",deltan);
+      ncparam.add_att("param_deltaq",deltaq);
+      ncparam.add_att("param_regenerate",regenerate);
+      ncparam.add_att("param_spreadm",spreadm);
+      ncparam.add_att("param_ndommaxvar",ndommaxvar);
+      ncparam.add_att("param_gammad",gammad);
+      ncparam.add_att("param_gammam",gammam);
+      ncparam.add_att("param_NPPCROP",NPPCROP);
+      ncparam.add_att("param_deltat",deltat);
+      ncparam.add_att("param_spreadv",spreadv);
+      ncparam.add_att("param_overexp",overexp);
+      ncparam.add_att("param_kappa",kappa);
+      ncparam.add_att("param_gdd_opt",gdd_opt);
+      ncparam.add_att("param_omega",omega);
+      ncparam.add_att("param_gammab",gammab);
+      ncparam.add_att("param_ndommaxmean",ndommaxmean);
+      ncparam.add_att("param_LiterateTechnology",LiterateTechnology);
+      ncparam.add_att("param_KnowledgeLoss",KnowledgeLoss);
+      ncparam.add_att("param_flucampl",flucampl);
+      ncparam.add_att("param_flucperiod",flucperiod);
+
+      /*
+struct ParLongElem parLlist[15]={{"RandomInit",&RandomInit},{"LocalSpread",&LocalSpread},{"RemoteSpread",&RemoteSpread},{"MaxCivNum",&MaxCivNum},{"DataActive",&DataActive},{"RunVarInd",&RunVarInd},{"VarActive",&VarActive},{"NumDice",&NumDice},{"MonteCarlo",&MonteCarlo},{"VarOutputStep",&VarOutputStep},{"NumMethod",&NumMethod},{"CoastRegNo",&CoastRegNo},{"SaharaDesert",&SaharaDesert},{"LGMHoloTrans",&LGMHoloTrans},{"END"}};
+struct ParStringElem parSlist[14]={{"SimulationName",&SimulationName},{"ModelName",&ModelName},{"ModelPath",&ModelPath},{"varresfile",&varresfile},{"datapath",&datapath},{"regiondata",&regiondata},{"mappingdata",&mappingdata},{"resultfilename",&resultfilename},{"watchstring",&watchstring},{"spreadfile",&spreadfile},{"climatefile",&climatefile},{"eventfile",&eventfile},{"SiteRegfile",&SiteRegfile},{"END"}};
+      */
+
+
+
+      // Write simulation paramters to netcdf restart file (TODO)
+      ncparam.close();
+#endif
+    }
+    else {
 #ifdef HAVE_MPI_H
       if (mpi_rank==0)
 #endif
-	  glues::Messages::Error();
-
+	glues::Messages::Error();
+      
       SiSi::finalize();
       return 1;
+    }
   }
-
+  /*  else if (ext.compare("nc")) {
+    // not implemented yet 
+    }*/
+  else { 
+#ifdef HAVE_MPI_H
+    if (mpi_rank==0)
+#endif
+      glues::Messages::Error();
+    return 1;
+  }
 
 #ifdef HAVE_MPI_H
   if (mpi_rank==0)
 #endif
-      glues::Messages::Welcome();
-
+    glues::Messages::Welcome();
+  
   if (
 #ifdef HAVE_MPI_H
       mpi_rank==0 &&
 #endif
-/** Read in the basic geographical region definitions
+  /** Read in the basic geographical region definitions
 */
       read_data() ) {
       glues::Messages::Error();
@@ -180,7 +289,7 @@ int main(int argc, char* argv[])
       value indicates the goodness of the simulation
       */
   
-  err_i=simulation();
+  double err_i=simulation();
   if (err_i<0) {
       glues::Messages::Error();
       SiSi::finalize();
