@@ -39,9 +39,9 @@
 #include "Data.h"
 #include "GNetcdf.h"
 #include <vector>
-#include <iostream.h>
-#include <fstream.h>
-#include <string.h>
+#include <iostream>
+#include <fstream>
+#include <string>
 
 #ifdef HAVE_MPI_H
 #include "mpi.h"
@@ -119,7 +119,7 @@ int main(int argc, char* argv[])
       NcFile ncparam(configncfilename.c_str(),NcFile::Replace);
 
       time_t today;
-      std::time(&today);
+      time(&today);
       string s1(asctime(gmtime(&today)));
       string timestring=s1.substr(0,s1.find_first_of("\n"));
       ncparam.add_att("Conventions","CF-1.4");
