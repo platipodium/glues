@@ -256,6 +256,27 @@ int gnc_write_header(NcFile& ncfile, int nreg) {
   var->add_att("coordinates","lon lat");  
   var->add_att("date_of_creation",timestring.c_str());
 
+  var = ncfile.add_var("technology_spread_by_people",ncFloat, timedim, regdim);
+  var->add_att("units","a^{-1}");
+  var->add_att("long_name","technology_spread_by_people");
+  var->add_att("description","Net exchange of technology by migrants");
+  var->add_att("coordinates","time lon lat");  
+  var->add_att("date_of_creation",timestring.c_str());
+
+  var = ncfile.add_var("technology_spread_by_information",ncFloat, timedim, regdim);
+  var->add_att("units","a^{-1}");
+  var->add_att("long_name","technology_spread_by_information");
+  var->add_att("description","Net exchange of technology by information");
+  var->add_att("coordinates","time lon lat");  
+  var->add_att("date_of_creation",timestring.c_str());
+
+  var = ncfile.add_var("technology_spread",ncFloat, timedim, regdim);
+  var->add_att("units","a^{-1}");
+  var->add_att("long_name","technology_spread");
+  var->add_att("description","Net exchange of technology");
+  var->add_att("coordinates","time lon lat");  
+  var->add_att("date_of_creation",timestring.c_str());
+
   return 0;
 }
 
