@@ -67,7 +67,7 @@ int set_events()
     EventRegInd = new int(numberOfRegions);
     EventRegNum = new int(numberOfRegions);
     EventSeries = new double(MaxEvent*MaxProxyReg);
-    EventWeight = new double(MaxEvent*MaxProxyReg); */
+    EventWeight = new double(MaxEvent*MaxProxyReg); */ 
     
     /** Test correctness of EventInReg file */
     if (1) {
@@ -408,7 +408,9 @@ int initialize() {
   /* ----------------------------------------------- */
   /*      Initialize  global/simulation values       */
   /* ----------------------------------------------- */
-  sprd = new double[N_POPVARS*numberOfRegions];
+  sprd = new double[N_POPVARS*numberOfRegions];   // Total spread per time step
+  sprd_i = new double[N_POPVARS*numberOfRegions]; // Information spread per time step
+  sprd_p = new double[N_POPVARS*numberOfRegions]; // Goods-with-people spread per time step
   sprdm = new double[numberOfRegions+2];
   NewCivInd = new int[MaxNew];
   OldCivHit= new int[RowsOfdata_agri_start];

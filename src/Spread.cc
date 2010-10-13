@@ -62,9 +62,13 @@ double spread_all() {
   /* ---------------------------------------------------------- */
   /*    Clears memory for collecting changes due to spreading   */
   /* ---------------------------------------------------------- */
-  for (unsigned int i=0; i<numberOfRegions; i++)
-    for (unsigned int n=0; n<N_POPVARS; n++)
-    sprd[i*N_POPVARS+n]=0;
+  for (unsigned int i=0; i<numberOfRegions; i++) {
+    for (unsigned int n=0; n<N_POPVARS; n++) {
+      sprd[i*N_POPVARS+n]=0;
+      sprd_p[i*N_POPVARS+n]=0;
+      sprd_i[i*N_POPVARS+n]=0;
+    }
+  }
   /* ------------------------------------------------------ */
   /*       Calculates exchange rates for all regions        */
   /* ------------------------------------------------------ */
@@ -225,8 +229,11 @@ double calc_spread_single(unsigned int i) {
    
       sprd[import_id*N_POPVARS+0] += (export_tech*export_pop/import_pop)*import_change;
       sprd[import_id*N_POPVARS+1] += (export_ndom*export_pop/import_pop)*import_change;
-      
       sprd[import_id*N_POPVARS+2] += (export_qfarm*export_pop/import_pop)*import_change;
+      
+      sprd_p[import_id*N_POPVARS+0] += (export_tech*export_pop/import_pop)*import_change;
+      sprd_p[import_id*N_POPVARS+1] += (export_ndom*export_pop/import_pop)*import_change;
+      sprd_p[import_id*N_POPVARS+2] += (export_qfarm*export_pop/import_pop)*import_change;
       
       
       /* TODO: germs and resist
@@ -241,6 +248,9 @@ double calc_spread_single(unsigned int i) {
 
      sprd[import_id*N_POPVARS+0]+=traitspread(export_tech,import_tech,import_change);
      sprd[import_id*N_POPVARS+1]+=traitspread(export_ndom,populations[import_id].Ndomesticated(),import_change);
+       
+     sprd_i[import_id*N_POPVARS+0]+=traitspread(export_tech,import_tech,import_change);
+     sprd_i[import_id*N_POPVARS+1]+=traitspread(export_ndom,populations[import_id].Ndomesticated(),import_change);
        
       // Qfarming should not spread, thus next line commented
       //sprd[i1*N_POPVARS+2]+=traitspread(iqfarm,populations[j].Qfarming());
