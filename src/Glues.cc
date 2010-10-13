@@ -667,8 +667,21 @@ double simulation() {
 	  gnc_write_record(ncout,"npp",&float_record,t);
 	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprdm[i];
 	  gnc_write_record(ncout,"migration_density",&float_record,t);
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprd[i*N_POPVARS+0];
+	  gnc_write_record(ncout,"technology_spread",&float_record,t);
+	/*  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprd_p[i*N_POPVARS+1];
+	  gnc_write_record(ncout,"farming_spread",&float_record,t);
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprd_p[i*N_POPVARS+2];
+	  gnc_write_record(ncout,"economies_spread",&float_record,t);
+	  */for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprd_p[i*N_POPVARS+0];
+	  gnc_write_record(ncout,"technology_spread_by_people",&float_record,t);
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprd_i[i*N_POPVARS+0];
+	  gnc_write_record(ncout,"technology_spread_by_information",&float_record,t);
 	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].SubsistenceIntensity();
 	  gnc_write_record(ncout,"subsistence_intensity",&float_record,t);
+
+//      for (n=4; n<N_POPVARS-1; n++) printf("%1.3f ",sprd[i*N_POPVARS+n]*1E3);
+
 	}
     
 #endif
