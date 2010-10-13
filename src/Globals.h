@@ -1,7 +1,7 @@
 /* GLUES global parameter declaration this file is part of
    the Global Land Use and technological Evolution Simulator
    
-   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008
+   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008,2009,2010
    Carsten Lemmen <carsten.lemmen@gkss.de>, Kai Wirtz <kai.wirtz@gkss.de>
 
    This program is free software; you can redistribute it and/or modify it
@@ -22,7 +22,7 @@
 
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
    @author Kai W Wirtz <kai.wirtz@gkss.de
-   @date 2008-01-28
+   @date 2010-10-13
    @file Globals.h
    @brief Global parameter list
 */
@@ -57,7 +57,7 @@ extern int* timepoints,civind;
 extern int* DISTANCEMATRIX;
 extern long GlobCivStart,tmax,OutStep;
 extern FILE  *outfile,*watchfile[N_INSPECT]; //array of watch streams
-extern double* sprd,*sprdm,ev[N_POPVARS];
+extern double* sprd,*sprd_i,*sprd_p,*sprdm,ev[N_POPVARS];
 extern unsigned int num_stores,num_states,num_others;
 extern float *store_vector;
 extern int *EventRegInd,*EventRegNum;

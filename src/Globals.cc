@@ -24,7 +24,7 @@
 
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
    @author Kai W. Wirtz <kai.wirtz@gkss.de>
-   @date 2010-07-30
+   @date 2010-10-13
    @file Globals.cc
    @brief Global declaration and definitions 
    @todo recursive method if change>RelChange
@@ -85,6 +85,7 @@ double tot_spr_t,tot_pop_t,tot_spr,tot_pop;
 /*   Creates memory for collecting changes due to spreading   */
 /* ---------------------------------------------------------- */
 double *sprd,*sprdm,ev[N_POPVARS];
+double *sprd_p,*sprd_i;
 
 /** GLOBALS section*/
 int *DISTANCEMATRIX ;
