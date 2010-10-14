@@ -320,15 +320,16 @@ int set_events()
 /*   read data files and 
      initialize global simulation variables        */
 /*----------------------------------------------------*/
-vector<PopulatedRegion>::size_type  RegionProperties(vector<PopulatedRegion>);
+vector<PopulatedRegion>::size_type  RegionProperties(vector<PopulatedRegion>&);
 
 int read_data() {
 
   init_names();         // prepares file name strings
-  size_t maxneighbours;
+  int maxneighbours;
 
-  vector<PopulatedRegion> region;
-  vector<PopulatedRegion>::size_type nregion;
+  std::vector<PopulatedRegion> region;
+  std::vector<PopulatedRegion>::size_type nregion;
+  std::vector<PopulatedRegion>::iterator iregion;
 
   /** Initialize regions* and region vector and get number of regions
   in both numberOfRegions and nregion.  Assert that nregion is greater than
@@ -338,27 +339,43 @@ int read_data() {
   cout << "Read " << nregion << " regions" << endl;
   
   //for (unsigned int i; i<numberOfRegions; i++) cout << regions[i].Index() << "/" << regions[i].Id() << endl; 
-  if (!read_neighbours()) return 1;  // calculate neighbour regions 
+  maxneighbours = read_neighbours();
+  if (maxneighbours<0) return 1;  // calculate neighbour regions 
 
-  /** Debug neighbours 
+  /** Debug neighbours */
+  cout << "Debugging from Input.cc, neighbours for all regions (n=" 
+    << region.size() << ")" << endl;
+  /*for (iregion=region.begin() ; iregion<region.end(); iregion++) {
+    cout << iregion->Id() << " " << iregion->Numneighbours() << " " ; 
+    if (iregion->Neighbour()) cout << " .";
+    cout << endl;
+  }*/
   for (unsigned int i; i<numberOfRegions; i++) {
-    cout << regions[i].Id();
-    if (regions[i].Neighbour()) cout << ' .';
+    cerr << regions[i].Id() << " " << regions[i].Numneighbours();
+    GeographicalNeighbour* gn;
+    if (gn=regions[i].Neighbour())  {
+      cout << " " << gn->Region()->Id();
+      while (gn=gn->Next()) cout << " " << gn->Region()->Id();
+    }
     cout << endl;
   }
   // End debug */
   
-  /** Initialize spread matrix */
-  
-
-
+  /** Initialize spread matrix 
+  cerr << "Max neighbours: " << maxneighbours << " " ;
+  maxneighbours=0;
+  for (iregion=region.begin() ; iregion<region.end(); iregion++) {
+    maxneighbours=max(iregion->Numneighbours(),maxneighbours);
+  }  
+  cerr << maxneighbours << endl; */ 
+ 
   // Mapping data ist not needed, but optional (not used yet, i.e.
   // for remapping of regions
   // if (!read_mapping()) return 0;
 
   if (GlobalClimate::InitRead(climatestring) < 1) return 1;
 
-// for (unsigned int i; i<numberOfRegions; i++) cerr << regions[i] << endl; 
+  //for (unsigned int i; i<numberOfRegions; i++) cerr << regions[i] << endl; 
 
   
   if (!read_proxyevents()) return 1;  //  
