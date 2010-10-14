@@ -341,8 +341,11 @@ int read_data() {
   //for (unsigned int i; i<numberOfRegions; i++) cout << regions[i].Index() << "/" << regions[i].Id() << endl; 
   maxneighbours = read_neighbours();
   if (maxneighbours<0) return 1;  // calculate neighbour regions 
+  // This maxneighbours is wrong, TODO needs fix, thus calculate anew:
+  maxneighbours=0;
+  for (unsigned int i=0; i<numberOfRegions; i++) maxneighbours=max(regions[i].Numneighbours(),maxneighbours);
 
-  /** Debug neighbours */
+  /** Debug neighbours 
   cout << "Debugging from Input.cc, neighbours for all regions (n=" 
     << region.size() << ")" << endl;
   /*for (iregion=region.begin() ; iregion<region.end(); iregion++) {
@@ -350,7 +353,7 @@ int read_data() {
     if (iregion->Neighbour()) cout << " .";
     cout << endl;
   }*/
-  for (unsigned int i; i<numberOfRegions; i++) {
+  /*for (unsigned int i=0; i<numberOfRegions; i++) {
     cerr << regions[i].Id() << " " << regions[i].Numneighbours();
     GeographicalNeighbour* gn;
     if (gn=regions[i].Neighbour())  {
@@ -361,14 +364,9 @@ int read_data() {
   }
   // End debug */
   
-  /** Initialize spread matrix 
-  cerr << "Max neighbours: " << maxneighbours << " " ;
-  maxneighbours=0;
-  for (iregion=region.begin() ; iregion<region.end(); iregion++) {
-    maxneighbours=max(iregion->Numneighbours(),maxneighbours);
-  }  
-  cerr << maxneighbours << endl; */ 
- 
+  /** Initialize spread matrix*/ 
+  spreadmatrix = new double[N_POPVARS*numberOfRegions*maxneighbours];
+
   // Mapping data ist not needed, but optional (not used yet, i.e.
   // for remapping of regions
   // if (!read_mapping()) return 0;

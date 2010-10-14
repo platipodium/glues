@@ -709,7 +709,6 @@ int read_neighbours() {
     ifs >> selfid;
   
     for (unsigned int j=0; j<5; j++) ifs >> numneigh;
-    if (numneigh>maxneighbours) maxneighbours=numneigh;
     for (unsigned int j=0; j<numneigh; j++) {
 
       ifs >> charbuffer;
@@ -734,8 +733,9 @@ int read_neighbours() {
   */
   GeographicalNeighbour *gn, *jn;
   for (unsigned int i=0; i<numberOfRegions; i++) {
-  numneigh=0;
-  if (gn=regions[i].Neighbour())  {
+    numneigh=0;
+    maxneighbours=0;
+    if (gn=regions[i].Neighbour())  {
       numneigh++;
       unsigned int j=gn->Region()->Id();
       GeographicalNeighbour *jn=regions[j].Neighbour();
@@ -756,10 +756,10 @@ int read_neighbours() {
       }
     }
     regions[i].Numneighbours(numneigh);
+    if (numneigh>maxneighbours) maxneighbours=numneigh;
   }
 	 
-
-  std::cout << " OK" << std::endl;;
+  std::cout << " OK (max=" << maxneighbours << ")" << std::endl;;
   return maxneighbours;
 }
 
