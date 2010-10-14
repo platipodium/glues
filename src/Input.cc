@@ -546,7 +546,7 @@ unsigned int read_proxyevents()
 // -------------------------------------------------------------------------------
 //
 // -------------------------------------------------------------------------------
-vector<PopulatedRegion>::size_type  RegionProperties(vector<PopulatedRegion> region) 
+vector<PopulatedRegion>::size_type  RegionProperties(vector<PopulatedRegion>& region) 
 {
   static const unsigned int BUFSIZE=1024;
   static char charbuffer[BUFSIZE];
@@ -622,6 +622,7 @@ vector<PopulatedRegion>::size_type  RegionProperties(vector<PopulatedRegion> reg
       region.push_back(PopulatedRegion(regions[i]));
       // todo: add index generation
       //cout << i++ << endl;;
+      //cout << region.size() << " "; 
       i++;
    }
  
@@ -636,6 +637,8 @@ vector<PopulatedRegion>::size_type  RegionProperties(vector<PopulatedRegion> reg
 
 int read_neighbours() {
 
+  int maxneighbours=0;
+  
   cout << _("Reading neighbor info from file ") << regionstring ;
 #ifdef HAVE_NETCDF_H
   NcFile ncin(regionstring.c_str(),NcFile::ReadOnly);
@@ -667,7 +670,7 @@ int read_neighbours() {
       }
     }*/
     std::cout << " OK" << std::endl;;
-    return 1;
+    return maxneighbours;
   }
 #endif
 
@@ -706,6 +709,7 @@ int read_neighbours() {
     ifs >> selfid;
   
     for (unsigned int j=0; j<5; j++) ifs >> numneigh;
+    if (numneigh>maxneighbours) maxneighbours=numneigh;
     for (unsigned int j=0; j<numneigh; j++) {
 
       ifs >> charbuffer;
@@ -722,12 +726,41 @@ int read_neighbours() {
     }
     i++;
     // if (i>680 || i<10) printf("read %d %d %d \n",i,selfid,numneigh);
-
   }
   ifs.close();
+	
+  /** Make sure that neighbours are mutual neighbours, and count neighbours
+	  @todo Delete duplicate neighbours 
+  */
+  GeographicalNeighbour *gn, *jn;
+  for (unsigned int i=0; i<numberOfRegions; i++) {
+  numneigh=0;
+  if (gn=regions[i].Neighbour())  {
+      numneigh++;
+      unsigned int j=gn->Region()->Id();
+      GeographicalNeighbour *jn=regions[j].Neighbour();
+      while (jn) { 
+          if (jn->Region()->Id()==i) break;
+          else jn=jn->Next();
+      }
+      if (jn==0) cerr << "Region " << i << " is not a mutual neighbour of " << j << endl;
+      while (gn=gn->Next()) {
+          numneigh++;
+          j=gn->Region()->Id();
+          jn=regions[j].Neighbour();
+          while (jn) { 
+            if (jn->Region()->Id()==i) break;
+            else jn=jn->Next();
+          }
+          if (jn==0) cerr << "Region " << i << " is not a mutual neighbour of " << j << endl;
+      }
+    }
+    regions[i].Numneighbours(numneigh);
+  }
+	 
 
   std::cout << " OK" << std::endl;;
-  return 1;
+  return maxneighbours;
 }
 
 
