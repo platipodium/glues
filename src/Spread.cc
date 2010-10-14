@@ -107,22 +107,7 @@ double calc_spread_single(unsigned int i) {
   iid    = populations[i].Region()->Id();
   
   irgr = populations[i].Growthrate();
-  
   iinfl=itech*ipop;  
-  
- 
-  /** Test for neighbours, debugging only 
-  neigh= populations[i].Region()->Neighbour();
-  cerr << i <<  "/" << iid << ":" ;
-  while (neigh) {
-    j   = neigh->Region()->Index();
-    jid = neigh->Region()->Id();
-    cerr << " " <<  j << "/" << jid;
-    neigh=neigh->Next();
-  }
-  cerr << endl;
-  return 0;
-  // End test */
   
   /* -------------------------------------------- */
   /*     Gets all region neighbours ...           */
@@ -185,7 +170,7 @@ double calc_spread_single(unsigned int i) {
       
     sprd[i*N_POPVARS+4]+=dp0*ipop;
     sprd[j*N_POPVARS+4]+=dp1*jpop;
-
+    
      /**
 	 For unidirectional transport of traits and traits in people,
 	 identify source and target. Change occurs in
@@ -217,13 +202,20 @@ double calc_spread_single(unsigned int i) {
     double import_pop   =populations[import_id].Density();
     double import_tech  =populations[import_id].Technology();   
     
+    double import_tech_p=import_change>0?(export_tech*export_pop/import_pop)*import_change:0;
+    double import_ndom_p=import_change>0?(export_ndom*export_pop/import_pop)*import_change:0;
+    double import_qfarm_p=import_change>0?(export_qfarm*export_pop/import_pop)*import_change:0;
+    double import_tech_i=import_change>0?traitspread(export_tech,import_tech,import_change):0;
+    double import_ndom_i=import_change>0?traitspread(export_ndom,populations[import_id].Ndomesticated(),import_change):0;
+    double import_pop_m=import_change*import_pop;
+    
     /** TODO pop can be negative */
     assert(import_pop>0);
     assert(import_change>=0);
     if (import_change>0) {
    
       /** 
-      Spread of traits with people (experimental opening for 0-1,3-4)
+      Spread of traits with people 
       This has not been documented in WL03
       */
    
@@ -234,6 +226,8 @@ double calc_spread_single(unsigned int i) {
       sprd_p[import_id*N_POPVARS+0] += (export_tech*export_pop/import_pop)*import_change;
       sprd_p[import_id*N_POPVARS+1] += (export_ndom*export_pop/import_pop)*import_change;
       sprd_p[import_id*N_POPVARS+2] += (export_qfarm*export_pop/import_pop)*import_change;
+      
+      //spreadmatrix[numberOfRegions*(import_id*N_POPVARS+2)*j] = (export_qfarm*export_pop/import_pop)*import_change;
       
       /* TODO: germs and resist
       sprd[import_id*N_POPVARS+3] += (export_resist*export_pop/import_pop)*import_change;
@@ -259,11 +253,12 @@ double calc_spread_single(unsigned int i) {
       //sprd[import_id*N_POPVARS+3]+=genospread(iresist,populations[j].Resist(),export_tech);
 
     
-   /**cerr << populations[import_id] << " rgr= " << populations[import_id].RelativeGrowthrate() 
+  /* cerr << import_id << " " populations[import_id] << " rgr= " << populations[import_id].RelativeGrowthrate() 
     	<< "/ import_change = " << import_change << endl
     	<< force << " / " << dp0 << " / " << dp1  << endl
-    	<< ijpop << " / " << iinfl << " / " << jinfl << " / " << exch << endl
-    	<< populations[export_id] << endl;*/
+    	<< ijpop << " / " << iinfl << " / " << jinfl << " / " << exch << endl 
+    	<< export_id // populations[export_id] 
+    	<< endl;*/
 
   
       double ch;
@@ -284,6 +279,17 @@ double calc_spread_single(unsigned int i) {
       sprdm[j]+=fabs(dp1*jpop);
       }
 
+   cerr << import_id << " " /*populations[import_id] /*<< " rgr= " << populations[import_id].RelativeGrowthrate() 
+    	<< "/ import_change = " << import_change << endl
+    	<< force << " / " << dp0 << " / " << dp1  << endl
+    	<< ijpop << " / " << iinfl << " / " << jinfl << " / " << exch << endl */
+    	<< export_id // populations[export_id] 
+    	<< " dT " << sprd_p[import_id*N_POPVARS+0] << " " <<  sprd_i[import_id*N_POPVARS+0]
+    	<< " dN " << sprd_p[import_id*N_POPVARS+1] << " " <<  sprd_i[import_id*N_POPVARS+1]
+    	<< " dQ " << sprd_p[import_id*N_POPVARS+2] << " " <<  sprd_i[import_id*N_POPVARS+2]
+    	<< " dP " << sprd_p[import_id*N_POPVARS+3] << " " <<  sprd_i[import_id*N_POPVARS+3] 	
+    	<< endl;
+    	
     }
     neigh = neigh->Next();
   }
