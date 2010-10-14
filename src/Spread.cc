@@ -224,8 +224,8 @@ double calc_spread_single(unsigned int i) {
    
       /** 
       Spread of traits with people (experimental opening for 0-1,3-4)
+      This has not been documented in WL03
       */
-   
    
       sprd[import_id*N_POPVARS+0] += (export_tech*export_pop/import_pop)*import_change;
       sprd[import_id*N_POPVARS+1] += (export_ndom*export_pop/import_pop)*import_change;
@@ -234,7 +234,6 @@ double calc_spread_single(unsigned int i) {
       sprd_p[import_id*N_POPVARS+0] += (export_tech*export_pop/import_pop)*import_change;
       sprd_p[import_id*N_POPVARS+1] += (export_ndom*export_pop/import_pop)*import_change;
       sprd_p[import_id*N_POPVARS+2] += (export_qfarm*export_pop/import_pop)*import_change;
-      
       
       /* TODO: germs and resist
       sprd[import_id*N_POPVARS+3] += (export_resist*export_pop/import_pop)*import_change;

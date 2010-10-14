@@ -325,6 +325,7 @@ vector<PopulatedRegion>::size_type  RegionProperties(vector<PopulatedRegion>);
 int read_data() {
 
   init_names();         // prepares file name strings
+  size_t maxneighbours;
 
   vector<PopulatedRegion> region;
   vector<PopulatedRegion>::size_type nregion;
@@ -346,6 +347,10 @@ int read_data() {
     cout << endl;
   }
   // End debug */
+  
+  /** Initialize spread matrix */
+  
+
 
   // Mapping data ist not needed, but optional (not used yet, i.e.
   // for remapping of regions
