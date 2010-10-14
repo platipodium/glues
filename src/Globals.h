@@ -58,6 +58,7 @@ extern int* DISTANCEMATRIX;
 extern long GlobCivStart,tmax,OutStep;
 extern FILE  *outfile,*watchfile[N_INSPECT]; //array of watch streams
 extern double* sprd,*sprd_i,*sprd_p,*sprdm,ev[N_POPVARS];
+extern double *spreadmatrix;
 extern unsigned int num_stores,num_states,num_others;
 extern float *store_vector;
 extern int *EventRegInd,*EventRegNum;

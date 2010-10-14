@@ -86,6 +86,7 @@ double tot_spr_t,tot_pop_t,tot_spr,tot_pop;
 /* ---------------------------------------------------------- */
 double *sprd,*sprdm,ev[N_POPVARS];
 double *sprd_p,*sprd_i;
+double *spreadmatrix;
 
 /** GLOBALS section*/
 int *DISTANCEMATRIX ;
