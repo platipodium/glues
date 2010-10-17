@@ -344,7 +344,7 @@ double simulation() {
 
 #ifdef HAVE_NETCDF_H
   NcFile ncout("test.nc",NcFile::Replace);
-  status=gnc_write_header(ncout,numberOfRegions);
+  status=gnc_write_header(ncout,numberOfRegions,maxneighbours);
   if (status) return -1;
 #endif
 

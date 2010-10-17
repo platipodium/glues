@@ -325,7 +325,6 @@ vector<PopulatedRegion>::size_type  RegionProperties(vector<PopulatedRegion>&);
 int read_data() {
 
   init_names();         // prepares file name strings
-  int maxneighbours;
 
   std::vector<PopulatedRegion> region;
   std::vector<PopulatedRegion>::size_type nregion;

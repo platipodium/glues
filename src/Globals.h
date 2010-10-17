@@ -70,8 +70,9 @@ extern double NewCivDist,*NewCivDev,*NewCivTime;
 extern double var_out[2][N_OUTVARS],var_out0[2][N_OUTVARS];
 extern double *par_val[N_VARIAT],*RegPerf;
 extern double tot_pop_t,tot_spr,tot_pop;
+extern int maxneighbours; 
 
-/** GLOBALS section*/
+/* GLOBALS section*/
 
 extern unsigned int numberOfRegions;
 

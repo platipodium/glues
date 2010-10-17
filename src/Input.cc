@@ -637,7 +637,7 @@ vector<PopulatedRegion>::size_type  RegionProperties(vector<PopulatedRegion>& re
 
 int read_neighbours() {
 
-  int maxneighbours=0;
+  maxneighbours=0;
   
   cout << _("Reading neighbor info from file ") << regionstring ;
 #ifdef HAVE_NETCDF_H
