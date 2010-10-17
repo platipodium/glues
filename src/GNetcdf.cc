@@ -277,6 +277,37 @@ int gnc_write_header(NcFile& ncfile, int nreg) {
   var->add_att("coordinates","time lon lat");  
   var->add_att("date_of_creation",timestring.c_str());
 
+  var = ncfile.add_var("economies_spread_by_people",ncFloat, timedim, regdim);
+  var->add_att("units","a^{-1}");
+  var->add_att("long_name","economies_spread_by_people");
+  var->add_att("description","Net exchange of economies by migrants");
+  var->add_att("coordinates","time lon lat");  
+  var->add_att("date_of_creation",timestring.c_str());
+
+  var = ncfile.add_var("economies_spread_by_information",ncFloat, timedim, regdim);
+  var->add_att("units","a^{-1}");
+  var->add_att("long_name","economies_spread_by_information");
+  var->add_att("description","Net exchange of economies by information");
+  var->add_att("coordinates","time lon lat");  
+  var->add_att("date_of_creation",timestring.c_str());
+
+  var = ncfile.add_var("farming_spread_by_people",ncFloat, timedim, regdim);
+  var->add_att("units","a^{-1}");
+  var->add_att("long_name","farming_spread_by_people");
+  var->add_att("description","Net exchange of farming by migrants");
+  var->add_att("coordinates","time lon lat");  
+  var->add_att("date_of_creation",timestring.c_str());
+
+  /**
+  Farming does not spread by information 
+  var = ncfile.add_var("farming_spread_by_information",ncFloat, timedim, regdim);
+  var->add_att("units","a^{-1}");
+  var->add_att("long_name","farming_spread_by_information");
+  var->add_att("description","Net exchange of farming by information");
+  var->add_att("coordinates","time lon lat");  
+  var->add_att("date_of_creation",timestring.c_str());
+  */
+
   return 0;
 }
 

@@ -670,22 +670,16 @@ double simulation() {
 	  gnc_write_record(ncout,"migration_density",&float_record,t);
 	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprd[i*N_POPVARS+0];
 	  gnc_write_record(ncout,"technology_spread",&float_record,t);
-	/*  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprd_p[i*N_POPVARS+1];
-	  gnc_write_record(ncout,"farming_spread",&float_record,t);
-	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprd_p[i*N_POPVARS+2];
-	  gnc_write_record(ncout,"economies_spread",&float_record,t);
-	  */for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprd_p[i*N_POPVARS+0];
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprd_p[i*N_POPVARS+0];
 	  gnc_write_record(ncout,"technology_spread_by_people",&float_record,t);
 	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprd_i[i*N_POPVARS+0];
 	  gnc_write_record(ncout,"technology_spread_by_information",&float_record,t);
-     for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprd_p[i*N_POPVARS+1];
+      for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprd_p[i*N_POPVARS+1];
 	  gnc_write_record(ncout,"economies_spread_by_people",&float_record,t);
 	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprd_i[i*N_POPVARS+1];
 	  gnc_write_record(ncout,"economies_spread_by_information",&float_record,t);
 	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprd_p[i*N_POPVARS+2];
 	  gnc_write_record(ncout,"farming_spread_by_people",&float_record,t);
-	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprd_i[i*N_POPVARS+2];
-	  gnc_write_record(ncout,"farming_spread_by_information",&float_record,t);
 	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].SubsistenceIntensity();
 	  gnc_write_record(ncout,"subsistence_intensity",&float_record,t);
 
