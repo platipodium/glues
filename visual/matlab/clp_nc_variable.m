@@ -29,6 +29,7 @@ arguments = {...
   {'flip',0},...
   {'showtime',1},...
   {'showstat',1},...
+  {'showvalue',0},...
   {'scenario',''}
 };
 
@@ -219,7 +220,7 @@ ncol=length(colormap);
 
 
   %% Invisible plotting of all regions
-  hp=clp_regionpath('lat',latlim,'lon',lonlim,'draw','patch','col',landcolor,'reg',reg);  
+  [hp,loli,lali,lon,lat]=clp_regionpath('lat',latlim,'lon',lonlim,'draw','patch','col',landcolor,'reg',reg);  
   ival=find(hp>0);
   %alpha(hp(ival),0);
   
@@ -267,6 +268,13 @@ for it=1:ntime
       set(h,'FaceColor',cmap(i,:),'tag','region_patch');
     end
   end
+  
+  if showvalue
+    for ir=1:nreg
+       m_text(double(lon(ir)),double(lat(ir)),num2str(data(ireg(ir),itime(it))),...
+           'HorizontalAlignment','center','VerticalAlignment','middle');
+    end
+  end
 
   if (it==1)
     cb=colorbar('FontSize',15);
@@ -285,7 +293,7 @@ for it=1:ntime
     
   set(gcf,'UserData',cl_get_version);
  
-  if (showtime>0)
+  if (exist('time','var') && showtime>0)
     m_text(lonlim(1)+0.02*(lonlim(2)-lonlim(1)),latlim(1)+0.02*(latlim(2)-latlim(1)),num2str(time(it)),...
         'VerticalAlignment','bottom','HorizontalAlignment','left','background','w')
   end
@@ -313,7 +321,7 @@ for it=1:ntime
   if length(scenario)>0 bname=[bname '_' scenario]; end
   
   
-  if (ntime>1 || showtime>0) bname = [bname '_' num2str(time(it))]; end
+  if exist('time','var') if (ntime>1 || showtime>0) bname = [bname '_' num2str(time(it))]; end; end
   plot_multi_format(gcf,fullfile(fdir,bname));
   %pause(0.05);
 end

@@ -269,11 +269,11 @@ double calc_spread_single(unsigned int i) {
       sprdm[j]+=fabs(dp1*jpop);
     }
 
-/*    cerr << import_id << " " << export_id 
-    	<< " dT " << sprd_p[import_id*N_POPVARS+0] << " " <<  sprd_i[import_id*N_POPVARS+0] << " " <<  sprd_i[import_id*N_POPVARS+0]
-    	<< " dN " << sprd_p[import_id*N_POPVARS+1] << " " <<  sprd_i[import_id*N_POPVARS+1] << " " <<  sprd_i[import_id*N_POPVARS+1]
-    	<< " dQ " << sprd_p[import_id*N_POPVARS+2] << " " <<  sprd_i[import_id*N_POPVARS+2] << " " <<  sprd_i[import_id*N_POPVARS+2]
-    	<< " dP " << sprd_p[import_id*N_POPVARS+3] << " " <<  sprd_i[import_id*N_POPVARS+3] << " " <<  sprd_i[import_id*N_POPVARS+4]	
+    /*cerr << import_id << " " << export_id 
+    	<< " dT " << sprd_p[import_id*N_POPVARS+0] << " " <<  sprd_i[import_id*N_POPVARS+0] << " " <<  sprd[import_id*N_POPVARS+0]
+    	<< " dN " << sprd_p[import_id*N_POPVARS+1] << " " <<  sprd_i[import_id*N_POPVARS+1] << " " <<  sprd[import_id*N_POPVARS+1]
+    	<< " dQ " << sprd_p[import_id*N_POPVARS+2] << " " <<  sprd_i[import_id*N_POPVARS+2] << " " <<  sprd[import_id*N_POPVARS+2]
+    	<< " dP " << sprd_p[import_id*N_POPVARS+4] << " " <<  sprd_i[import_id*N_POPVARS+4] << " " <<  sprd[import_id*N_POPVARS+4]	
     	<< endl;
     //*/	
     }
@@ -305,6 +305,8 @@ double calc_spread_single(unsigned int i) {
     strenght of trait spread by trade versus population spread */
 
 inline double traitspread(double export_trait,double import_trait,double import_change) {
+  /** @todo this should not return negative values, should it? This happens when
+     the influence of the exporter with lower tech is higher (due to P,A), interesting, but real?*/
   return spreadm*(export_trait-import_trait)*import_change;
 }
 

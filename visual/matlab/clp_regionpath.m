@@ -1,4 +1,4 @@
-function [h,latlimit,lonlimit]=clp_regionpath(varargin)
+function [h,lonlimit,latlimit,lon,lat]=clp_regionpath(varargin)
 
 cl_register_function;
 
@@ -94,6 +94,8 @@ for i=1:length(iselect)
     phdl(i)=m_patch(lonpath,latpath,colpath,'EdgeColor','none');      
     %set(mp,'LineStyle','none');
   end
+  lat(i)=calc_geo_mean(latpath,latpath);
+  lon(i)=calc_geo_mean(latpath,lonpath);
 end
 
 if nargout>0
