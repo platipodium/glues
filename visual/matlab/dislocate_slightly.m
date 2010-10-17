@@ -11,7 +11,7 @@ for i=1:n-1
  dist=sqrt( (x(i+1:n)-x(i)).^2 + (y(i+1:n)-y(i)).^2);
  j=find(dist<crit);
  if ~isempty(j)
-     if isvert(j) j=vertcat(i,i+j);
+     if size(j,2)<size(j,1) j=vertcat(i,i+j);
      else j=horzcat(i,i+j);
      end
      xc=mean(x(j));
