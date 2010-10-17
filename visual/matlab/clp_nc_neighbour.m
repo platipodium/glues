@@ -28,6 +28,7 @@ arguments = {...
   {'threshold',NaN},...
   {'flip',0},...
   {'showtime',1},...
+  {'showregion',1},...
   {'showstat',1},...
   {'showvalue',0},...
   {'scenario',''}
@@ -143,29 +144,9 @@ switch (varname)
     otherwise ;
 end
 
-if isfinite(threshold)
-  %% plot timing maps
-  ntime=1;
-  timing=(data>=threshold)*1.0;
-  izero=find(timing==0);
-  timing(izero)=NaN;
-  timing=timing.*repmat(alltime',size(data,1),1);
-  timing(isnan(timing))=inf;
-  timing=min(timing,[],2);
-  data=timing;
-  data(isinf(data))=NaN;
-  description=['Timing of '  varname];
-  minmax=timelim;
-  if isinf(minmax(1)) minmax(1)=min(data); end
-  if isinf(minmax(2)) minmax(2)=max(data); end
-  itime=1;
-  units='Calendar year';
-else 
-  minmax=double([min(min(min(data(ireg,itime)))),max(max(max(data(ireg,itime))))]);
-  ilim=find(isfinite(lim));
-  minmax(ilim)=lim(ilim);
-end
-
+minmax=double([min(min(min(data(ireg,:)))),max(max(max(data(ireg,:))))]);
+ilim=find(isfinite(lim));
+minmax(ilim)=lim(ilim);
 
 seacolor=0.7*ones(1,3);
 landcolor=0.8*ones(1,3);  
@@ -233,12 +214,13 @@ ncol=length(colormap);
 
 %% Time loop
 
+ntime=1;
 for it=1:ntime
   
   if minmax(2)>minmax(1)
-    resvar=round(((data(ireg,itime(it))-minmax(1)))./(minmax(2)-minmax(1))*(length(cmap)-1))+1;
+    resvar=round(((data(ireg,:)-minmax(1)))./(minmax(2)-minmax(1))*(length(cmap)-1))+1;
   else
-    resvar=data(ireg,itime(it))*0+1;
+    resvar=data(ireg,:)*0+1;
     ncol=1;
     cmap=repmat(seacolor/2.0,2,1);
     colormap(cmap);
@@ -257,45 +239,25 @@ for it=1:ntime
   if (ntime>1) titletext=[titletext ' ' num2str(time(it))]; end
   ht=title(titletext,'interpreter','none');
 
- 
-  %m_plot(lon,lat,'rs','MarkerSize',0.1);
-  for i=1:ncol
-    if i==1 j=find(resvar<=1);
-    elseif i==ncol j=find(resvar>=ncol);
-    else j=find(resvar==i);
-    end
-    
-    if isempty(j) continue; end
-    for ij=1:length(j)
-      h=hp(j(ij));
-      if isnan(h) || h==0 continue; end
-      greyval=0.15+0.35*sqrt(i./ncol);
-      %alpha(h,greyval);
-      set(h,'FaceColor',cmap(i,:),'tag','region_patch');
-    end
+   
+  for ir=1:nreg
+   error('This routine is not finished yet');
+   nn=find(isfinite(data(ir,:)));
+   m_geodesic(lon(ir),lat(ir),lon2,lat2,Npoints,spheroid)
+  
   end
   
-  if showvalue
+  
+  if showregion
     for ir=1:nreg
-       m_text(double(lon(ir)),double(lat(ir)),num2str(data(ireg(ir),itime(it))),...
+       m_text(double(lon(ir)),double(lat(ir)),num2str(region(ir)),...
            'HorizontalAlignment','center','VerticalAlignment','middle');
     end
   end
-
-  if (it==1)
-    cb=colorbar('FontSize',15);
-    if length(units)>0 title(cb,units); end
-    if minmax(2)>minmax(1)
-      yt=get(cb,'YTick');
-      yr=minmax(2)-minmax(1);
-      ytl=scale_precision(yt*yr+minmax(1),3)';
-      set(cb,'YTickLabel',num2str(ytl));
-    else
-      cb=colorbar('FontSize',15,'Ytick',minmax(1));
-    end
-    fdir=fullfile(d.plot,'neighbour',varname);
-    if ~exist('fdir','dir') system(['mkdir -p ' fdir]); end
-  end
+  
+  
+  
+  
     
   set(gcf,'UserData',cl_get_version);
  
@@ -304,7 +266,6 @@ for it=1:ntime
         'VerticalAlignment','bottom','HorizontalAlignment','left','background','w')
   end
  %% 
- 
  
   if (showstat>0)
       isfin=isfinite(data(ireg,itime(it)));

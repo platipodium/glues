@@ -436,6 +436,16 @@ double simulation() {
   gnc_write_record(ncout,"region_is_in_sahara",&int_record);
   for (unsigned int i=0; i<numberOfRegions; i++) int_record[i]=populations[i].Region()->ContId();
   gnc_write_record(ncout,"region_continent",&int_record);
+  /*for (unsigned int i=0; i<numberOfRegions; i++) {
+    GeographicalNeighbour* gn=populations[i].Region()->Neighbour();
+    int * int_n_record=new int[maxneighbours];
+    unsigned int j;
+    for (j=0; j<maxneighbours; j++) int_n_record[j]=-1;
+    if (gn) int_n_record[j=0]=gn->Region()->Id();
+    while (gn=gn->Next()) int_n_record[++j]=gn->Region()->Id();
+  	gnc_write_record(ncout,"region_neighbour",&int_n_record,i);
+  }*/   
+  
 #endif
 
   for (t=0; t<tmax; t++) {
