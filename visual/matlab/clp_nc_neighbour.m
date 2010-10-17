@@ -29,7 +29,7 @@ arguments = {...
   {'flip',0},...
   {'showtime',1},...
   {'showregion',1},...
-  {'showstat',1},...
+  {'showstat',0},...
   {'showvalue',0},...
   {'scenario',''}
 };
@@ -135,14 +135,12 @@ netcdf.close(ncid);
 
 %ireg=find(lat>=latlim(1) & lat<=latlim(2) & lon>=lonlim(1) & lon<=lonlim(2));
 %nreg=length(ireg);
+allregion=region;
 region=region(ireg);
+alllat=lat;
+alllon=lon;
 lat=lat(ireg);
 lon=lon(ireg);
-
-switch (varname)
-    case 'region_neighbour', data=(data==0) ;
-    otherwise ;
-end
 
 minmax=double([min(min(min(data(ireg,:)))),max(max(max(data(ireg,:))))]);
 ilim=find(isfinite(lim));
@@ -241,12 +239,15 @@ for it=1:ntime
 
    
   for ir=1:nreg
-   error('This routine is not finished yet');
-   nn=find(isfinite(data(ir,:)));
-   m_geodesic(lon(ir),lat(ir),lon2,lat2,Npoints,spheroid)
-  
+   nn=sum(data(ireg(ir),:)>-1);
+   for in=1:nn
+     j=find(data(ireg(ir),in)==ireg-1);
+     if isempty(j) break; end
+     %m_geodesic(lon(ir),lat(ir),lon(j),lat(j),20,'b:');
+     %m_plot(alllon([ireg(ir),j]),alllat([ireg(ir),j]),'b-');
+     m_plot(lon([ir,j]),lat([ir,j]),'b-');
+   end
   end
-  
   
   if showregion
     for ir=1:nreg
@@ -254,10 +255,7 @@ for it=1:ntime
            'HorizontalAlignment','center','VerticalAlignment','middle');
     end
   end
-  
-  
-  
-  
+   
     
   set(gcf,'UserData',cl_get_version);
  
