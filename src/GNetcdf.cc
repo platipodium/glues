@@ -32,7 +32,7 @@ using namespace std;
 
 #ifdef HAVE_NETCDF_H
 
-int gnc_write_header(NcFile& ncfile, int nreg) {
+int gnc_write_header(NcFile& ncfile, int nreg, int nneigh, int ncont) {
   if (!ncfile.is_valid()) {
     cerr << "Could not open NetCDF file for writing " << endl;
     return 1;
@@ -60,9 +60,11 @@ int gnc_write_header(NcFile& ncfile, int nreg) {
   ncfile.add_att("model_version",VERSION);
   ncfile.add_att("date_of_creation",timestring.c_str());
    
-  NcDim *regdim, *timedim;
-  if (!(regdim  = ncfile.add_dim("region", nreg))) return 1;
-  if (!(timedim = ncfile.add_dim("time"))) return 1;
+  NcDim *regdim, *timedim, *neighdim, *contdim;
+  if (!(regdim   = ncfile.add_dim("region", nreg))) return 1;
+  if (!(neighdim = ncfile.add_dim("neighbour", nneigh))) return 1;
+  if (!(contdim = ncfile.add_dim("continent", ncont))) return 1;
+  if (!(timedim  = ncfile.add_dim("time"))) return 1;
   
 /** Create coordinate variables */  
   
@@ -141,6 +143,14 @@ int gnc_write_header(NcFile& ncfile, int nreg) {
   var->add_att("description","Initial value for density of population");
   var->add_att("coordinates","time lon lat");  
   var->add_att("date_of_creation",timestring.c_str());
+
+/** Neighbour variables */
+   if (!(var = ncfile.add_var("region_neighbour", ncInt, ncfile.get_dim("neighbour"), ncfile.get_dim("region")))) return 1;
+  var->add_att("date_of_creation",timestring.c_str());
+  var->add_att("long_name","region neighbour");
+  var->add_att("standard_name","region_neighbour");
+  var->add_att("description","Region id of neighbours");
+  var->add_att("coordinates","lat lon neighbour");
 
 /** Time-dependent variables */
   var = ncfile.add_var("technology",ncFloat,timedim,regdim);
