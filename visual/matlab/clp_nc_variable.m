@@ -199,10 +199,20 @@ if isinf(latlim(2)) latlim(2)=80; end
   set(varid,'PaperType','A4');
   hold on;
   pb=clp_basemap('lon',lonlim,'lat',latlim,'nogrid',nogrid);
-  if (marble>0)
+  if (marble==1)
     pm=clp_marble('lon',lonlim,'lat',latlim);
     if pm>0 alpha(pm,marble); end
-  
+  elseif (marble==2)
+    a=clp_basemap('latlim',latlim,'lonlim',lonlim,'nocoast',1);
+    [elev,lon,lat]=M_TBASE([lonlim(1) lonlim(2) latlim(1) latlim(2)]);
+    elev(elev<0)=NaN;
+    glat=latlim(2)+0.5/12-[1:size(elev,1)]/12.0;
+    glon=lonlim(1)-0.5/12+[1:size(elev,2)]/12.0;
+    m_pcolor(glon,glat,double(elev));
+    shading interp;
+    cmap=colormap(gray(256));
+    colormap(flipud(cmap(100:230,:)));
+    m_gshhs('ic','color',cmap(230,:));
   else
     m_coast('patch',landcolor);
     set(gca,'Tag','m_coast');
