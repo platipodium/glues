@@ -1,4 +1,4 @@
-2009-06-18  Carsten Lemmen  <carsten.lemmen@gkss.de>
+2009-06-18  Carsten Lemmen  <carsten.lemmen@hzg.de>
 
 	* src/Glues.cc (main): 
 	(calc_deviation): 
