@@ -720,7 +720,9 @@ double simulation() {
 
   return calc_deviation(CivNum);
   
+#ifdef HAVE_NETCDF_H  
   ncout.close();
+#endif
 }
 /** END of simulation() */
 
