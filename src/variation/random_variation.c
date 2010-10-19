@@ -1,5 +1,5 @@
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 //#define DEBUG 0
@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
 #endif
 
     offset=0;
-    serror=index(line,'\t');
+    serror=strchr(line,'\t');
     if (serror==NULL) return 4;
     else {
       memcpy(typus,line+offset,serror-line-offset);
@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
         fprintf(stderr,"\t%s",typus);
 #endif
 
-    serror=index(line+offset,'\t');
+    serror=strchr(line+offset,'\t');
     if (serror==NULL) return 5;
     else {
       memcpy(name,line+offset,serror-line-offset);
@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
     fprintf(stderr,"\t%s",name);
 #endif
    
-    serror=index(line+offset,'\t');
+    serror=strchr(line+offset,'\t');
     if (serror==NULL) return 6;
     else {
       minval= atof(line+offset);
@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
     fprintf(stderr,"\t%f",minval);
 #endif
     
-    serror=index(serror,'\t');
+    serror=strchr(serror,'\t');
     if (serror==NULL) return 7;
     else {
       maxval= atof(line+offset);

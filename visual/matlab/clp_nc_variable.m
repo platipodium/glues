@@ -198,21 +198,24 @@ if isinf(latlim(2)) latlim(2)=80; end
   set(varid,'DoubleBuffer','on');    
   set(varid,'PaperType','A4');
   hold on;
-  pb=clp_basemap('lon',lonlim,'lat',latlim,'nogrid',nogrid);
+  if (marble<2) pb=clp_basemap('lon',lonlim,'lat',latlim,'nogrid',nogrid); end
   if (marble==1)
     pm=clp_marble('lon',lonlim,'lat',latlim);
     if pm>0 alpha(pm,marble); end
   elseif (marble==2)
-    a=clp_basemap('latlim',latlim,'lonlim',lonlim,'nocoast',1);
-    [elev,lon,lat]=M_TBASE([lonlim(1) lonlim(2) latlim(1) latlim(2)]);
+    pb=clp_basemap('lon',lonlim,'lat',latlim,'nogrid',nogrid,'nocoast',1);
+    [elev,elon,elat]=M_TBASE([lonlim(1) lonlim(2) latlim(1) latlim(2)]);
     elev(elev<0)=NaN;
     glat=latlim(2)+0.5/12-[1:size(elev,1)]/12.0;
     glon=lonlim(1)-0.5/12+[1:size(elev,2)]/12.0;
     m_pcolor(glon,glat,double(elev));
-    shading interp;
     cmap=colormap(gray(256));
     colormap(flipud(cmap(100:230,:)));
-    m_gshhs('ic','color',cmap(230,:));
+    shading(gca,'interp');
+    %m_gshhs('lc','color',cmap(230,:));
+    axes('box','off','Color','none');
+    %pb=clp_basemap('lon',lonlim,'lat',latlim,'nogrid',nogrid,'nocoast',1);
+    m_gshhs('lc','color',cmap(1,:));
   else
     m_coast('patch',landcolor);
     set(gca,'Tag','m_coast');
@@ -232,10 +235,8 @@ if isinf(latlim(2)) latlim(2)=80; end
 
 ncol=length(colormap);
 
-
-
   %% Invisible plotting of all regions
-  [hp,loli,lali,lon,lat]=clp_regionpath('lat',latlim,'lon',lonlim,'draw','patch','col',landcolor,'reg',reg);  
+  [hp,loli,lali,lon,lat]=clp_regionpath('lat',latlim,'lon',lonlim,'draw','patch','col','none','reg',reg);  
   ival=find(hp>0);
   %alpha(hp(ival),0);
   
