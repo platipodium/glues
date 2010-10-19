@@ -2,7 +2,7 @@
 ## This makefile is part of the glues distribution
 ##
 ## Copyright (C) 2010
-## Carsten Lemmen <carsten.lemmen@gkss.de>
+## Carsten Lemmen <carsten.lemmen@hzg.de>
 ## GKSS-Forschungszentrum Geesthacht GmbH
 ##
 ## This program is free software; you can redistribute it and/or modify

@@ -16,9 +16,12 @@ int main(int argc, char* argv[])
   double minval,maxval,val;
   size_t offset;
 
+  fprintf(stdout,"Program deprecated, please use C++ version RandomVariation.cc");
+
   if (argc>1) 
     seed=(unsigned long)atol(argv[1]);
-  
+ 
+ 
   fprintf(stdout,"Program %s called with arguments %s (%ld)\n",argv[0],argv[1],seed);
   
   srand(seed);

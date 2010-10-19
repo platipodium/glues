@@ -29,10 +29,6 @@ while iarg<=nargin
       lonlim=varargin{iarg+1};
       if (length(lonlim)==1) lonlim(2)=lonlim(1); end
       iarg=iarg+1;
-    case 'lbk'
-      lonlim=[6,42];
-      latlim=[31,50];
-      
       case 'old'
           lonlim=[-30,180];
           latlim=[-40,60];
@@ -55,6 +51,9 @@ while iarg<=nargin
     case 'usa'
           lonlim=[-125,-70];
           latlim=[10,50];
+    case 'lbk'
+      lonlim=[-10,42];
+      latlim=[31,57];
     case 'eme'
       lonlim=[-15,42];
       latlim=[27,55];
