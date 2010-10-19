@@ -2,7 +2,7 @@
    the Global Land Use and technological Evolution Simulator
    
    Copyright (C) 2007,2008
-   Carsten Lemmen <carsten.lemmen@gkss.de>
+   Carsten Lemmen <carsten.lemmen@hzg.de>
    
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the
@@ -20,7 +20,7 @@
 */
 /**
 
-   @author Carsten Lemmen <carsten.lemmen@gkss.de>
+   @author Carsten Lemmen <carsten.lemmen@hzg.de>
    @date 2008-01-08
    @file Symbols.h
    @brief Global macro declarations

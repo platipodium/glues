@@ -2,7 +2,7 @@
    the Global Land Use and technological Evolution Simulator
    
    Copyright (C) 2008
-   Carsten Lemmen <carsten.lemmen@gkss.de>
+   Carsten Lemmen <carsten.lemmen@hzg.de>
 
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the
@@ -19,7 +19,7 @@
    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 /**
-   @author Carsten Lemmen <carsten.lemmen@gkss.de>
+   @author Carsten Lemmen <carsten.lemmen@hzg.de>
    @date   2008-01-16
    @file FarmingQuotaTrait.cc
    @brief Declaration of class FarmingQuotaTrait

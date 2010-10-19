@@ -2,7 +2,7 @@
    the Global Land Use and technological Evolution Simulator
    
    Copyright (C) 2007,2008
-   Carsten Lemmen <carsten.lemmen@gkss.de>, Kai Wirtz <kai.wirtz@gkss.de>
+   Carsten Lemmen <carsten.lemmen@hzg.de>, Kai Wirtz <kai.wirtz@hzg.de>
 
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the
@@ -19,8 +19,8 @@
    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 /**
-   @author Carsten Lemmen <carsten.lemmen@gkss.de>
-   @author Kai W Wirtz <kai.wirtz@gkss.de
+   @author Carsten Lemmen <carsten.lemmen@hzg.de>
+   @author Kai W Wirtz <kai.wirtz@hzg.de
    @file  LandRegion.h
    @brief Definition of class LocalClimate (before:RegionalCimate)
    @date 2008-08-12

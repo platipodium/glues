@@ -2,7 +2,7 @@
  * GLUES						        *
  * Global Land-Use and technological Evolution Simulator	*
  *								*
- * \author Carsten Lemmen <carsten.lemmen@gkss.de>
+ * \author Carsten Lemmen <carsten.lemmen@hzg.de>
  * \file printevents.c
  * \date 2007-05-24
  ***************************************************************/

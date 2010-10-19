@@ -2,7 +2,7 @@
    the Global Land Use and technological Evolution Simulator
 
    Copyright (C) 2010
-   Carsten Lemmen <carsten.lemmen@gkss.de>
+   Carsten Lemmen <carsten.lemmen@hzg.de>
 
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the
@@ -19,7 +19,7 @@
    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 /**
-   @author Carsten Lemmen <carsten.lemmen@gkss.de>
+   @author Carsten Lemmen <carsten.lemmen@hzg.de>
    @date   2010-08-07
    @file   GNetcdf.cc
 */
@@ -48,8 +48,8 @@ int gnc_write_header(NcFile& ncfile, int nreg, int nneigh, int ncont) {
   ncfile.add_att("history","File created");
   ncfile.add_att("address","Max-Planck-Str 1, 21502 Geesthacht, Germany");
   ncfile.add_att("principal_investigator","Carsten Lemmen");
-  ncfile.add_att("email","carsten.lemmen@gkss.de");
-  ncfile.add_att("institution","GKSS-Forschungszentrum Geesthacht GmbH");
+  ncfile.add_att("email","carsten.lemmen@hzg.de");
+  ncfile.add_att("institution","Helmholtz-Zentrum Geesthacht GmbH");
   ncfile.add_att("funding_source","Deutsche Forschungsgemeinschaft");
   ncfile.add_att("funding_scheme","Priority program SPP 1266");
   ncfile.add_att("funding_scheme_name","Interdynamik");
