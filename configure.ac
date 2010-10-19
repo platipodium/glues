@@ -22,7 +22,7 @@ dnl Defines AC_PACKAGE_BUGREPORT, PACKAGE_BUGREPORT
 AC_INIT([GLUES],[GLUES_VERSION],[carsten.lemmen@gkss.de],[glues])
 
 #AC_COPYRIGHT broken on autoconf 2.61 sunray
-#AC_COPYRIGHT ([[Carsten Lemmen and Kai W. Wirtz, GKSS-Forschungszentrum Geesthacht GmbH]])
+#AC_COPYRIGHT ([[Carsten Lemmen and Kai W. Wirtz, Helmholtz-Zentrum Geesthacht GmbH]])
 
 dnl configuring options for auxiliary directories
 AC_CONFIG_AUX_DIR([config])
