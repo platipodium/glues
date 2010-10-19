@@ -20,7 +20,7 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
-   @date   2010-03-04
+   @date   2010-10-19
    @file nc_regions.cc
    @description This program creates the region and neighbour files for a land grid of 0.5 resolution
 */
@@ -60,13 +60,11 @@ int main(int argc, char* argv[])
   
   string filename="regions.nc";
   
-  /** You may need to run the matlab scripts get_iiasa and cl_read_iiasa
-      to create the input file */
-  string inputname="../../visual/matlab/iiasa.nc";
 
   /** You may need to run the matlab scripts get_iiasa and cl_read_iiasa
       to create the input file */
   string inputname="plasim_10k.nc";
+  //string inputname="../../visual/matlab/iiasa.nc";
 
   
   NcFile ncin(inputname.c_str(), NcFile::ReadOnly);

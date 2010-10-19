@@ -20,7 +20,7 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
-   @date   2010-04-27
+   @date   2010-10-19
    @file nc_pangaea.cc
 */
 
@@ -40,8 +40,6 @@
 #include "netcdfcpp.h"
 #endif
 
-using namespace std;
-
 int copy_att(NcFile*,const NcAtt*);
 int copy_att(NcVar*,const NcAtt*);
 int append(NcAtt*,const char*);
@@ -54,9 +52,9 @@ int main(int argc, char* argv[])
     return 1;
 #else
  
-  string input_filename="pangaea_reg.nc";
-  string region_filename="glues_map_dim.nc";
-  string output_filename="pangaea.nc";
+  std::string input_filename="pangaea_reg.nc";
+  std::string region_filename="glues_map_dim.nc";
+  std::string output_filename="pangaea.nc";
   
   NcFile ncin(input_filename.c_str(), NcFile::ReadOnly);
   if (!ncin.is_valid()) {
@@ -78,9 +76,9 @@ int main(int argc, char* argv[])
 
   // Get current time
   time_t today;
-  std::time(&today);
-  string s1(asctime(gmtime(&today)));
-  string timestring=s1.substr(0,s1.find_first_of("\n"));
+  time(&today);
+  std::string s1(asctime(gmtime(&today)));
+  std::string timestring=s1.substr(0,s1.find_first_of("\n"));
   
   // Create dimensions, CF-conventions desires T,Z,Y,X (time,altitude,latitude,longitude)
   NcDim* dim;
@@ -191,7 +189,7 @@ int main(int argc, char* argv[])
     
     ncfile.get_var("population_density")->put_rec(pval,it);
     ncfile.get_var("technology")->put_rec(tval,it);
-    cout << it << endl;
+    std::cout << it << std::endl;
   }
         
   
@@ -248,8 +246,8 @@ int append(NcAtt* att, const char* ch) {
   long attlen=att->num_vals();
   NcType atttype=att->type();
   NcValues* values=att->values();
-  string s1((char*)values->base());
-  string s2 = s2.append(", " + string(ch));
+  std::string s1((char*)values->base());
+  std::string s2 = s2.append(", " + std::string(ch));
   
   return 0;
 }

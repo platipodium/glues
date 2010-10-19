@@ -20,7 +20,7 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
-   @date   2010-03-04
+   @date   2010-10-19
    @file nc_climateregions.cc
    @description This program reads a map (created by nc_regionmap), reads a climatology and
    a varying climate, produces regions and neighbour files
@@ -43,8 +43,6 @@
 #define M_PI    3.14159265358979323846f
 #endif
 
-using namespace std;
-
 float sind(float);
 float cosd(float);
 float calc_gridcell_area(float clat,float dlon=0.5,float dlat=0.5,float radius=6378.137);
@@ -64,10 +62,10 @@ int main(int argc, char* argv[])
    */
 
 
-  string mapfilename="glues_map.nc";
-  string regionfilename="regions.nc";
-  string transientfilename="plasim_11k-2.nc";
-  string filename="regions_11k-2.nc";
+  std::string mapfilename="glues_map.nc";
+  std::string regionfilename="regions.nc";
+  std::string transientfilename="plasim_11k-2.nc";
+  std::string filename="regions_11k-2.nc";
   
 /** Read the climatology, this file need to include the variables longitude, latitude,
 monthly precip and montly temperature */
@@ -197,7 +195,7 @@ monthly precip and montly temperature */
        }
        npp[y*nland+l]=npp_lieth(tann[l],pann[l]);
        if (npp_lieth(tann[l],pann[l])<0) {
-           cerr << l << " " << y << " " << tann[l] << " " << pann [l] << endl;
+           std::cerr << l << " " << y << " " << tann[l] << " " << pann [l] << std::endl;
            return 1;
        }
        tanmean+=tann[l]/nland;
@@ -221,8 +219,8 @@ monthly precip and montly temperature */
   
   time_t today;
   std::time(&today);
-  string s1(asctime(gmtime(&today)));
-  string monthstring=s1.substr(0,s1.find_first_of("\n"));
+  std::string s1(asctime(gmtime(&today)));
+  std::string monthstring=s1.substr(0,s1.find_first_of("\n"));
   
   ncfile.add_att("Conventions","CF-1.4");
   ncfile.add_att("title","GLUES netCDF regions ");
@@ -365,7 +363,8 @@ monthly precip and montly temperature */
  
  	 ireg=ilat[i]*(ncol+2)+ilon[i];
  	 if (map[ireg]!=i+1)
-       cerr << ilat[i] << "/" << ilon[i] << " " << i+1 << "/" << map[ireg] << " " << ireg << endl;
+       std::cerr << ilat[i] << "/" << ilon[i] << " " 
+                 << i+1 << "/" << map[ireg] << " " << ireg << std::endl;
     neigh[nland*0+i]=map[(ilat[i]+0)*(ncol+2)+ilon[i]-1]; // ww neighbour
     neigh[nland*1+i]=map[(ilat[i]+1)*(ncol+2)+ilon[i]-1]; // nw neighbour
     neigh[nland*2+i]=map[(ilat[i]+1)*(ncol+2)+ilon[i]-0]; // nn neighbour
@@ -497,7 +496,7 @@ inline float npp_lieth(float temp, float prec) {
 
   float npp_p=(1.-exp(-V1*prec))*NPPMAX;
   float npp_t=1./(1.+V3*exp(-V2*temp))*NPPMAX;
-  return min(npp_p,npp_t);
+  return std::min(npp_p,npp_t);
 }
 
   /** Define continuous land masses */

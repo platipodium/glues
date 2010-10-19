@@ -13,7 +13,6 @@
 #include "Exchange.h"
 
 //namespace glues {
-using namespace std;
 
 Exchange::Exchange(unsigned int n) 
 {

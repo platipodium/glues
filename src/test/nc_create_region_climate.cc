@@ -20,7 +20,7 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
-   @date   2010-02-23
+   @date   2010-10-19
    @file create_reg_climate.cc
 */
 
@@ -32,8 +32,6 @@
 #ifdef HAVE_NETCDF_H
 #include "netcdfcpp.h"
 #endif
-
-using namespace std;
 
 int main(int argc, char* argv[]) 
 {
@@ -47,7 +45,7 @@ int main(int argc, char* argv[])
   const int nreg=685;
   unsigned int i;
   
-  string filename="reg_climate.nc";
+  std::string filename="reg_climate.nc";
    
   NcFile ncfile(filename.c_str(), NcFile::Replace);
   if (!ncfile.is_valid()) return 1;
@@ -100,14 +98,14 @@ int main(int argc, char* argv[])
   nppvar->add_att("coordinates","lon lat");
   
     
-  string gddname = "../../examples/setup/685/reg_npp_80_685.dat";
-  ifstream ifs(gddname.c_str(),ios::in);  
+  std::string gddname = "../../examples/setup/685/reg_npp_80_685.dat";
+  std::ifstream ifs(gddname.c_str(),std::ios::in);  
 
   if (ifs.bad()) return 1;  
 
-  ifs.seekg(0,ios::end);
+  ifs.seekg(0,std::ios::end);
   int length=ifs.tellg();
-  ifs.seekg(0,ios::beg);
+  ifs.seekg(0,std::ios::beg);
   
   float *fbuffer=new float [length];
   
@@ -123,8 +121,8 @@ int main(int argc, char* argv[])
   
   gddvar->put(fbuffer,nclim,nreg);
 
-  string nppname("../../examples/setup/685/reg_npp_80_685.dat");
-  ifs.open(nppname.c_str(),ios::in);
+  std::string nppname("../../examples/setup/685/reg_npp_80_685.dat");
+  ifs.open(nppname.c_str(),std::ios::in);
   while (ifs.good()) ifs >> fbuffer[i++];
   ifs.close();
    nppvar->put(fbuffer,nclim,nreg);

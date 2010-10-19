@@ -20,7 +20,7 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
-   @date   2009-01-19
+   @date   2010-10-19
    @file create_reg_climate.cc
 */
 
@@ -33,8 +33,6 @@
 #include "netcdfcpp.h"
 #endif
 
-using namespace std;
-
 int main(int argc, char* argv[]) 
 {
 
@@ -44,7 +42,7 @@ int main(int argc, char* argv[])
 #else
  
   unsigned int i;
-  string filename="reg_geography.nc";
+  std::string filename="reg_geography.nc";
    
   NcError ncerror(NcError::verbose_nonfatal);
   NcFile ncfile(filename.c_str(), NcFile::Write);
@@ -55,7 +53,7 @@ int main(int argc, char* argv[])
   char * cbuff  = new char[length];
   //for (i=0; i<length; i++) cbuff+i=histatt->as_string(i);
   cbuff=histatt->as_string(0);
-  string history = "add_reg_gegraphy, " + string(cbuff);
+  std::string history = "add_reg_gegraphy, " + std::string(cbuff);
   histatt->remove();
   ncfile.add_att("history",history.c_str());
   
@@ -65,13 +63,13 @@ int main(int argc, char* argv[])
   NcDim *timedim = ncfile.get_dim("time");
   int ntime = timedim->size();
 
-  string regname = "../../examples/setup/685/region_geography.tsv";
-  ifstream ifs(regname.c_str(),ios::in);  
+  std::string regname = "../../examples/setup/685/region_geography.tsv";
+  std::ifstream ifs(regname.c_str(),std::ios::in);  
   if (ifs.bad()) return 1;  
 
-  ifs.seekg(0,ios::end);
+  ifs.seekg(0,std::ios::end);
   length=ifs.tellg();
-  ifs.seekg(0,ios::beg);
+  ifs.seekg(0,std::ios::beg);
   
   float *fbuffer=new float[length];
   while (ifs.good()) ifs >> fbuffer[i++];

@@ -20,7 +20,7 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
-   @date   2010-08-07
+   @date   2010-10-20
    @file   GNetcdf.cc
 */
 
@@ -28,20 +28,18 @@
 #include <iostream>
 #include <ctime>
 
-using namespace std;
-
 #ifdef HAVE_NETCDF_H
 
 int gnc_write_header(NcFile& ncfile, int nreg, int nneigh, int ncont) {
   if (!ncfile.is_valid()) {
-    cerr << "Could not open NetCDF file for writing " << endl;
+    std::cerr << "Could not open NetCDF file for writing " << std::endl;
     return 1;
   }
   
   time_t today;
   std::time(&today);
-  string s1(asctime(gmtime(&today)));
-  string timestring=s1.substr(0,s1.find_first_of("\n"));
+  std::string s1(asctime(gmtime(&today)));
+  std::string timestring=s1.substr(0,s1.find_first_of("\n"));
   
   ncfile.add_att("Conventions","CF-1.4");
   ncfile.add_att("title","GLUES");
@@ -331,7 +329,7 @@ int gnc_write_header(NcFile& ncfile, int nreg, int nneigh, int ncont) {
 int gnc_write_record(NcFile& ncfile, const std::string& varname, int** data, const int irecord) {
 
   if (!ncfile.is_valid()) {
-    cerr << "Could not open NetCDF file for appending." << endl;
+    std::cerr << "Could not open NetCDF file for appending." << std::endl;
     return 1;
   }
   
@@ -368,8 +366,8 @@ int gnc_write_record(NcFile& ncfile, const std::string& varname, int** data, con
  
  /* time_t today;
   std::time(&today);
-  string s1(asctime(gmtime(&today)));
-  string timestring=s1.substr(0,s1.find_first_of("\n"));
+  std::string s1(asctime(gmtime(&today)));
+  std::string timestring=s1.substr(0,s1.find_first_of("\n"));
 
   var->add_att("date_of_modification",timestring.c_str());
 */
@@ -386,11 +384,10 @@ int gnc_write_record(NcFile& ncfile, const std::string& varname, int** data, con
 int gnc_write_record(NcFile& ncfile, const std::string& varname, float** data, const int irecord) {
 
   if (!ncfile.is_valid()) {
-    cerr << "Could not open NetCDF file for appending." << endl;
+    std::cerr << "Could not open NetCDF file for appending." << std::endl;
     return 1;
   }
   
-
   if (!gnc_is_var(ncfile,varname)) return 1;
   
   NcVar* var;
@@ -423,9 +420,9 @@ int gnc_write_record(NcFile& ncfile, const std::string& varname, float** data, c
   }
  
  /* time_t today;
-  std::time(&today);
-  string s1(asctime(gmtime(&today)));
-  string timestring=s1.substr(0,s1.find_first_of("\n"));
+  time(&today);
+  std::string s1(asctime(gmtime(&today)));
+  std::string timestring=s1.substr(0,s1.find_first_of("\n"));
 
   var->add_att("date_of_modification",timestring.c_str());
 */
@@ -444,11 +441,11 @@ bool gnc_is_var(const NcFile& ncfile, const std::string& varname) {
  
   for (int i=0; i<n; i++) {
     var=ncfile.get_var(i);
-    string name(var->name());
+    std::string name(var->name());
     if (name==varname) return true;
   }
 
-  cerr << "NetCDF file does not contain variable \"" << varname << "\".\n";    
+  std::cerr << "NetCDF file does not contain variable \"" << varname << "\".\n";    
   return false;
 }
 
@@ -463,11 +460,11 @@ bool gnc_is_dim(const NcFile& ncfile, const std::string& dimname) {
  
   for (int i=0; i<n; i++) {
     dim=ncfile.get_dim(i);
-    string name(dim->name());
+    std::string name(dim->name());
     if (name==dimname) return true;
   }
 
-  cerr << "NetCDF file does not contain dimension \"" << dimname << "\".\n";    
+  std::cerr << "NetCDF file does not contain dimension \"" << dimname << "\".\n";    
   return false;
 }
 
@@ -482,11 +479,11 @@ bool gnc_is_att(const NcFile& ncfile, const std::string& attname) {
  
   for (int i=0; i<n; i++) {
     att=ncfile.get_att(i);
-    string name(att->name());
+    std::string name(att->name());
     if (name==attname) return true;
   }
 
-  cerr << "NetCDF file does not contain attribute \"" << attname << "\".\n";    
+  std::cerr << "NetCDF file does not contain attribute \"" << attname << "\".\n";    
   return false;
 }
 
@@ -501,11 +498,11 @@ bool gnc_is_att(const NcVar*  var, const std::string& attname) {
  
   for (int i=0; i<n; i++) {
     att=var->get_att(i);
-    string name(att->name());
+    std::string name(att->name());
     if (name==attname) return true;
   }
 
-  cerr << "Variable \"" << var->name() << "\" does not contain attribute \"" << attname << "\".\n";    
+  std::cerr << "Variable \"" << var->name() << "\" does not contain attribute \"" << attname << "\".\n";    
   return false;
 }
 
@@ -530,7 +527,7 @@ bool gnc_check_var(const NcFile& ncfile, const std::string & varname, const int 
   }
   if (s==len) return true;
 
-  cerr << "None of the dimensions of variable \"" << varname << "\" is of requested length " << len << ".\n";    
+  std::cerr << "None of the dimensions of variable \"" << varname << "\" is of requested length " << len << ".\n";    
   return false;
 }
 

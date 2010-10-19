@@ -40,8 +40,6 @@
 #include "netcdfcpp.h"
 #endif
 
-using namespace std;
-
 int copy_att(NcFile*,const NcAtt*);
 int copy_att(NcVar*,const NcAtt*);
 int append(NcAtt*,const char*);
@@ -54,9 +52,9 @@ int main(int argc, char* argv[])
     return 1;
 #else
  
-  string template_filename="glues_template.nc";
-  string input_filename="../../examples/setup/685/results.out";
-  string output_filename="results.nc";
+  std::string template_filename="glues_template.nc";
+  std::string input_filename="../../examples/setup/685/results.out";
+  std::string output_filename="results.nc";
    
   NcFile nctmpl(template_filename.c_str(), NcFile::ReadOnly);
   if (!nctmpl.is_valid()) {
@@ -64,7 +62,7 @@ int main(int argc, char* argv[])
     return 1;
   }
   
-  ifstream ifs(input_filename.c_str(),ios::in | ios::binary);
+  std::ifstream ifs(input_filename.c_str(),std::ios::in | std::ios::binary);
   if (!ifs.good()) {
     std::cerr << " Required input file " << input_filename << " not found." << std::endl;
     return 1;
@@ -78,8 +76,8 @@ int main(int argc, char* argv[])
   }
    
   
-  vector<string> vars;
-  string line;
+  std::vector<std::string> vars;
+  std::string line;
   
   // big endian versus low endian?
   
@@ -112,7 +110,7 @@ Byte fields for nreg
   float tend  =*(fptr+2);
   float tstep =*(fptr+3);
   int ntime=ceil((tend-tstart)/tstep);
-//  cout << nreg << " " << tstart << ":" << tstep << ":" << tend << " " << ntime << endl;
+//  std::cout << nreg << " " << tstart << ":" << tstep << ":" << tend << " " << ntime << std::endl;
   
   
   // Populate coordinate vars
@@ -136,8 +134,8 @@ Byte fields for nreg
 
   time_t today;
   std::time(&today);
-  string s1(asctime(gmtime(&today)));
-  string timestring=s1.substr(0,s1.find_first_of("\n"));
+  std::string s1(asctime(gmtime(&today)));
+  std::string timestring=s1.substr(0,s1.find_first_of("\n"));
 
   // Copy global attributes
   for (int i=0; i<nctmpl.num_atts(); i++) {  
@@ -199,8 +197,8 @@ Byte fields for nreg
   //dim=var->get_dim(0);
   for (int i=0; i<nreg; i++)  var->put(region,nreg);  
 
-  string s;
-  vector<string>::iterator ivar;
+  std::string s;
+  std::vector<std::string>::iterator ivar;
   char data[nreg*sizeof(float)];
   float* result = (float*) data;
   int i;
@@ -233,7 +231,7 @@ Byte fields for nreg
       
     }
     
-    //cout << (*ivar) << "/" << s << "t=" << time[itime] << " r=" ; 
+    //std::cout << (*ivar) << "/" << s << "t=" << time[itime] << " r=" ; 
     ifs.read(data,sizeof(data));
     result=(float*)data;
     var->put_rec(result,itime);
@@ -242,7 +240,7 @@ Byte fields for nreg
       var->add_att("glues_order",i);
     }
     //for (i=0; i<nreg; i+=137) cout << result[i] << ",";
-    //cout << endl;
+    //std::cout << std::endl;
     
     i++;
   }
@@ -299,8 +297,8 @@ int append(NcAtt* att, const char* ch) {
   long attlen=att->num_vals();
   NcType atttype=att->type();
   NcValues* values=att->values();
-  string s1((char*)values->base());
-  string s2 = s2.append(", " + string(ch));
+  std::string s1((char*)values->base());
+  std::string s2 = s2.append(", " + std::string(ch));
   
   return 0;
 }

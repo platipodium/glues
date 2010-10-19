@@ -3,19 +3,17 @@
 #include <cmath>
 #include <assert.h>
 
-using namespace std;
-
 int main(int argc, char* argv[]) 
 {
 
-  string filename="mapping_80_685.dat.len";
-  ifstream ifs;
-  ifs.open(filename.c_str(),ios::binary);
+  std::string filename="mapping_80_685.dat.len";
+  std::ifstream ifs;
+  ifs.open(filename.c_str(),std::ios::binary);
   
   // get length of file:
-  ifs.seekg (0, ios::end);
+  ifs.seekg (0, std::ios::end);
   int length = ifs.tellg();
-  ifs.seekg (0, ios::beg);
+  ifs.seekg (0, std::ios::beg);
 
   // allocate memory:
   char * buffer = new char [length];
@@ -32,16 +30,16 @@ int main(int argc, char* argv[])
   	lbuffer[i]=ibuffer[i];
     sum+=lbuffer[i];
     if (lbuffer[i]>lmax) lmax=lbuffer[i];
-  	//cout << i+1 << ":" << lbuffer[i] << ":" << lmax << ":" << sum << endl;
+  	//std::cout << i+1 << ":" << lbuffer[i] << ":" << lmax << ":" << sum << std::endl;
   }
   
   // There should be lmax * nreg data in the mapping file
   
   filename="mapping_80_685.dat";
-  ifs.open(filename.c_str(),ios::binary);
-  ifs.seekg (0, ios::end);
+  ifs.open(filename.c_str(),std::ios::binary);
+  ifs.seekg (0, std::ios::end);
   length = ifs.tellg();
-  ifs.seekg (0, ios::beg);
+  ifs.seekg (0, std::ios::beg);
   delete[] buffer;
   buffer = new char [length];
   ifs.read (buffer,length);
@@ -53,31 +51,31 @@ int main(int argc, char* argv[])
   assert(lmax*nreg==nnum);
 
   // print header
-  cout << "# This file was automatically generated, do not edit" << endl
-       << "# Creator: print_mapping.cc" << endl
-       << "# File format: colon-separated value" << endl
-       << "# Data format: "<< endl
-       << "#    col 1 region id (greater zero)" << endl
-       << "#    col 2 number of cells (n) in region" << endl
-       << "#    col 3..n+2 id of cells belonging to region" << endl;
+  std::cout << "# This file was automatically generated, do not edit" << std::endl
+       << "# Creator: print_mapping.cc" << std::endl
+       << "# File format: colon-separated value" << std::endl
+       << "# Data format: "<< std::endl
+       << "#    col 1 region id (greater zero)" << std::endl
+       << "#    col 2 number of cells (n) in region" << std::endl
+       << "#    col 3..n+2 id of cells belonging to region" << std::endl;
 
   for (i=0; i< nreg; i++) 
   {
   	n=lbuffer[i];
-  	cout << i+1 << ":" << n ;
+  	std::cout << i+1 << ":" << n ;
   	for (int j=0; j<n; j++)
   	{   	  
-  	  cout << ":" << ibuffer[i*lmax+j]  ;
+  	  std::cout << ":" << ibuffer[i*lmax+j]  ;
   	}  	
-  	cout << endl;
+  	std::cout << std::endl;
   }
 
   // create special binary mapping files for region 271
-  ofstream ofs;
-  ofs.open("mapping_80_1.dat.len",ios::binary|ios::out);
+  std::ofstream ofs;
+  ofs.open("mapping_80_1.dat.len",std::ios::binary|std::ios::out);
   ofs.write((char*)(lbuffer+270),4);
   ofs.close();
-  ofs.open("mapping_80_1.dat",ios::binary|ios::out);
+  ofs.open("mapping_80_1.dat",std::ios::binary|std::ios::out);
   ofs.write((char*)(ibuffer+270*lmax),lbuffer[270]);
   ofs.close();
 

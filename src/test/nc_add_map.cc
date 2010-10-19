@@ -20,7 +20,7 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
-   @date   2010-03-18
+   @date   2010-10-19
    @file nc_add_map.cc
    @description This program adds a map (created by nc_regionmap) to a climate region file
    (created by nc_climateregions).  
@@ -46,8 +46,6 @@
 #define M_PI    3.14159265358979323846f
 #endif
 
-using namespace std;
-
 bool is_var(NcFile*, std::string);
 
 int main(int argc, char* argv[]) 
@@ -63,8 +61,8 @@ int main(int argc, char* argv[])
    */
 
 
-  string mapfilename="glues_map.nc";
-  string cellfilename="regions_11k-2.nc";
+  std::string mapfilename="glues_map.nc";
+  std::string cellfilename="regions_11k-2.nc";
 
  /** Open map file, read id and lat/lon fields  */
  
@@ -129,8 +127,8 @@ int main(int argc, char* argv[])
   
   time_t today;
   std::time(&today);
-  string s1(asctime(gmtime(&today)));
-  string monthstring=s1.substr(0,s1.find_first_of("\n"));
+  std::string s1(asctime(gmtime(&today)));
+  std::string monthstring=s1.substr(0,s1.find_first_of("\n"));
   
   /** Copy global attributes */
   NcAtt* att;
@@ -143,7 +141,7 @@ int main(int argc, char* argv[])
   
   var->add_att("date_of_creation",monthstring.c_str());
   var->add_att("long_name","map_id");
-  var->add_att("description",(string("mapped id from ") + mapfilename).c_str());
+  var->add_att("description",(std::string("mapped id from ") + mapfilename).c_str());
   var->add_att("source",mapfilename.c_str());
   
   var->put(mapid,nland);
@@ -162,10 +160,10 @@ bool is_var(NcFile* ncfile, std::string varname) {
  
   for (int i=0; i<n; i++) {
     var=ncfile->get_var(i);
-    string name(var->name());
+    std::string name(var->name());
     if (name==varname) return true;
   }
 
-  cerr << "NetCDF file does not contain variable \"" << varname << "\".\n";    
+  std::cerr << "NetCDF file does not contain variable \"" << varname << "\".\n";    
   return false;
 }

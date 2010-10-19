@@ -20,7 +20,7 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
-   @date   2010-08-09
+   @date   2010-10-19
    @file   SiSiReader.cc
 */
 
@@ -31,8 +31,6 @@
 #include <map>
 #include <string>
 
-using namespace std;
-
 int main(int argc, char* argv[]) 
 {
 
@@ -40,7 +38,7 @@ int main(int argc, char* argv[])
   
   std::string filename="/Users/lemmen/devel/glues/examples/simulations/685/lbk.sim";
 
-  std::ifstream ifs(filename.c_str(),ios::in);
+  std::ifstream ifs(filename.c_str(),std::ios::in);
   if (ifs.bad()) return 1;
   
   
