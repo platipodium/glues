@@ -20,7 +20,7 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
-   @date   2010-03-24
+   @date   2010-10-19
    @file nc_regions.cc
    @description This program creates the region, climate and mapping files from regions.nc (on gridcell) or
    from regions_11k_685.nc (alread mapped)
@@ -44,8 +44,6 @@
 #define M_PI    3.14159265358979323846f
 #endif
 
-using namespace std;
-
 float calc_geodesic(float,float,float,float);
 bool is_var(NcFile*, std::string);
 bool is_att(NcVar*,  std::string);
@@ -58,7 +56,7 @@ int main(int argc, char* argv[])
 
 if (argc>1) {
   std::cout << "nc_write_region_dat" << std::endl << std::endl  
-  << "This program creates the region, climate and mapping files from regions.nc" << endl; 
+  << "This program creates the region, climate and mapping files from regions.nc" << std::endl; 
   return 0;
 }
 
@@ -67,13 +65,13 @@ if (argc>1) {
     return 1;
 #else
   
-  string prefix="regions";
-  string appendix="_11k-2_685";
+  std::string prefix="regions";
+  std::string appendix="_11k-2_685";
   
-  string ncfilename=prefix + appendix + ".nc";
-  string regfilename=prefix + appendix + ".dat";
-  string regnppname=prefix + "_npp" + appendix + ".dat";
-  string reggddname=prefix + "_gdd" + appendix + ".dat";
+  std::string ncfilename=prefix + appendix + ".nc";
+  std::string regfilename=prefix + appendix + ".dat";
+  std::string regnppname=prefix + "_npp" + appendix + ".dat";
+  std::string reggddname=prefix + "_gdd" + appendix + ".dat";
   
   /** You may need to run the C++ program nc_regions to create the input file */
   
@@ -157,8 +155,8 @@ if (argc>1) {
   
   ncin.close();
 
-  ofstream ofs;
-  ofs.open(regfilename.c_str(),ios::out);
+  std::ofstream ofs;
+  ofs.open(regfilename.c_str(),std::ios::out);
 
   float lly=-89.75;
   float llx=-179.75;
@@ -199,7 +197,7 @@ if (argc>1) {
     /** Output format is 
       id numcells area longitude latitude numneighbours neighid:neighboundary
     */
-    ofs.unsetf(ios::floatfield); 
+    ofs.unsetf(std::ios::floatfield); 
     ofs << setprecision(5) << setw(5) << region[i] << " 1 " <<  setw(7) << lroundf(area[i]) << " " 
     	<< setw(3) << ilon[i] << " " << setw(3) << ilat[i] << " " << setw(1) << regnn[i] ;
     
@@ -237,16 +235,16 @@ if (argc>1) {
  
  const int nclim=ntime;
  
- ofs.open(regnppname.c_str(),ios::out);
- ofs << setiosflags(ios::fixed) << setprecision(2);
+ ofs.open(regnppname.c_str(),std::ios::out);
+ ofs << setiosflags(std::ios::fixed) << setprecision(2);
  for (int j=0; j<nclim; j++) {
    for (int i=0; i<nreg; i++) if (region[i]>0) ofs << npp[j*nreg+i] << " ";
-   ofs << endl;
+   ofs << std::endl;
  }
  ofs.close();
 
- ofs.open(reggddname.c_str(),ios::out);
- ofs << setiosflags(ios::fixed) << setprecision(2);
+ ofs.open(reggddname.c_str(),std::ios::out);
+ ofs << setiosflags(ios::std::fixed) << setprecision(2);
  for (int j=0; j<nclim; j++) {
    for (int i=0; i<nreg; i++) if (region[i]>0) ofs << gdd[j*nreg+i] << " ";
    ofs <<  endl;
@@ -254,12 +252,12 @@ if (argc>1) {
  ofs.close();
  
  // Write dummy event files
- ofs.open("EventInReg.dat",ios::out);
- for (int i=0; i<nreg ; i++) if (region[i]>0) ofs << "-1 -1 -1 -1 -1 -1 -1 -1" << endl; 
+ ofs.open("EventInReg.dat",std::ios::out);
+ for (int i=0; i<nreg ; i++) if (region[i]>0) ofs << "-1 -1 -1 -1 -1 -1 -1 -1" << std::endl; 
  ofs.close();
  
- ofs.open("EventInRad.dat",ios::out);
- for (int i=0; i<nreg; i++) if (region[i]>0) ofs << "0 0 0 0 0 0 0 0" << endl; 
+ ofs.open("EventInRad.dat",std::ios::out);
+ for (int i=0; i<nreg; i++) if (region[i]>0) ofs << "0 0 0 0 0 0 0 0" << std::endl; 
  ofs.close();
  
  
@@ -315,11 +313,11 @@ bool is_dim(NcFile* ncfile, std::string dimname) {
  
   for (int i=0; i<n; i++) {
     dim=ncfile->get_dim(i);
-    string name(dim->name());
+    std::string name(dim->name());
     if (name==dimname) return true;
   }
 
-  cerr << "NetCDF file does not contain dimension \"" << dimname << "\".\n";    
+  std::cerr << "NetCDF file does not contain dimension \"" << dimname << "\".\n";    
   return false;
 }
 
@@ -331,11 +329,11 @@ bool is_att(NcFile* ncfile, std::string attname) {
  
   for (int i=0; i<n; i++) {
     att=ncfile->get_att(i);
-    string name(att->name());
+    std::string name(att->name());
     if (name==attname) return true;
   }
 
-  cerr << "NetCDF file does not contain attribute \"" << attname << "\".\n";    
+  std::cerr << "NetCDF file does not contain attribute \"" << attname << "\".\n";    
   return false;
 }
 
@@ -347,11 +345,11 @@ bool is_att(NcVar* var, std::string attname) {
  
   for (int i=0; i<n; i++) {
     att=var->get_att(i);
-    string name(att->name());
+    std::string name(att->name());
     if (name==attname) return true;
   }
 
-  cerr << "Variable \"" << var->name() << "\" does not contain attribute \"" << attname << "\".\n";    
+  std::cerr << "Variable \"" << var->name() << "\" does not contain attribute \"" << attname << "\".\n";    
   return false;
 }
 
@@ -372,6 +370,6 @@ bool check_var(NcFile* ncfile, std::string varname,int len) {
   }
   if (s==len) return true;
 
-  cerr << "None of the dimensions of variable \"" << varname << "\" is of requested length " << len << ".\n";    
+  std::cerr << "None of the dimensions of variable \"" << varname << "\" is of requested length " << len << ".\n";    
   return false;
 }

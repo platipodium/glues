@@ -20,7 +20,7 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
-   @date   2010-03-06
+   @date   2010-10-19
    @file nc_map2regions.cc
    @description This program converts the mapping information added to the climate region file
    (created by nc_climateregions and subsequent nc_add_map), and scales all info on the climateregions to the new map
@@ -46,8 +46,6 @@
 #define M_PI    3.14159265358979323846f
 #endif
 
-using namespace std;
-
 float sind(float);
 float cosd(float);
 float calc_geodesic(float,float,float,float);
@@ -67,8 +65,8 @@ int main(int argc, char* argv[])
   /** You may need to run nc_climateregions to get regions_*.nc grid file
       You may need to rund nc_add_map to have mapid information in file
    */
-  string cellfilename="regions_11k-2.nc";
-  string filename="regions_11k-2_685.nc";
+  std::string cellfilename="regions_11k-2.nc";
+  std::string filename="regions_11k-2_685.nc";
  
 /** Read the cell file, this file need to include the variables longitude, latitude,
 npp and gdd */
@@ -113,7 +111,7 @@ npp and gdd */
   int* numneigh=new int[nland];
 
   if (!is_var(&ncc,"map_id")) {
-    cerr << "Please add map_id information by running nc_add_map." << endl;
+    std::cerr << "Please add map_id information by running nc_add_map." << std::endl;
     return 1;
   }
   int * regionid=new int[nland];
@@ -181,8 +179,8 @@ npp and gdd */
 
  for (int i=0; i<nland; i++) {
     if (regionid[i]<1) continue;
-    //cout << "r[" << i << "]=" << region[i] << " (" << numneigh[i] << "):" ; 
-//    cout << "r[" << i << "]=" << regionid[i] << " " << longit[i] << "|" << latit[i]; 
+    //std::cout << "r[" << i << "]=" << region[i] << " (" << numneigh[i] << "):" ; 
+//    std::cout << "r[" << i << "]=" << regionid[i] << " " << longit[i] << "|" << latit[i]; 
  
     if (numneigh[i]<1) continue;
     int k,n;
@@ -195,9 +193,10 @@ npp and gdd */
  	  /* Check for mutual neighbour relationship 
  	  if not, fix this in the the creating program */
  	  if (neigh[((j+4)%8)*nland+neighid-1] != region[i]) {
- 	    cout << "r[" << i << "]=" << region[i] << " (" << j << ") n[" << neighid-1 << "]=" << neigh[((j+4)%8)*nland+neighid-1] << endl;
+ 	    std::cout << "r[" << i << "]=" << region[i] << " (" << j << ") n[" 
+ 	              << neighid-1 << "]=" << neigh[((j+4)%8)*nland+neighid-1] << std::endl;
  	  }
- 	  //cout << " " << j << ":" << neighid << ":" << neigh[((j+4)%8)*nland+neighid-1];
+ 	  //std::cout << " " << j << ":" << neighid << ":" << neigh[((j+4)%8)*nland+neighid-1];
  	  
  	  if (regionid[neighid-1]==regionid[i]) continue; // break if neighbour same id 
  	  /* Find neighbour in this region */
@@ -210,7 +209,7 @@ npp and gdd */
  	    k++;
  	  }
  	  if (k>=nnmax) {
- 	    cerr << "Insufficent size of nnmax, please increase in source code.\n";
+ 	    std::cerr << "Insufficent size of nnmax, please increase in source code.\n";
  	    return 1;
  	  }
  	  
@@ -231,7 +230,7 @@ npp and gdd */
    }
    //   cout << " " << regnn[regionid[i]-1] << endl;
    //if (i > 20) break;
-  //cout << endl;
+  //std::cout << std::endl;
 }
 
   delete [] npp, gdd, area, latit, longit, ilat, ilon, neigh;
@@ -240,28 +239,29 @@ npp and gdd */
   int maxregn=0;
   for (int i=0; i<nreg; i++) {
     for (int j=0; j<nyear; j++) {
-      regnpp[j*nreg+i]/=1.0*max(1,regn[i]);
-      reggdd[j*nreg+i]/=1.0*max(1,regn[i]);
+      regnpp[j*nreg+i]/=1.0*std::max(1,regn[i]);
+      reggdd[j*nreg+i]/=1.0*std::max(1,regn[i]);
     }
     reglon[i]/=regn[i];
     reglat[i]/=regn[i];
     if (regnn[i]>nn) nn=regnn[i];
     if (regn[i]>maxregn) maxregn=regn[i];
-//    cout << i << " " << regn[i] << " " << reggdd[i] << " " << regnpp[i] << endl;
+//    std::cout << i << " " << regn[i] << " " << reggdd[i] << " " << regnpp[i] << endl;
   }
   
   /** Copy regneigh [nreg*nnmax] into new neigh[nreg*nn] 
       and swap arrays after copying */
   neigh=new int[nn*nreg];
   for (int i=0; i<nreg; i++) {
-    cout << reg[i] << " " << regn[i] << " " << reglon[i] << "|" << reglat[i] << " " << regnn[i];
+    std::cout << reg[i] << " " << regn[i] << " " << reglon[i] 
+              << "|" << reglat[i] << " " << regnn[i];
     for (int j=0; j<regnn[i]; j++) {
       //neigh[i*nn+j]=regneigh[i*nnmax+j];
       //neigh[j*nreg+i]=regneigh[i*nnmax+j];
       neigh[j*nreg+i]=regneigh[j*nreg+i];
-      cout << " " << regneigh[j*nreg+i];
+      std::cout << " " << regneigh[j*nreg+i];
     }
-    cout << endl;
+    std::cout << std::endl;
   } 
   delete [] regneigh;
   regneigh=neigh;
@@ -285,9 +285,9 @@ npp and gdd */
   if (!ncfile.is_valid()) return 1;
   
   time_t today;
-  std::time(&today);
-  string s1(asctime(gmtime(&today)));
-  string monthstring=s1.substr(0,s1.find_first_of("\n"));
+  time(&today);
+  std::string s1(asctime(gmtime(&today)));
+  std::string monthstring=s1.substr(0,s1.find_first_of("\n"));
   
   /** Copy global attributes */
   NcAtt* att;
@@ -359,7 +359,7 @@ npp and gdd */
   ncfile.get_var("area")->put(regarea,nreg);
   short* sh=new short[nyear*nreg];
   for (int i=0; i<nyear*nreg; i++) sh[i]=lrintf(regnpp[i]);
-  //for (int i=0; i<nreg; i++)  cout << i << " " << regnpp[i] << " " << sh[i] << endl;
+  //for (int i=0; i<nreg; i++)  std::cout << i << " " << regnpp[i] << " " << sh[i] << std::endl;
   ncfile.get_var("npp")->put(sh,nyear,nreg);
   for (int i=0; i<nyear*nreg; i++) sh[i]=lrintf(reggdd[i]);
   ncfile.get_var("gdd")->put(sh,nyear,nreg);
@@ -416,7 +416,7 @@ inline float npp_lieth(float temp, float prec) {
 
   float npp_p=(1.-exp(-V1*prec))*NPPMAX;
   float npp_t=1./(1.+V3*exp(-V2*temp))*NPPMAX;
-  return min(npp_p,npp_t);
+  return std::min(npp_p,npp_t);
 }
 
   /** Define continuous land masses */
@@ -443,11 +443,11 @@ bool is_var(NcFile* ncfile, std::string varname) {
  
   for (int i=0; i<n; i++) {
     var=ncfile->get_var(i);
-    string name(var->name());
+    std::string name(var->name());
     if (name==varname) return true;
   }
 
-  cerr << "NetCDF file does not contain variable \"" << varname << "\".\n";    
+  std::cerr << "NetCDF file does not contain variable \"" << varname << "\".\n";    
   return false;
 }
 

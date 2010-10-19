@@ -5,7 +5,6 @@
 #include <cstdlib>
 
 using glues::IO;
-using namespace std;
 
 int main (int argc, char* argv[]) 
 {
@@ -16,8 +15,8 @@ int main (int argc, char* argv[])
     
     std::ifstream ifs1,ifs2,ifs;
 
-    ifs1.open(filename.c_str(),ios::in);
-    ifs2.open(filename.c_str(),ios::in);
+    ifs1.open(filename.c_str(),std::ios::in);
+    ifs2.open(filename.c_str(),std::ios::in);
 
     unsigned long int nrow, ncol;
 
@@ -27,8 +26,8 @@ int main (int argc, char* argv[])
     ifs1.close();
     ifs2.close();
 
-    cout << "Number of rows: " << nrow << endl;
-    cout << "Number of cols: " << ncol << endl;
+    std::cout << "Number of rows: " << nrow << std::endl;
+    std::cout << "Number of cols: " << ncol << std::endl;
    
     double** data;
 
@@ -39,43 +38,43 @@ int main (int argc, char* argv[])
     }
     
      for (i=0; i<nrow; i++) for (j=0; j<ncol; j++) data[i][j]=0;
-/*   ifs.open(filename.c_str(),ios::in);
+/*   ifs.open(filename.c_str(),std::ios::in);
     //nrow=IO::read_ascii_table(ifs,data,0,0,0,0);
     cout << "---------------------\n"; 
-    cerr << "Number of rows read: " << nrow << endl;
+    cerr << "Number of rows read: " << nrow << std::endl;
     for (i=0; i< nrow ; i++) {
 	for (j=0; j< ncol ; j++)
 	    fprintf(stdout,"%5.0f ",data[i][j]);
-	cout << endl;
+	std::cout << std::endl;
     }
-    cout << "---------------------\n"; 
+    std::cout << "---------------------\n"; 
     ifs.close();
     
-    ifs.open(filename.c_str(),ios::in);
+    ifs.open(filename.c_str(),std::ios::in);
     for (i=0; i<nrow; i++) for (j=0; j<ncol; j++) data[i][j]=0;
     //nrow=IO::read_ascii_table(ifs,data,1,2,0,0);
-    cout << "---------------------\n"; 
-    cout << "Number of rows read, offset (1,2): " << nrow << endl;
+    std::cout << "---------------------\n"; 
+    std::cout << "Number of rows read, offset (1,2): " << nrow << std::endl;
     for (i=0; i< nrow ; i++) {
 	for (j=0; j< ncol ; j++)
 	    fprintf(stdout,"%5.0f ",data[i][j]);
-	cout << endl;
+	std::cout << std::endl;
     }
-    cout << "---------------------\n"; 
+    std::cout << "---------------------\n"; 
     
     ifs.close();
 */  
-    ifs.open(filename.c_str(),ios::in);
+    ifs.open(filename.c_str(),std::ios::in);
     for (i=0; i<nrow; i++) for (j=0; j<ncol; j++) data[i][j]=0;
     nrow=IO::read_ascii_table(ifs,data,2,3,4,4);
-    cout << "---------------------\n"; 
-    cout << "Number of rows read, offset (2,3), max (3,5): " << nrow << endl;
+    std::cout << "---------------------\n"; 
+    std::cout << "Number of rows read, offset (2,3), max (3,5): " << nrow << std::endl;
     for (i=0; i< nrow ; i++) {
 	for (j=0; j< ncol ; j++)
 	    fprintf(stdout," %3.0f ",data[i][j]);
-	cout << endl;
+	std::cout << std::endl;
     }
-    cout << "---------------------\n"; 
+    std::cout << "---------------------\n"; 
 
     ifs.close();
     return 0;

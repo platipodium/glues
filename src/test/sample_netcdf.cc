@@ -1,7 +1,7 @@
 /* GLUES test; this file is part of
    the Global Land Use and technological Evolution Simulator
    
-   Copyright (C) 2009
+   Copyright (C) 2009,2010
    Carsten Lemmen <carsten.lemmen@hzg.de>
 
    This program is free software; you can redistribute it and/or modify it
@@ -20,7 +20,7 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
-   @date   2009-08-07
+   @date   2010-10-19
    @file test_netcdf.cc
 */
 
@@ -34,8 +34,6 @@
 #include "netcdfcpp.h"
 #endif
 
-using namespace std;
-
 int main(int argc, char* argv[]) 
 {
 
@@ -44,12 +42,12 @@ int main(int argc, char* argv[])
     return 1;
 #else
  
-  string filename="../../examples/setup/685/results.out";
+  std::string filename="../../examples/setup/685/results.out";
    
-  ifstream ifs(filename.c_str(),ios::in | ios::binary);
-  ifs.seekg (0, ios::end);
+  std::ifstream ifs(filename.c_str(),std::ios::in | std::ios::binary);
+  ifs.seekg (0, std::ios::end);
   int length = ifs.tellg();
-  ifs.seekg (0, ios::beg);
+  ifs.seekg (0, std::ios::beg);
 
   // First byte gives the number of variables as an unsigned char
   unsigned char nvar;
@@ -57,7 +55,7 @@ int main(int argc, char* argv[])
 
   int i=0;
   
-  string *vars = new string[nvar];
+  std::string *vars = new std::string[nvar];
 
   for (i=0; i<nvar; i++) 
   {
@@ -78,11 +76,11 @@ int main(int argc, char* argv[])
   for (i=0; i<8; i++) 
   {
   nreg=(float*)(buffer+i);
-    cout << i << ": " << *nreg << endl;
+    std::cout << i << ": " << *nreg << std::endl;
   }
  
-  cout << (int)nvar << " x " << *nreg << " / " << *tstart << ":"
-  << tend << " " << tstep << endl;
+  std::cout << (int)nvar << " x " << *nreg << " / " << *tstart << ":"
+  << tend << " " << tstep << std::endl;
 
 
   return 0;

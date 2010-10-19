@@ -20,7 +20,7 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
-   @date   2010-03-06
+   @date   2010-10-19
    @file nc_util.cc
    @brief Utility functions for netCDF file handling
 */

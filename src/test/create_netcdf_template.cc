@@ -20,7 +20,7 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
-   @date   2010-01-19
+   @date   2010-10-19
    @file nc_glues.cc
 */
 
@@ -33,8 +33,6 @@
 #include "netcdfcpp.h"
 #endif
 
-using namespace std;
-
 int main(int argc, char* argv[]) 
 {
 
@@ -45,15 +43,15 @@ int main(int argc, char* argv[])
  
   const int ntime=0;
   const int nreg=1;
-  string filename="glues_template.nc";
+  std::string filename="glues_template.nc";
    
   NcFile ncfile(filename.c_str(), NcFile::Replace);
   if (!ncfile.is_valid()) return 1;
   
   time_t today;
   std::time(&today);
-  string s1(asctime(gmtime(&today)));
-  string timestring=s1.substr(0,s1.find_first_of("\n"));
+  std::string s1(asctime(gmtime(&today)));
+  std::string timestring=s1.substr(0,s1.find_first_of("\n"));
   
   ncfile.add_att("Conventions","CF-1.4");
   ncfile.add_att("title","GLUES netCDF template in CF conventions");

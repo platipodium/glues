@@ -20,7 +20,7 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
-   @date   2010-01-15
+   @date   2010-10-19
    @file nc_regionmap.cc
 */
 
@@ -34,8 +34,6 @@
 #include "netcdfcpp.h"
 #endif
 
-using namespace std;
-
 int main(int argc, char* argv[]) 
 {
 
@@ -44,8 +42,8 @@ int main(int argc, char* argv[])
     return 1;
 #else
   
-  string input_filename="../../visual/matlab/glues_regionid.rst";
-  string filename="glues_map.nc";
+  std::string input_filename="../../visual/matlab/glues_regionid.rst";
+  std::string filename="glues_map.nc";
    
   const int ntime=0;
    
@@ -53,9 +51,9 @@ int main(int argc, char* argv[])
   if (!ncfile.is_valid()) return 1;
   
   time_t today;
-  std::time(&today);
-  string s1(asctime(gmtime(&today)));
-  string timestring=s1.substr(0,s1.find_first_of("\n"));
+  time(&today);
+  std::string s1(asctime(gmtime(&today)));
+  std::string timestring=s1.substr(0,s1.find_first_of("\n"));
   
   ncfile.add_att("Conventions","CF-1.4");
   ncfile.add_att("title","GLUES netCDF region raster in CF conventions");
@@ -74,7 +72,7 @@ int main(int argc, char* argv[])
   ncfile.add_att("filenames_output",filename.c_str());
   
 
-  std::ifstream ifs(input_filename.c_str(),ios::in);
+  std::ifstream ifs(input_filename.c_str(),std::ios::in);
   if (!ifs.good()) return 1;
   
 // Define and read grid

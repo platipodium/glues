@@ -21,7 +21,7 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
    @author Kai Wirtz <kai.wirtz@hzg.de>
-   @date   2010-10-13
+   @date   2010-10-19
    @file   Glues.cc
    @brief  Main driver for GLUES simulations
 */
