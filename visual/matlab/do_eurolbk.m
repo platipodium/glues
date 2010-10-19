@@ -4,9 +4,10 @@ reg='emea';
 
 [r,nreg,lonlim,latlim]=find_region_numbers(reg);
 
-clp_nc_variable('var','farming','timelim',[-6000],'marble',0,'latlim',latlim,'lonlim',lonlim);
+clp_nc_variable('var','farming','timelim',[-6000],'marble',2,'latlim',latlim,'lonlim',lonlim);
 
 
+return
 a=clp_basemap('latlim',latlim,'lonlim',lonlim,'nocoast',1);
 [elev,lon,lat]=M_TBASE([lonlim(1) lonlim(2) latlim(1) latlim(2)]);
 elev(elev<0)=NaN;
@@ -17,9 +18,6 @@ shading interp;
 cmap=colormap(gray(256));
 colormap(flipud(cmap(100:230,:)));
 m_gshhs('ic','color',cmap(230,:));
-
-
-
 
 
 return
