@@ -204,18 +204,7 @@ if isinf(latlim(2)) latlim(2)=80; end
     if pm>0 alpha(pm,marble); end
   elseif (marble==2)
     pb=clp_basemap('lon',lonlim,'lat',latlim,'nogrid',nogrid,'nocoast',1);
-    [elev,elon,elat]=M_TBASE([lonlim(1) lonlim(2) latlim(1) latlim(2)]);
-    elev(elev<0)=NaN;
-    glat=latlim(2)+0.5/12-[1:size(elev,1)]/12.0;
-    glon=lonlim(1)-0.5/12+[1:size(elev,2)]/12.0;
-    m_pcolor(glon,glat,double(elev));
-    cmap=colormap(gray(256));
-    colormap(flipud(cmap(100:230,:)));
-    shading(gca,'interp');
-    %m_gshhs('lc','color',cmap(230,:));
-    axes('box','off','Color','none');
-    %pb=clp_basemap('lon',lonlim,'lat',latlim,'nogrid',nogrid,'nocoast',1);
-    m_gshhs('lc','color',cmap(1,:));
+    pm=clp_relief;
   else
     m_coast('patch',landcolor);
     set(gca,'Tag','m_coast');

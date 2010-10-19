@@ -1,14 +1,21 @@
 % Run script for eurolbk paper about spread and migration in Europe
 
-reg='emea';
-
+%% Create lbk_background.png
+reg='lbk';
 [r,nreg,lonlim,latlim]=find_region_numbers(reg);
+figure(1); clf reset;
+axes('color','w','box','off');
+m_proj('equidistant','lat',latlim,'lon',lonlim);
 
-clp_nc_variable('var','farming','timelim',[-6000],'marble',2,'latlim',latlim,'lonlim',lonlim);
+c0=100;
+c1=230;
+m_grid('XTick',[],'Ytick',[],'box','off');
+cmap=gray(256);
+hold on;
+%set(gca,'XTick',[],'Ytick',[],'box','off');
 
+%m_gshhs('ib','color',cmap(230,:));
 
-return
-a=clp_basemap('latlim',latlim,'lonlim',lonlim,'nocoast',1);
 [elev,lon,lat]=M_TBASE([lonlim(1) lonlim(2) latlim(1) latlim(2)]);
 elev(elev<0)=NaN;
 glat=latlim(2)+0.5/12-[1:size(elev,1)]/12.0;
@@ -17,12 +24,12 @@ m_pcolor(glon,glat,double(elev));
 shading interp;
 cmap=colormap(gray(256));
 colormap(flipud(cmap(100:230,:)));
-m_gshhs('ic','color',cmap(230,:));
+%m_gshhs('fc','color',cmap(c1,:));
+%print('-dpng','-r600','lbk_background');
 
 
-return
 
-r=clp_nc_variable('var','region','showvalue',1,'reg',reg);
+r=clp_nc_variable('var','region','showvalue',1,'reg',reg,'marble',2);
 
 ti=clp_nc_trajectory('var','technology_spread_by_information','reg',reg);
 tp=clp_nc_trajectory('var','technology_spread_by_people','reg',reg);
