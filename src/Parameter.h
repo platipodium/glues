@@ -2,7 +2,7 @@
    the Global Land Use and technological Evolution Simulator
    
    Copyright (C) 2010
-   Carsten Lemmen <carsten.lemmen@gkss.de>, Kai Wirtz <kai.wirtz@gkss.de>
+   Carsten Lemmen <carsten.lemmen@hzg.de>, Kai Wirtz <kai.wirtz@hzg.de>
 
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the
@@ -20,8 +20,8 @@
 */
 /**
 
-   @author Carsten Lemmen <carsten.lemmen@gkss.de>
-   @author Kai W Wirtz <kai.wirtz@gkss.de
+   @author Carsten Lemmen <carsten.lemmen@hzg.de>
+   @author Kai W Wirtz <kai.wirtz@hzg.de
    @date 2010-05-07
    @file Parameter.h
    @brief Global parameter class

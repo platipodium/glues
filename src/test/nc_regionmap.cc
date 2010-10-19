@@ -2,7 +2,7 @@
    the Global Land Use and technological Evolution Simulator
    
    Copyright (C) 2010
-   Carsten Lemmen <carsten.lemmen@gkss.de>
+   Carsten Lemmen <carsten.lemmen@hzg.de>
 
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the
@@ -19,7 +19,7 @@
    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 /**
-   @author Carsten Lemmen <carsten.lemmen@gkss.de>
+   @author Carsten Lemmen <carsten.lemmen@hzg.de>
    @date   2010-01-15
    @file nc_regionmap.cc
 */
@@ -60,10 +60,10 @@ int main(int argc, char* argv[])
   ncfile.add_att("Conventions","CF-1.4");
   ncfile.add_att("title","GLUES netCDF region raster in CF conventions");
   ncfile.add_att("history","Created by nc_regionmap");
-  ncfile.add_att("institution","GKSS-Forschungszentrum Geesthacht GmbH");
+  ncfile.add_att("institution","Helmholtz-Zentrum Geesthacht GmbH");
   ncfile.add_att("address","Max-Planck-Str 1, 21502 Geesthacht, Germany");
   ncfile.add_att("principal_investigator","Carsten Lemmen");
-  ncfile.add_att("email","carsten.lemmen@gkss.de");
+  ncfile.add_att("email","carsten.lemmen@hzg.de");
   ncfile.add_att("model_name","GLUES");
   ncfile.add_att("model_version","1.1.7");
   ncfile.add_att("source","GLUES model 1.1.7");

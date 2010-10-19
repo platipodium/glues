@@ -1,7 +1,7 @@
 # Makefile for GLUES sources.
 
 # Copyright (C) 2008,2009,2010
-# Carsten Lemmen <carsten.lemmen@gkss.de>, GKSS-Forschungszentrum Geesthacht
+# Carsten Lemmen <carsten.lemmen@hzg.de>, Helmholtz-Zentrum Geesthacht
 
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by

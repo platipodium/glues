@@ -2,7 +2,7 @@
    the Global Land Use and technological Evolution Simulator
    
    Copyright (C) 2009,2010
-   Carsten Lemmen <carsten.lemmen@gkss.de>
+   Carsten Lemmen <carsten.lemmen@hzg.de>
 
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the
@@ -19,7 +19,7 @@
    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 /**
-   @author Carsten Lemmen <carsten.lemmen@gkss.de>
+   @author Carsten Lemmen <carsten.lemmen@hzg.de>
    @date   2010-02-23
    @file create_reg_climate.cc
 */
@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
   ncfile.add_att("Conventions","CF-1.4");
   ncfile.add_att("title","GLUES netcdf background climate");
   ncfile.add_att("history","Glues template netcdf file");
-  ncfile.add_att("institution","GKSS-Forschungszentrum Geesthacht GmbH");
+  ncfile.add_att("institution","Helmholtz-Zentrum Geesthacht GmbH");
   ncfile.add_att("source","GLUES 1.1.9 model");
   ncfile.add_att("comment","");
   ncfile.add_att("references","Wirtz & Lemmen (2003), Lemmen (2009)");
