@@ -5,14 +5,14 @@ arguments = {...
   {'lonlim',[-inf inf]},...
   {'timelim',[-inf,inf]},...
   {'lim',[-inf,inf]},...
-  {'reg','all'},...
+  {'reg','lbk'},...
   {'discrete',0},...
   {'variables','region_neighbour'},...
   {'scale','absolute'},...
   {'figoffset',0},...
   {'timeunit','BP'},...
   {'timestep',20},...
-  {'marble',0},...
+  {'marble',2},...
   {'seacolor',0.7*ones(1,3)},...
   {'landcolor',.8*ones(1,3)},...
   {'transparency',1},...
@@ -27,10 +27,11 @@ arguments = {...
   {'nogrid',0},...
   {'threshold',NaN},...
   {'flip',0},...
-  {'showtime',1},...
+  {'showtime',0},...
   {'showregion',1},...
   {'showstat',0},...
   {'showvalue',0},...
+  {'fontsize',15},...
   {'scenario',''}
 };
 
@@ -41,8 +42,6 @@ for i=1:a.length eval([a.name{i} '=' clp_valuestring(a.value{i}) ';']); end
 
 [d,f]=get_files;
 
-reg='emea';
-% Choose 'emea' or 'China' or 'World'
 if ischar(reg)
   [ireg,nreg,loli,lali]=find_region_numbers(reg);
 else
@@ -178,11 +177,13 @@ if isinf(latlim(2)) latlim(2)=80; end
   set(varid,'DoubleBuffer','on');    
   set(varid,'PaperType','A4');
   hold on;
-  pb=clp_basemap('lon',lonlim,'lat',latlim,'nogrid',nogrid);
-  if (marble>0)
+  if (marble<2) pb=clp_basemap('lon',lonlim,'lat',latlim,'nogrid',nogrid); end
+  if (marble==1)
     pm=clp_marble('lon',lonlim,'lat',latlim);
     if pm>0 alpha(pm,marble); end
-  
+  elseif (marble==2)
+    pb=clp_basemap('lon',lonlim,'lat',latlim,'nogrid',nogrid,'nocoast',1);
+    pm=clp_relief;
   else
     m_coast('patch',landcolor);
     set(gca,'Tag','m_coast');
@@ -200,15 +201,16 @@ if isinf(latlim(2)) latlim(2)=80; end
   
   end
 
-ncol=length(colormap);
-
-
+  ncol=length(colormap);
 
   %% Invisible plotting of all regions
   [hp,loli,lali,lon,lat]=clp_regionpath('lat',latlim,'lon',lonlim,'draw','patch','col',landcolor,'reg',reg);  
   ival=find(hp>0);
-  %alpha(hp(ival),0);
-  
+  if transparency 
+    alpha(hp(ival),0);
+    h=hp(ival);
+    set(h,'EdgeColor','k','EdgeAlpha',0.1);
+  end  
 
 %% Time loop
 
@@ -245,22 +247,25 @@ for it=1:ntime
      if isempty(j) break; end
      %m_geodesic(lon(ir),lat(ir),lon(j),lat(j),20,'b:');
      %m_plot(alllon([ireg(ir),j]),alllat([ireg(ir),j]),'b-');
-     m_plot(lon([ir,j]),lat([ir,j]),'b-');
+     m_plot(lon([ir,j]),lat([ir,j]),'k:','color',repmat(0.5,1,3));
    end
   end
   
   if showregion
     for ir=1:nreg
-       m_text(double(lon(ir)),double(lat(ir)),num2str(region(ir)),...
-           'HorizontalAlignment','center','VerticalAlignment','middle');
+       if lon(ir)<lonlim(1) || lon(ir)>lonlim(2) || lat(ir) < latlim(1) || lat(ir)> latlim(2) continue; end
+       ht(ir)=m_text(double(lon(ir)),double(lat(ir)),num2str(region(ir)),...
+           'HorizontalAlignment','center','VerticalAlignment','middle','tag',num2str(region(ir)));
     end
   end
    
-    
+    fdir=fullfile(d.plot,'variable',varname);
+    if ~exist('fdir','dir') system(['mkdir -p ' fdir]); end
+  
   set(gcf,'UserData',cl_get_version);
  
   if (exist('time','var') && showtime>0)
-    m_text(lonlim(1)+0.02*(lonlim(2)-lonlim(1)),latlim(1)+0.02*(latlim(2)-latlim(1)),num2str(time(it)),...
+   m_text(lonlim(1)+0.02*(lonlim(2)-lonlim(1)),latlim(1)+0.02*(latlim(2)-latlim(1)),num2str(time(it)),...
         'VerticalAlignment','bottom','HorizontalAlignment','left','background','w')
   end
  %% 
@@ -273,16 +278,16 @@ for it=1:ntime
       s=scale_precision(s,3);
       statstr=sprintf('%.2f:%.2f:%.2f',s);
       m_text(lonlim(2)-0.02*(lonlim(2)-lonlim(1)),latlim(1)+0.02*(latlim(2)-latlim(1)),statstr,...
-        'VerticalAlignment','bottom','HorizontalAlignment','right','background','w','tag','Statistics')  
+        'VerticalAlignment','bottom','HorizontalAlignment','right','background','w','Tag','Statistics')  
   end
   
   obj=findall(gcf,'-property','FontSize');
-  set(obj,'FontSize',15);
+  set(obj,'FontSize',fontsize);
   obj=findall(gcf,'tag','Statistics');
   set(obj,'FontSize',10);
   
   %%
-  bname=[varname '_' num2str(nreg)];
+  bname=[varname '_' reg '_' num2str(nreg)];
   if length(scenario)>0 bname=[bname '_' scenario]; end
   
   
