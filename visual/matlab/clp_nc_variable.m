@@ -298,6 +298,8 @@ for it=1:ntime
   if showvalue
     for ir=1:nreg
         if isnan(data(ireg(ir),itime(it))) continue; end
+        if lon(ir)<lonlim(1) || lon(ir)>lonlim(2) || lat(ir)<latlim(1) || ...
+            lat(ir)>latlim(2) continue; end
        m_text(double(lon(ir)),double(lat(ir)),num2str(data(ireg(ir),itime(it))),...
            'HorizontalAlignment','center','VerticalAlignment','middle','tag','showvalue');
     end
