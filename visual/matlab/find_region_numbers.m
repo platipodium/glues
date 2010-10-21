@@ -53,6 +53,7 @@ while iarg<=nargin
           latlim=[10,50];
     case 'lbk'
       lonlim=[-10,42];
+      %lonlim=[6,42];
       latlim=[31,57];
     case 'eme'
       lonlim=[-15,42];

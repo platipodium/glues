@@ -1,8 +1,14 @@
 #!/bin/bash
+# TODO why does the regular sed not accept this?
 
-SED=`which sed` 
+V=eurolbk
+
+test -x sed && SED=$(which sed)
+test -x gsed && SED=$(which gsed)
+export SED=/opt/local/bin/gsed
+
 X=src/glues
-P=examples/simulations/685/lbk
+export P=examples/simulations/685/lbk
 S=examples/setup/685
 
 SIM=$P.sim
@@ -11,7 +17,45 @@ SCE=$P.sce
 DAT=$P.dat
 OPAR=$P.opar
 R=$S/results
-PAR=$P.par
+export PAR=$P.par
+
+# Make sure we start from base setup (with spread, no fluc)
+$SED -i '/spreadv/s/spreadv.*$/spreadv 0.002/' $PAR
+$SED -i '/spreadm/s/spreadm.*$/spreadm 100/' $OPAR
+$SED -i '/LocalSpread/s/LocalSpread.*$/LocalSpread 1/' $CTL
+$SED -i '/flucampl/s/flucampl.*$/flucampl 0.0/' $DAT
+
+$X $SIM
+mv test.nc ${V}_base.nc
+
+# Remove spread (used in paper to diagnose indigenous)
+$SED -i '/LocalSpread/s/1/0/' $CTL
+$X $SIM
+cp test.nc ${V}_nospread.nc
+$SED -i '/LocalSpread/s/0/1/' $CTL
+
+# Add climate disruptions
+$SED -i '/flucampl/s/0\.0/0.4/' $DAT
+$X $SIM
+cp test.nc ${V}_events.nc
+$SED -i '/flucampl/s/0\.4/0.0/' $DAT
+
+# return to base setup
+$SED -i '/spreadv/s/spreadv.*$/spreadv 0.002/' $PAR
+$SED -i '/spreadm/s/spreadm.*$/spreadm 100/' $OPAR
+$SED -i '/LocalSpread/s/LocalSpread.*$/LocalSpread 1/' $CTL
+$SED -i '/flucampl/s/flucampl.*$/flucampl 0.0/' $DAT
+
+
+
+
+exit
+
+
+
+
+
+
 
 
 # trade const and migration var, kee0p spreadv*spreadm=0.2
@@ -80,9 +124,6 @@ cp ${R}.out ${R}_v3m8.out
 $SED -i '/spreadm/s/spreadm.*$/spreadm 1000/' $OPAR
 $X $SIM
 cp ${R}.out ${R}_v3m9.out
-
-
-
 
 
 # only migration
