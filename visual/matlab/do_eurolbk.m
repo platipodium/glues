@@ -2,13 +2,14 @@
 
 %% Define region to lbk
 reg='lbk'
-timelim=[-8000 -2000];
+timelim=[-8000 -4000];
 
 %% plot farming timing
 clp_nc_variable('var','farming','threshold',0.5,'reg',reg,'marble',2,'transparency',1,'nocolor',0,...
-      'showstat',0,'timelim',timelim,'showtime',0);
+      'showstat',0,'timelim',timelim,'showtime',0,'flip',1,'showvalue',1,'file','../../amant_events.nc','figoffset',1);
 
 
+  return
 %% Plot wave of advance for selected regions
 hreg=[271 255  211 183 178 170 146 142 122 123];
 lc='mkcrbmkcrb';
@@ -16,7 +17,7 @@ ls='--------------------';
 nhreg=length(hreg);
 timelim=[-8000 -2000];
 
-[d,b]=clp_nc_trajectory('reg',hreg+1,'var','farming','timelim',timelim);
+[d,b]=clp_nc_trajectory('reg',hreg+1,'var','farming','timelim',timelim,'file','../../amant_nofluc');
 
 %%
 dd=diff(d');
