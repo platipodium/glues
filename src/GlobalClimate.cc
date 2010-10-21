@@ -60,7 +60,7 @@ int GlobalClimate::InitRead(char* filename)
   char *charoffset,gddname[299];
   unsigned int num=0,method=0;
   long unsigned int nrow=0,ncol=0,i=0,j=0;
-  double** data;
+  //double** data;
 
   ifstream ififsc,ifs;
 
@@ -71,7 +71,7 @@ int GlobalClimate::InitRead(char* filename)
     cout << "\nERROR\tTried to open file " << filename << " and failed" << endl;
     return 0;  // The file does not exist
   }
-  nrow=glues::IO::count_ascii_rows(ifsr);
+  nrow=glues::IO<void>::count_ascii_rows(ifsr);
   ifsr.close();
   if (nrow < 1) {
       cout << "\nERROR\tFile " << filename << " appears to have 0 rows" << endl;
@@ -85,19 +85,19 @@ int GlobalClimate::InitRead(char* filename)
     cout << "\nERROR\tTried to open file " << filename << " and failed" << endl;
     return 0;  
   }
-  ncol=glues::IO::count_ascii_columns(ifsc);
+  ncol=glues::IO<void>::count_ascii_columns(ifsc);
   ifsc.close();
   if (ncol < 1) {
       cout << "\nERROR\tFile " << filename << " appears to have 0 columns" << endl;
       return 0;
   }
 
-  // Create data field
-  data=(double**)malloc(nrow*sizeof(double*));
+
+/*  data=(double**)malloc(nrow*sizeof(double*));
   for (i=0; i<nrow; i++) {
       data[i]=(double*)malloc(ncol*sizeof(double));
       for (j=0; j<ncol; j++) data[i][j]=0;
-  }
+  }*/
 
   unsigned long int joffset=0;
 
@@ -128,8 +128,11 @@ int GlobalClimate::InitRead(char* filename)
 
   ifs.open(filename,ios::in);
 
+  // Create data field
+  std::vector< std::vector<double> > data;
+
   if (method==0) { // old data version nclim rows * nreg columns
-      glues::IO::read_ascii_table(ifs,data,0,joffset,0,0);
+      glues::IO<double>::read_ascii_table(ifs,data,0,joffset,0,0);
       for (i=0; i<num; i++) 
 	  for (j=0; j<ncol-joffset; j++) {
  	      if (npp_store + j + numberOfRegions*i == NULL)
@@ -142,7 +145,7 @@ int GlobalClimate::InitRead(char* filename)
   }
   else 
   {
-      glues::IO::read_ascii_table(ifs,data,0,joffset,0,0);
+      glues::IO<double>::read_ascii_table(ifs,data,0,joffset,0,0);
       for (i=0; i<num; i++) 
 	  for (j=0; j<ncol-joffset; j++) {
 	      if (npp_store + i + numberOfRegions*j == NULL)
@@ -170,7 +173,7 @@ int GlobalClimate::InitRead(char* filename)
   }
 
   if (method==0) { // old data version nclim rows * nreg columns
-      glues::IO::read_ascii_table(ifs,data,0,joffset,0,0);
+      glues::IO<double>::read_ascii_table(ifs,data,0,joffset,0,0);
       for (i=0; i<num; i++) 
 	  for (j=0; j<ncol-joffset; j++) {
 	      if (gdd_store + j + numberOfRegions*i == NULL)
@@ -178,12 +181,12 @@ int GlobalClimate::InitRead(char* filename)
 		  cerr << "ERROR: Memory not allocated in GlobalClimate::gdd_store" << endl;
 		  return 0;
 	      }
-	      gdd_store[j+numberOfRegions*i]=data[i][j];
+	      gdd_store[j+numberOfRegions*i]=data.at(i).at(j);
 	  }
   }
   else 
   {
-      glues::IO::read_ascii_table(ifs,data,0,joffset,0,0);
+      glues::IO<double>::read_ascii_table(ifs,data,0,joffset,0,0);
       for (i=0; i<num; i++) 
 	  for (j=0; j<ncol-joffset; j++) {
 	      if (gdd_store + i + numberOfRegions*j == NULL)
@@ -191,7 +194,7 @@ int GlobalClimate::InitRead(char* filename)
 		  cerr << "ERROR: Memory not allocated in GlobalClimate::gdd_store" << endl;
 		  return 0;
 	      }
-	      gdd_store[i+numberOfRegions*j]=data[i][j];
+	      gdd_store[i+numberOfRegions*j]=data.at(i).at(j);
 	  }
   } 
   ifs.close();
