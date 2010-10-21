@@ -169,7 +169,7 @@ end
 seacolor=0.7*ones(1,3);
 landcolor=0.8*ones(1,3);  
 
-if transparency
+if transparency && isnan(threshold)
   %colmap=[linspace(0,0,n)' linspace(0.1,0.6,n)' linspace(1,0.5,n)']
   colmap=hsv2rgb([linspace(0,0,ncol)' linspace(0.1,0.5,ncol)' linspace(1,0.8,ncol)']);
 else
@@ -277,6 +277,7 @@ for it=1:ntime
       greyval=0.15+0.35*sqrt(i./ncol);
       if transparency
         if i./ncol>0.33 greyval=0.33; elseif (i./ncol)>0.66 greyval=0.5; else greyval=0; end
+        if ~isnan(threshold) greyval=0.33; end
         alpha(h,greyval); 
       end
       if ~nocolor
@@ -296,8 +297,9 @@ for it=1:ntime
   
   if showvalue
     for ir=1:nreg
+        if isnan(data(ireg(ir),itime(it))) continue; end
        m_text(double(lon(ir)),double(lat(ir)),num2str(data(ireg(ir),itime(it))),...
-           'HorizontalAlignment','center','VerticalAlignment','middle');
+           'HorizontalAlignment','center','VerticalAlignment','middle','tag','showvalue');
     end
   end
   
