@@ -3,19 +3,19 @@ function [retdata,basename]=clp_nc_variable(varargin)
 arguments = {...
   {'latlim',[-inf inf]},...
   {'lonlim',[-inf inf]},...
-  {'timelim',[-inf,inf]},...
+  {'timelim',[-5000,-5000]},...
   {'lim',[-inf,inf]},...
-  {'reg','all'},...
+  {'reg','lbk'},...
   {'discrete',0},...
-  {'variables','npp'},...
+  {'variables','farming'},...
   {'scale','absolute'},...
   {'figoffset',0},...
   {'timeunit','BP'},...
   {'timestep',20},...
-  {'marble',0},...
+  {'marble',2},...
   {'seacolor',0.7*ones(1,3)},...
   {'landcolor',.8*ones(1,3)},...
-  {'transparency',1},...
+  {'transparency',0},...
   {'snapyear',1000},...
   {'movie',1},...
   {'mult',1},...
@@ -30,7 +30,7 @@ arguments = {...
   {'showtime',1},...
   {'showstat',1},...
   {'showvalue',0},...
-  {'scenario',''}
+  {'scenario',''}...
 };
 
 cl_register_function;
@@ -169,10 +169,16 @@ end
 seacolor=0.7*ones(1,3);
 landcolor=0.8*ones(1,3);  
 
-if (nocolor==0)
-  colmap=jet(ncol);
+if transparency
+  %colmap=[linspace(0,0,n)' linspace(0.1,0.6,n)' linspace(1,0.5,n)']
+  colmap=hsv2rgb([linspace(0,0,ncol)' linspace(0.1,0.5,ncol)' linspace(1,0.8,ncol)']);
 else
+  colmap=jet(ncol);
+end
+
+if nocolor 
   colmap=flipud(gray(ncol));
+  if ~transparency flip=1; end
 end
 if (flip==1) colmap=flipud(colmap); end
 
@@ -225,9 +231,9 @@ if isinf(latlim(2)) latlim(2)=80; end
 ncol=length(colormap);
 
   %% Invisible plotting of all regions
-  [hp,loli,lali,lon,lat]=clp_regionpath('lat',latlim,'lon',lonlim,'draw','patch','col','none','reg',reg);  
+  [hp,loli,lali,lon,lat]=clp_regionpath('lat',latlim,'lon',lonlim,'draw','patch','col',landcolor,'reg',reg);  
   ival=find(hp>0);
-  %alpha(hp(ival),0);
+  if transparency alpha(hp(ival),0); end
   
 
 %% Time loop
@@ -269,8 +275,22 @@ for it=1:ntime
       h=hp(j(ij));
       if isnan(h) || h==0 continue; end
       greyval=0.15+0.35*sqrt(i./ncol);
-      %alpha(h,greyval);
-      set(h,'FaceColor',cmap(i,:),'tag','region_patch');
+      if transparency
+        if i./ncol>0.33 greyval=0.33; elseif (i./ncol)>0.66 greyval=0.5; else greyval=0; end
+        alpha(h,greyval); 
+      end
+      if ~nocolor
+        set(h,'FaceColor',cmap(i,:),'tag','region_patch','EdgeColor',cmap(min(ncol,i+1),:),'EdgeAlpha',greyval)
+      else
+        greyval=repmat(0.5,1,3);
+        if i<ncol/3 continue; end
+        density=7-4.0*i/ncol;
+        xp=get(h,'XData'); yp=get(h,'YData');
+        [xlon,xlat]=m_xy2ll(xp,yp);
+        if (exist('hh','var') && j(ij)<=length(hh) && (hh(j(ij))>0)) delete hh(j(ij)); end
+        hh(j(ij))=m_hatch(xlon,xlat,'cross',30,density,'color',greyval,'linewidth',0.1);
+        set(h,'EdgeColor',greyval,'EdgeAlpha',0.3,'FaceAlpha',0)       
+      end
     end
   end
   
@@ -280,8 +300,12 @@ for it=1:ntime
            'HorizontalAlignment','center','VerticalAlignment','middle');
     end
   end
-
+  
   if (it==1)
+    fdir=fullfile(d.plot,'variable',varname);
+    if ~exist('fdir','dir') system(['mkdir -p ' fdir]); end
+  end
+  if (it==1) && ~transparency
     cb=colorbar('FontSize',15);
     if length(units)>0 title(cb,units); end
     if minmax(2)>minmax(1)
@@ -292,14 +316,15 @@ for it=1:ntime
     else
       cb=colorbar('FontSize',15,'Ytick',minmax(1));
     end
-    fdir=fullfile(d.plot,'variable',varname);
-    if ~exist('fdir','dir') system(['mkdir -p ' fdir]); end
   end
     
   set(gcf,'UserData',cl_get_version);
  
   if (exist('time','var') && showtime>0)
-    m_text(lonlim(1)+0.02*(lonlim(2)-lonlim(1)),latlim(1)+0.02*(latlim(2)-latlim(1)),num2str(time(it)),...
+    if time(it)<0 bcad='BC'; else bcad='AD'; end
+    if time(it)==0 time(it)=1; end
+    m_text(lonlim(1)+0.02*(lonlim(2)-lonlim(1)),latlim(1)+0.02*(latlim(2)-latlim(1)),...
+        [num2str(abs(time(it))) ' ' bcad],...
         'VerticalAlignment','bottom','HorizontalAlignment','left','background','w')
   end
  %% 
@@ -322,9 +347,8 @@ for it=1:ntime
   set(obj,'FontSize',10);
   
   %%
-  bname=[varname '_' num2str(nreg)];
+  bname=[varname '_' reg '_' num2str(nreg)];
   if length(scenario)>0 bname=[bname '_' scenario]; end
-  
   
   if exist('time','var') if (ntime>1 || showtime>0) bname = [bname '_' num2str(time(it))]; end; end
   plot_multi_format(gcf,fullfile(fdir,bname));

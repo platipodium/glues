@@ -1,5 +1,60 @@
 % Run script for eurolbk paper about spread and migration in Europe
 
+%% Define region to lbk
+reg='lbk'
+timelim=[-8000 -2000];
+
+%% plot farming timing
+clp_nc_variable('var','farming','threshold',0.5,'reg',reg,'marble',2,'transparency',1,'nocolor',0,...
+      'showstat',0,'timelim',timelim,'showtime',0);
+
+
+%% Plot wave of advance for selected regions
+hreg=[271 255  211 183 178 170 146 142 122 123];
+lc='mkcrbmkcrb';
+ls='--------------------';
+nhreg=length(hreg);
+timelim=[-8000 -2000];
+
+[d,b]=clp_nc_trajectory('reg',hreg+1,'var','farming','timelim',timelim);
+
+%%
+dd=diff(d');
+ntime=size(dd,1);
+dtime=(timelim(2)-timelim(1))/(ntime-1);
+time=timelim(1):dtime:timelim(2);
+clf reset;
+for i=1:nhreg
+  p(i)=plot(dd(:,i),time,'k-','color',lc(i),'LineStyle',ls(i));
+  hold on;
+end
+set(gca,'YAxisLocation','right','Ylim',[timelim(1),-3000],'XTick',[]);
+%legend(num2str(hreg'));
+plot_multi_format(gcf,[b '_diff']);
+
+%% Plot region network
+clp_nc_neighbour('reg',reg,'marble',2,'transparency',1,'nocolor',0,...
+      'showstat',0,'showtime',0,'fontsize',10);
+
+for ir=1:nhreg
+  obj=findobj(gcf,'Tag',num2str(hreg(ir)));
+  set(obj,'Color',lc(ir),'FontSize',14);
+end
+  
+return  
+%% Define region to lbk
+reg='lbk'
+time=-8000:100:-2000;
+ntime=length(time);
+
+%% plot farming advance
+for it=1:ntime
+  clp_nc_variable('var','farming','reg',reg,'marble',2,'transparency',1,'nocolor',0,...
+      'showstat',0,'lim',[0 1],'timelim',time(it));
+end
+
+
+return
 %% Create lbk_background.png
 reg='lbk';
 [r,nreg,lonlim,latlim]=find_region_numbers(reg);
