@@ -21,7 +21,8 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
    @author Kai Wirtz <kai.wirtz@gkss.de>
-   @date   2010-03-30
+   @author Caleb K Taylor <calebt@users.sourceforge.net>
+   @date   2010-10-26
    @file   GlobalClimate.h
    @brief  Input and update of climate data
 */
@@ -41,36 +42,31 @@ extern PopulatedRegion* regions;
 
 /** DECLARATION section **/
 class GlobalClimate {
- protected:
-  double timestamp;
-  //double * timeaxis;
-  //glues::RegionalClimate* climate;
-  //int *map;
-  std::vector< glues::RegionalClimate > climate;
-  std::vector< double > timeaxis;
-  std::vector< int > map;
+  protected:
+    double timestamp;
+ 
+    std::vector< glues::RegionalClimate > climate;
+    std::vector< double > timeaxis;
+    std::vector< int > map;
 
-  double id2lat(unsigned int index) const{ return 90.0-(index/720)/2.0;}
-  double id2lon(unsigned int index) const{ return (index%720)/2.0-180.; }
-  unsigned int lat2x(double lat)  const { return (unsigned int)((90.-lat)*2.); }
-  unsigned int lon2x(double lon)  const { return (unsigned int)((lon+180.)*2.);}
-  unsigned int geo2id(double,double) const;
-  // static double *npp_store;
-  //static double *gdd_store;
-
-
- public:
-  GlobalClimate(double timestamp);
-  ~GlobalClimate();
+    double id2lat(unsigned int index) const{ return 90.0-(index/720)/2.0;}
+    double id2lon(unsigned int index) const{ return (index%720)/2.0-180.; }
+    unsigned int lat2x(double lat)  const { return (unsigned int)((90.-lat)*2.); }
+    unsigned int lon2x(double lon)  const { return (unsigned int)((lon+180.)*2.);}
+    unsigned int geo2id(double,double) const;
+ 
+  public:
+    GlobalClimate(double timestamp);
+    ~GlobalClimate();
 
   /** Accessor methods */
-  double Timestamp() { return timestamp; }
-  //Need to implement own bounds checking for climate[].
-  glues::RegionalClimate Climate(unsigned int i) { return climate.at(i); }
-  int Update(double time);
-  int UpdateNPP(int r, double npp);
+    double Timestamp() { return timestamp; }
+    //Need to implement own bounds checking for climate[].
+    glues::RegionalClimate Climate(unsigned int i) { return climate.at(i); }
+    int Update(double time);
+    int UpdateNPP(int r, double npp);
 
-  static int InitRead(char* filename);
+    static int InitRead(char* filename);
 
 };
 #endif
