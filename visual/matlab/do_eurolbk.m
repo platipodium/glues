@@ -56,17 +56,18 @@ end
   
 %return  
 %% Define region to lbk
-reg='lbk'
-time=-8000:100:-2000;
+reg='lbk';
+time=-7500:100:-3000;
 ntime=length(time);
 
 %% plot farming advance
-for it=1:-1 %ntime
+for it=1:ntime
   clp_nc_variable('var','farming','reg',reg,'marble',2,'transparency',1,'nocolor',0,...
       'showstat',0,'lim',[0 1],'timelim',time(it),...
       'file','../../eurolbk_base.nc','figoffset',0,'sce','base');
 end
-
+% Command line postprocessing
+% for F in farming_lbk_66_base_*png ; do ln -s $F `echo $F | awk -F'_' '{print $1 "_" $2 "_" $3 "_" $4 "_" 10000+$5 "_" $5 }'` ; done
 
 %return
 %% Create lbk_background.png

@@ -269,12 +269,12 @@ double calc_spread_single(unsigned int i) {
       sprdm[j]+=fabs(dp1*jpop);
     }
 
-    /*cerr << import_id << " " << export_id 
+    /*std::cerr << import_id << " " << export_id 
     	<< " dT " << sprd_p[import_id*N_POPVARS+0] << " " <<  sprd_i[import_id*N_POPVARS+0] << " " <<  sprd[import_id*N_POPVARS+0]
     	<< " dN " << sprd_p[import_id*N_POPVARS+1] << " " <<  sprd_i[import_id*N_POPVARS+1] << " " <<  sprd[import_id*N_POPVARS+1]
     	<< " dQ " << sprd_p[import_id*N_POPVARS+2] << " " <<  sprd_i[import_id*N_POPVARS+2] << " " <<  sprd[import_id*N_POPVARS+2]
     	<< " dP " << sprd_p[import_id*N_POPVARS+4] << " " <<  sprd_i[import_id*N_POPVARS+4] << " " <<  sprd[import_id*N_POPVARS+4]	
-    	<< endl;
+    	<< std::endl;
     //*/	
     }
     neigh = neigh->Next();
