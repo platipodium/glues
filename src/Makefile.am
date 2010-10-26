@@ -79,7 +79,6 @@ GeographicalWorld.cc \
 Continent.cc \
 GeoRegion.cc \
 GeoNeighbour.cc \
-IO.cc \
 GNetcdf.cc
 
 if LOCALSISI
