@@ -30,6 +30,16 @@ read_ascii_row is still overloaded for a vector<vector<Type>>
 and a vector<Type>
 
 User can use empty or non-empty vector<vector<Type>> or vector<Type>
+
+Note:
+I have assumed if the arguments to read_ascii_xx
+are 0 then the entire file/row/column is to be read.
+
+Fixed:
+1. Modified behavior of read_ascii_xx.
+2. Updated overload for vector<Type>.
+3. seekg bug in count_ascii_column that got overlooked.
+
 */
 
 #ifndef glues_io_h
@@ -47,7 +57,7 @@ User can use empty or non-empty vector<vector<Type>> or vector<Type>
 //#include "RegionalPopulation.h"
 
 
-namespace glues 
+namespace glues
 {
 	template < class Type >
 	class IO
@@ -55,7 +65,7 @@ namespace glues
 	public:
 		//Ctor.
 		IO(char commentCh = '#'){ commentChar = commentCh; }
-		
+
 		static void setComment( char commentCh = '#' ) { commentChar = commentCh; }
 		static long unsigned int count_ascii_rows(std::istream& is);
 		static long unsigned int count_ascii_columns(std::istream& is) ;
@@ -63,22 +73,22 @@ namespace glues
 		static long unsigned int read_ascii_table(
 			std::istream& is,
 			std::vector< std::vector<Type> > &,
-			long unsigned int row_offset,
-			long unsigned int column_offset,
-			long unsigned int nrow,
-			long unsigned int ncol);
+			long unsigned int row_offset = 0,
+			long unsigned int column_offset = 0,
+			long unsigned int nrow = 0,
+			long unsigned int ncol = 0);
 
 
 		static long unsigned int read_ascii_table(
 			std::istream& is,
 			std::vector<Type> &,
-			long unsigned int row_offset,
-			long unsigned int column_offset,
-			long unsigned int nrow,
-			long unsigned int ncol);
+			long unsigned int row_offset = 0,
+			long unsigned int column_offset = 0,
+			long unsigned int nrow = 0,
+			long unsigned int ncol = 0);
 
 
-	static int define_resultfile(std::string,unsigned long int);
+	static int define_resultfile(std::string,unsigned long int nreg = 685);
 #ifdef HAVE_NETCDF_H
 //	static int writeNetCDF(NcFile&,double t,RegionalPopulation* populations);
 #endif
@@ -97,176 +107,169 @@ namespace glues
 	/******************************************
 	read_ascii_table( vector<vector<Type>> )  */
 
-	template< class Type>
-	long unsigned int 
+	template< class Type >
+	long unsigned int
 		glues::IO<Type>::read_ascii_table(std::istream& is,
 		std::vector< std::vector<Type> > &table_double,
-		long unsigned int row_offset = 0, long unsigned int column_offset = 0,
-		long unsigned int max_nrow = 0, long unsigned int max_ncol = 0)
-
+		long unsigned int row_offset, long unsigned int column_offset,
+		long unsigned int max_nrow, long unsigned int max_ncol )
 	{
-	  Type dvalue;
-	  std::string line, word;
-	  long unsigned int icol = 0, irow = 0;
+		Type dvalue;
+		std::string line, word;
+		long unsigned int icol = 0, irow = 0;
 
-	  //Check for IO errors.
-	  if( is.rdstate() & std::ios::badbit )
-	  {
-		  std::cerr << "ERROR: glues::IO::count_ascii_columns. "
-			  << "Fatal IO error, badbit." << std::endl;
-		  return 0;
-	  }
-	  else
-	  {
-		  is.clear();
-	  }
-  
-	  is.seekg(0);
+		//Check for IO errors.
+		if( is.rdstate() & std::ios::badbit )
+		{
+			std::cerr << "ERROR: glues::IO::count_ascii_columns. "
+				<< "Fatal IO error, badbit." << std::endl;
+			return 0;
+		}
+		else
+		{
+			is.clear();
+		}
 
-	  //assert( max_nrow - row_offset > 0 );
-	  //assert( max_ncol - column_offset > 0 );
-  
-	  //Set size of vector.
-	  table_double.clear();
+		is.seekg(0);
 
-	  while(is.good() && getline(is, line))
-	  {
-		  if( is_comment_line(line) )
-			  continue;
-		  ++irow;
-		  icol = 0;//When each line is read, this is reset.
+		//Set size of vector.
+		table_double.clear();
 
-		  //Skip to row to start with the first time.
-		  if( row_offset > 0 && row_offset >= irow )
-		  {
-			  continue;
-		  }
-		  //Exit loop if exceeded max_nrow.
-		  else if( irow > max_nrow )
-		  {
-			  break;
-		  }
-		  //Else add room for this row.
-		  else
-		  {
-			  table_double.push_back( std::vector<Type>() );
-		  }
+		while(is.good() && getline(is, line))
+		{
+			if( is_comment_line(line) )
+				continue;
+			++irow;
+			icol = 0;//When each line is read, this is reset.
 
-		  //Extract "words" in row.
-		  std::istringstream iss(line);
+			//Skip to row to start with the first time.
+			if( row_offset > 0 && row_offset >= irow )
+			{
+				continue;
+			}
+			//Exit loop if exceeded max_nrow.
+			else if( (max_nrow > 0) && (irow > max_nrow+row_offset) )
+			{
+				break;
+			}
+			//Else add room for this row.
+			else
+			{
+				table_double.push_back( std::vector<Type>() );
+			}
 
-		  //Skip to column/word to start with.
-		  //leave get pointer before the entry needed.
-		  while( iss.good() && icol < column_offset )//(icol-1)
-		  {
-			  if(iss >> word)
-				  icol++;
-		  }
-	  
-		  //Extract words until icol > max_ncol.
-		  //Push to table_double.
-		  while( iss.good() && icol < max_ncol )
-		  {
-			  if(iss >> word)
-			  {
-				  std::stringstream tss( word );
-				  tss >> dvalue;
-				  icol++;
-				  table_double.at( irow-row_offset-1 ).push_back( dvalue );
-			  }
-		  }
+			//Extract "words" in row.
+			std::istringstream iss(line);
 
-		  //attempted to extract more words
-		  //than are on one line, error.
-		  if( iss.bad() )
-		  {
-			  std::cerr << "ERROR: in read_ascii_table. Attempted to extract"
-				  << " more words than exist per line.\n";
-			  return 0;
-		  }
-	  }
+			//Extract words until icol > max_ncol.
+			//Push to table_double.
+			while( iss.good()
+				&& (iss >> word)
+				&& ((icol < max_ncol+column_offset) || (max_ncol==0)) )
+			{
+				// Skip multi-blank and tab words, break on non-numeric
+				if (!is_numeric(word))
+					break;
 
-	  return irow - row_offset - 1;
+				icol++;
+
+				// Skip this column if less than col-offset
+				if (icol <= column_offset)
+					continue;
+
+				std::stringstream tss( word );
+				tss >> dvalue;
+				table_double.at( irow-row_offset-1 ).push_back( dvalue );
+			}
+		}
+
+		//return irow-row_offset;
+		return ( max_nrow > 0 ) ? (irow-row_offset-1) : irow-row_offset;
 	}
 
 	/**********************************
 	 read_ascii_table( vector<Type> ) */
 
 	template <class Type>
-	long unsigned int
-	glues::IO<Type>::read_ascii_table(std::istream& is, std::vector<Type> & fv,
-		long unsigned int row_offset = 0, long unsigned int column_offset = 0,
-		long unsigned int max_nrow = 0, long unsigned int max_ncol = 0)
+	long unsigned int glues::IO<Type>::read_ascii_table(
+		std::istream& is,
+		std::vector<Type> & fv,
+		long unsigned int row_offset,
+		long unsigned int column_offset,
+		long unsigned int max_nrow,
+		long unsigned int max_ncol)
 
 	{
-	  Type fvalue = 0.0f;
-	  std::string line, word;
-	  long unsigned int icol = 0, irow = 0;
+		Type fvalue;
+		std::string line, word;
+		long unsigned int icol = 0, irow = 0;
 
-	  //Check for IO errors.
-	  if( is.rdstate() & std::ios::badbit )
-	  {
-		  std::cerr << "ERROR: glues::IO::count_ascii_columns. "
-			  << "Fatal IO error, badbit." << std::endl;
-		  return 0;
-	  }
-	  else
-	  {
-		  is.clear();
-	  }
-	  is.seekg(0);
+		//Check for IO errors.
+		if( is.rdstate() & std::ios::badbit )
+		{
+			std::cerr << "ERROR: glues::IO::count_ascii_columns. "
+				<< "Fatal IO error, badbit." << std::endl;
+			return 0;
+		}
+		else
+		{
+			is.clear();
+		}
+		is.seekg(0);
+		fv.clear();
 
-	  // std::cerr  << line << std::endl;
-	  while (is.good() && std::getline(is, line))
-	  {
-		  icol = 0;
-		  if( !is_comment_line(line) )
-		  {
-			  std::istringstream iss(line);
-			  while (iss.good() && (iss >> word))
-			  {
-				  // Skip multi-blank and tab words, break on non-numeric
-				  if (word.length() < 1)
-					  continue;
-				  if (isspace(word.at(0)))
-					  continue;
-				  if (!is_numeric(word))
-					  break;
+		// std::cerr  << line << std::endl;
+		while (is.good() && std::getline(is, line))
+		{
+			if( is_comment_line(line) )
+				continue;
+			++irow;
+			icol = 0;
 
-				  // Skip this line if more than max_col
-				  if (max_ncol > 0 && icol >= column_offset + max_ncol)
-					  break;
-			  
-				  icol++;
+			//Skip to row to start with the first time.
+			if( row_offset > 0 && row_offset >= irow )
+			{
+				continue;
+			}
+			//Exit loop if exceeded max_nrow.
+			else if( (max_nrow > 0) && (irow > max_nrow+row_offset) )
+			{
+				break;
+			}
 
-				  if (icol == column_offset + 1)
-					  irow++;
+			std::istringstream iss(line);
 
-				  // Skip this column if less than col-offset
-				  if (icol <= column_offset)
-					  continue;
-			  
-				  // Skip this line if less than row-offset
-				  if (irow <= row_offset)
-				  {
-					  //icol--;
-					  break;
-				  }
+			while (iss.good() && (iss >> word))
+			{
+				// Skip multi-blank and tab words, break on non-numeric
+				if (!is_numeric(word))
+					break;
 
-				  //C++ portable string to int/float:
-				  std::istringstream tss(word);
-				  tss >> fvalue;
+				// Skip this line if more than max_col
+				if (max_ncol > 0 && icol >= column_offset + max_ncol)
+					break;
 
-				  fv.push_back( fvalue );
-			  }
-		  }
+				icol++;
 
-		  if (icol > column_offset && max_nrow > 0 && irow >= row_offset + max_nrow)
-			break;
+				// Skip this column if less than col-offset
+				if (icol <= column_offset)
+					continue;
+
+				//C++ portable string to int/float:
+				std::istringstream tss(word);
+				tss >> fvalue;
+				fv.push_back( fvalue );
+			}
+
+			if (icol > column_offset
+				&& max_nrow > 0
+				&& irow >= row_offset + max_nrow)
+				break;
 		}
 
-	  return irow - row_offset - 1;
+		return irow - row_offset;
 	}
+
 
 	/*******************
 	count_ascii_rows() */
@@ -286,17 +289,10 @@ namespace glues
 			  << "Fatal IO error, badbit." << std::endl;
 		  return 0;
 	  }
-	  //else if(is.rdstate() & std::ios::failbit )
-	  //{
-		 // std::cerr << "ERROR: glues::IO::count_ascii_rows. "
-			//  << "Non-fatal IO error, failbit." << std::endl;
-		 // is.clear();
-	  //}
 	  else
 	  {
 		  is.clear();
 	  }
-
 	  is.seekg(0);
 
 	  //Read line, ensure not comment line.
@@ -327,7 +323,7 @@ namespace glues
 
 	  std::string line, word;
 	  unsigned int n = 0;
-  
+
 	  //Check for IO errors.
 	  if( is.rdstate() & std::ios::badbit )
 	  {
@@ -339,6 +335,7 @@ namespace glues
 	  {
 		  is.clear();
 	  }
+	  is.seekg(0);
 
 	  while (is.good() && std::getline(is, line))
 	  {
@@ -382,20 +379,20 @@ namespace glues
 	 is_comment_line()*/
 
 	template<class Type>
-	bool 
+	bool
 	glues::IO<Type>::is_comment_line(const std::string &line)
 	{
 		if( line.size() == 0 )
 			return true;
-	
+
 		size_t pos;
 		//Get index of first non-whitespace char.
 		for( pos = 0; pos < line.size() && isspace(line.at(pos)); ++pos ) {}
-	
+
 	#ifdef GLUES_IO_TRIM
 		std::string temp( line.begin()+pos, line.end() );
 		line = temp;//copy data.
-		return ( (isalpha(line.at(0)) 
+		return ( (isalpha(line.at(0))
 			|| line.at(0) == commentChar) );
 	#else
 		return (isalpha(line.at(pos)) || line.at(pos) == commentChar);
@@ -408,7 +405,7 @@ namespace glues
 
 	template <class Type>
 	int
-	glues::IO<Type>::define_resultfile(std::string filename, unsigned long int nreg = 685)
+	glues::IO<Type>::define_resultfile(std::string filename, unsigned long int nreg)
 	{
 
 	  // NcFile ncfile(filename.c_str(),NcFile::Write);
@@ -431,9 +428,6 @@ namespace glues
 	return 0;
 
 	}
-
-
-
 
 	//This is some kind of odd rule due to
 	//C++'s archaic compilation behavior.
