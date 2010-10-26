@@ -21,7 +21,8 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
    @author Kai Wirtz <kai.wirtz@gkss.de>
-   @date   2010-09-24
+   @author Caleb K Taylor <calebt@users.sourceforge.net>
+   @date   2010-10-26
    @file   GlobalClimate.cc
    @brief  Input and update of climate data
 */
@@ -35,8 +36,6 @@
 #include <cassert>
 #include <cmath>
 
-//static double *npp_store;
-//static double *gdd_store;
 static std::vector<double> npp_store;
 static std::vector<double> gdd_store;
 
@@ -45,38 +44,27 @@ GlobalClimate::GlobalClimate(double time)
   timestamp = time;
   climate.resize( numberOfRegions );
   map.resize( MAPENTRIES, -1 );
-  //climate = new glues::RegionalClimate[numberOfRegions];
-  //timeaxis = NULL;
-//  map = new int[MAPENTRIES];
-//  for (unsigned int i=0; i<MAPENTRIES; i++) map[i]=-1;
 }
 
 GlobalClimate::~GlobalClimate() {
-  //if (climate) delete [] climate;
-  //delete timeaxis;
-  //if (map) delete [] map;
 }
 
 
 /**
-    Fills the static variables npp_store and gdd_store from files
+    @brief Fills the static variables npp_store and gdd_store from files
+    @param filename name of file on disk
  */
 
 int GlobalClimate::InitRead(char* filename)
 {
-  //char *charoffset,gddname[299];
   std::string gddname;
   size_t charOffset = 0;
 
   unsigned int num=0,method=0;
   long unsigned int nrow=0,ncol=0,i=0,j=0;
-  //double** data;
   std::vector< std::vector<double> > vdata;
 
-  //ifstream ififsc,ifs;
-
-  // Read the number of rows, make this stream a separate variable ifsr
-  //ifstream ifsr;
+  // Read the number of rows
   std::ifstream ifs;
   ifs.open(filename,std::ios::in);
   if (ifs.bad()) {
@@ -90,7 +78,7 @@ int GlobalClimate::InitRead(char* filename)
       return 0;
   }
 
-  // Read the number of columns, //make separate stream variable
+  // Read the number of columns
   ifs.open(filename,std::ios::in);
   if (ifs.bad()) {
     cout << "\nERROR\tTried to open file " << filename << " and failed" << endl;
@@ -102,13 +90,6 @@ int GlobalClimate::InitRead(char* filename)
       cout << "\nERROR\tFile " << filename << " appears to have 0 columns" << endl;
       return 0;
   }
-
-  // Create data field
-  /*data=(double**)malloc(nrow*sizeof(double*));
-  for (i=0; i<nrow; i++) {
-      data[i]=(double*)malloc(ncol*sizeof(double));
-      for (j=0; j<ncol; j++) data[i][j]=0;
-  }*/
 
   unsigned long int joffset=0;
 
@@ -140,8 +121,6 @@ int GlobalClimate::InitRead(char* filename)
   {
       gdd_store.resize( numberOfRegions*num );
   }
-  //if (npp_store == NULL) npp_store  =new double[numberOfRegions*num];
-  //if (gdd_store == NULL) gdd_store  =new double[numberOfRegions*num];
 
   cout << "Read NPP from " << filename;
 
@@ -153,19 +132,10 @@ int GlobalClimate::InitRead(char* filename)
       {
           for( j = 0; j < ncol-joffset; j++ )
           {
+             // This assumes that npp_store has been adusted to correct size
               npp_store.at(j+numberOfRegions*i) = vdata.at(i).at(j);
-              //npp_store.push_back( vdata.at(i).at(j) );
           }
       }
-      /*for (i=0; i<num; i++)
-	  for (j=0; j<ncol-joffset; j++) {
- 	      if (npp_store + j + numberOfRegions*i == NULL)
-	      {
-		  cerr << "ERROR: Memory not allocated in GlobalClimate::npp_store" << endl;
-		  return 0;
-	      }
-	      npp_store[j+numberOfRegions*i]=data[i][j];
-	  }*/
   }
   else
   {
@@ -175,30 +145,15 @@ int GlobalClimate::InitRead(char* filename)
           for( j = 0; j < ncol-joffset; j++ )
           {
               npp_store.at(i+numberOfRegions*j) = vdata.at(i).at(j);
-              //npp_store.push_back( vdata.at(i).at(j) );
           }
       }
-      /*for (i=0; i<num; i++)
-	  for (j=0; j<ncol-joffset; j++) {
-	      if (npp_store + i + numberOfRegions*j == NULL)
-	      {
-		  cerr << "ERROR: Memory not allocated in GlobalClimate::npp_store" << endl;
-		  return 0;
-	      }
-	      npp_store[i+numberOfRegions*j]=data[i][j];
-	  }*/
   }
   ifs.close();
   std::cout << ", found " << nrow << " x " << ncol-joffset << " climates." << std::endl;
 
-  //gddname stuff.
   gddname = filename;
   charOffset = gddname.find( "npp", 0 );
   gddname.replace( charOffset, 3, std::string("gdd") );
-  //strcpy(gddname,filename);
-  //charoffset=strstr(gddname,"npp");
-  //strncpy(charoffset,"gdd",3);
-
   cout << "Read GDD from " << gddname;
 
   ifs.open(gddname.c_str(),std::ios::in);
@@ -218,17 +173,6 @@ int GlobalClimate::InitRead(char* filename)
               gdd_store.at(j+numberOfRegions*i) = vdata.at(i).at(j);
           }
       }
-
-      /*
-      for (i=0; i<num; i++)
-	  for (j=0; j<ncol-joffset; j++) {
-	      if (gdd_store + j + numberOfRegions*i == NULL)
-	      {
-		  cerr << "ERROR: Memory not allocated in GlobalClimate::gdd_store" << endl;
-		  return 0;
-	      }
-	      gdd_store[j+numberOfRegions*i]=data[i][j];
-	  }*/
   }
   else
   {
@@ -241,16 +185,6 @@ int GlobalClimate::InitRead(char* filename)
               gdd_store.at(i+numberOfRegions*j) = vdata.at(i).at(j);
           }
       }
-      /*
-      for (i=0; i<num; i++)
-	  for (j=0; j<ncol-joffset; j++) {
-	      if (gdd_store + i + numberOfRegions*j == NULL)
-	      {
-		  cerr << "ERROR: Memory not allocated in GlobalClimate::gdd_store" << endl;
-		  return 0;
-	      }
-	      gdd_store[i+numberOfRegions*j]=data[i][j];
-	  }*/
   }
   ifs.close();
 
@@ -303,9 +237,7 @@ int GlobalClimate::Update(double t) {
 	if(ci<corrn)
 	{
 	    double fac=(1+0.1*corrv[ci]);
-	    //climate[r].Npp(fac*npp_store[r+it*numberOfRegions]);
 	    climate.at(r).Npp(fac * npp_store.at(r+it*numberOfRegions));
-	    //regions[r].Npp(fac*npp_store[r+it*numberOfRegions]);
 	    regions[r].Npp(fac * npp_store.at(r+it*numberOfRegions));
 //     if(ci==5)
 //     printf("%d %d\t%1.2f -> %1.1f %1.3f\n",it,r,fac,
@@ -313,7 +245,6 @@ int GlobalClimate::Update(double t) {
 	}
 	else
 	{
-	    //climate[r].Npp(npp_store[r+it*numberOfRegions]);
 	    climate.at(r).Npp(npp_store.at(r+it*numberOfRegions));
 	    //std::cerr << "<<::DEBUG::>> GlobalClimate var: " << r+it*numberOfRegions << endl;
 	    //regions[r].Npp(npp_store[r+it*numberOfRegions]);
@@ -327,7 +258,6 @@ int GlobalClimate::Update(double t) {
      tl=0.7*gdd_store[r+it*numberOfRegions]/365;
      else
 */
-	//tl=gdd_store[r+it*numberOfRegions]/365;
 	tl = gdd_store.at(r+it*numberOfRegions)/365;
 /*    tl=(2*tlm-tl)*tl/(tlm*tlm);*/
 /*    tl=2*tlm*tl/(tlm*tlm+tl*tl);*/
@@ -340,7 +270,6 @@ int GlobalClimate::Update(double t) {
     //cout << "Update Climate[" << it << "] for year " << it*ClimUpdateTimes[0] << " / " << t << endl;
     timestamp=it*ClimUpdateTimes[0];
     //timestamp=4*ClimUpdateTimes[0];
-//  cout << "SUCCESS\n";
     return 1;
 }
 
@@ -350,6 +279,5 @@ unsigned int GlobalClimate::geo2id(double lat,double lon) const {
     dy=(unsigned int)((lon+180.)*2.);
     return dx*720+dy;
 }
-
 
 /** EOF GlobalClimate.cc */
