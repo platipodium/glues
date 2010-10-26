@@ -20,26 +20,26 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
-   @date   2010-02-21
+   @author Caleb K Taylor <calebt@users.sourceforge.org>
+   @date   2010-10-26
    @file   IO.h
 */
 
-/* Caleb T.
-Class is now a template.
-read_ascii_row is still overloaded for a vector<vector<Type>>
-and a vector<Type>
+/** ChangeLog
+ * 2010-10-22 calebt
+   Class is now a template.
+   read_ascii_row is still overloaded for a vector<vector<Type>>
+   and a vector<Type>
 
-User can use empty or non-empty vector<vector<Type>> or vector<Type>
+   User can use empty or non-empty vector<vector<Type>> or vector<Type>
 
-Note:
-I have assumed if the arguments to read_ascii_xx
-are 0 then the entire file/row/column is to be read.
+   I have assumed if the arguments to read_ascii_xx
+   are 0 then the entire file/row/column is to be read.
 
-Fixed:
-1. Modified behavior of read_ascii_xx.
-2. Updated overload for vector<Type>.
-3. seekg bug in count_ascii_column that got overlooked.
-
+  Fixed:
+  1. Modified behavior of read_ascii_xx.
+  2. Updated overload for vector<Type>.
+  3. seekg bug in count_ascii_column that got overlooked.
 */
 
 #ifndef glues_io_h
@@ -54,8 +54,6 @@ Fixed:
 #ifdef HAVE_NETCDF_H
 #include "netcdfcpp.h"
 #endif
-//#include "RegionalPopulation.h"
-
 
 namespace glues
 {
@@ -63,7 +61,7 @@ namespace glues
 	class IO
 	{
 	public:
-		//Ctor.
+
 		IO(char commentCh = '#'){ commentChar = commentCh; }
 
 		static void setComment( char commentCh = '#' ) { commentChar = commentCh; }
@@ -77,8 +75,7 @@ namespace glues
 			long unsigned int column_offset = 0,
 			long unsigned int nrow = 0,
 			long unsigned int ncol = 0);
-
-
+			
 		static long unsigned int read_ascii_table(
 			std::istream& is,
 			std::vector<Type> &,
@@ -87,11 +84,12 @@ namespace glues
 			long unsigned int nrow = 0,
 			long unsigned int ncol = 0);
 
+	   static int define_resultfile(std::string,unsigned long int nreg = 685);
 
-	static int define_resultfile(std::string,unsigned long int nreg = 685);
 #ifdef HAVE_NETCDF_H
 //	static int writeNetCDF(NcFile&,double t,RegionalPopulation* populations);
 #endif
+
 	private:
 		static bool is_numeric(const std::string &);
 		static bool is_comment_line(const std::string &);
@@ -101,8 +99,6 @@ namespace glues
 	/**********************/
 	/* Begin definitions. */
 	/**********************/
-
-
 
 	/******************************************
 	read_ascii_table( vector<vector<Type>> )  */
