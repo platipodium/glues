@@ -1,5 +1,42 @@
 function do_pakistan
 
+%% Finds correlation between CRU and Indus varves
+crufile='data/tyn_cru2.0_bycountry_pakistan.txt';
+varvefile='data/indus_varves.mat';
+
+cru=load(crufile,'-ascii');
+varve=load(varvefile);
+icru=find (cru(:,1)<1980 & cru(:,1)>1901);
+ivarve=find (varve.year<1980 & varve.year>1901);
+
+figure(1); clf reset;
+plot(varve.year(ivarve),cl_normalize(varve.thick(ivarve)),'r-','Linewidth',3);
+
+ropt=0
+for i=2:18
+  for j=30:80
+    c=movavg(cru(icru,1),cru(icru,i),j);
+    for k=-10:10
+      v=varve.thick(ivarve+k);
+      r=corrcoef(v,c);
+      if abs(r(1,2))>abs(ropt)
+        ropt=r(1,2); kopt=k; jopt=j; iopt=i;
+        fprintf('%f %d %d %d\n',ropt,k,i,j);
+      end
+    end
+  end
+end
+ 
+c=cl_normalize(movavg(cru(icru,1),cru(icru,iopt),jopt));
+v=cl_normalize(varve.thick(ivarve+kopt));
+
+hold off;
+plot(varve.year(ivarve),v,'r-','Linewidth',3);
+hold on;
+p(i)=plot(cru(icru,1),c,'b-');
+  
+return
+
 lonlim=[60,80];
 latlim=[22 38];
 clp_topography('latlim',latlim,'lonlim',lonlim);
