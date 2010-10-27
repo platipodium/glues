@@ -1,21 +1,21 @@
 function clp_nc_timeseries(varargin)
 
+%  {'latlim',[35,37]},...
+%  {'lonlim',[62,64]},...
 arguments = {...
-%  {'latlim',[-inf inf]},...
-%  {'lonlim',[-inf inf]},...
-  {'latlim',[35,37]},...
-  {'lonlim',[62,64]},...
+  {'latlim',[-inf inf]},...
+  {'lonlim',[-inf inf]},...
   {'tcoord','time'},...
   {'xcoord','lon'},...
   {'ycoord','lat'},...
   {'timelim',[-inf,inf]},...
   {'lim',[-inf,inf]},...
-  {'variables','pre'},...
+  {'variables','var4'},...
   {'scale','absolute'},...
   {'figoffset',0},...
   {'timestep',1},...
   {'timeunit','month'},...
-  {'file','data/cru_ts_3_00.1901.2006.pre.nc'},...
+  {'file','data/Pakistantotprec_0_11k_JFND.nc'},...
   {'mult',1},...
   {'div',1},...
   {'nosum',0},...
@@ -66,7 +66,30 @@ for varid=0:nvar-1
         %case 'years',jstime=jstimeoffset+datenum(double(time));
       end
       tunit=timescale{1};
+    elseif strcmp(tunit,'day as %Y%m%d.%f')
+      year = floor(time/10000);
+      month = floor(mod(time,10000)/100);
+      day = floor(time/1000000);
+      time=year+month/12.0+day/365.25;
+      timeunit='year';
     end
+    
+  end
+end
+
+%% now treat case of non-coordinate variables for lat/lon 
+% Todo: for time
+for dimid=0:ndim-1
+  [dimname,dimlen]=netcdf.inqDim(ncid,dimid);
+  if strcmp(dimname,xcoord) && ~exist('londimid','var')
+    lon=1:dimlen;
+    londimid=dimid;
+  elseif strcmp(dimname,ycoord) && ~exist('latdimid','var')
+    lat=1:dimlen;
+    latdimid=dimid;
+  elseif strcmp(dimname,tcoord) && ~exist('timedimid','var')
+    time=1:dimlen;
+    timedimid=dimid;
   end
 end
 
@@ -105,6 +128,9 @@ else
 end
 
 % If data is organized along lat dimension
+if length(latlim)==1 latlim(2)=latlim(1); end
+if length(lonlim)==1 lonlim(2)=lonlim(1); end
+
 if any(dimids==latdimid) && length(lat)>1
   ilat=find(lat>=latlim(1) & lat<=latlim(2));
   if isempty(ilat)
@@ -227,14 +253,16 @@ if isinf(timelim(2)) timelim(2)=time(end)+0.025*(time(end)-time(1)); end
 if exist('jstime','var')
     datetick(gca);
 else
-  cl_year_one(gca);
-xlabel(timeunit);
+  if strcmp(timeunit,'year') & any(time<0) cl_year_one(gca); end
+  xlabel(timeunit);
 end
 set(gca,'XLim',timelim);
 ylabel(description);
 
 hold on;
-p1=plot(time,mdata,'b','Linewidth',5);
+if length(data)>length(mdata)
+  p1=plot(time,mdata,'b','Linewidth',2);
+end
 
 % Plot annual mean
 if exist('jstime','var')
