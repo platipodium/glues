@@ -43,7 +43,7 @@ clp_topography('latlim',latlim,'lonlim',lonlim);
 m_proj('equidistant','lat',latlim,'lon',lonlim);
 
 %%
-file='../../src/test/plasim_11k.nc';
+file='data/plasim_11k.nc';
 ncid=netcdf.open(file,'NOWRITE');
 varid=netcdf.inqVarID(ncid,'lat'); lat=netcdf.getVar(ncid,varid);
 varid=netcdf.inqVarID(ncid,'lon'); lon=netcdf.getVar(ncid,varid);
