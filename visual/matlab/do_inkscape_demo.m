@@ -1,0 +1,29 @@
+% Demonstration script for matlab/inkscape/latex interoperability
+
+% Produce an arbitrary plot
+clp_nc_variable('var','farming','timelim',[-7000,1490],'latlim',[-50 75],'lonlim',[-140 150],...
+'threshold',0.5,'file','../../amant_base.nc','flip',1);
+
+% and add some more annotation
+m_text(147,-37,'Reference simulation','background','w','FontSize',14,'HorizontalAlignment','right');
+print('-dpdf','inkscape_demo_1.pdf');
+
+% Convert pdf to pdf+tex with Inkscape
+cmd=['/Applications/Inkscape.app/Contents/Resources/bin/inkscape -D -z '...
+    '--file=inkscape_demo_1.pdf --export-pdf=inkscape_demo_2.pdf --export-latex'];
+system(cmd);
+
+% Create latex  file
+tex=[ ...
+'\documentclass{article}\n' ...
+'\usepackage{graphicx}\n' ...
+'\setlength{\svgwidth}{0.7\hsize}\n' ...
+'\begin{document}\n' ...
+'\includegraphics{inkscape_demo_1}\n' ...
+'\input{inkscape_demo_2.pdf_tex}\n' ...
+'\end{document}' ]
+
+fid=fopen('inkscape_demo.tex','w');
+fprintf(fid,'%s',tex);
+fclose(fid);
+
