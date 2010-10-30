@@ -1,4 +1,4 @@
-function retdata=clp_nc_timeseries(varargin)
+function [retdata,handles]=clp_nc_timeseries(varargin)
 
 %  {'latlim',[35,37]},...
 %  {'lonlim',[62,64]},...
@@ -14,14 +14,16 @@ arguments = {...
   {'scale','absolute'},...
   {'figoffset',0},...
   {'timestep',1},...
-  {'timeunit','month'},...
+  {'timeunit','day'},...
   {'file','data/Pakistantotprec_0_11k_JJAS.nc'},...
   {'mult',1},...
   {'div',1},...
   {'nosum',1},...
   {'nomean',1},...
+  {'notitle',1},...
   {'nearest',0},...
-  {'nobar',0}
+  {'nobar',0},...
+  {'linewidth',1}
 };
 
 cl_register_function;
@@ -237,7 +239,7 @@ hold on;
 set(a1,'YTick',[],'XTick',[]);
 
 titletext=description;
-ht=title(titletext,'interpreter','none');
+if ~notitle ht=title(titletext,'interpreter','none'); end
 
 if exist('jstime','var') 
   time=jstime; 
@@ -248,10 +250,10 @@ hold on;
 for i=1:nlat 
   for j=1:nlon 
     if nobar
-      pij(i,j)=plot(time,squeeze(data(j,i,:)),'c'); 
+      pij(i,j)=plot(time,squeeze(data(j,i,:)),'c','linewidth',linewidth); 
     else
       minmax(1)=0;
-      pij(i,j)=bar(time,squeeze(data(j,i,:)),'c');
+      pij(i,j)=bar(time,squeeze(data(j,i,:)),'facecolor','c','barwidth',linewidth);
     end
   end
 end
@@ -325,6 +327,11 @@ plot_multi_format(gcf,fullfile(fdir,bname));
 %    sdata(ntime)/1E6, time(ntime), areasum);
 
 if nargout>0 retdata=squeeze(data); end
+if nargout>1 
+  if ~notitle handles.title=ht; end
+  handles.p=pij;
+end
+
 
 end
 
