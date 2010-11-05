@@ -24,15 +24,25 @@ function akp_plasim_timeseries(varargin)
 % the left (Kabul river) and right (Uper Indus).  corresponding netcdf
 % gridcell is [x=2 y=2], i.e. latlim=3 and lonlim=3 for the routine below.
 
-[data,hdl]=clp_nc_timeseries('file','data/Pakistantotprec_0_11k_JJAS.nc',...
-    'xcoord','x','ycoord','y','latlim',3,'lonlim',3,'var','var4',...
-    'nosum',1,'notitle',1,'timeunit','day','fig',0,'nobar',1,'lim',[0 inf])
+[data,hdl]=clp_nc_timeseries('file','Pakistantotprec_0_11k_JJAS.nc',...
+    'xcoord','x','ycoord','y','latlim',2,'lonlim',4,'var','var4',...
+    'nosum',1,'notitle',1,'timeunit','day','fig',0,'nobar',1,'lim',[0 8])
 
 set(gca,'XDir','reverse');
 ylabel('Precipitation (mm/day)');
-title('Plasim 11k Precipitation over North Pakistan (Western rivers)');
+xlabel('Years BP');
+title('Plasim 11k Precipitation over North East Pakistan (Eastern Rivers)');
+legend('Monsoon prec JJAS');
+
+%where can i get the variable name to limit it ??
+
+%How can i add a line corresponding to years ????
+
+%pline=plot(lim[3300 3900],'Harappan Decline');
+
 %set(hdl.p,'edgecolor','b','barwidth',0.00001)
 
+%danke schon 
 time=get(hdl.p,'XData');
 rain=get(hdl.p,'YData');
 
