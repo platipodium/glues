@@ -24,27 +24,25 @@ function akp_plasim_timeseries(varargin)
 % the left (Kabul river) and right (Uper Indus).  corresponding netcdf
 % gridcell is [x=2 y=2], i.e. latlim=3 and lonlim=3 for the routine below.
 
-[data,hdl]=clp_nc_timeseries('file','data/Pakistantotprec_0_11k_JJAS.nc',...
-    'xcoord','x','ycoord','y','latlim',2,'lonlim',4,'var','var4',...
-    'nosum',1,'notitle',1,'timeunit','day','fig',0,'nobar',1,'lim',[0 8])
+[data,hdl]=clp_nc_timeseries('file','data/Pakistan_sst_run_totprec_0_11k_JJAS.nc',...
+    'xcoord','lon','ycoord','lat','latlim',[34 38],'lonlim',[70 74],'var','var4',...
+    'nosum',1,'notitle',1,'timeunit','day','fig',0,'nobar',1,'lim',[0 8],'timelim',...
+    [-4300 -3000])
 
-set(gca,'XDir','reverse');
+%set(gca,'XDir','reverse');
 ylabel('Precipitation (mm/day)');
 xlabel('Years BP');
 title('Plasim 11k Precipitation over North East Pakistan (Eastern Rivers)');
 legend('Monsoon prec JJAS');
 
-%where can i get the variable name to limit it ??
-
-%How can i add a line corresponding to years ????
 
 %pline=plot(lim[3300 3900],'Harappan Decline');
 
 %set(hdl.p,'edgecolor','b','barwidth',0.00001)
 
-%danke schon 
-time=get(hdl.p,'XData');
-rain=get(hdl.p,'YData');
+
+time=get(hdl.p,'XData'); if iscell(time) time=time{:}; end
+rain=get(hdl.p,'YData'); if iscell(rain) rain=rain{:}; end
 
 m200=movavg(time,rain,200);
 hold on;
@@ -57,6 +55,19 @@ plot(time,m200,'r:','LineWidth',3);
 % rainfall go into Ganges and Tibet Plateau.
 
 % Todo: exercise for Aurangzeb
+
+%% for all boxes in source region (punjab+himalaya)
+[data,hdl]=clp_nc_timeseries('file','data/Pakistan_sst_run_totprec_0_11k_JJAS.nc',...
+    'xcoord','lon','ycoord','lat','latlim',[28 32],'lonlim',[76 80],'var','var4',...
+    'nosum',1,'notitle',1,'timeunit','day','fig',1,'nobar',1,'lim',[0 8],'timelim',...
+    [-4350 -3050]);
+
+time=get(hdl.p,'XData'); if iscell(time) time=time{:}; end
+rain=get(hdl.p,'YData'); if iscell(rain) rain=rain{:}; end
+
+sdata=squeeze(sum(sum(data,2),1));
+figure(5); clf reset;
+plot(time,sdata);
 
 return
 end

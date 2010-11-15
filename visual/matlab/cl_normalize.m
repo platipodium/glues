@@ -1,6 +1,10 @@
 function xn=cl_normalize(x)
 
-xn=(x-mean(x))./std(x);
+isfin=isfinite(x);
+
+xf=(x(isfin)-mean(x(isfin)))./std(x(isfin));
+xn=x;
+xn(isfin)=xf;
 
 return
 end
