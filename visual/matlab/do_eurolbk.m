@@ -1,8 +1,10 @@
 % Run script for eurolbk paper about spread and migration in Europe
 
 %% Define region to lbk
-reg='lbk'
+reg='lbk';
 timelim=[-8000 -4000];
+hreg=[271 255  211 183 178 170 146 142 122 123];
+
 
 %% plot farming timing
 clp_nc_variable('var','farming','threshold',0.5,'reg',reg,'marble',2,'transparency',1,'nocolor',0,...
@@ -46,13 +48,14 @@ plot_multi_format(gcf,[b '_diff']);
 
 %% Plot region network
 clp_nc_neighbour('reg',reg,'marble',2,'transparency',1,'nocolor',0,...
-      'showstat',0,'showtime',0,'fontsize',10,...
+      'showstat',0,'showtime',0,'fontsize',10,'showregion',0,...
       'file','../../eurolbk_base.nc','figoffset',0,'sce','base');
 
-for ir=1:nhreg
+for ir=1:-nhreg
   obj=findobj(gcf,'Tag',num2str(hreg(ir)));
   set(obj,'Color',lc(ir),'FontSize',14);
 end
+
   
 %return  
 %% Define region to lbk
@@ -137,5 +140,55 @@ for i=1:length(reg)
   plot(q(j,:)/100,'m--'); 
   plot(qp(j,:),'m-');  
 end
+
+
+
+if ~exist('ex','var') ex=load('eurolbk_base'); end
+tex=ex.d(:,1)-2*ex.d(1,1);
+ti=ex.d(:,2);
+te=ex.d(:,3);
+
+
+for ir=1:10
+figure(ir); clf reset;
+r=hreg(ir);
+ii=find(ti==r & tex<-4000);
+ie=find(te==r & tex<-4000);
+
+plot(tex(ii),ex.d(ii,5),'r.');
+hold on;
+plot(tex(ie),-ex.d(ie,5),'b.');
+
+xlabel('Calendar year');
+ylabel('Technology exchange by people');
+title(['Region ' num2str(hreg(ir))]);
+
+figure(ir+10); clf reset;
+plot(tex(ii),ex.d(ii,4),'r.');
+hold on;
+plot(tex(ie),-ex.d(ie,4),'b.');
+
+xlabel('Calendar year');
+ylabel('Technology exchange by information');
+title(['Region ' num2str(hreg(ir))]);
+
+fprintf('Sum in region %d: %f by people, %f by info\n',...
+    r,sum(ex.d(ii,5))-sum(ex.d(ie,5)),sum(ex.d(ii,4))-sum(ex.d(ie,4)));
+%    r,sum(ex.d(ii,5)),sum(ex.d(ii,4)));
+end
+
+return
+iit=(tex(ii)+9500)/5+1;
+iet=(tex(ie)+9500)/5+1;
+%iit=find(tex(ti==r));
+%iet=find(tex(te==r));
+[uiit,uii,uij]=unique(iit);
+for i=1:length(uiit)
+  iii=find(uiit(i)==iit);
+  ui(i)=sum(ex.d(ii(iii),5));
+end
+ut=(uiit-1)*5-9500;
+
+plot(ut,ui,'m-');
 
 % Todo: make network plot (who is connected to whom)

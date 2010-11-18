@@ -227,7 +227,7 @@ int read_dim_SiteRegfile()
   cout << "Reading columns of " << fname << " ... ";
   ifs.open(fname,ios::in);
   if (ifs.bad()) {
-    cerr << "\nERROR\tTried to open file " << fname << " and failed" << endl;
+    std::cout << "\nERROR\tTried to open file " << fname << " and failed" << endl;
     return 0;
   }
   
@@ -260,7 +260,7 @@ int read_dim_SiteRegfile_orig() {
     cout << "Reading columns of " << fname << " ... ";
     file.open(fname,ios::in);
     if (file.bad()) {
-	cerr << "\nERROR\tTried to open file " << fname << " and failed" << endl;
+	std::cerr << "\nERROR\tTried to open file " << fname << " and failed" << endl;
 	return 0;
     }
     file.getline(charbuffer,BUFSIZE);
@@ -298,11 +298,11 @@ unsigned int read_SiteRegfile()
     ifs.close();
     
     if (MaxProxyReg >= MAXPROXY) {
-      cerr<< "\nERROR\t Number of proxies greater than MAXPROXY constant.\n";
+      std::cerr<< "\nERROR\t Number of proxies greater than MAXPROXY constant.\n";
       return 0;
     }
     if (MaxProxyReg == 0) {
-      cerr<< "\nERROR\t Number of proxies cannot be zero.\n";
+      std::cerr<< "\nERROR\t Number of proxies cannot be zero.\n";
       return 0;
     }
     
@@ -510,7 +510,7 @@ unsigned int read_proxyevents()
   
     filename += eventfile;
 
-    cerr << "Read " << filename << " ";
+    std::cout << "Read " << filename << " ";
     
     ifs.open(filename.c_str(),ios::in);
     
@@ -519,7 +519,7 @@ unsigned int read_proxyevents()
 
     ifs.close();
 
-    cerr << numberOfSites << " sites x " << MaxEvent << " events\n!";
+    std::cout << numberOfSites << " sites x " << MaxEvent << " events\n";
 
     EventTime= (double *)(malloc(numberOfSites*MaxEvent*sizeof(double)));
     EventSerMax = (double *)(malloc(numberOfSites*sizeof(double)));
@@ -648,7 +648,7 @@ int read_neighbours() {
     NcVar* var=ncin.get_var("number_of_neighbours");
     int* number_of_neighbours = new int(rdim->size());
     var->get(number_of_neighbours,rdim->size());
-    cerr << " " << rdim->size() << " x " << ndim->size() << endl;
+    std::cout << " " << rdim->size() << " x " << ndim->size() << endl;
     /* Next lines commented due to memory leak errors */
     /*var=ncin.get_var("region_neighbour");
     int* neighbour=new int(rdim->size()*ndim->size());
@@ -743,7 +743,7 @@ int read_neighbours() {
           if (jn->Region()->Id()==i) break;
           else jn=jn->Next();
       }
-      if (jn==0) cerr << "Region " << i << " is not a mutual neighbour of " << j << endl;
+      if (jn==0) std::cout << "Region " << i << " is not a mutual neighbour of " << j << endl;
       while (gn=gn->Next()) {
           numneigh++;
           j=gn->Region()->Id();
@@ -752,7 +752,7 @@ int read_neighbours() {
             if (jn->Region()->Id()==i) break;
             else jn=jn->Next();
           }
-          if (jn==0) cerr << "Region " << i << " is not a mutual neighbour of " << j << endl;
+          if (jn==0) std::cout << "Region " << i << " is not a mutual neighbour of " << j << endl;
       }
     }
     regions[i].Numneighbours(numneigh);

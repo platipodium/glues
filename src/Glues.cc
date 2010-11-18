@@ -59,7 +59,7 @@ class Exchange;
 double pseudo_simulation();
 double simulation();
 long unsigned int calc_deviation(unsigned long int);
-extern double spread_all();
+extern double spread_all(double t);
 void dump_events();
 
 /**
@@ -609,7 +609,7 @@ double simulation() {
        param::LocalSpread
     */
     if (LocalSpread>0)	{
-      tot_spr_t = spread_all();
+      tot_spr_t = spread_all(t*ts-TimeStart);
       tot_spr += tot_spr_t;
       if( !exchange() ) t=tmax;
       fer=populations[KeyFCrescent].ActFert();
