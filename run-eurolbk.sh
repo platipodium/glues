@@ -25,8 +25,9 @@ $SED -i '/spreadm/s/spreadm.*$/spreadm 100/' $OPAR
 $SED -i '/LocalSpread/s/LocalSpread.*$/LocalSpread 1/' $CTL
 $SED -i '/flucampl/s/flucampl.*$/flucampl 0.0/' $DAT
 
-$X $SIM
+$X $SIM #2> eurolbk_base.log
 mv test.nc ${V}_base.nc
+#exit
 
 # Remove spread (used in paper to diagnose indigenous)
 $SED -i '/LocalSpread/s/1/0/' $CTL

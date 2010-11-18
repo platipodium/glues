@@ -48,7 +48,7 @@ unsigned long int glues::Events()
     ifs.close();
     ifs.open(filename.c_str(),ios::in);
 
-    cerr << numberOfSites << " sites x " << numberOfEvents << " events\n!";
+    std::cout << numberOfSites << " sites x " << numberOfEvents << " events\n";
 
     /**EventTime= (double *)(std::malloc(numberOfSites*numberOfEvents*sizeof(double)));
     EventSerMax = (double *)(std::malloc(numberOfSites*sizeof(double)));

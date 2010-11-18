@@ -18,7 +18,7 @@
 class Exchange;
 
 double dpr;
-double calc_spread_single(unsigned int);
+double calc_spread_single(unsigned int,double t=0);
 double traitspread(double,double,double);
 //double geno_spread(double,double,double);
 /* ------------------------------------------------------ */
@@ -55,7 +55,7 @@ int exchange(void) {
 /* -------------------------------------------------- */
 
 
-double spread_all() { 
+double spread_all(double t=0) { 
 
   double tot_spr_t=0;
 
@@ -73,7 +73,7 @@ double spread_all() {
   /*       Calculates exchange rates for all regions        */
   /* ------------------------------------------------------ */
   for (unsigned int i=0; i<numberOfRegions; i++)
-    tot_spr_t+=calc_spread_single(i);
+    tot_spr_t+=calc_spread_single(i,t);
 
   //printf("Total spread in this time step: %f\n", tot_spr_t);
   return tot_spr_t;
@@ -82,7 +82,7 @@ double spread_all() {
 /* ----------------------------------------------------------- */
 /*   Calculates exchange of a single region with neighbours    */
 /* ----------------------------------------------------------- */
-double calc_spread_single(unsigned int i) {
+double calc_spread_single(unsigned int i, double t) {
 
   unsigned int j, i1;
   unsigned int jid, iid;
@@ -210,8 +210,8 @@ double calc_spread_single(unsigned int i) {
     double import_qfarm_p=import_change>0?(export_qfarm*export_pop/import_pop)*import_change:0;
     double import_tech_i=import_change>0?traitspread(export_tech,import_tech,import_change):0;
     double import_ndom_i=import_change>0?traitspread(export_ndom,populations[import_id].Ndomesticated(),import_change):0;
-    double import_pop_m=import_change*import_pop;
-    double export_pop_m=export_change*export_pop;
+    double import_pop_p=import_change*import_pop;
+    double export_pop_p=export_change*export_pop;
     
     if (import_change>0) {
    
@@ -269,11 +269,18 @@ double calc_spread_single(unsigned int i) {
       sprdm[j]+=fabs(dp1*jpop);
     }
 
-    /*std::cerr << import_id << " " << export_id 
-    	<< " dT " << sprd_p[import_id*N_POPVARS+0] << " " <<  sprd_i[import_id*N_POPVARS+0] << " " <<  sprd[import_id*N_POPVARS+0]
-    	<< " dN " << sprd_p[import_id*N_POPVARS+1] << " " <<  sprd_i[import_id*N_POPVARS+1] << " " <<  sprd[import_id*N_POPVARS+1]
-    	<< " dQ " << sprd_p[import_id*N_POPVARS+2] << " " <<  sprd_i[import_id*N_POPVARS+2] << " " <<  sprd[import_id*N_POPVARS+2]
-    	<< " dP " << sprd_p[import_id*N_POPVARS+4] << " " <<  sprd_i[import_id*N_POPVARS+4] << " " <<  sprd[import_id*N_POPVARS+4]	
+    /*std::cerr << t << " " << import_id << " " << export_id 
+    	<< " " << import_tech_i << " " <<  import_tech_p
+    	<< " " << import_ndom_i << " " <<  import_ndom_p
+    	<< " " << import_qfarm_p 
+    	<< " " << import_pop_p << " " << export_pop_p  	
+    	<< std::endl;
+    //*/	
+   /*std::cerr << t << " " << import_id << " " << export_id 
+    	<< " " << sprd_p[import_id*N_POPVARS+0] << " " <<  sprd_i[import_id*N_POPVARS+0] //<< " " <<  sprd[import_id*N_POPVARS+0]
+    	<< " " << sprd_p[import_id*N_POPVARS+1] << " " <<  sprd_i[import_id*N_POPVARS+1] //<< " " <<  sprd[import_id*N_POPVARS+1]
+    	<< " " << sprd_p[import_id*N_POPVARS+2] //<< " " <<  sprd_i[import_id*N_POPVARS+2] //<< " " <<  sprd[import_id*N_POPVARS+2]
+    	<< " " << sprd_p[import_id*N_POPVARS+4] //<< " " <<  sprd_i[import_id*N_POPVARS+4] //<< " " <<  sprd[import_id*N_POPVARS+4]	
     	<< std::endl;
     //*/	
     }

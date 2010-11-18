@@ -44,10 +44,11 @@ name=holodata.Plotname;
 proxy=holodata.Proxy;
 
 pt=strfind(proxy,'P');
+pt{:}=1;
 j=0;
 for i=1:length(pt) if ~isempty(pt{i}) 
-  if strmatch(proxy{i},'TOC') continue; end
-  if strmatch(proxy{i},'Ti') continue; end
+  %if strmatch(proxy{i},'TOC') continue; end
+  %if strmatch(proxy{i},'Ti') continue; end
   j=j+1;
   ptv(j)=double(pt{i});
   itv(j)=i;
@@ -103,7 +104,7 @@ for k=1:ntv
   clf reset;
   trend=clp_single_timeseries_trend(i,'FontSize',fontsize,'no_title',1,'no_legend',1);
    title(infotext,'background','w');
- plot_multi_format(20,fullfile(dirs.plot,['proxy_trend_ps_' num2str(i)]));
+ plot_multi_format(20,fullfile(dirs.plot,['proxy_trend_' num2str(i) '_' name]));
 
   
 end  
