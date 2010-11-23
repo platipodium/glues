@@ -119,10 +119,14 @@ hold on;
 
  isig=find(db(Gxx_corr)>=db(Gred_theoretical.*param.scalecrit));
  
- text(1./20.,65,'Significant frequencies:');
- text(1./20.,62,'yearly (324-432 d)');
- text(1./20.,59,'weekly (6.8-7.2 d)');
- text(1./20.,56,'half-weekly (3.4-3.5 d)');
+ %text(1./20.,5,'Significant frequencies:');
+ %text(1./20.,62,'yearly (324-432 d)');
+ %text(1./20.,59,'weekly (6.8-7.2 d)');
+ %text(1./20.,56,'half-weekly (3.4-3.5 d)');
  
+ text(1./5.,60,'Significant frequencies:');
+ text(1./5.,57,'yearly (344-413 d)');
+ text(1./5.,54,'9.5 day (9.5-9.6 d)');
+ text(1./5.,51,'half-weekly (3.6 d)');
 
 return;
