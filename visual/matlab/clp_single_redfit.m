@@ -3,7 +3,7 @@ function clp_single_redfit(varargin)
 cl_register_function();
 
 arguments = {...
-  {'freqlim',[1/5000. 2.0]},...
+  {'freqlim',[-inf inf]},...
   {'lim',[-inf,inf]},...
   {'figoffset',0},...
   {'sce',''},...
@@ -12,7 +12,8 @@ arguments = {...
   {'notitle',0},...
   {'period','low'},...
   {'FontSize',16},...
-  {'xticks',7} 
+  {'xticks',7},...
+  {'oneover',0}
 };
 
 cl_register_function;
@@ -28,7 +29,7 @@ end;
 load(file);
 
 
-if isinf(freqlim(1)) freqlim(1)=min(freq); end
+if isinf(freqlim(1)) freqlim(1)=min(freq(freq>0)); end
 if isinf(freqlim(2)) freqlim(2)=max(freq); end
 
 numax=min([freqlim(2),max(freq)]);
@@ -67,29 +68,36 @@ if any(isnan([dbymin,dbymax]));
   fprintf('Some data in range are NaN\n');
   return; 
 end;
-oneover=repmat('1/',6,1);  
 
 clf reset;
 
 set(gca,'xlim',[numin,numax],'ylim',[dbymin,dbymax]);
-%if ~no_xticks set(gca,'xtick',reshape(bands',6,1));
-%else set(gca,'xtick',[]);
-%end
+xt=get(gca,'Xtick');
+xtl=get(gca,'XTickLabel');
+
 
 nxt=xticks;
-xt=linspace(numin,numax,nxt);
-oneover='1/';
-space=size(num2str(round(1./xt')),2);
-xtl=repmat(' ',nxt,space+2);
-for i=1:nxt
- xtli=[oneover  num2str(round(1./xt(i)))];
- xtl(i,1:length(xtli))=xtli;
-end
 
+if oneover
+  oneover='1/';
+  xt=linspace(numin,numax,nxt);
+  space=size(num2str(round(1./xt')),2);
+  xtl=repmat(' ',nxt,space+2);
+  for i=1:nxt
+   xtli=[oneover  num2str(round(1./xt(i)))];
+   xtl(i,1:length(xtli))=xtli;
+  end
+else
+  xt=linspace(numin,numax,nxt)';      
+  xtl=1.0./xt;
+  for i=1:nxt xtl(i)=scale_precision(xtl(i),2); end
+  xt=1./xtl;
+  xtl=num2str(xtl);
+end
 set(gca,'Xtick',xt);
 set(gca,'xticklabel',xtl);
- xlabel('Frequency (yr^{-1})');
- ylabel('Spectral amplitude (dB)');
+xlabel('Cyclicity (d)');
+ylabel('Spectral amplitude (dB)');
 
 hold on;
  
@@ -104,10 +112,17 @@ hold on;
  plot(freq,db(Gxx_corr),'Color','r','LineWidth',2.5,'LineStyle','-');
  nuquist=round(1/max(nu));
  nuorder=floor(log(max(nu)*1000)/log(10.));
- nutext=sprintf('f_{nyq}=1/%d yr^{-1}',nuquist);
+ nutext=sprintf('f_{nyq}=1/%d d^{-1}',nuquist);
  critext=sprintf('P_{cri}=%5.2f%',param.critical);
  
  hold off;
 
+ isig=find(db(Gxx_corr)>=db(Gred_theoretical.*param.scalecrit));
+ 
+ text(1./20.,65,'Significant frequencies:');
+ text(1./20.,62,'yearly (324-432 d)');
+ text(1./20.,59,'weekly (6.8-7.2 d)');
+ text(1./20.,56,'half-weekly (3.4-3.5 d)');
+ 
 
 return;
