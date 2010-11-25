@@ -373,6 +373,9 @@ AC_CONFIG_FILES([Makefile
   examples/results/685/Makefile
   examples/results/938/Makefile
   examples/results/939/Makefile
+  examples/simulations/pop/pop.sce
+  examples/simulations/pop/pop.sim
+  examples/simulations/pop/Makefile
   examples/simulations/685/lbk.sce
   examples/simulations/685/lbk.sim
   examples/simulations/1/Makefile
