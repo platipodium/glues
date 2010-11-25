@@ -1,6 +1,6 @@
-# Main Makefile for GLUES.
+# Makefile for GLUES.
 
-# Copyright (C) 2007,2008,2009,2010
+# Copyright (C) 2010
 # Carsten Lemmen, GKSS-Forschungszentrum Geesthacht GmbH
 
 ## This program is free software; you can redistribute it and/or modify
@@ -18,4 +18,5 @@
 ## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 ## 02110-1301, USA.
 
-SUBDIRS=685 938 test_new_event 62483 plasim 1 2 pop
+EXTRA_DIST=pop.sim.in pop.ctl pop.dat pop.init pop.opar pop.par pop.sce.in
+
