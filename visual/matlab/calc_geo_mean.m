@@ -11,9 +11,9 @@ if numel(lat)==numel(value)
   lat=reshape(lat,nlat,1);
   value=reshape(value,nlat,1);
   valid=find(isfinite(value) & lat>=-90 & lat<=90);
-elseif numel(lat)=size(value,1);
+elseif numel(lat)==size(value,1);
   valid=find(lat>=-90 & lat<=90);  
-elseif numel(lat)=size(value,2);
+elseif numel(lat)==size(value,2);
   valid=find(lat>=-90 & lat<=90);  
 else
     error('Dimension mismatch. This case not handled yet, please implement');

@@ -720,7 +720,8 @@ int read_neighbours() {
         if (in < i) regions[in].AddNeighbour(&regions[i],
 						     neigh_boundary,1);
     }				     
-	//if (i>680) printf("read %i %d %d %d %f\n",i,selfid,numneigh,neighid,neigh_boundary);
+	//if (1) std::cerr << i << " " << selfid << " " << numneigh << " "
+	//<< neighid << " " << neigh_boundary << std::endl;
     
     }
     i++;
