@@ -2,7 +2,7 @@
 comment Scenario specific numbers and file names
 int	CoastRegNo	0
 comment Dateipfad fuer Eingabe
-string  datapath        "/Users/lemmen/devel/testing/examples/setup/1/"
+string  datapath        "/Users/lemmen/devel/glues/examples/setup/1/"
 comment Dateiname fuer Eingabe
 string	regiondata	"regions_80_1.dat"
 string	mappingdata	"mapping_80_1.dat"

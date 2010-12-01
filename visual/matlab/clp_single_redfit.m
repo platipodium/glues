@@ -91,12 +91,12 @@ else
   xt=linspace(numin,numax,nxt)';      
   xtl=1.0./xt;
   for i=1:nxt xtl(i)=scale_precision(xtl(i),2); end
-  xt=1./xtl;
+  xt=unique(1./xtl);
   xtl=num2str(xtl);
 end
 set(gca,'Xtick',xt);
 set(gca,'xticklabel',xtl);
-xlabel('Cyclicity (d)');
+xlabel('Cyclicity (y)');
 ylabel('Spectral amplitude (dB)');
 
 hold on;
@@ -112,8 +112,8 @@ hold on;
  plot(freq,db(Gxx_corr),'Color','r','LineWidth',2.5,'LineStyle','-');
  nuquist=round(1/max(nu));
  nuorder=floor(log(max(nu)*1000)/log(10.));
- nutext=sprintf('f_{nyq}=1/%d d^{-1}',nuquist);
- critext=sprintf('P_{cri}=%5.2f%',param.critical);
+ nutext=sprintf('f_{nyq}=1/%d d^{-1}',nuquist)
+ critext=sprintf('P_{cri}=%5.2f%',param.critical)
  
  hold off;
 
