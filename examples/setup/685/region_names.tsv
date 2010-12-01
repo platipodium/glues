@@ -1,0 +1,685 @@
+  1 Northwest_Territories	300.75 187.34 251.01
+  2 Greenland	310.58 201.14 283.63
+  3 Norway	75.47 49.30 55.66
+  4 Northwest_Territories	70.18 45.36 54.68
+  5 USSR_Northwest	93.47 61.13 75.86
+  6 USSR_East_Siberia	594.65 380.60 563.06
+  7 Northwest_Territories	137.45 86.77 108.58
+  8 Greenland	1630.16 1053.05 1557.93
+  9 Northwest_Territories	288.77 181.42 255.57
+ 10 USSR_East_Siberia	197.88 126.21 180.76
+ 11 USSR_Northwest	94.32 61.13 84.56
+ 12 USSR_Ural	109.14 70.99 99.16
+ 13 USSR_Ural	116.39 74.94 107.51
+ 14 Alaska	93.80 61.13 91.95
+ 15 USSR_East_Siberia	825.29 526.52 809.43
+ 16 Alaska	122.94 78.88 114.27
+ 17 Alaska	121.81 78.88 119.32
+ 18 USSR_East_Siberia	218.92 140.01 218.84
+ 19 Greenland	343.68 220.86 308.70
+ 20 USSR_Northwest	109.21 69.02 99.22
+ 21 USSR_Far_East	173.63 110.43 169.21
+ 22 USSR_Northwest	65.86 41.41 62.60
+ 23 USSR_Northwest	98.26 63.10 91.82
+ 24 USSR_Ural	82.23 53.24 78.56
+ 25 Sweden	89.70 57.19 86.57
+ 26 USSR_Ural	384.72 246.50 376.53
+ 27 Northwest_Territories	247.35 159.73 222.55
+ 28 Sweden	87.32 55.22 77.67
+ 29 Finland	140.46 90.71 137.77
+ 30 USSR_Northwest	145.98 92.68 137.12
+ 31 USSR_East_Siberia	197.11 126.21 197.11
+ 32 Alaska	345.54 220.86 342.53
+ 33 Northwest_Territories	735.09 469.34 698.36
+ 34 Norway	84.47 53.24 76.87
+ 35 USSR_Far_East	1468.13 926.84 1442.02
+ 36 USSR_Far_East	109.09 70.99 98.09
+ 37 Alaska	63.11 39.44 55.82
+ 38 Yukon_Territory	417.85 266.22 412.96
+ 39 Northwest_Territories	665.58 427.92 577.21
+ 40 Iceland	104.81 67.05 93.06
+ 41 USSR_Northwest	76.00 49.30 73.76
+ 42 USSR_Northwest	205.26 130.15 205.26
+ 43 USSR_East_Siberia	187.50 120.29 187.50
+ 44 Northwest_Territories	219.99 140.01 219.99
+ 45 USSR_Northwest	97.55 61.13 93.33
+ 46 USSR_East_Siberia	577.21 366.79 573.32
+ 47 Northwest_Territories	433.68 276.08 426.78
+ 48 Northwest_Territories	106.45 67.05 106.45
+ 49 Sweden	97.06 61.13 93.36
+ 50 USSR_Far_East	245.21 155.79 230.97
+ 51 USSR_Northwest	121.64 76.91 121.64
+ 52 Norway	64.52 41.41 63.23
+ 53 USSR_Northwest	123.88 78.88 122.01
+ 54 USSR_Ural	256.93 161.70 254.69
+ 55 Finland	175.15 110.43 166.96
+ 56 USSR_Ural	124.49 78.88 124.49
+ 57 USSR_East_Siberia	215.21 138.04 215.21
+ 58 Alaska	60.24 39.44 49.79
+ 59 Quebec	95.97 61.13 88.92
+ 60 USSR_Ural	393.97 250.44 393.97
+ 61 USSR_Far_East	92.90 59.16 86.72
+ 62 Alaska	331.46 212.98 318.48
+ 63 Northwest_Territories	145.50 92.68 145.50
+ 64 Norway	127.61 80.85 113.94
+ 65 USSR_East_Siberia	101.93 65.08 101.93
+ 66 Alberta	99.64 63.10 99.64
+ 67 USSR_East_Siberia	331.58 212.98 331.58
+ 68 British_Columbia	120.18 76.91 120.18
+ 69 USSR_Ural	191.89 122.26 191.89
+ 70 USSR_East_Siberia	898.20 573.85 894.90
+ 71 Northwest_Territories	128.72 80.85 128.72
+ 72 Manitoba	190.83 120.29 190.18
+ 73 Quebec	124.71 78.88 122.00
+ 74 Norway	64.05 41.41 60.00
+ 75 Sweden	67.24 43.38 61.41
+ 76 USSR_Northwest	359.07 228.75 359.07
+ 77 USSR_Ural	82.75 53.24 82.75
+ 78 USSR_Ural	93.37 59.16 93.37
+ 79 USSR_Ural	70.36 45.36 70.36
+ 80 USSR_Ural	95.33 61.13 95.33
+ 81 USSR_West_Siberia	131.73 84.80 131.73
+ 82 USSR_East_Siberia	401.27 254.39 401.27
+ 83 Alaska	113.46 72.96 93.89
+ 84 USSR_East_Siberia	169.74 108.46 169.74
+ 85 USSR_Central	469.33 301.72 467.04
+ 86 British_Columbia	490.93 313.55 468.16
+ 87 Saskatchewan	163.64 104.52 163.64
+ 88 USSR_East_Siberia	147.30 94.66 147.30
+ 89 Alberta	89.22 57.19 89.22
+ 90 Alberta	65.17 41.41 65.17
+ 91 Manitoba	74.14 47.33 71.81
+ 92 Scotland	76.43 49.30 62.13
+ 93 Sweden	104.73 67.05 89.44
+ 94 USSR_Far_East	174.91 112.40 163.04
+ 95 Saskatchewan	89.28 57.19 89.28
+ 96 Alberta	92.76 59.16 92.76
+ 97 USSR_West	175.57 110.43 167.44
+ 98 Quebec	71.75 45.36 70.88
+ 99 Quebec	388.11 246.50 378.95
+100 USSR_East_Siberia	174.91 110.43 174.91
+101 Alberta	113.20 72.96 113.20
+102 Manitoba	123.50 78.88 123.50
+103 USSR_East_Siberia	644.15 410.18 644.15
+104 Ontario	239.79 151.84 228.55
+105 USSR_East_Siberia	194.11 124.24 194.11
+106 USSR_East_Siberia	66.90 43.38 66.90
+107 Saskatchewan	215.97 138.04 215.97
+108 Newfoundland	213.80 136.07 192.27
+109 England_Wales	80.92 51.27 76.12
+110 USSR_Byelarus	131.19 82.82 129.22
+111 USSR_Byelarus	113.84 72.96 113.84
+112 USSR_Ural	714.37 457.50 714.37
+113 USSR_West_Siberia	557.84 354.96 557.84
+114 USSR_East_Siberia	132.05 84.80 132.05
+115 British_Columbia	484.18 307.63 467.03
+116 Manitoba	99.56 63.10 99.56
+117 Poland	71.94 45.36 68.21
+118 USSR_Far_East	216.44 136.07 216.44
+119 British_Columbia	115.02 72.96 115.02
+120 Quebec	162.26 102.54 160.03
+121 Ireland	95.87 61.13 79.56
+122 Newfoundland	104.90 67.05 95.52
+123 Germany	207.58 132.12 194.83
+124 Poland	91.62 59.16 87.14
+125 USSR_Central_Chernozem	151.38 96.63 151.38
+126 USSR_Far_East	88.35 55.22 81.42
+127 Ontario	68.94 43.38 68.94
+128 Ontario	116.84 74.94 115.70
+129 Quebec	81.89 51.27 80.69
+130 USSR_Central_Chernozem	96.81 61.13 96.81
+131 Russian_Turkestan	374.73 238.61 374.73
+132 USSR_East_Siberia	384.24 244.53 384.24
+133 Saskatchewan	165.80 104.52 165.80
+134 Quebec	88.77 57.19 85.35
+135 USSR_Volga	168.18 108.46 168.18
+136 Russian_Turkestan	1021.18 650.76 1021.18
+137 USSR_East_Siberia	208.60 132.12 208.60
+138 USSR_East_Siberia	99.83 63.10 99.83
+139 Neimenggu	135.36 86.77 135.36
+140 Alberta	124.38 78.88 124.38
+141 Manitoba	245.99 155.79 245.99
+142 Quebec	70.91 45.36 67.91
+143 Poland	177.92 114.38 177.92
+144 British_Columbia	78.39 49.30 60.89
+145 Quebec	93.06 59.16 92.44
+146 USSR_West_Siberia	93.13 59.16 93.13
+147 Germany	169.37 106.49 169.37
+148 USSR_Southwest	398.68 252.42 398.68
+149 Russian_Turkestan	340.26 216.92 340.26
+150 Heilongjiang	126.82 80.85 126.82
+151 USSR_Far_East	356.37 228.75 324.71
+152 Ontario	131.97 82.82 131.97
+153 British_Columbia	59.19 37.47 59.19
+154 Ontario	149.04 94.66 149.04
+155 Quebec	72.88 45.36 72.88
+156 Newfoundland	116.88 74.94 96.46
+157 Germany	163.09 102.54 162.99
+158 Heilongjiang	245.11 155.79 245.11
+159 France	470.38 299.74 445.93
+160 North_Dakota	85.59 55.22 85.59
+161 Minnesota	104.22 67.05 104.22
+162 Quebec	243.62 155.79 239.69
+163 New_Brunswick	110.48 70.99 99.57
+164 USSR_Donetsk_Dnepr	228.35 143.96 217.02
+165 Russian_Turkestan	67.07 43.38 67.07
+166 Mongolia	187.11 118.32 187.11
+167 Mongolia	418.07 266.22 418.07
+168 USSR_Far_East	119.47 76.91 117.60
+169 Ontario	65.72 41.41 65.72
+170 France	88.57 57.19 77.40
+171 Hungary	93.72 59.16 93.18
+172 Russian_Turkestan	108.21 69.02 105.78
+173 Russian_Turkestan	115.07 72.96 115.07
+174 Mongolia	88.69 57.19 88.69
+175 Ciscaucasia	182.57 116.35 168.85
+176 Russian_Turkestan	65.56 41.41 65.56
+177 Neimenggu	533.44 341.16 533.44
+178 Italy	68.08 43.38 66.82
+179 Hungary	81.18 51.27 81.18
+180 Russian_Turkestan	189.49 120.29 189.49
+181 Montana	847.99 540.33 847.99
+182 Wisconsin	72.95 45.36 72.95
+183 Nova_Scotia	95.55 61.13 69.28
+184 Romania	137.25 86.77 137.25
+185 Romania	102.93 65.08 99.90
+186 Ciscaucasia	124.15 78.88 120.45
+187 Russian_Turkestan	88.12 55.22 88.12
+188 Mongolia	87.84 55.22 87.84
+189 Washington	212.25 136.07 206.50
+190 Montana	187.96 120.29 187.96
+191 Maine	113.12 72.96 107.54
+192 Russian_Turkestan	230.27 145.93 226.89
+193 Russian_Turkestan	128.52 80.85 128.52
+194 Xinjiang	214.49 136.07 214.49
+195 Mongolia	198.59 126.21 198.59
+196 Heilongjiang	528.50 337.21 516.15
+197 Ontario	122.07 76.91 122.07
+198 New_York	119.81 76.91 117.49
+199 Yugoslavia	76.63 49.30 69.79
+200 Ciscaucasia	155.73 98.60 150.94
+201 Japan	87.77 55.22 72.34
+202 Minnesota	227.88 143.96 227.88
+203 Italy	72.16 45.36 68.99
+204 Mongolia	83.60 53.24 83.60
+205 Mongolia	129.40 82.82 129.40
+206 Oregon	226.35 143.96 226.35
+207 Russian_Turkestan	216.03 138.04 216.03
+208 Russian_Turkestan	118.23 74.94 118.23
+209 Russian_Turkestan	73.86 47.33 73.86
+210 Spain	219.69 140.01 210.44
+211 Yugoslavia	78.19 49.30 78.00
+212 Bulgaria	97.61 61.13 95.39
+213 Xinjiang	94.50 59.16 94.50
+214 Mongolia	245.36 155.79 245.36
+215 Michigan	143.91 92.68 143.91
+216 Italy	192.80 122.26 162.51
+217 Yugoslavia	122.49 76.91 121.12
+218 Jilin	88.14 55.22 88.14
+219 South_Dakota	212.74 136.07 212.74
+220 Spain	75.68 47.33 68.46
+221 Russian_Turkestan	408.32 260.30 392.74
+222 Xinjiang	68.43 43.38 68.43
+223 Neimenggu	284.64 181.42 284.64
+224 Iowa	153.39 98.60 153.39
+225 Illinois	279.77 177.48 279.77
+226 New_York	121.35 76.91 121.35
+227 Xinjiang	59.95 37.47 59.95
+228 New_York	73.87 47.33 64.23
+229 Spain	108.04 69.02 105.35
+230 Russian_Turkestan	80.26 51.27 80.26
+231 Gansu	162.16 102.54 162.16
+232 Liaoning	159.28 100.57 153.51
+233 Utah	248.05 157.76 248.05
+234 Nebraska	177.33 112.40 177.33
+235 Ohio	160.60 102.54 160.60
+236 Albania	72.60 45.36 71.28
+237 Russian_Turkestan	166.95 106.49 166.95
+238 Russian_Turkestan	70.02 45.36 70.02
+239 Neimenggu	355.54 226.78 355.54
+240 Nevada	273.66 173.54 273.66
+241 Turkey-in-Asia	274.68 175.51 272.11
+242 Xinjiang	193.81 124.24 193.81
+243 Turkey-in-Asia	370.06 234.67 361.21
+244 Russian_Turkestan	97.83 61.13 97.83
+245 Xinjiang	537.51 341.16 537.51
+246 Hebei	97.30 61.13 93.59
+247 Utah	79.11 49.30 79.11
+248 California	76.93 49.30 69.47
+249 Colorado	77.49 49.30 77.49
+250 Kansas	77.32 49.30 77.32
+251 Portugal	137.15 86.77 130.36
+252 Spain	93.98 59.16 93.98
+253 Greece	79.78 51.27 60.50
+254 Turkey-in-Asia	113.71 72.96 97.85
+255 Japan	96.87 61.13 87.34
+256 Turkey-in-Asia	71.30 45.36 68.87
+257 Turkey-in-Asia	103.20 65.08 103.20
+258 Russian_Turkestan	149.14 94.66 149.14
+259 Xinjiang	165.06 104.52 165.06
+260 Qinghai	70.73 45.36 70.73
+261 Qinghai	99.74 63.10 99.74
+262 Shandong	138.33 88.74 133.46
+263 Spain	78.86 49.30 65.76
+264 Iran	173.96 110.43 167.50
+265 Russian_Turkestan	230.52 147.90 227.31
+266 Texas	79.43 51.27 79.43
+267 Shanxi	441.67 280.02 441.67
+268 California	72.35 45.36 67.89
+269 Arizona	157.14 100.57 157.14
+270 Oklahoma	74.78 47.33 74.78
+271 Missouri	640.12 408.20 627.09
+272 Syria_Lebanon	73.28 47.33 61.69
+273 Iran	77.37 49.30 74.28
+274 Russian_Turkestan	78.59 49.30 78.59
+275 Qinghai	91.51 57.19 91.51
+276 Korea	123.97 78.88 111.70
+277 Oklahoma	80.67 51.27 80.67
+278 Algeria	115.05 72.96 105.84
+279 Syria_Lebanon	137.90 86.77 137.90
+280 Afghanistan	113.97 72.96 113.97
+281 Afghanistan	106.12 67.05 106.12
+282 Qinghai	74.94 47.33 74.94
+283 New_Mexico	87.72 55.22 87.72
+284 Tennessee	85.61 55.22 85.61
+285 North_Carolina	60.54 39.44 60.54
+286 North_Carolina	65.68 41.41 57.22
+287 Tennessee	68.13 43.38 68.13
+288 Iran	84.28 53.24 84.28
+289 Japan	98.19 63.10 85.73
+290 California	70.89 45.36 69.47
+291 New_Mexico	107.65 69.02 107.65
+292 New_Mexico	76.66 49.30 76.66
+293 Arkansas	165.76 104.52 165.76
+294 Algeria	76.29 49.30 75.60
+295 Afghanistan	117.15 74.94 117.15
+296 Afghanistan	71.18 45.36 71.18
+297 Pakistan_India_Bangladesh	104.19 67.05 104.19
+298 Sichuan	82.49 53.24 82.49
+299 Shaanxi	71.62 45.36 71.62
+300 Henan	124.55 78.88 124.55
+301 Shandong	71.39 45.36 71.39
+302 California	81.01 51.27 81.01
+303 Morocco	113.35 72.96 105.81
+304 Algeria	109.09 69.02 102.85
+305 Algeria	141.23 90.71 140.05
+306 Iraq	79.30 51.27 79.30
+307 Iran	69.40 43.38 69.40
+308 Iran	93.52 59.16 93.52
+309 Pakistan_India_Bangladesh	106.25 67.05 106.25
+310 Xizang	1547.38 984.03 1547.38
+311 Henan	89.95 57.19 89.95
+312 Jiangsu	85.09 53.24 80.17
+313 Japan	115.97 72.96 91.36
+314 Alabama	232.30 147.90 231.07
+315 Morocco	82.92 53.24 82.92
+316 Syria_Lebanon	72.39 45.36 72.39
+317 Iraq	120.79 76.91 120.79
+318 Pakistan_India_Bangladesh	88.11 55.22 88.11
+319 Aridoamerica	73.38 47.33 66.75
+320 Arizona	124.90 78.88 123.51
+321 Texas	134.90 86.77 134.90
+322 Iran	466.57 297.77 466.57
+323 Sichuan	112.51 70.99 112.51
+324 Texas	88.49 57.19 88.49
+325 Xizang	59.85 37.47 59.85
+326 Sichuan	96.38 61.13 96.38
+327 Arizona	75.70 47.33 75.70
+328 Morocco	94.81 61.13 90.72
+329 Afghanistan	133.21 84.80 133.21
+330 Anhui	99.97 63.10 99.97
+331 Afghanistan	65.88 41.41 65.88
+332 Texas	110.79 70.99 110.79
+333 Algeria	233.05 147.90 233.05
+334 Aridoamerica	173.03 110.43 166.17
+335 Aridoamerica	93.10 59.16 93.10
+336 Texas	87.79 55.22 85.23
+337 Iran	66.71 41.41 66.71
+338 Pakistan_India_Bangladesh	92.87 59.16 92.87
+339 Xizang	69.38 43.38 69.38
+340 Xizang	85.77 55.22 85.77
+341 Hubei	145.69 92.68 145.69
+342 Xizang	96.67 61.13 96.67
+343 Libya	535.64 341.16 513.46
+344 Saudi_Arabia	689.95 439.76 682.60
+345 Iran	67.01 43.38 67.01
+346 Afghanistan	75.01 47.33 75.01
+347 Pakistan_India_Bangladesh	123.41 78.88 123.41
+348 Sichuan	110.45 70.99 110.45
+349 Zhejiang	187.52 120.29 177.19
+350 Aridoamerica	72.90 47.33 72.90
+351 Florida	490.76 311.58 460.52
+352 Algeria	477.84 303.69 477.84
+353 Pakistan_India_Bangladesh	73.43 47.33 73.43
+354 Hunan	360.27 230.72 360.27
+355 Pakistan_India_Bangladesh	78.75 49.30 78.75
+356 Pakistan_India_Bangladesh	65.39 41.41 65.39
+357 Aridoamerica	81.91 51.27 81.91
+358 Egypt	731.62 465.39 715.16
+359 Jiangxi	114.93 72.96 114.93
+360 Aridoamerica	116.03 72.96 91.82
+361 Pakistan_India_Bangladesh	117.25 74.94 117.25
+362 Sichuan	138.72 88.74 138.72
+363 Guizhou	137.23 86.77 137.23
+364 Aridoamerica	121.51 76.91 121.51
+365 Texas	329.60 209.03 322.61
+366 Pakistan_India_Bangladesh	85.38 55.22 85.38
+367 Sichuan	178.47 114.38 178.47
+368 Saudi_Arabia	378.47 242.56 362.36
+369 Iran	638.04 406.23 612.36
+370 Pakistan_India_Bangladesh	215.99 138.04 215.99
+371 Aridoamerica	75.23 47.33 70.18
+372 Pakistan_India_Bangladesh	72.32 45.36 72.32
+373 Fujian	91.66 59.16 82.90
+374 Libya	368.38 234.67 368.38
+375 Saudi_Arabia	388.74 246.50 388.28
+376 Pakistan_India_Bangladesh	153.88 98.60 149.32
+377 Burma	83.27 53.24 83.27
+378 Yunnan	100.59 63.10 100.59
+379 Guangdong	81.37 51.27 81.37
+380 Aridoamerica	103.98 67.05 103.98
+381 Libya	331.18 211.00 331.18
+382 Pakistan_India_Bangladesh	103.34 65.08 103.26
+383 Pakistan_India_Bangladesh	212.18 136.07 212.18
+384 Aridoamerica	59.20 37.47 59.20
+385 Algeria	1416.95 905.15 1416.95
+386 Morocco	382.92 244.53 373.28
+387 Pakistan_India_Bangladesh	76.16 49.30 76.16
+388 Pakistan_India_Bangladesh	139.33 88.74 133.29
+389 Pakistan_India_Bangladesh	122.72 78.88 114.15
+390 Pakistan_India_Bangladesh	825.69 526.52 815.72
+391 Yunnan	382.79 244.53 382.79
+392 Guangxi	206.02 132.12 189.63
+393 Aridoamerica	74.12 47.33 74.12
+394 Algeria	923.20 587.66 923.20
+395 Pakistan_India_Bangladesh	315.88 201.14 314.76
+396 Guangdong	91.17 59.16 81.46
+397 Morocco	195.62 124.24 185.95
+398 Central_Mexico	135.48 86.77 131.76
+399 Sahel_States	481.77 307.63 481.77
+400 Saudi_Arabia	394.92 250.44 391.02
+401 Caribbean	118.03 74.94 94.62
+402 Sudan	795.21 506.80 794.26
+403 Saudi_Arabia	999.53 634.98 975.61
+404 Burma	158.28 100.57 147.93
+405 Burma	461.09 293.83 461.09
+406 Caribbean	90.83 57.19 68.86
+407 Sahel_States	111.36 70.99 111.36
+408 Sahel_States	275.84 175.51 275.84
+409 Sahel_States	140.88 90.71 140.07
+410 Pakistan_India_Bangladesh	73.48 47.33 67.22
+411 Central_Mexico	561.41 356.93 530.74
+412 Mayan_America	205.13 130.15 191.79
+413 Sahel_States	168.01 106.49 168.01
+414 Sahel_States	522.14 333.27 522.14
+415 Thailand	100.05 63.10 100.05
+416 Sahel_States	144.33 92.68 144.33
+417 Pakistan_India_Bangladesh	100.16 63.10 95.88
+418 Sahel_States	210.87 134.10 208.48
+419 Mayan_America	152.02 96.63 138.10
+420 Sudan	169.04 108.46 169.04
+421 Yemen	118.81 76.91 112.03
+422 Pakistan_India_Bangladesh	101.29 65.08 101.29
+423 Pakistan_India_Bangladesh	232.67 147.90 231.84
+424 Sahel_States	173.14 110.43 173.14
+425 Sudan	386.90 246.50 378.30
+426 Philippines	143.36 90.71 109.11
+427 Sahel_States	107.49 69.02 107.49
+428 Sahel_States	662.98 422.01 662.98
+429 Yemen	131.72 84.80 127.79
+430 Yemen	113.06 72.96 104.52
+431 Burma	155.89 98.60 139.48
+432 Central_America	68.83 43.38 64.61
+433 Ethiopia	71.91 45.36 67.25
+434 Central_America	66.06 41.41 58.58
+435 West_Africa	86.97 55.22 83.98
+436 Sudan	236.68 151.84 234.20
+437 Pakistan_India_Bangladesh	62.83 39.44 60.00
+438 Thailand	232.93 147.90 232.09
+439 Sahel_States	183.45 116.35 183.45
+440 Sahel_States	243.55 155.79 243.55
+441 Central_America	120.56 76.91 110.98
+442 Sahel_States	72.24 45.36 72.24
+443 Sahel_States	69.19 43.38 69.19
+444 Sahel_States	135.54 86.77 135.54
+445 Sudan	114.49 72.96 114.49
+446 Ethiopia	135.96 86.77 135.96
+447 Pakistan_India_Bangladesh	114.58 72.96 111.81
+448 Sudan	93.68 59.16 93.68
+449 Ethiopia	75.46 49.30 65.23
+450 West_Africa	90.72 57.19 90.72
+451 Sahel_States	366.98 234.67 366.98
+452 Cambodia	72.63 47.33 67.92
+453 West_Africa	169.89 108.46 169.89
+454 Ethiopia	78.92 51.27 78.92
+455 Pakistan_India_Bangladesh	94.15 61.13 88.41
+456 Sudan	240.30 153.82 240.30
+457 Ethiopia	79.01 51.27 79.01
+458 West_Africa	75.95 49.30 74.44
+459 West_Africa	143.16 90.71 143.16
+460 West_Africa	115.32 72.96 115.32
+461 Vietnam	566.17 360.88 541.76
+462 West_Africa	487.88 311.58 478.45
+463 Sahel_States	283.37 181.42 283.37
+464 Ethiopia	67.09 43.38 67.09
+465 Pakistan_India_Bangladesh	82.25 53.24 73.78
+466 Philippines	69.99 45.36 45.46
+467 Northern_South_America	106.92 69.02 104.38
+468 Equatoria_Zaire_Angola	79.47 51.27 79.47
+469 Northern_South_America	199.02 128.18 189.20
+470 West_Africa	293.67 187.34 291.96
+471 Ethiopia	73.41 47.33 73.41
+472 Northern_South_America	216.64 138.04 199.33
+473 West_Africa	235.63 149.87 235.63
+474 Sahel_States	82.74 53.24 82.74
+475 Sudan	137.74 88.74 137.74
+476 Ethiopia	85.78 55.22 85.78
+477 Somalia	311.75 199.17 294.38
+478 Central_America	134.35 86.77 109.21
+479 Northern_South_America	76.74 49.30 76.74
+480 West_Africa	315.95 201.14 303.09
+481 Sudan	220.59 141.98 220.59
+482 Ethiopia	64.42 41.41 64.42
+483 Philippines	107.46 69.02 88.78
+484 Andes	313.94 201.14 294.28
+485 West_Africa	227.42 145.93 221.60
+486 Ethiopia	196.65 126.21 196.65
+487 Sri_Lanka	70.62 45.36 61.33
+488 Amazon	73.80 47.33 73.80
+489 West_Africa	70.77 45.36 70.77
+490 Amazon	64.67 41.41 64.67
+491 Equatoria_Zaire_Angola	172.43 110.43 172.43
+492 Equatoria_Zaire_Angola	498.97 317.49 498.97
+493 Sudan	212.83 136.07 212.83
+494 Ethiopia	73.85 47.33 73.85
+495 Amazon	172.55 110.43 172.55
+496 Malaysia_Singapore	206.57 132.12 181.06
+497 Equatoria_Zaire_Angola	228.53 145.93 219.43
+498 Somalia	117.16 74.94 112.78
+499 Amazon	210.08 134.10 210.08
+500 Ethiopia	111.07 70.99 111.07
+501 Indonesia	80.33 51.27 67.12
+502 Amazon	274.61 175.51 270.34
+503 Andes	129.87 82.82 129.87
+504 Equatoria_Zaire_Angola	290.33 185.37 290.33
+505 Equatoria_Zaire_Angola	225.78 143.96 225.78
+506 Kenya	269.18 171.56 267.11
+507 Somalia	148.49 94.66 138.43
+508 Amazon	235.12 149.87 219.83
+509 Equatoria_Zaire_Angola	170.30 108.46 170.30
+510 Uganda	389.60 248.47 389.60
+511 Amazon	170.32 108.46 170.32
+512 Kenya	222.75 141.98 222.75
+513 Indonesia	426.85 272.14 398.88
+514 Indonesia	399.22 254.39 362.96
+515 Amazon	1799.78 1147.70 1799.78
+516 Equatoria_Zaire_Angola	588.32 374.68 581.52
+517 Amazon	331.33 211.00 329.78
+518 Amazon	414.80 264.25 414.80
+519 Equatoria_Zaire_Angola	225.98 143.96 225.98
+520 Indonesia	343.69 218.89 322.38
+521 Kenya	154.79 98.60 149.98
+522 Indonesia	114.51 72.96 93.61
+523 Indonesia	86.63 55.22 66.17
+524 Equatoria_Zaire_Angola	421.04 268.19 421.04
+525 Amazon	312.48 199.17 295.97
+526 Tanzania	222.76 141.98 222.76
+527 Melanesia	95.96 61.13 78.59
+528 Andes	126.83 80.85 118.83
+529 Equatoria_Zaire_Angola	247.33 157.76 247.33
+530 Melanesia	419.72 268.19 401.80
+531 Melanesia	61.75 39.44 55.32
+532 Amazon	64.80 41.41 64.80
+533 Tanzania	80.26 51.27 80.26
+534 North_coast_Brazil	371.72 238.61 366.23
+535 Equatoria_Zaire_Angola	228.21 145.93 227.18
+536 Andes	92.32 59.16 82.65
+537 NE_Brazil	196.86 126.21 196.86
+538 Equatoria_Zaire_Angola	277.05 177.48 277.05
+539 Tanzania	148.04 94.66 148.04
+540 Amazon	193.84 124.24 193.84
+541 Indonesia	73.79 47.33 61.41
+542 Amazon	297.43 191.28 297.43
+543 North_coast_Brazil	98.24 63.10 97.13
+544 Equatoria_Zaire_Angola	522.72 335.24 522.72
+545 Indonesia	79.82 51.27 61.23
+546 Melanesia	178.15 114.38 164.27
+547 Andes	104.41 67.05 104.41
+548 Amazon	503.83 321.44 503.83
+549 Equatoria_Zaire_Angola	131.99 84.80 131.99
+550 Central_Brazil	919.68 587.66 913.92
+551 North_coast_Brazil	61.21 39.44 61.21
+552 Melanesia	73.39 47.33 61.94
+553 North_coast_Brazil	82.51 53.24 82.51
+554 Amazon	471.91 301.72 471.91
+555 Amazon	158.41 102.54 158.41
+556 Amazon	60.82 39.44 60.82
+557 Equatoria_Zaire_Angola	657.31 420.04 646.67
+558 Amazon	146.01 94.66 146.01
+559 Equatoria_Zaire_Angola	127.75 82.82 127.75
+560 Tanzania	475.01 303.69 460.68
+561 Amazon	163.89 106.49 163.89
+562 Amazon	157.38 102.54 157.38
+563 South_Central_Africa	717.76 459.48 716.19
+564 Andes	123.98 80.85 123.98
+565 Amazon	276.39 177.48 276.39
+566 North_coast_Brazil	160.19 104.52 160.19
+567 Australia	223.14 143.96 197.75
+568 Amazon	143.99 92.68 143.99
+569 South_Central_Africa	147.20 94.66 147.20
+570 Madagascar	75.03 49.30 63.36
+571 Andes	78.30 51.27 66.16
+572 Equatoria_Zaire_Angola	146.70 94.66 146.70
+573 Australia	138.18 88.74 120.63
+574 Andes	104.70 69.02 104.70
+575 Andes	71.64 47.33 71.64
+576 Andes	108.25 70.99 108.25
+577 Australia	59.72 39.44 53.73
+578 Central_coast_Brazil	146.00 94.66 146.00
+579 Equatoria_Zaire_Angola	74.44 49.30 74.44
+580 Australia	98.25 65.08 95.83
+581 Equatoria_Zaire_Angola	115.66 74.94 115.66
+582 South_Central_Africa	380.07 244.53 380.07
+583 Madagascar	95.22 63.10 90.74
+584 Equatoria_Zaire_Angola	169.15 110.43 164.95
+585 Australia	124.92 80.85 124.83
+586 Australia	236.44 151.84 227.59
+587 Australia	177.03 114.38 173.60
+588 Mozambique	83.13 55.22 77.56
+589 Australia	70.89 47.33 61.92
+590 Madagascar	79.55 53.24 77.98
+591 Australia	65.00 43.38 65.00
+592 SW_Africa_Botswana	161.55 104.52 161.55
+593 South_Central_Africa	64.64 43.38 64.64
+594 Mozambique	114.34 74.94 110.69
+595 Madagascar	73.39 49.30 69.57
+596 South_Central_Africa	108.28 70.99 108.28
+597 Australia	474.69 305.66 474.69
+598 Andes	93.62 61.13 93.62
+599 Central_Brazil	159.88 104.52 159.88
+600 North_coast_Brazil	392.90 252.42 371.00
+601 SW_Africa_Botswana	296.69 191.28 296.69
+602 Madagascar	61.04 41.41 55.99
+603 Australia	247.44 159.73 245.00
+604 Australia	84.26 55.22 84.26
+605 Madagascar	106.04 69.02 102.06
+606 Australia	75.15 49.30 75.15
+607 Andes	69.85 47.33 69.85
+608 Australia	69.25 47.33 69.25
+609 Australia	229.91 147.90 223.15
+610 Australia	160.56 104.52 160.56
+611 Australia	201.62 130.15 201.62
+612 Central_coast_Brazil	1902.76 1216.72 1896.63
+613 Andes	248.86 161.70 230.04
+614 Argentina_lowland	913.89 585.68 913.89
+615 SW_Africa_Botswana	200.51 130.15 200.51
+616 Mozambique	278.13 179.45 267.82
+617 Australia	131.60 86.77 120.26
+618 SW_Africa_Botswana	347.83 224.81 347.83
+619 SW_Africa_Botswana	278.33 179.45 278.33
+620 Andes	152.29 98.60 152.29
+621 Madagascar	125.43 82.82 118.63
+622 Australia	259.48 167.62 259.48
+623 Australia	73.14 49.30 73.14
+624 Southern_Africa	133.89 88.74 133.89
+625 South_coast_Brazil	299.09 193.26 299.09
+626 Australia	809.24 518.64 796.66
+627 Australia	204.18 132.12 204.18
+628 Australia	109.63 72.96 109.63
+629 Southern_Africa	128.24 84.80 128.24
+630 Australia	685.33 439.76 680.24
+631 Australia	348.19 224.81 348.19
+632 Australia	197.95 128.18 193.24
+633 Southern_Africa	769.30 493.00 743.29
+634 Argentina_lowland	76.04 51.27 76.04
+635 Australia	353.07 228.75 353.07
+636 Australia	122.57 80.85 122.57
+637 Andes	120.72 78.88 120.72
+638 Southern_Africa	138.42 90.71 135.01
+639 Andes	70.85 47.33 70.85
+640 Australia	250.31 161.70 247.32
+641 Andes	61.78 41.41 61.78
+642 South_coast_Brazil	256.86 165.65 242.04
+643 Southern_Africa	71.91 49.30 71.91
+644 Argentina_lowland	156.55 102.54 156.55
+645 Australia	297.00 193.26 297.00
+646 Uruguay	122.81 80.85 122.81
+647 Andes	73.80 49.30 73.80
+648 Australia	84.43 57.19 84.43
+649 Southern_Africa	88.62 59.16 82.31
+650 Australia	114.49 76.91 111.63
+651 Australia	114.69 76.91 105.53
+652 Australia	68.44 47.33 61.65
+653 Argentina_lowland	106.68 70.99 102.19
+654 Australia	211.64 138.04 211.64
+655 Argentina_lowland	132.54 86.77 127.72
+656 Australia	88.01 59.16 80.43
+657 Australia	133.22 88.74 127.20
+658 Uruguay	113.67 74.94 106.02
+659 Southern_Africa	67.01 45.36 61.91
+660 Australia	167.08 110.43 167.08
+661 Andes	66.42 45.36 63.38
+662 Argentina_lowland	68.72 47.33 68.72
+663 Argentina_lowland	93.78 63.10 93.78
+664 Argentina_lowland	137.76 90.71 137.76
+665 Australia	93.37 63.10 80.81
+666 Argentina_lowland	147.78 98.60 143.35
+667 New_Zealand	86.08 59.16 65.12
+668 Australia	100.31 67.05 88.34
+669 Andes	72.22 49.30 66.98
+670 Argentina_lowland	87.44 59.16 87.44
+671 Argentina_lowland	150.05 98.60 149.14
+672 Argentina_lowland	59.87 41.41 58.83
+673 Argentina_lowland	74.98 51.27 69.45
+674 New_Zealand	100.47 67.05 79.15
+675 Argentina_lowland	85.07 57.19 75.29
+676 Australia	80.69 55.22 63.39
+677 Argentina_lowland	78.84 53.24 78.84
+678 Argentina_lowland	122.18 82.82 109.86
+679 Argentina_lowland	107.98 72.96 102.51
+680 Andes	174.53 114.38 148.87
+681 New_Zealand	125.53 84.80 111.37
+682 Argentina_lowland	96.03 65.08 87.84
+683 Argentina_lowland	75.63 53.24 69.87
+684 Andes	148.24 98.60 115.07
+685 Andes	72.11 51.27 50.88
