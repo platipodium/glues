@@ -4,7 +4,7 @@ function [time,lon,lat,climate]=cl_nc_read_arve(varargin)
 cl_register_function;
 
 arguments = {...
-  {'file','../../data/biome4out.nc'},...
+  {'file','../../data/plasim_LSG_6999_6000_mean.nc'},...
   {'timelim',[-inf inf]}
 };
 
@@ -19,24 +19,25 @@ ncid=netcdf.open(file,'NC_NOWRITE');
 try
   varid=netcdf.inqVarID(ncid,'time');
   time=netcdf.getVar(ncid,varid);  
-  [name,xtype,timedim,natts] = netcdf.inqVar(varid);
+  [name,xtype,timedim,natts] = netcdf.inqVar(ncid,varid);
+  timeunit=netcdf.getAtt(ncid,varid,'units');
 catch ('MATLAB:netcdf:inqVarID:variableNotFound');
 end
 
 try
   varid=netcdf.inqVarID(ncid,'lat');
   lat=netcdf.getVar(ncid,varid);  
-  [name,xtype,latdim,natts] = netcdf.inqVar(varid);
+  [name,xtype,latdim,natts] = netcdf.inqVar(ncid,varid);
 catch ('MATLAB:netcdf:inqVarID:variableNotFound');
   try
     varid=netcdf.inqVarID(ncid,'latitude');
     lat=netcdf.getVar(ncid,varid);  
-    [name,xtype,latdim,natts] = netcdf.inqVar(varid);
+    [name,xtype,latdim,natts] = netcdf.inqVar(ncid,varid);
   catch ('MATLAB:netcdf:inqVarID:variableNotFound');
     try
       varid=netcdf.inqVarID(ncid,'y');
       lat=netcdf.getVar(ncid,varid);  
-     [name,xtype,latdim,natts] = netcdf.inqVar(varid);
+     [name,xtype,latdim,natts] = netcdf.inqVar(ncid,varid);
     catch ('MATLAB:netcdf:inqVarID:variableNotFound');
     end
   end
@@ -45,21 +46,38 @@ end
 try
   varid=netcdf.inqVarID(ncid,'lon');
   lon=netcdf.getVar(ncid,varid);  
-  [name,xtype,londim,natts] = netcdf.inqVar(varid);
+  [name,xtype,londim,natts] = netcdf.inqVar(ncid,varid);
 catch ('MATLAB:netcdf:inqVarID:variableNotFound');
   try
     varid=netcdf.inqVarID(ncid,'longitude');
     lon=netcdf.getVar(ncid,varid);  
-    [name,xtype,londim,natts] = netcdf.inqVar(varid);
+    [name,xtype,londim,natts] = netcdf.inqVar(ncid,varid);
   catch ('MATLAB:netcdf:inqVarID:variableNotFound');
     try
       varid=netcdf.inqVarID(ncid,'x');
       lon=netcdf.getVar(ncid,varid);  
-      [name,xtype,londim,natts] = netcdf.inqVar(varid);
+      [name,xtype,londim,natts] = netcdf.inqVar(ncid,varid);
     catch ('MATLAB:netcdf:inqVarID:variableNotFound');
     end
   end
 end
+
+%% Bring lat and lon in order
+if lat(2)>lat(1) reverse_lats=0; else
+  lat=flipud(lat);
+  reverse_lats=1;
+end
+
+if any(lon>180) reorder_lons=1; 
+  ilon1=find(lon<=180);
+  ilon2=find(lon>180);
+  lon(ilon2)=lon(ilon2)-360;
+  [lon,sortlon]=sort(lon);
+else
+  reorder_lons=0;
+end
+
+
 
 %% Now read all other variables 
 for varid=0:nvar-1
@@ -72,7 +90,58 @@ for varid=0:nvar-1
     case {'npp','gdd','gdd0','gdd5'}, ; 
     otherwise warning('Variable with id %d and name %s not used.',varid,varname);      
   end
-  eval(['climate.' varname ' = netcdf.getVar(ncid,varid);']);
+  varval=netcdf.getVar(ncid,varid);
+
+  % Rearrange if lat decreasing
+  if (reverse_lats & any(latdim==dimids))
+    idim=find(latdim==dimids);
+    varval=flipdium(varval,idim);
+  end
+  
+  % Rearrange if lon gt 180
+  if (reorder_lons & any(londim==dimids))
+    idim=find(londim==dimids);
+    switch (idim)
+      case 1, varval=varval(sortlon,:);
+      case 2, varval=varval(:,sortlon);
+      case 3, varval=varval(:,:,sortlon);
+      case 4, varval=varval(:,:,:,sortlon);
+    end
+  end
+  
+  eval(['climate.' varname ' = varval;']);end
+
+%% Calculate npp if necessary
+if ~isfield(climate,'npp') & isfield(climate,'temp') & isfield(climate,'prec')
+  if numel(size(climate.temp))<3
+    climate.npp=clc_npp(climate.temp,climate.prec);
+  else
+    % assume time is third dimension and is monthly
+    climate.npp=clc_npp(mean(climate.temp,3),sum(climate.prec,3));
+  end
+end
+
+%% Calculate gdd if necessary
+if ~isfield(climate,'gdd0') & isfield(climate,'temp')
+  climate.gdd0=sum(climate.temp.*(climate.temp>=0),3);
+end
+
+if ~isfield(climate,'gdd5') & isfield(climate,'temp')
+  climate.gdd5=sum(climate.temp.*(climate.temp>=5),3);
+end
+
+if ~isfield(climate,'gdd') & isfield(climate,'temp')
+  if numel(size(climate.temp))>3
+    climate.gdd=sum(climate.temp>=0,3)*30;
+  end
+end
+
+
+%% Finally reduce precip and temp to annual means
+timedim=find(size(climate.temp)==12);
+if ~isempty(timedim)
+  climate.temp=mean(climate.temp,timedim);
+  climate.prec=sum(climate.prec,timedim);
 end
 
 netcdf.close(ncid);
