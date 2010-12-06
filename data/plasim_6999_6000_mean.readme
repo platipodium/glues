@@ -1,0 +1,13 @@
+- 6k-time slice, d.h. von 6999-6000 BP, als Mittel über diese 1000 Jahre
+- t2m in K, precip in mm/day. Es handelt sich hierbei um den 
+Gesamt-Niederschlag. Laß dich bitte durch den Code 142, LSP, nicht 
+verunsichern
+- jeweils 3 Datensätze, PlaSim_orig, PlaSim_reconstruct_regional (N-Atlantik) 
+und PlaSim_reconstruct_global, da diese auch schon fertig waren.
+- aufbereitet habe ich dann jeweils die globalen T2m- und Niederschlagsfelder 
+und, separat, globale Felder, in denen nur die Landpunkte enthalten sind und 
+die Meerespunkte als missing values gesetzt wurden (Endunfg _land). Bei den 
+Daten, die ich dir vom LSG-Lauf geschickt haben, waren es damals die globalen 
+Felder. Das scheint also geklappt zu haben. Wußte aber nicht mehr, wie und ob 
+du zwischen Meer und Land unterscheidest, daher habe ich dir beides mal 
+mitgeschickt.
