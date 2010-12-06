@@ -13,7 +13,7 @@ arguments = {...
   {'period','low'},...
   {'FontSize',16},...
   {'xticks',7},...
-  {'oneover',0}
+  {'oneover',1}
 };
 
 cl_register_function;
@@ -28,6 +28,7 @@ end;
 [fpe.path fpe.name fpe.ext]=fileparts(file);
 load(file);
 
+freq=freq/1000;
 
 if isinf(freqlim(1)) freqlim(1)=min(freq(freq>0)); end
 if isinf(freqlim(2)) freqlim(2)=max(freq); end
@@ -102,22 +103,25 @@ ylabel('Spectral amplitude (dB)');
 hold on;
  
 
- plot(freq,db(Gred_theoretical),'k-','LineWidth',1.5);
- plot(freq,db(Gred_theoretical.*param.scalecrit),'b-','LineWidth',2.0);
- plot(freq,db(Gred_theoretical.*param.scale99),'-.','LineWidth',1.0,'Color',[0.5 0.5 0.5]); 
- plot(freq,db(Gred_theoretical.*param.scale95),'--','LineWidth',1.0,'Color',[0.5 0.5 0.5]); 
- plot(freq,db(Gred_theoretical.*param.scale90),'-','LineWidth',1.0,'Color',[0.5 0.5 0.5]);
+ p50=plot(freq,db(Gred_theoretical),'k-','LineWidth',1.5);
+ pt=plot(freq,db(Gred_theoretical.*param.scalecrit),'b-','LineWidth',2.0);
+ p99=plot(freq,db(Gred_theoretical.*param.scale99),'-.','LineWidth',1.0,'Color',[0.5 0.5 0.5]); 
+ p95=plot(freq,db(Gred_theoretical.*param.scale95),'--','LineWidth',1.0,'Color',[0.5 0.5 0.5]); 
+ p90=plot(freq,db(Gred_theoretical.*param.scale90),'-','LineWidth',1.0,'Color',[0.5 0.5 0.5]);
 
 
- plot(freq,db(Gxx_corr),'Color','r','LineWidth',2.5,'LineStyle','-');
+ pd=plot(freq,db(Gxx_corr),'Color','r','LineWidth',2.5,'LineStyle','-');
  nuquist=round(1/max(nu));
  nuorder=floor(log(max(nu)*1000)/log(10.));
  nutext=sprintf('f_{nyq}=1/%d d^{-1}',nuquist)
- critext=sprintf('P_{cri}=%5.2f%',param.critical)
+ critext=sprintf('p_{cri}=%5.2f%',param.critical)
+
+ legend([pd,p95,pt],'REDFIT spectrum','p=.95',critext)
+ 
  
  hold off;
 
- isig=find(db(Gxx_corr)>=db(Gred_theoretical.*param.scalecrit));
+ isig=find(db(Gxx_corr)>=db(Gred_theoretical.*param.scale95));
  
  %text(1./20.,5,'Significant frequencies:');
  %text(1./20.,62,'yearly (324-432 d)');

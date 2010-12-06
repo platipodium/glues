@@ -1,88 +1,67 @@
-function write_region_plasim(varargin)
+function write_arveregion_biome4(varargin)
 
 cl_register_function();
 
-matfile='regionmap_685.mat';
 
-%climatefile='plasim_klima.mat';
-climatefile='../../src/test/plasim_11k.mat';
+%% Read popregions file
+% arvelat is -89.xx .. 89.xx
+% arvelon is -179.xx .. 179.xx (col=lat)
+% size arveregion is 4320 x 2160 (row=lon)
 
-if ~exist(climatefile,'file') 
-  warning('No climate change information found / %s missing. writing static climate',climatefile);
-else
-  plasim=load(climatefile);
-end
+file='/h/lemmen/projects/glues/tex/2010/holopop/arve/popregions6.nc';
+ncid=netcdf.open(file,'NC_NOWRITE');
+varid=netcdf.inqVarID(ncid,'z');
+region=netcdf.getVar(ncid,varid);
+varid=netcdf.inqVarID(ncid,'lat');
+lat=netcdf.getVar(ncid,varid);
+varid=netcdf.inqVarID(ncid,'lon');
+lon=netcdf.getVar(ncid,varid);
+netcdf.close(ncid);
 
-iarg=1;
-while iarg<=nargin
-  arg=lower(varargin{iarg});
+%% Region region names
+file='/h/lemmen/projects/glues/tex/2010/holopop/arve/pop_region_key2.txt';
+fid=fopen(file,'r');
+C=textscan(fid,'%d %s');
+fclose(fid);
+arveid=C{1};
+arvename=C{2};
+arvename{999}='Not_named';
+arveid(999)=0;
+
+file='/h/lemmen/projects/glues/tex/2010/holopop/arve/biome4out.nc';
+ncid=netcdf.open(file,'NC_NOWRITE');
+varid=netcdf.inqVarID(ncid,'npp');
+npp=netcdf.getVar(ncid,varid);
+varid=netcdf.inqVarID(ncid,'gdd0');
+gdd0=netcdf.getVar(ncid,varid);
+varid=netcdf.inqVarID(ncid,'gdd5');
+gdd5=netcdf.getVar(ncid,varid);
+varid=netcdf.inqVarID(ncid,'lat');
+blat=netcdf.getVar(ncid,varid);
+varid=netcdf.inqVarID(ncid,'lon');
+blon=netcdf.getVar(ncid,varid);
+varid=netcdf.inqVarID(ncid,'time');
+month=netcdf.getVar(ncid,varid);
+netcdf.close(ncid);
+
+prefix='biome4';
+
+%% For each ARVE region find cells and read GLUES
+ar=unique(arveregion);
+nland=sum(sum(arveregion>0));
+nwater=sum(sum(arveregion<0));
+
+ar=ar(ar>0);
+nar=length(ar);
+[narow,nacol]=size(arveregion);
+
+
+
+
+
+
+for i=1:nar
   
-  switch arg(1:3)
-    case 'fil'
-          matfile=varargin{iarg+1};
-          iarg=iarg+1;
-      otherwise
-        fprintf('Unknown keyword %s.',varargin{iarg});    
-  end
-  iarg=iarg+1;
-end
-
-if ~exist(matfile,'file') return; end
-
-prefix=strrep(matfile,'.mat','');
-nppfile =[strrep(prefix,'map','_plasim_npp')  '.tsv'];
-npplfile=[strrep(prefix,'map','_plasim_nppl') '.tsv'];
-gddfile =[strrep(prefix,'map','_plasim_gdd')  '.tsv'];
-climatefile=[strrep(prefix,'map','_plasim') '.mat'];
-
-
-load(matfile)
-if ~exist('region','var') 
-  region.length=regionlength;
-end
-
-if ~exist('map','var')
-    map.region=regionmap;
-end
-
-if ~exist('land','var')
-    land.region=regionnumber;
-    land.map=regionindex;
-    land.lat=lat;
-    land.lon=lon;
-end
-
-nreg=length(region.length);
-[cols,rows]=size(map.region);
-
-plasim.npp=sum(plasim.npp,3)*360;
-
-nlon=size(plasim.temp,1);
-nlat=size(plasim.temp,2);
-
-lon=[0:nlon-1]/nlon*360-180/nlon;
-
-lon1=find(lon<=180);
-lon2=find(lon>180);
-
-lon=[lon(lon2)-360 lon(lon1)];
-
-%lon(lon2)=lon(lon2)-360;
-plasim.temp=[ plasim.temp(lon2,:,:);plasim.temp(lon1,:,:) ];
-plasim.precip=[ plasim.precip(lon2,:,:); plasim.precip(lon1,:,:) ];
-plasim.npp=[ plasim.npp(lon2,:,:);plasim.npp(lon1,:,:) ];
-plasim.npp(find(plasim.npp<=0))=NaN;
-
-lat=[0:nlat-1]/nlat*180-90+90/nlat;
-lat=fliplr(lat);
-
-plasim.nppl=clc_npp(mean(plasim.temp,3),sum(plasim.precip,3));
-
-%% Old version: number of days
-plasim.gdd=sum(plasim.temp>0,3)*30.;
-%plasim.gdd0=sum((plasim.temp>0).*plasim.temp),3)*30;
-
-for ireg=1:nreg
   % select all cells of this region
   
   
