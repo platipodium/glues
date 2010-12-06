@@ -101,15 +101,17 @@ for varid=0:nvar-1
   % Rearrange if lon gt 180
   if (reorder_lons & any(londim==dimids))
     idim=find(londim==dimids);
-    switch (idim)
-      case 1, varval=varval(sortlon,:);
-      case 2, varval=varval(:,sortlon);
-      case 3, varval=varval(:,:,sortlon);
-      case 4, varval=varval(:,:,:,sortlon);
-    end
+    varval=cl_reorder(varval,sortlon,idim);
   end
   
   eval(['climate.' varname ' = varval;']);end
+
+%% Correct specific data
+% plasim data is mm/day in precip and temp in K
+if strfind(file,'plasim')
+  if isfield(climate,'temp') climate.temp=climate.temp-273.15; end
+  if isfield(climate,'prec') climate.prec=climate.prec*365.25/12; end
+end
 
 %% Calculate npp if necessary
 if ~isfield(climate,'npp') & isfield(climate,'temp') & isfield(climate,'prec')
@@ -131,19 +133,20 @@ if ~isfield(climate,'gdd5') & isfield(climate,'temp')
 end
 
 if ~isfield(climate,'gdd') & isfield(climate,'temp')
-  if numel(size(climate.temp))>3
-    climate.gdd=sum(climate.temp>=0,3)*30;
+  if numel(size(climate.temp))>2
+    climate.gdd=sum(climate.temp>=0,3)*365./12;
   end
 end
 
 
 %% Finally reduce precip and temp to annual means
-timedim=find(size(climate.temp)==12);
-if ~isempty(timedim)
-  climate.temp=mean(climate.temp,timedim);
-  climate.prec=sum(climate.prec,timedim);
+if isfield(climate,'temp')
+  timedim=find(size(climate.temp)==12);
+  if ~isempty(timedim)
+    climate.temp=mean(climate.temp,timedim);
+    climate.prec=sum(climate.prec,timedim);
+  end
 end
-
 netcdf.close(ncid);
 
 matfile=strrep(file,'.nc','.mat');
