@@ -431,18 +431,18 @@ unsigned int read_ascii_table(std::istream& is, int** table_int)
 /**
    @param is: input stream to read from
    @return: number of lines read
+   @deprecated: a new function exists in IO.h, but this one is still used by read_proxyevents
+   
 */
-
 unsigned int count_ascii_rows(std::istream& is) 
 {
     
   std::string line;
   unsigned int n=0;
    
-
   if ( is.bad() ) {
-	  cout << "ERROR in count_ascii_rows. Input stream not ready\n";
-      }
+    cout << "ERROR in count_ascii_rows. Input stream not ready\n";
+  }
   
   is.seekg(0);
 
