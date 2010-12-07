@@ -72,24 +72,20 @@ int GlobalClimate::InitRead(char* filename)
     return 0;  // The file does not exist
   }
   nrow=glues::IO<void>::count_ascii_rows(ifs);
-  ifs.close();
+
   if (nrow < 1) {
       cerr << "\nERROR\tFile " << filename << " appears to have 0 rows" << endl;
       return 0;
   }
 
   // Read the number of columns
-  ifs.open(filename,std::ios::in);
-  if (ifs.bad()) {
-    cout << "\nERROR\tTried to open file " << filename << " and failed" << endl;
-    return 0;
-  }
   ncol=glues::IO<void>::count_ascii_columns(ifs);
   ifs.close();
   if (ncol < 1) {
       cout << "\nERROR\tFile " << filename << " appears to have 0 columns" << endl;
       return 0;
   }
+  std::cerr << "Rows by colums " << nrow << " x " << ncol << std::endl;
 
   unsigned long int joffset=0;
 
@@ -140,7 +136,7 @@ int GlobalClimate::InitRead(char* filename)
   else
   {
       glues::IO<double>::read_ascii_table(ifs,vdata,0,joffset,0,0);
-      for( i = 0; i < num; i++ )
+      for( i = 0; i < nrow; i++ )
       {
           for( j = 0; j < ncol-joffset; j++ )
           {
@@ -175,23 +171,24 @@ int GlobalClimate::InitRead(char* filename)
       }
   }
   else
-  {
+  { // new data version nreg rows * nclim columns
       glues::IO<double>::read_ascii_table(ifs,vdata,0,joffset,0,0);
 
-      for( i = 0 ; i < num; i++ )
+      for( i = 0 ; i < nrow; i++ )
       {
           for( j = 0; j < ncol-joffset; j++ )
           {
               gdd_store.at(i+numberOfRegions*j) = vdata.at(i).at(j);
+              //std::cerr << i << " " << num << " " << joffset << " " << j << " " << gdd_store.at(i+numberOfRegions*j)  << std::endl;
           }
       }
   }
   ifs.close();
 
   std::cout << ", found " << nrow << " x " << ncol-joffset << " climates." << std::endl;
-  if ( num < nrow ) {
+  /*if ( num < nrow ) {
       std::cout << "Warning: only " << num << " climates used (check ClimateUpdateTimes parameter)" << std::endl;
-  }
+  }*/
 
 /** Establish time axis
 // problem with static manner of this fucntion

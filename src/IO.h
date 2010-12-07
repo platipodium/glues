@@ -267,8 +267,10 @@ namespace glues
 	}
 
 
-	/*******************
-	count_ascii_rows() */
+	/**
+	count_ascii_rows() 
+	@todo needs handling of wrong file names /non-existent file
+	*/
 
 	template<class Type>
 	unsigned long int
@@ -290,10 +292,12 @@ namespace glues
 		  is.clear();
 	  }
 	  is.seekg(0);
-
-	  //Read line, ensure not comment line.
+ 
+ //Read line, ensure not comment line.
 	  while(is.good() && std::getline(is, line))
 	  {
+	  	  //	  std::cerr << line << ": " << is_comment_line(line)<< std::endl;
+
 		  if( !is_comment_line(line) )
 		  {
 			  n++;
@@ -301,6 +305,7 @@ namespace glues
 		  if( n < 1 )//error checking
 			  continue;
 	  }
+
 	  return n;
 	}
 
