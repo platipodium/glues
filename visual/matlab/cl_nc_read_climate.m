@@ -22,6 +22,13 @@ try
   [name,xtype,timedim,natts] = netcdf.inqVar(ncid,varid);
   timeunit=netcdf.getAtt(ncid,varid,'units');
 catch ('MATLAB:netcdf:inqVarID:variableNotFound');
+  try
+    varid=netcdf.inqVarID(ncid,'month');
+    time=netcdf.getVar(ncid,varid);  
+    [name,xtype,timedim,natts] = netcdf.inqVar(ncid,varid);
+    timeunit=netcdf.getAtt(ncid,varid,'units');
+  catch ('MATLAB:netcdf:inqVarID:variableNotFound');
+end
 end
 
 try
@@ -83,9 +90,9 @@ end
 for varid=0:nvar-1
   [varname,xtype,dimids,natt] = netcdf.inqVar(ncid,varid);
   switch(varname)
-    case {'lon','lat','time','height','level','layer'}, continue; 
+    case {'lon','lat','time','month','height','level','layer'}, continue; 
     case {'var142','prec','lsp'}, varname='prec'; 
-    case {'var167','temp','t2m','t2'}, varname='temp'; 
+    case {'var167','temp','t2m','t2','tmean'}, varname='temp'; 
     case {'var301'}, varname='npp';
     case {'npp','gdd','gdd0','gdd5'}, ; 
     otherwise warning('Variable with id %d and name %s not used.',varid,varname);      
@@ -150,7 +157,9 @@ end
 netcdf.close(ncid);
 
 matfile=strrep(file,'.nc','.mat');
-save(matfile,'lon','lat','time','climate');
+if ~exist('time','var') time=NaN; end
 
+save(matfile,'lon','lat','time','climate');
+      
 return
 end
