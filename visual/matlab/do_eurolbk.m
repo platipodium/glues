@@ -4,6 +4,56 @@
 reg='lbk';
 timelim=[-8000 -4000];
 hreg=[271 255  211 183 178 170 146 142 122 123];
+nhreg=length(hreg);
+letters='ABCDEFGHIJKLMNOPQRSTUVW';
+letters=letters(1:nhreg);
+
+file='../../eurolbk_base.nc';
+ncid=netcdf.open(file,'NOWRITE');
+varid=netcdf.inqVarID(ncid,'region');
+region=netcdf.getVar(ncid,varid);
+varid=netcdf.inqVarID(ncid,'latitude');
+lat=double(netcdf.getVar(ncid,varid));
+varid=netcdf.inqVarID(ncid,'longitude');
+lon=double(netcdf.getVar(ncid,varid));
+netcdf.close(ncid);
+nreg=length(region);
+
+% get lat/lon from regionpath, since they are wrong in the above file
+if ~exist('lonlat_685.mat','file')
+  load('regionpath_685');
+  regionpath(:,:,1)=regionpath(:,:,1)+0.5;
+  regionpath(:,:,2)=regionpath(:,:,2)+1;
+  lats=squeeze(regionpath(:,:,2));
+  lons=squeeze(regionpath(:,:,1));
+
+  for ir=1:nreg
+    lat(ir)=calc_geo_mean(lats(ir,:),lats(ir,:));
+    lon(ir)=calc_geo_mean(lats(ir,:),lons(ir,:));
+  end
+  save('lonlat_685','lon','lat');
+else load('lonlat_685');
+end
+  
+
+if ~exist('neolithicsites.mat','file')
+    fprintf('Required file neolithicsites.mat not found, please contact distributor.\n');
+    return
+end
+
+
+load('neolithicsites');
+slat=Forenbaher.Latitude;
+slon=Forenbaher.Long;
+period=Forenbaher.Period;
+site=Forenbaher.Site_name;
+age=Forenbaher.Median_age;
+ns=length(age);
+dlat=[slat' repmat(lat(272),ns,1)];
+dlat=reshape(dlat',2*ns,1);
+dlon=[slon' repmat(lon(272),ns,1)];
+dlon=reshape(dlon',2*ns,1);
+dists=m_lldist(dlon,dlat);
 
 
 %% plot farming timing
@@ -11,6 +61,21 @@ clp_nc_variable('var','farming','threshold',0.5,'reg',reg,'marble',2,'transparen
       'showstat',0,'timelim',timelim,'showtime',0,'flip',1,'showvalue',1,...
       'file','../../eurolbk_base.nc','figoffset',0,'sce','base');
   
+
+return
+
+%% Plot region network
+[data,basename]=clp_nc_neighbour('reg',reg,'marble',2,'transparency',1,'nocolor',0,...
+      'showstat',0,'showtime',0,'fontsize',10,'showregion',0,...
+      'file','../../eurolbk_base.nc','figoffset',0,'sce','base','noprint',1);
+  
+for ir=1:nhreg  
+  m_text(lon(hreg(ir)+1),lat(hreg(ir)+1),letters(ir),'background','y',...
+      'Horizontal','center','Vertical','middle');
+end
+plot_multi_format(gcf,basename);
+
+
 %return
 clp_nc_variable('var','farming','threshold',0.5,'reg',reg,'marble',2,'transparency',1,'nocolor',0,...
       'showstat',0,'timelim',timelim,'showtime',0,'flip',1,'showvalue',1,...
@@ -18,9 +83,9 @@ clp_nc_variable('var','farming','threshold',0.5,'reg',reg,'marble',2,'transparen
 
 
 % Only for informational purpose, not in paper (which is without climate)
-clp_nc_variable('var','farming','threshold',0.5,'reg',reg,'marble',2,'transparency',1,'nocolor',0,...
-      'showstat',0,'timelim',timelim,'showtime',0,'flip',1,'showvalue',1,...
-      'file','../../eurolbk_events.nc','figoffset',1,'sce','events')
+%clp_nc_variable('var','farming','threshold',0.5,'reg',reg,'marble',2,'transparency',1,'nocolor',0,...
+%      'showstat',0,'timelim',timelim,'showtime',0,'flip',1,'showvalue',1,...
+%      'file','../../eurolbk_events.nc','figoffset',1,'sce','events')
 
 %  return
 %% Plot wave of advance for selected regions
@@ -45,16 +110,6 @@ end
 set(gca,'YAxisLocation','right','Ylim',[timelim(1),-3000],'XTick',[]);
 %legend(num2str(hreg'));
 plot_multi_format(gcf,[b '_diff']);
-
-%% Plot region network
-clp_nc_neighbour('reg',reg,'marble',2,'transparency',1,'nocolor',0,...
-      'showstat',0,'showtime',0,'fontsize',10,'showregion',0,...
-      'file','../../eurolbk_base.nc','figoffset',0,'sce','base');
-
-for ir=1:-nhreg
-  obj=findobj(gcf,'Tag',num2str(hreg(ir)));
-  set(obj,'Color',lc(ir),'FontSize',14);
-end
 
   
 %return  
