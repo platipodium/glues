@@ -32,7 +32,8 @@ arguments = {...
   {'showstat',0},...
   {'showvalue',0},...
   {'fontsize',15},...
-  {'scenario',''}
+  {'scenario',''},...
+  {'noprint',0}
 };
 
 cl_register_function;
@@ -129,6 +130,9 @@ if numel(data)>length(data)
   ntime=length(time);
 end
 if ntime==1 && ~exist('itime','var') itime=1; end
+
+
+ntime=1; itime=1;
 
 netcdf.close(ncid);
 
@@ -292,11 +296,12 @@ for it=1:ntime
   
   
   if exist('time','var') if (ntime>1 || showtime>0) bname = [bname '_' num2str(time(it))]; end; end
-  plot_multi_format(gcf,fullfile(fdir,bname));
+  if ~noprint plot_multi_format(gcf,fullfile(fdir,bname)); end
   %pause(0.05);
 end
 
 if nargout>0 
+  
   retdata.value=data(ireg,itime); 
   retdata.lat=lat;
   retdata.lon=lon;

@@ -293,7 +293,9 @@ double RegionalPopulation::RelativeGrowthrate() {
       rgr = gammab*actualfertility*product-disease
   */
   birthrate = gammab*actualfertility*product;
-  deathrate = 2*disease;
+  deathrate = disease;
+  // To get global pop right, we should increase deathrate by factor two
+  // deathrate=2*deathrate;
   //deathrate = (gammab*10)*density/technology;
   rgr = birthrate - deathrate;
   

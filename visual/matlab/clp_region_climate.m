@@ -1,10 +1,10 @@
-function cl_write_region(varargin)
+function clp_region_climate(varargin)
 
 %% Standard arguments block
 cl_register_function;
 
 arguments = {...
-  {'file','../../data/iiasa.nc'},...
+  {'file','../../data/plasim_LSG_6999_6000_mean.nc'},...
   {'timelim',[-inf inf]}
 };
 
@@ -14,7 +14,6 @@ for i=1:a.length eval([a.name{i} '=' clp_valuestring(a.value{i}) ';']); end
 
 %% Read data file
 [time,lon,lat,climate]=cl_nc_read_climate('file',file);
-
 
 
 %% Read glues mapping file
@@ -46,65 +45,49 @@ nreg=length(region);
 names=fieldnames(climate);
 nnames=length(names);
 
-%nreg=10;
-for ireg=1:nreg
-  % select all cells of this region
-    
-  
-  [map.ilon,map.ilat]=find(map.region==region(ireg));
-  fprintf('%d %d %d',ireg,region(ireg),length(map.ilon));
-  
-  % Project this grid on the climate grid
-  map.ilon=ceil(map.ilon*1.0*length(lon)/map.nlon);
-  map.ilat=ceil(map.ilat*1.0*length(lat)/map.nlat);
-  [uirc,iirc,jirc]=unique([map.ilon map.ilat],'rows');
-  nirc=size(uirc,1);
-  hirc=hist(jirc,nirc);
-  
-  fprintf(' %d',length(uirc));
-  %if strfind(mapfile,'popregion') & length(map.ilon)>10000 continue; end
+%save(matfile,'climate');
 
-  for i=1:nnames
-    varvalue=double(climate.(names{i}));
-    
-    weight=cosd(map.latgrid(uirc(:,2))).*hirc';
-    sweight=sum(weight);
-    meanval=sum(weight.*diag(varvalue(uirc(:,1),uirc(:,2))))/sweight;
-    
-    %out.(names{i})(ireg)=calc_geo_mean(map.latgrid(map.ilat),varvalue(map.ilon,map.ilat));
-    out.(names{i})(ireg)=meanval;
-  end
-  
-  %if mod(ireg,2)==1 
-      fprintf('\n'); 
-  %end
-end
-
-climate=out;
-
-%% prepare output names
-matfile=strrep(file,'.nc',['_' num2str(nreg) '.mat']);
-save(matfile,'climate');
-
-%% output to text files
-v=cl_get_version;
-nclim=1;
+%% input from text files
 for i=1:nnames
   txtfile=strrep(file,'.nc',['_' num2str(nreg) '_' names{i} '.tsv']);
-  fid=fopen(txtfile,'w');
-  fprintf(fid,'# ASCII data info: columns\n');
-  fprintf(fid,'# 1. region id 2. number of climates,\n');
-  fprintf(fid,'# 3..n annual %s\n',names{i});
-  fprintf(fid,'# Version info: %s\n',struct2stringlines(v));
-
-  for ireg=1:nreg 
-    fprintf(fid,'%04d %03d',ireg,nclim);
-    fprintf(fid,' %.2f',climate.(names{i})(ireg));
-    fprintf(fid,'\n');
-  end
+  fid=fopen(txtfile,'r');
+  c = textscan(fid,'%04d %03d %.2f\n','CommentStyle','#');
+  reg.(names{i})=c{3};
   fclose(fid);
 end
 
+for i=1:nnames
+  figure(i); clf reset; 
+  subplot(2,1,1);
+  m_proj('equidistant'); hold on;
+  m_coast;
+  m_grid;
+  
+  m_pcolor(lon,lat,double(climate.(names{i}))');
+  %shading interp;
+  cmap=colormap(jet);
+  cb=colorbar;
+  ylimit=get(cb,'YLim');
+  val=reg.(names{i})
+  rcolor=floor((val-min(val))./(max(val)-min(val)).*(64-1)+1);
+  
+  subplot(2,1,2);
+  m_proj('equidistant'); hold on;
+  m_coast;
+  m_grid;
+  for ireg=1:nreg
+  % select all cells of this region
+  
+    [map.ilon,map.ilat]=find(map.region==region(ireg));
+  
+    % Project this grid on the climate grid
+    %map.ilon=ceil(map.ilon*1.0*length(lon)/map.nlon);
+    %map.ilat=ceil(map.ilat*1.0*length(lat)/map.nlat);
+    [uirc,iirc,jirc]=unique([map.ilon map.ilat],'rows');
+    m_plot(map.longrid(uirc(:,1)),map.latgrid(uirc(:,2)),'d','color',cmap(rcolor(ireg),:),'MarkerSize',0.2);
+    %m_line(map.longrid(uirc(:,1)),map.latgrid(uirc(:,2)),'color','k');
+  end
+end
 
 return; 
 end

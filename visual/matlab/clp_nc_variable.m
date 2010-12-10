@@ -311,7 +311,7 @@ for it=1:ntime
     fdir=fullfile(d.plot,'variable',varname);
     if ~exist('fdir','dir') system(['mkdir -p ' fdir]); end
   end
-  if (it==1) && ~transparency
+  if (it==1) % && ~transparency
     cb=colorbar('FontSize',15,'tag','colorbar');
     if length(units)>0 title(cb,units); end
     if minmax(2)>minmax(1)
