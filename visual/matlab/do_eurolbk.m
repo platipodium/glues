@@ -12,6 +12,12 @@ file='../../eurolbk_base.nc';
 ncid=netcdf.open(file,'NOWRITE');
 varid=netcdf.inqVarID(ncid,'region');
 region=netcdf.getVar(ncid,varid);
+varid=netcdf.inqVarID(ncid,'time');
+time=netcdf.getVar(ncid,varid);
+itime=find(time>=timelim(1) & time<=timelim(2));
+time=time(itime);
+varid=netcdf.inqVarID(ncid,'farming');
+farming=netcdf.getVar(ncid,varid);
 varid=netcdf.inqVarID(ncid,'latitude');
 lat=double(netcdf.getVar(ncid,varid));
 varid=netcdf.inqVarID(ncid,'longitude');
@@ -57,6 +63,7 @@ sdists=m_lldist(dlon,dlat);
 sdists=sdists(1:2:end);
 
 [ifound,nfound,lonlim,latlim]=find_region_numbers(reg);
+farming=farming(ifound,itime);
 
 ncol=19;
 cmap=flipud(jet(ncol));
@@ -69,27 +76,98 @@ viscol=find(iscol>0 & iscol<=ncol & slat>=latlim(1) & slat<=latlim(2) ...
 
 %% Do Ammerman plot (figure 4)
 figure(1); clf reset; hold on;
-plot(-stime,sdists,'bo');
-ylabel('Distance from Levante');
-xlabel('Time (year BC)'); 
-set(gca,'Xlim',-fliplr([timelim]));
-set(gca,'XDir','reverse');
-plot(8000:-200:4000,0:200:4000,'k--');
+set(gcf,'Units','centimeters','Position',[0 0 18 18]);
+% Single column 90 mm 1063 1772 3543 
+% 1.5 column 140 mm 1654 2756 5512
+% Full width 190 mm 2244 3740 7480
 
-dlat=[lat' repmat(lat(272),nreg,1)];
-dlat=reshape(lat',2*nreg,1);
-dlon=[lon' repmat(lon(272),nreg,1)];
+
+
+i272=find(ifound==272);
+for i=1:nhreg
+  ihreg(i)=find(ifound==hreg(i)+1);
+end
+
+dlat=[lat repmat(lat(272),nreg,1)];
+dlat=reshape(dlat',2*nreg,1);
+dlon=[lon repmat(lon(272),nreg,1)];
 dlon=reshape(dlon',2*nreg,1);
 dists=m_lldist(dlon,dlat);
 dists=dists(1:2:end);
+dists=dists(ifound);
+threshold=0.5;
+it=(farming>=threshold).*repmat(1:length(itime),nfound,1);
+it(it==0)=inf;
+it=min(it,[],2);
+itv=isfinite(it);
+onset=zeros(nfound,1)+inf;
+onset(itv)=time(min(it(itv),[],2));
+
+gtime=timelim(1):200:timelim(2);
+
+set(gca,'color','none','FontSize',14,'FontName','Times');
+p3=plot(-onset(ihreg),dists(ihreg),'ys','MarkerFaceColor','y','MarkerSize',7);
+p1=plot(-stime,sdists,'bo','MarkerFaceColor','none','MarkerSize',2);
+ylabel('Distance from Levante (km)');
+xlabel('Time (year BC)'); 
+set(gca,'Xlim',-fliplr([timelim]));
+set(gca,'XDir','reverse');
+p2=plot(-onset,dists,'rd','MarkerFaceColor','r','MarkerSize',5)
+%plot(7500:-200:3500,0:200:4000,'k--');
+
+pf1=polyfit(-onset(itv),dists(itv),1);
+p4=plot(-gtime,-gtime*pf1(1)+pf1(2),'r-','LineWidth',2);
+pf2=polyfit(-stime(viscol)',sdists(viscol),1);
+% Indistiguishable, thus not shown
+%plot(-gtime,-gtime*pf2(1)+pf2(2),'b--','MarkerSize',2);
+
+[cr1,cp1]=corrcoef(onset(itv),dists(itv));
+[cr2,cp2]=corrcoef(stime(viscol),sdists(viscol));
+
+ytl=get(gca,'YTickLabel');
+ytl(1,:)=' ';
+set(gca,'YTickLabel',ytl);
+
+l=legend([p1,p2],sprintf('Site data (n=%d, r^2=%.2f, v=%.2f km a^{-1})',length(viscol),cr2(2).^2,-pf2(1)),...
+    sprintf('Simulation (n=%d, r^2=%.2f, v=%.2f km a^{-1})',length(itv),cr1(2).^2,-pf1(1)),...
+    'location','NorthWest','FontSize',7);
+%set(l,'color','none');
+
+offsets=100*[0 1 -1 1 -1 0 0 0 0 0];
+for i=1:nhreg
+  t1(i)=text(-onset(ihreg(i)),-200+offsets(i),letters(i),'Horizontal','center','FontName','Times','FontSize',14);
+end
+
+plot_multi_format(1,'ammerman_rgb','pdf');
+
+
+%% Do black and white version
+set(p3,'MarkerFaceColor',repmat(0.5,3,1),'Color',repmat(0.5,3,1));
+set([p2,p1,p4],'Color',repmat(0,3,1));
+set(p2,'MarkerFaceColor',repmat(0,3,1));
+plot_multi_format(1,'ammerman_bw','pdf');
+
+%% Do non-uniform spread
+%movdists=movavg(onset(itv),dists(itv),500,1);
+%[sorton,isorton]=sort(onset(itv));
+%figure(2); clf reset;
+%plot(sorton,movdists(isorton),'r-');
+%pf3=polyfit(-onset(itv),dists(itv),3);
+%p5=plot(-gtime,(-gtime).^3*pf3(1)+(-gtime).^2*pf3(2)+-gtime*pf3(3)+pf3(4),'r-','LineWidth',2);
+
+
 
 
 %% plot farming timing (figure 3)
 ncol=19;
+
 [data,basename]=clp_nc_variable('var','farming','threshold',0.5,'reg',reg,'marble',2,'transparency',1,'nocolor',0,...
       'showstat',0,'timelim',timelim,'showtime',0,'flip',1,'showvalue',0,...
-      'file','../../eurolbk_base.nc','figoffset',0,'sce','base','noprint',1,'ncol',ncol);
+      'file','../../eurolbk_base.nc','figoffset',0,'sce','base',...
+      'noprint',1,'notitle',1,'ncol',ncol);
   
+set(gcf,'Units','centimeters','Position',[0 0 18 18]);
+
 cb=findobj('tag','colorbar');
 cmap=flipud(jet(ncol));
 cmap=rgb2hsv(cmap);
@@ -100,11 +178,14 @@ ytl=get(cb,'YTickLabel');
 ytl=ytl(:,2:end);
 set(cb,'YTickLabel',ytl);
 ytt=get(cb,'Title');
-set(ytt,'String','Year BC');
+set(ytt,'String','Year BC','FontSize',14,'FontName','Times','FontWeight','normal');
 
 for i=1:length(viscol)
   m_plot(slon(viscol(i)),slat(viscol(i)),'ko','MarkerFaceColor',cmap(iscol(viscol(i)),:));
 end
+
+ct=findobj(gcf,'-property','FontName');
+set(ct,'FontSize',14,'FontName','Times','FontWeight','normal');
 
 
 for ir=1:-nhreg  
@@ -113,25 +194,40 @@ for ir=1:-nhreg
 end
 m_coast('color','k');
 m_grid('box','fancy','linestyle','none');
-plot_multi_format(gcf,basename);
+plot_multi_format(gcf,strrep(basename,'farming_','timing_'),'pdf');
 
-  
+
+ct=findobj(gcf,'type','text'); set(ct,'visible','off');
+ct=findobj(gcf,'-property','YTickLabel'); set(ct,'YTickLabel',[]);
+ct=findobj(gcf,'-property','XTickLabel'); set(ct,'XTickLabel',[]);
+set(ytt,'visible','off');
+
+plot_multi_format(gcf,strrep(basename,'farming_','timing_'),'png');
+
+%plot2svg([basename '.svg'],gcf,'png');
+
 %% Plot region network (figure 1)
 [data,basename]=clp_nc_neighbour('reg',reg,'marble',2,'transparency',1,'nocolor',0,...
-      'showstat',0,'showtime',0,'fontsize',10,'showregion',0,...
-      'file','../../eurolbk_base.nc','figoffset',0,'sce','base','noprint',1);
+      'showstat',0,'showtime',0,'fontsize',15,'showregion',0,...
+      'file','../../eurolbk_base.nc','figoffset',0,'sce','base','noprint',1,'notitle',1);
   
 for ir=1:nhreg  
-  m_text(lon(hreg(ir)+1),lat(hreg(ir)+1),letters(ir),'background','y',...
+  t(i)=m_text(lon(hreg(ir)+1),lat(hreg(ir)+1),letters(ir),'background','y',...
       'Horizontal','center','Vertical','middle');
 end
 m_coast('color','k','linestyle','none');
-m_grid('box','fancy');
+m_grid('box','fancy','linestyle','none');
 
-plot_multi_format(gcf,basename);
+plot_multi_format(gcf,'region_map_rgb','tif');
+%% black and white version
+for ir=1:nhreg  
+  set(t(i),'background',repmat(0.9,3,1));
+end
+
+plot_multi_format(gcf,'region_map_bw','tif');
 
 
-%return
+return
 clp_nc_variable('var','farming','threshold',0.5,'reg',reg,'marble',2,'transparency',1,'nocolor',0,...
       'showstat',0,'timelim',timelim,'showtime',0,'flip',1,'showvalue',1,...
       'file','../../eurolbk_nospread.nc','figoffset',2,'sce','nospread')

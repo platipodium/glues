@@ -1,0 +1,747 @@
+% "Supplementary Data: First occurrence of the Neolithic in the Near and Middle East. Anatolia and Europe";;;;;;;;;;
+% "(modified from Forenbaher and Miracle. 2005; Pinhasi et al.. 2005). ";;;;;;;;;;
+% "Radiocarbon ages were calibrated using IntCal04 in Calib 5.0 (Reimer et al.. 2004).";;;;;;;;;;
+%
+% "Country";"Site/Centre name";"Latitude";"Long.";"Period";"Lab Number";"14C age";"1s";"Lower cal. ";"Median age ";"Upper cal. " 
+"Iraq";"M'lefaat";36.333;43.500;"Mlefatian";"Gd-6150";10890;140;12782;12876;12993
+"Jordan";"Wadi Faynan 16";30.626;35.445;"PPNA";"Beta-120210";10220;60;11823;11934;12053
+"Syria";"Mureybet";36.050;38.200;"PPNA";"P-1217";10215;117;11624;11913;12148
+"Israel";"Hatoula";31.783;35.150;"PPNA";"GifA-91139";10170;120;11418;11823;12080
+"Egypt";"Abu Madi I";28.550;33.970;"PPNA";"Pta-2669";10110;100;11409;11706;11969
+"Iraq";"Nemrik 9";36.720;42.880;"PPNA";"GD-6148";10070;120;11356;11638;11952
+"Jordan";"Dhra";31.250;35.567;"PPNA";"AA-38142";10059;73;11403;11598;11751
+"Iraq";"Shimshara";35.468;44.392;"PPN";"K-981";10030;160;11269;11603;11812
+"Israel";"Gesher";32.620;35.551;"PPNA";"Pta-4553";10020;100;11319;11547;11712
+"Israel";"Netiv Hagdud";32.000;35.420;"PPNA";"RT-762C";9970;150;11239;11519;11742
+"Syria";"Jerf el Ahmar";36.400;38.200;"PPNA";"Ly-10651";9965;55;11266;11407;11599
+"Iran";"Ali Kosh";32.420;47.250;"PPN";"I-1419";9950;190;11200;11507;11811
+"Jordan";"Iraq ed-Dubb";31.090;35.640;"PPNA";"OxA-2567";9950;100;11246;11450;11604
+"Israel";"Gilgal";32.156;34.953;"PPNA";"Pta-4588";9920;70;11233;11356;11594
+"Israel";"Jericho";31.880;35.450;"PPNA";"P-378";9775;110;10873;11179;11324
+"Iran";"Asiab";34.300;47.150;"PPN";"GrN-6434";9755;85;10892;11162;11254
+"Syria";"Aswad";33.588;36.382;"PPNA";"Gif-2633";9730;120;10796;11098;11253
+"Iraq";"Qermez Dere";36.396;41.794;"PPN";"OxA-3755";9710;85;10872;11097;11232
+"Iran";"Chagha Sefid";33.667;49.633;"PPN";"UCLA-295";9690;100;10801;11030;11221
+"Syria";"Abu Hureyra";35.867;38.400;"PPNB";"OxA-1228";9680;90;10804;11021;11209
+"Iran";"Hotu";35.814;53.899;"PPN";"L-182";9500;200;10570;10806;11126
+"Syria";"Dja'de";36.500;38.300;"EPPNB";"Ly-8842";9370;75;10503;10590;10698
+"Israel";"Horvat Galil";33.050;35.250;"PPNB";"RT-1397";9340;70;10435;10548;10663
+"Cyprus";"Kissonerga-Mylouthkia";34.825;32.420;"Cypro-EPPNB";"OxA-7460";9315;60;10418;10515;10644
+"Cyprus";"Parekklisha-Shillourokambos";34.746;33.158;"Cypro-EPPNB";"Ly-290";9310;80;10304;10502;10652
+"Jordan";"Ain Ghazal";32.083;36.100;"MPPNB-1";"GrN-12966";9200;110;10247;10387;10495
+"Israel";"Iraq el-Barud";31.600;34.783;"PPNB";"Hv-3368";9120;85;10207;10305;10400
+"Jordan";"Shu'eib";31.463;35.568;"LPPNB";"Bta-35087";9100;140;9963;10270;10507
+"Jordan";"Beidha";30.370;35.430;"PPNB";"GrN-5062";9030;50;10185;10206;10236
+"Jordan";"Ghwair";31.133;35.750;"MPPNB";"DRI-3253";9027;116;9917;10159;10292
+"Iran";"Ganj Dareh";38.833;47.833;"PPN";"SI-4741";8950;70;9930;10052;10206
+"Jordan";"Dhuweila";32.050;36.233;"MPPNB";;8910;60;9920;10027;10176
+"Israel";"Divshon";30.833;34.783;"PPNB";"SMU-3";8900;180;9740;9968;10214
+"Israel";"Yiftahel";32.694;35.311;"PPNB";"Pta-4242";8870;90;9797;9962;10171
+"Israel";"Hemar";31.142;35.372;"PPNB";"Pta-3625";8850;90;9777;9932;10153
+"Israel";"Reu'el";31.000;34.800;"PPNB";"Pta-3137";8720;70;9552;9703;9881
+"Syria";"Halula";36.417;38.167;"PPNB";"Beta-58928";8700;60;9551;9662;9732
+"Syria";"Sinn";36.217;37.400;"LPPNB";"GrN-9833";8650;50;9543;9606;9658
+"Iran";"Mushki";29.850;52.750;"Pottery Neolithic";"TK-34";8640;120;9495;9663;9883
+"Cyprus";"Kritou-Marottou";34.929;32.563;"Cypro-EPPNB";"Beta-183650";8600;40;9528;9550;9595
+"Syria";"Sabi Abyad II";36.933;40.567;"LPPNB";"GrN-21319";8530;60;9487;9513;9542
+"Iraq";"Jarmo";35.550;44.950;"PPN";"H-551/-491";8525;175;9281;9526;9743
+"Jordan";"Ayn Abu Nukhayla";29.550;35.400;"PPNB";;8509;64;9476;9503;9538
+"Israel";"Mezad Mazal";31.050;35.370;"PPNB";"B-2737";8480;70;9453;9486;9535
+"Israel";"Issaron";29.917;34.950;"PPNC?";"Pta-2999";8460;80;9421;9466;9537
+"Syria";"Assouad";36.950;39.033;"Pottery Neolithic";"MC-864";8450;120;9304;9433;9542
+"Jordan";"Sabha";32.383;35.733;"PPNB";"TO-3987";8430;70;9334;9447;9526
+"Iran";"Guran";33.500;48.667;"PPN";"K-1006";8410;200;9040;9371;9554
+"Jordan";"Jilat 7";31.500;36.417;"EPPNB";"OxA-2413";8390;80;9304;9396;9489
+"Syria";"Bouqras";35.150;40.433;"PPNB";"GrN-8262";8380;45;9320;9411;9473
+"Jordan";"Khirbet Hammam";32.083;36.367;"LPPNB";"GrN-26147";8370;40;9319;9403;9466
+"Syria";"Ras Shamra";35.583;35.750;"PPNB";"P-460";8364;101;9263;9351;9491
+"Israel";"Betzet 1";33.071;35.136;"PPN";"RT-1394";8330;100;9144;9320;9470
+"Syria";"Aray 2";35.917;36.467;"Pottery Neolithic";"N-5976";8290;145;9094;9258;9456
+"Jordan";"Azraq 31";31.833;36.817;"LPPNB";"OxA-2412";8275;80;9135;9263;9402
+"Jordan";"Bawwab al-Ghazal";31.967;35.733;"PPNB";"KN-5454";8273;59;9136;9266;9401
+"Jordan";"Burqu 35";30.150;35.217;"Pottery Neolithic";"OxA-2770";8270;80;9133;9256;9401
+"Egypt";"Ujrat el-Mehed 1";28.210;34.000;"LPPNB";"Pta-2703";8220;80;9032;9194;9291
+"Jordan";"Basta";30.233;35.533;"LPPNB";"GrN-14538";8155;50;9012;9098;9190
+"Syria";"Ghorafie";35.833;37.250;"Pottery Neolithic";"Gif-3372";8150;190;8780;9078;9402
+"Jordan";"Ba'ja";30.317;35.483;"LPPNB";"Bln-5123";8100;33;8998;9026;9079
+"Syria";"El Kowm 2";38.850;39.167;"LPPNB";"Ly-4400";8030;80;8767;8884;9023
+"Cyprus";"Kalavasos-Tenta";34.750;33.300;"Cypro-LPPNB";"P-2974";8020;90;8726;8873;9017
+"Israel";"Ashkelon";31.667;34.533;"PPNC";"OxA-7882";8000;110;8659;8855;9010
+"Israel";"Atlit-Yam";32.750;34.900;"PPNC?";"Pta-3950";8000;90;8725;8852;9007
+"Cyprus";"Dhali-Agridhi";35.030;33.430;"Cypro-PPNB";"P-2775";7990;80;8727;8843;8998
+"Lebanon";"Labwé";34.117;35.670;"PPNC?";"K-1430";7990;140;8638;8852;9014
+"Israel";"Tel Ali";31.067;35.500;"PPNC";"OxA-7886*";7975;70;8728;8833;8991
+"Iran";"Sarab";34.500;47.250;"Pottery Neolithic";"P-466";7956;98;8658;8812;8981
+"Cyprus";"Khirokitia/Shillourokambos";34.800;33.350;"Cypro-PPN";"Ly-4307";7930;130;8631;8787;8980
+"Syria";"Damishliyah";36.867;39.050;"Pottery Neolithic";"UtC-1094/";7920;110;8608;8774;8977
+"Syria";"Ramad";33.450;36.083;"Pottery Neolithic";"GrN-4823";7880;55;8592;8700;8845
+"Syria";"Kashkashok II";36.636;40.664;"Cypro-PPN";"TK-859";7880;110;8563;8728;8975
+"Jordan";"Tabaqat al-Buma";32.500;35.583;"Pottery Neolithic";"TO-1407";7800;70;8456;8581;8643
+"Cyprus";"Cape - Andreas-Kastros";35.700;34.583;"Cypro-PPNB";"MC-805";7775;125;8412;8588;8718
+"Egypt";"Qadesh Barnea 3";30.650;34.400;"Pottery Neolithic";"SMU-662";7530;100;8205;8332;8414
+"Iraq";"Thalathat II";36.450;42.630;"Pottery Neolithic";"TK-24";7520;120;8194;8319;8414
+"Israel";"Shaar Hagolan";32.683;35.600;"Pottery Neolithic";"OxA-7919*";7495;50;8214;8315;8379
+"Jordan";"Rahub";32.617;35.933;"Pottery Neolithic";"GrN-14539";7480;90;8201;8286;8376
+"Iraq";"Sotto";36.361;43.119;"Pottery Neolithic";"IGAN-769";7470;60;8206;8285;8361
+"Iraq";"Sawwan I";34.167;43.833;"Pottery Neolithic";"P-855";7456;73;8199;8272;8345
+"Iran";"Belt Cave";36.750;53.750;"Pottery Neolithic";"P-19a";7395;195;8023;8206;8378
+"Lebanon";"Byblos";34.117;35.650;"Pottery Neolithic";"GrN-1544";7360;70;8048;8176;8302
+"Israel";"Munhata";32.620;35.551;"Pottery Neolithic";"Ly-4927";7330;70;8030;8134;8194
+"Iran";"Sang-i-Chakhmak Oues";35.294;44.726;"Pottery Neolithic";;7270;125;7958;8096;8197
+"Iran";"Hajji Firuz";37.000;45.500;"Pottery Neolithic";"P-455";7269;86;8009;8090;8171
+"Iraq";"Yarim Tepe I";36.723;56.818;"Pottery Neolithic";"LE-1086";7150;90;7853;7973;8149
+"Israel";"Megadim";32.717;34.950;"Pottery Neolithic";"Pta-3652";7060;70;7829;7883;7962
+"Israel";"Qanah";32.117;35.883;"Pottery Neolithic";"RT-1544";7050;78;7795;7873;7956
+"Iraq";"Gawra";36.780;44.448;"Pottery Neolithic";"P-1494";7002;82;7757;7830;7932
+"Lebanon";"Ard Tlaili";33.963;36.157;"Pottery Neolithic";"K-1432";6870;130;7594;7722;7833
+"Israel";"Samir";32.800;34.950;"Pottery Neolithic";"Pta-3821";6830;60;7594;7664;7704
+"Israel";"Nizzanim";31.717;34.633;"Pottery Neolithic";"Hv-8509";6740;90;7513;7600;7674
+"Israel";"Uvda Valley";29.940;34.940;"Pottery Neolithic";;6560;90;7419;7465;7566
+"Israel";"Nahal Issaron";29.896;35.014;"Pottery Neolithic";"Pta-2999";6460;80;7293;7369;7433
+"Jordan";"Ghassul";31.800;35.600;"Pottery Neolithic";"SUA-734";6370;105;7177;7293;7421
+"Jordan";"Feinan";30.670;35.467;"Pottery Neolithic";"HD-12335";6360;45;7251;7295;7413
+"Turkey";"Hallan Cemi Tepsi";38.310;41.270;"PPNA";"BETA-55052";10590;170;12247;12521;12819
+"Turkey";"Cayönü";38.230;39.650;"PPNA";"GrN-8103";10430;80;12157;12349;12582
+"Turkey";"Göbekli";37.217;38.917;"PPNB";"Hd-20036";9559;53;10757;10923;11073
+"Turkey";"Mezraa Teleilat";38.483;37.417;"PPN";"AA-49102";9324;59;10428;10528;10650
+"Turkey";"Pinarbasi Site A";37.483;33.033;"PPNB";"OxA-5500";9290;80;10300;10472;10583
+"Turkey";"Nevali Cori";37.583;38.650;"PPNB";"OxA-8303";9280;55;10305;10459;10568
+"Turkey";"Kaletepe";38.280;34.570;"Aceramic";"GifA-100396";9030;80;9946;10188;10266
+"Turkey";"Cafer Höyük";38.460;38.780;"EPPNB";"Ly-4437";8950;80;9925;10046;10213
+"Turkey";"Asikli Höyük";38.370;34.250;"Aceramic";"GrN-19116";8920;50;9932;10039;10179
+"Turkey";"Akarcay Tepe";36.917;38.017;"PPN";"Beta-138548";8750;40;9631;9732;9886
+"Turkey";"Hacilar Aceramic";37.580;30.080;"Aceramic";"BM-127";8700;180;9528;9769;10118
+"Turkey";"Gritille";37.550;38.567;"PPNB";"Beta-13216";8610;90;9501;9604;9687
+"Turkey";"Canhasan III";37.500;33.500;"Aceramic";"HU-11";8584;65;9492;9552;9603
+"Turkey";"Hayaz Höyük";37.400;37.950;"PPNB";"GrN-12510";8300;60;9149;9308;9427
+"Turkey";"Suberde";37.340;31.950;"PPNB";"P-1391";8249;91;9092;9228;9400
+"Turkey";"Çatalhöyük";37.650;32.817;"Pottery Neolithic";"OxA-9775";8090;55;8815;9021;9126
+"Turkey";"Magzalia";36.660;42.500;"Neolithic";"IGAN-772";8010;50;8778;8873;9000
+"Turkey";"Kumartepe";37.483;38.483;"Pottery Neolithic";"GrN-12652";7930;80;8639;8784;8975
+"Turkey";"Yumuktepe";36.783;34.567;"Pottery Neolithic";"Rome-467";7920;90;8629;8773;8975
+"Turkey";"Erbaba";37.765;31.683;"Pottery Neolithic";"I-5151";7730;120;8394;8533;8633
+"Turkey";"Höyücek";37.450;30.567;"Pottery Neolithic";"HD-14219";7556;45;8348;8373;8404
+"Turkey";"Mentese";40.267;29.517;"Pottery Neolithic";"GrN-25819";7550;50;8339;8366;8408
+"Turkey";"Bademagaci";37.400;30.500;"Pottery Neolithic";"Hd-20910";7546;41;8345;8367;8397
+"Turkey";"Karain B";37.067;30.550;"Pottery Neolithic";"HD-10818";7420;70;8182;8249;8326
+"Turkey";"Kurucay Höyük";37.617;30.150;"Pottery Neolithic";"HD-12915";7310;70;8033;8114;8179
+"Turkey";"Ilipinar";40.467;29.300;"Pottery Neolithic";"GrN-19351";7195;40;7963;8000;8026
+"Turkey";"Hassuna";36.100;43.200;"Pottery Neolithic";"W-660";7040;200;7666;7871;8034
+"Turkey";"Girikihacian";38.250;39.970;"Neolithic";"Grn-6246";6950;45;7720;7777;7834
+"Yemen";"Ash-Shumah";14.281;43.103;"Neolithic";"GX-13781";7770;95;8426;8560;8635
+"Yemen";"Khuzma as-Shumlya ";16.083;49.667;"Early Neolithic";"AA-38548";7723;87;8425;8509;8582
+"Qatar";"Shagra A";24.827;51.395;"Neolithic";"Gif-5938";7520;90;8208;8324;8406
+"Oman";"Wadi Wutayya";23.603;58.502;"ABT";"Hv-12963";7250;85;8001;8075;8163
+"Yemen";"Sedd Adh-Dhra?a II. 1";14.550;44.402;"Neolithic";"Beta-90837";7080;140;7744;7898;8019
+"Oman";"Ras al-Hamra 7";23.121;57.283;"ABT?";"Hv-10926";7065;105;7789;7883;7996
+"U.A.E.";"Marawah Site 1";24.303;53.334;"Early Neolithic";"Hd-20756";7036;30;7845;7881;7931
+"Oman";"Saruq";23.611;58.457;"ABT";"Hv-14211";6685;105;7468;7554;7651
+"Oman";"Bandar Khayran 1. 1";23.501;58.733;"ABT?";"Hv-10924";6610;105;7428;7500;7577
+"Qatar";"Khor 2 (M et D)";25.684;51.506;"Neolithic";;6560;120;7331;7459;7573
+"Oman";"Daghmar 1";23.183;59.000;"ABT?";"Hv-10922";6545;105;7331;7449;7565
+"U.A.E.";"Dalma 11";24.000;52.000;"Obeid";"AA-52544";6395;60;7270;7329;7415
+"Yemen";"Surdud-1 n";15.185;43.510;"Neolithic";"GX-13782";6325;90;7163;7250;7414
+"Yemen";"MK. Sada";13.900;44.767;"Neolithic";"AXX-xx53";6250;90;7018;7159;7266
+"Oman";"Shuwayr 1";23.237;58.118;"ABT?";"Bln-3644/II";6220;60;7020;7115;7244
+"U.A.E.";"ar-Ramlah 6";25.362;56.044;"ABT";"Bln-4735*";6181;50;7008;7079;7162
+"Saudi Arabia";"Dosariyah";27.000;49.600;"Obeid 3";"I-5786";6135;120;6809;7019;7170
+"Oman";"Ras al-Jins 37";25.879;56.024;"ABT";"Gif-9819";6070;70;6798;6933;7143
+"U.A.E.";"Al Qassimiya";25.362;55.391;"ABT";"Ly-3953";5960;120;6655;6802;6952
+"U.A.E.";"Jazirat al-Hamra 1";25.810;55.950;"ABT";"Hv-13192";5955;100;6667;6793;6909
+"U.A.E.";"al-Madar (Point 69)";25.565;55.553;"ABT";"Ly-3280";5890;170;6495;6722;6908
+"Yemen";"Wadi Shumlya";16.000;50.000;"Early Neolithic";"OS-16933";5870;45;6644;6691;6740
+"Oman";"Bir Bira 1";22.690;58.547;"ABT?";"Hv-10921";5850;115;6503;6662;6785
+"Saudi Arabia";"Abu Khamis";27.900;48.700;"Obeid 4";"UGa-315";5750;65;6482;6548;6637
+"Oman";"Bandar Jissa 1";23.551;58.643;"ABT?";"Hv-12975";5730;105;6411;6530;6639
+"Yemen";"Qummah-3";16.702;42.118;"Neolithic";"Beta-23578";5730;90;6415;6529;6637
+"U.A.E.";"Ile d? Akab";25.570;55.560;"ABT";"Ly-5172";5695;90;6402;6490;6629
+"Oman";"Qurum North 1";23.613;58.593;"ABT?";"Hv-14212";5580;160;6208;6379;6561
+"Oman";"Dibab 1";23.080;59.055;"ABT?";"Bln-5270/II";5420;60;6131;6220;6293
+"Oman";"Wadi Shab 1";22.933;57.533;"ABT?";"GX-17881";5127;80;5749;5861;5983
+"Azerbijan";"Shomu";41.323;45.265;"Pottery Neolithic";"LE-629";7510;70;8213;8320;8390
+"Turkmenistan";"Togolok";38.120;57.950;"Pottery Neolithic";"Bln-719";7320;100;8013;8134;8286
+"Turkmenistan";"Jeitun";38.100;58.220;"Pottery Neolithic";"OxA-2914";7270;100;7982;8093;8178
+"Georgia";"Arukhlo 1";41.467;44.694;"Pottery Neolithic";"TB-300";7135;70;7868;7958;8018
+"Turkmenistan";"Chagylly";37.443;59.513;"Pottery Neolithic";"LE-592";7000;110;7729;7827;7935
+"Greece";"Elateia";38.610;22.730;"Early Neolithic";"GrN-3039";8240;110;9033;9216;9399
+"Greece";"Nea Nikomedeia";40.600;22.250;"Early Neolithic";"Q-655";8180;150;8991;9132;9405
+"Greece";"Argissa PPN";39.630;22.470;"Early Neolithic";"BB";8060;99;8772;8939;9120
+"Greece";"Knossos";35.510;25.160;"Early Neolithic";"BM-124";8050;180;8639;8937;9196
+"Greece";"Franchthi Cave";37.430;23.130;"Early Neolithic";"P-2095";7980;110;8657;8835;8998
+"Greece";"Kyklopas Cave";39.360;24.160;"Early Neolithic";"DEM-636";7780;32;8541;8561;8595
+"Greece";"Sesklo";39.380;22.810;"Initial Neolithic";"P-1681";7755;97;8420;8545;8627
+"Greece";"Achilleion";39.280;22.380;"Early Neolithic";"LJ-3180";7750;60;8457;8522;8588
+"Bosnia-Herz.";"Cuka";41.270;21.470;"Neolithic";;7680;160;8316;8498;8697
+"Greece";"Sidari";39.780;19.730;"Early Neolithic";"GXO-771";7670;120;8377;8476;8589
+"Turkey";"Hoca Cesme";40.700;26.117;"Pottery Neolithic";"Bln-4609";7637;43;8386;8427;8506
+"R. Macedonia";"Anza";41.700;22.000;"Star?evo";"LJ-2519";7560;70;8223;8368;8428
+"Bulgaria";"Polyanista- Platoto 1";43.150;26.760;"Early Neolithic";;7333;167;8009;8150;8323
+"Croatia";"Vela Spila cave";48.970;16.730;"Early Neolithic";"z-1967";7300;120;7981;8120;8283
+"Bosnia-Herz.";"Obre";44.180;18.100;"Star?evo";"UCLA-1605.I";7240;60;7998;8063;8158
+"Yugoslavia";"Porodin";40.880;21.480;"Neolithic";"KN-I.596";7240;55;7999;8062;8157
+"Croatia";"Gudnja";42.850;17.650;"Early Neolithic";"GrN-10315";7170;70;7876;7991;8148
+"Yugoslavia";"Apatin";45.660;18.980;"Star?evo";"GrN-15973";7130;60;7874;7954;8009
+"Serbia";"Donja Branjevina";45.460;19.150;"Early Neolithic";;7083;111;7793;7899;8008
+"Albania";"Konispol ";39.700;20.150;"Early Neolithic";"Beta-56415";7060;110;7763;7878;7996
+"Croatia";"Grapčeva";43.150;16.650;"Early Neolithic";"Beta-103488";7030;60;7796;7862;7936
+"Bulgaria";"Gulubnik";42.400;23.250;"Struma Period";;7020;190;7670;7852;8011
+"Greece";"Dikili Tash";41.000;24.250;"Early Neolithic";"Gif-2628";7020;170;7681;7849;7994
+"Serbia";"Magareci Mlin-Apatin";45.800;18.970;"Proto-Star?evo";;7018;110;7741;7842;7948
+"Croatia";"Gospodska";43.750;16.250;"Early Neolithic";"z-579";7010;90;7757;7837;7936
+"Croatia";"Pokrovnik";43.800;15.900;"Early Neolithic";;7000;100;7740;7827;7934
+"Yugoslavia";"Odmut";42.700;19.650;"Early Neolithic";"SI-2217";6985;100;7718;7814;7930
+"Croatia";"Tinj";44.000;15.400;"Early Neolithic";"GrN-15236";6980;160;7674;7814;7952
+"R. Macedonia";"Tumba or Veluska";41.900;21.360;"Early Neolithic";"TX-1785";6950;120;7679;7786;7926
+"R. Macedonia";"Vrsnik-Tarinci";41.750;22.150;"Early Neolithic";"Bln-339";6950;100;7685;7785;7920
+"Greece";"Vougliameni Limni";37.900;23.860;"Neolithic";"Ly-6946";6940;60;7698;7771;7829
+"Greece";"Velu?ka IV";40.900;20.350;"Neolithic";;6913;32;7691;7736;7784
+"Greece";"Theopetra Cave";38.460;23.230;"Neolithic";"DEM-455";6890;43;7674;7721;7782
+"Bulgaria";"Azmak";42.450;25.760;"Karanovo I";"Bln-203";6880;100;7618;7726;7823
+"Bulgaria";"Eleshnitsa 2";41.850;23.620;"Karanovo I";;6865;109;7595;7714;7822
+"Croatia";"Vižula";44.825;13.920;"Early Neolithic";"HD-12093";6850;180;7568;7708;7921
+"Croatia";"Škarin Samograd";43.700;16.000;"Early Neolithic";"HD-12094";6750;60;7574;7608;7659
+"Greece";"?karin Samograd Cave";43.890;16.000;"Cardial";;6718;80;7512;7581;7659
+"Bosnia-Herz.";"Gornja Tuzla";44.450;18.760;"Star?evo";"GrN-2059";6640;75;7466;7521;7576
+"Greece";"Sitagroi";41.150;24.200;"Early Neolithic";"Bln-779";6625;170;7332;7507;7666
+"Croatia";"Pupićina";45.340;14.300;"Early Neolithic";"z-2575";6600;240;7253;7476;7696
+"Bulgaria";"Karanovo";42.500;25.930;"Karanovo II";"Bln-201";6573;100;7418;7473;7574
+"Greece";"Kastria";38.950;22.130;"Early Neolithic";"DEM-272";6528;55;7338;7443;7505
+"Greece";"Drakaina Cave";38.150;20.760;"Early Neolithic";"DEM-628";6500;66;7326;7407;7469
+"Croatia";"Grotta Podosojna";45.250;14.230;"Neolithic";"Z-198";6470;95;7279;7376;7460
+"Bulgaria";"Kremenik 4";42.290;23.280;"Early Neolithic";;6450;100;7267;7361;7437
+"Greece";"Ayios Petros";37.333;23.500;"Neolithic";"BM-2020";6400;80;7270;7328;7417
+"Greece";"Proskinites";40.950;25.460;"Neolithic";"DEM-23";6368;63;7253;7304;7415
+"Bulgaria";"Poljanica";43.200;26.670;"Poljanica";;6343;74;7173;7275;7412
+"Greece";"Dispilio";40.500;21.160;"Neolithic";"DEM-657";6338;29;7250;7268;7311
+"Yugoslavia";"Pristina";42.650;21.150;"Neolithic";"Bln-435";6280;80;7029;7199;7309
+"Greece";"Tharrounia";38.517;23.983;"Neolithic";"DEM-171-137";6246;49;7029;7175;7256
+"Romania";"Tirpe?ti";47.170;26.330;"LBK";;6240;71;7025;7152;7254
+"Greece";"Saliagos";37.000;25.050;"Neolithic";"P-1311";6172;74;6973;7069;7166
+"Romania";"Topolnita 2b";41.450;21.820;"Neolithic";;6135;191;6797;7008;7247
+"Romania";"Zorlentu Mare";45.310;21.810;"Vinca";"GrN-10316";6070;40;6864;6927;6993
+"Bulgaria";"Ov?arovo";43.200;26.750;"Poljanica";;5908;101;6574;6734;6884
+"Romania";"Hamangia-Baia 1";44.700;28.660;"Hamangia";"GrN-1986";5880;70;6571;6699;6792
+"Italy";"Praia di Mare";40.424;17.234;"Early Neolithic";"R-285";7555;85;8213;8360;8428
+"Italy";"Scamuso";41.100;16.890;"Cardial";"Gif-6339";7290;110;7979;8110;8195
+"France";"Bavans";47.460;6.700;"Late LBK";"Lv-1415";7130;70;7867;7953;8015
+"Italy ";"Masseria Giufredda";41.550;15.500;"Early Neolithic";"MC-2292";7125;200;7760;7952;8164
+"Italy";"Rendina";41.000;16.000;"Early Neolithic";"LJ-4548";7110;140;7761;7931;8151
+"France";"Pontcharaud";45.780;3.080;"Epicardial";"Ly-7625";7095;50;7862;7923;7970
+"Germany";"Langweiler";50.810;6.430;"LBK";"KN-2695";7090;135;7756;7908;8026
+"Italy";"Scaramella";41.500;15.680;"Masseria la Quercia";"R-350";7000;100;7740;7827;7934
+"Italy ";"Scramella S. Vito";41.550;15.500;"Early Neolithic";"R-350";7000;100;7740;7827;7934
+"France";"Abri de la Poujade";44.110;3.160;"Early Roucadourian";"MC-1367";6990;120;7712;7819;7933
+"Italy";"Defensola";41.898;16.156;"Early Neolithic";"Utc-1342";6990;80;7740;7820;7929
+"Italy";"Arene Candide";44.500;8.500;"Cardial";"UB-2423";6980;115;7699;7810;7930
+"Italy";"Trasano 1";40.667;16.600;"Cardial";"TAN-88248";6980;130;7693;7811;7932
+"Italy";"Grotta S. Angelo di Os";40.729;17.577;"Cardial";"GIF-6724";6980;70;7736;7811;7924
+"Italy";"Torre Sabea";40.250;15.183;"Cardial";;6960;130;7680;7795;7930
+"Italy";"Grotta Pollera";44.408;8.931;"Cardial";"MC-756";6950;100;7685;7785;7920
+"Hungary";"Endrod";47.910;21.830;"Körös";"GrN-10319";6945;50;7709;7773;7830
+"Italy";"Piana di Curingia";38.820;16.250;"Cardial";"P-2946";6930;60;7689;7762;7825
+"France";"Le Singlier";44.680;1.710;"Roucadourian";"Ly-33";6915;70;7677;7752;7826
+"France";"Chateauneuf Les Martig";43.380;5.160;"Early Cardial";"MC-2515";6900;100;7626;7744;7842
+"Italy";"Torre Canne";40.850;17.467;"Early Neolithic";"Gif-6725";6900;80;7667;7741;7827
+"Italy";"Ripa Tetta";41.500;15.333;"Early Neolithic";"CAMS-2681";6890;60;7670;7726;7789
+"Italy";"Coppa Nevigata";41.500;15.750;"Cardial";"OxA-1475";6880;90;7620;7724;7817
+"Italy";"Grotta di Monte Venere";43.513;11.828;"Neolithic";"R-1167";6860;60;7621;7695;7747
+"Italy";"La Marmotta";42.117;12.233;"Cardial";"R-2360";6855;65;7616;7691;7747
+"Italy";"Villa Communale";41.450;15.533;"Early/Middle Neolithic";"MC-2290";6850;130;7582;7703;7825
+"Switzerland";"Delley-Portalban II";46.920;6.950;"Neolithic";"Lv-624";6850;110;7590;7700;7790
+"Switzerland";"Portalban 2";47.930;7.960;"Early Neolithic";"Lv-624";6850;110;7590;7700;7790
+"Germany";"Calden";51.420;9.400;"Neolithic";"Hd-16228";6835;43;7617;7664;7692
+"France";"Caucade";43.700;7.350;"Cardial";"MC-2342";6800;130;7520;7657;7786
+"Italy";"Lagnano da Piede";38.000;12.330;"Early Neolithic";"UB-2271";6790;255;7434;7657;7922
+"Austria";"Brunn am Gebirge";48.100;16.280;"LBK";"ETH-11148";6785;75;7576;7633;7682
+"Italy";"Santa Anna III";37.967;12.267;"Early Neolithic";"R-322";6780;90;7521;7632;7700
+"Spain";"Cueva del Nacimiento";38.080;-2.300;"Early Neolithic";"Gif-2368";6780;130;7509;7639;7755
+"Portugal";"Pena d'Agua";39.483;-8.533;"Cardial";"Wk-9214";6775;60;7585;7625;7666
+"Germany";"Steinfurth 2";48.700;13.720;"LBK";"UtC-1839";6770;70;7576;7622;7672
+"Portugal";"Chaves Cave";41.733;-7.467;"Cardial";"N-12685";6770;70;7576;7622;7672
+"Spain";"Cueva de Chaves";42.360;0.210;"Cardial";"GrN-12685";6770;70;7576;7622;7672
+"Czech R.";"Bylany";49.920;15.330;"LBK";"BM-569";6754;96;7512;7611;7684
+"Italy";"Piancada";45.787;13.085;"Early Neolithic";"R-2705";6751;108;7507;7610;7688
+"Italy";"Grotta dell'Uzzo";38.017;12.483;"Aceramic Neolithic";"P-2733";6750;70;7569;7608;7669
+"Italy ";"Villa Comunale";41.550;15.500;"Early Neolithic";"MC-2291";6750;220;7430;7620;7826
+"France";"Terres de Prepoux";48.330;3.060;"LBK";"Ly-4503";6730;110;7500;7593;7677
+"Spain";"Cendres Cave";38.733;0.100;"Cardial";"Beta-75220";6730;80;7515;7591;7665
+"Italy";"Grotta Scaloria";41.450;15.567;"Early Neolithic";"LJ-4649";6720;100;7507;7583;7667
+"Italy";"Scaloria";40.550;18.053;"Cardial";"LJ-4649";6720;100;7507;7583;7667
+"Italy";"Grotta Filiestru";40.500;8.660;"Cardial";"Q-3020";6710;75;7509;7575;7655
+"Italy";"Acconia";38.900;16.583;"Early Neolithic";"P-2949";6710;80;7508;7575;7656
+"Belgium";"Blicquy. Couture de la";50.580;3.680;"LBK";"Hv-9271";6705;165;7427;7577;7702
+"France";"Saint Mitre";44.880;5.650;"Cardial";"MC-264";6700;130;7464;7569;7669
+"France";"Baume de Fontbregoua";43.550;6.230;"Cardial";"Gif-2990";6700;100;7489;7567;7656
+"Italy ";"Edera ";45.650;13.760;"Early Neolithic";"GX-19569";6700;130;7464;7569;7669
+"Italy";"Grotta Corbeddu";40.250;9.480;"Early Neolithic";"UtC-1251";6690;80;7486;7557;7616
+"Italy";"Pian di Cereto";43.867;12.633;"Early Neolithic";"R-548";6680;80;7483;7547;7611
+"France";"Casabianca or Casterra";42.080;9.500;"Cardial";"MC-2243";6670;130;7434;7543;7652
+"Andora";"Margineda Cave";42.467;1.500;"Cardial";"Ly-2839";6670;120;7435;7543;7620
+"France";"Araguina Sennola";41.380;9.160;"Cardial";"Gif-2325";6650;140;7427;7528;7655
+"Italy";"Masseria Candelaro";41.460;15.543;"Early Neolithic";"OxA-3684";6640;95;7439;7521;7581
+"France";"Baume d'Oullins";44.310;4.460;"Cardial";"MC-2034";6630;110;7429;7514;7588
+"Italy";"Stretto. Partanna";38.120;13.360;"Neolithic";"Rome-291";6630;120;7427;7513;7607
+"Italy";"Lugo di Romagna";44.417;11.900;"Early Neolithic";"R-2747";6626;110;7429;7511;7587
+"Hungary";"Szarvas";47.830;20.580;"Körös";"BM-1866";6620;60;7468;7508;7566
+"France";"Abri de Pendimoun";44.880;7.480;"Cardial";"Ly-5692";6615;105;7429;7503;7578
+"Italy";"Grotta Arma dello Stef";44.100;8.010;"Cardial";"Bln-3276";6610;60;7442;7502;7564
+"Italy";"Arma dello Stefanin";44.283;8.500;"Cardial";"Bln-3276";6610;60;7442;7502;7564
+"France";"Abri Jean Cros";43.080;2.460;"PeriCardial";"Gif-3575";6600;130;7336;7490;7610
+"France";"Le Baratin";44.080;5.880;"Cardial";"Gif-1855";6600;140;7333;7489;7612
+"Germany";"Goddelau";49.840;8.500;"LBK";"KN-3429";6600;85;7433;7495;7565
+"Italy";"Grotta Continenza";41.958;13.536;"Cardial";"R-1411";6590;75;7432;7489;7562
+"Hungary";"Basaroga";46.250;21.000;"Körös";"BM-1862";6580;60;7431;7482;7556
+"Italy";"Maddalena di Muccia";43.060;13.060;"Cardial";"R-643a";6580;75;7428;7482;7562
+"Italy";"Villagio Leopardi";42.750;13.267;"Cardial";"Pi-101";6578;135;7329;7471;7584
+"Italy";"S. Stefano di Ortucchi";41.950;13.633;"Cardial";"R-468";6575;80;7426;7478;7563
+"Italy";"Fagnigola";45.855;12.688;"Early Neolithic";"R-2550";6570;75;7425;7475;7562
+"Italy";"Sammardenchia";45.720;13.760;"Early Neolithic ";"R-2547";6570;74;7426;7475;7561
+"France";"Cavaou";43.450;5.000;"Neolithic";"Ly-7021";6560;85;7420;7466;7565
+"Italy";"Valer";45.883;12.713;"Early Neolithic";"Bln-4436";6557;71;7422;7466;7560
+"Poland";"Nieborowa";52.060;20.080;"LBK";"KN-2514";6550;65;7421;7461;7557
+"Italy";"Fiorano Modenese";44.537;10.817;"Early Neolithic";"GrN-19839";6540;60;7419;7453;7555
+"Italy";"Fonterossi (Lama dei P";42.055;14.210;"Cardial";"OxA-1958";6540;80;7334;7450;7561
+"Italy";"Monte Maulo";41.570;14.640;"Early Neolithic";"OxA-651";6540;80;7334;7450;7561
+"Germany";"Göttingen";51.530;9.930;"LBK";"H-1534/1027";6530;180;7267;7420;7580
+"France";"Renaghju";41.510;8.910;"Cardial";"Ly-8327";6525;60;7334;7439;7505
+"Italy";"Lugo di Grezzana";45.520;11.017;"Early Neolithic";"R-2745";6524;76;7329;7435;7551
+"Italy";"Santa Tecchia";41.500;15.660;"Early Neolithic";"BM-2414";6520;70;7330;7432;7502
+"Italy";"Grotta dell'Edera";45.653;13.776;"Cardial";"MC-2332";6510;110;7317;7415;7553
+"Netherlands";"Elsloo";50.930;5.770;"LBK";"GrN-2311";6510;100;7320;7417;7503
+"Spain";"La Falguera";43.117;-6.217;"Cardial";"OxA-10191";6510;70;7327;7422;7483
+"Belgium";"Omal";50.650;5.200;"LBK";"Hv-9285";6505;105;7316;7410;7506
+"Germany";"Ulm-Eggingen";48.400;10.000;"LBK";"Hv-14732";6500;100;7314;7405;7497
+"Switzerland";"Planta";46.230;7.360;"Early Neolithic";"CRG-280";6500;80;7323;7406;7477
+"Italy";"Fontanarosa Uliveto";41.019;15.021;"Cardial";"BM-2415";6490;150;7267;7386;7559
+"Italy ";"Mass. Font. Ulivetto";41.550;15.500;"Early Neolithic";"BM-2415";6490;150;7267;7386;7559
+"France";"Grotte de Camprafaud";43.430;3.900;"LBK";"Gif-3078";6480;130;7269;7381;7498
+"Italy";"Porto Badisco";40.067;18.483;"Cardial";"F-97";6465;185;7177;7355;7565
+"Belgium";"Place Saint Lambert";50.650;5.560;"LBK";"Lv-1340";6460;60;7323;7368;7427
+"Germany";"Enkingen";48.830;10.570;"LBK";"UtC-2344";6460;80;7293;7369;7433
+"Hungary";"Oszentivan";46.200;20.180;"Early Vinca";"Bln-479";6460;80;7293;7369;7433
+"France";"Source de Reselauze";43.510;3.280;"Cardial";"MC-1227";6450;100;7267;7361;7437
+"France";"Baume de Montclus";44.260;4.430;"Cardial";"MC-695";6450;100;7267;7361;7437
+"Italy";"Molino Casarotto";45.460;11.600;"Early Neolithic";"BIRM-175";6450;110;7265;7360;7459
+"Portugal";"Almonda Cave";39.500;-8.617;"Cardial";"OxA-9287";6445;45;7324;7362;7422
+"Hungary";"Korlat";48.360;21.250;"Bukk";"Bln-119";6440;100;7266;7354;7433
+"Czech R.";"Zopy";49.330;17.580;"Early LBK";"Bln-57";6430;100;7264;7346;7430
+"Italy";"San Marco. Gubbio";43.130;12.400;"Cardial";"OxA-1853";6430;80;7280;7350;7424
+"Italy";"S. Marco";40.500;16.500;"Cardial";"OxA-1853";6430;80;7280;7350;7424
+"Italy";"Bevilacqua";38.920;16.610;"Stentinello";"P-3047";6430;90;7276;7424;7348
+"Poland";"Olszanica";50.100;19.830;"LBK";"GrN-5384";6430;75;7294;7350;7423
+"Germany";"Duderstadt";51.520;10.270;"LBK";"H-919/889";6422;100;7261;7340;7429
+"Belgium";"Coron Maton";50.550;5.880;"LBK";"Gif-5257";6420;120;7179;7334;7458
+"Italy";"Arma di Nasino";44.117;8.033;"Cardial";"R-313";6420;65;7295;7346;7420
+"Germany";"Lamersdorf";50.800;6.460;"LBK";"KN-I.367";6410;45;7294;7346;7417
+"Spain";"Frare Cave";41.630;2.033;"Cardial";"I-13030";6410;70;7279;7338;7417
+"Spain";"La Draga";41.867;2.117;"Cardial";"UBAR_314";6410;70;7279;7338;7417
+"Czech R.";"Mohelnice";49.780;16.910;"LBK";"Bln-102a";6405;100;7254;7326;7427
+"Czech R.";"Chabarovice";50.660;13.950;"Early LBK";"Bln-438";6400;120;7177;7316;7430
+"France";"Ricoh";48.060;7.300;"Early LBK";"Ly-4582";6400;70;7272;7331;7416
+"France";"Pendimoum";43.810;7.500;"Cardial";"Gif-6471";6390;100;7184;7313;7426
+"Germany";"Bruchenbrücken";50.300;8.800;"LBK";"OxA-1630";6390;100;7184;7313;7426
+"Germany";"Gerlingen";48.800;9.070;"LBK";"KN-2295";6390;160;7158;7291;7479
+"Italy";"Fonte Chiarano";45.730;12.584;"Early Neolithic";"AECV-1996C";6380;180;7028;7274;7472
+"Belgium";"Oleye";50.680;5.210;"LBK";"Lv-1685";6370;95;7180;7297;7420
+"Hungary";"Katalszeg";46.210;20.080;"Koros";"Bln-86";6370;100;7178;7295;7421
+"Netherlands";"Geleen";51.960;5.750;"LBK";"GrN-995";6370;60;7254;7306;7415
+"France";"Saint Germain des Bois";46.910;2.480;"Neolithic";"Ly-4566";6360;80;7180;7292;7417
+"Germany";"Gudensberg. Güntersber";51.180;9.370;"Neolithic";"Hd-17130";6352;29;7258;7283;7312
+"France";"Grotte de Gazel";43.310;2.410;"Epicardial";"GrN-6707";6350;55;7178;7285;7413
+"Germany";"Rosdorf";51.510;9.930;"Early LBK";"Hv-586";6350;70;7177;7284;7413
+"Switzerland";"Arlesheim. Birseck-Erm";47.480;7.620;"Neolithic";"ETH-9650";6350;80;7175;7282;7414
+"Germany";"Eitzum 2";52.170;10.820;"LBK";"UtC-1833";6340;70;7172;7272;7411
+"France";"Saint Marcel d'Ardeche";44.350;4.460;"Middle Cardial/Impres";"MC-2376";6330;90;7165;7256;7414
+"France";"Chemin de Naviot";48.400;6.160;"Late LBK";"Ly-4479";6330;140;7029;7235;7423
+"Germany";"Muddersheim";50.700;6.550;"LBK";"H-924b/1121";6330;80;7166;7259;7412
+"Portugal";"Caldeirao";39.649;-8.416;"Cardial";"OxA-1035";6330;80;7166;7259;7412
+"France";"Grotte du Gardon";45.950;5.330;"Early Neolithic";"Ly-8422";6325;40;7177;7254;7305
+"Belgium";"Crisnee";50.680;5.400;"LBK";"Lv-1580";6320;75;7164;7248;7408
+"Germany";"Koln-Mengenich";50.910;7.000;"LBK";"KN-I.369";6320;70;7167;7249;7318
+"Italy";"Pizzo di Bodio";45.800;8.833;"Early Neolithic";"B-5090";6320;80;7163;7247;7412
+"Italy";"Fornace Capuccini di F";44.293;11.876;"Cardial";"Bln-3372";6320;60;7172;7250;7307
+"Belgium";"Wange";50.800;5.050;"Late LBK";"Lv-1116";6310;75;7161;7235;7407
+"Hungary";"Tiszavasvari-Keresztfa";48.960;21.380;"LBK";"Bln-505";6305;100;7029;7221;7414
+"Belgium";"Waremme";50.660;5.200;"LBK";"Lv-1693";6300;95;7029;7217;7411
+"Italy ";"Ciclami ";45.650;13.760;"Early Neolithic";"R-1040A";6300;50;7172;7224;7267
+"Austria";"Frauenhofen";48.670;15.630;"Stichbandkeramik";"KN-2566";6290;65;7160;7213;7305
+"Italy";"Marcianese";42.200;16.910;"Impressed Ware";"BM-2250";6290;60;7161;7214;7287
+"France";"Revellata";42.560;8.730;"Cardial";"Ly-6085";6280;75;7029;7200;7308
+"Hungary";"Tarnabod";47.680;20.210;"LBK";"Bln-123";6280;100;7025;7192;7312
+"Italy";"Castelgrande. Bellinzo";40.786;15.430;"Early Neolithic";"B-4564";6270;40;7170;7206;7249
+"Belgium";"Kanne";50.800;5.660;"LBK";"Lv-1025";6260;75;7027;7177;7267
+"France";"Grotte de l'Abeurador";43.350;2.700;"Epicardial";"MC-2145";6260;90;7019;7172;7271
+"France";"Armeau";48.130;3.360;"LBK";"GrN-6781";6260;65;7029;7182;7266
+"Italy";"Ripabianca di Monterad";43.710;13.100;"Fiorano";"R-599";6260;85;7023;7174;7269
+"Poland";"Strzelce";53.310;18.110;"LBK";"GrN-5087";6260;60;7029;7185;7266
+"Slovakia";"Sturovo";47.800;18.730;"LBK";"Bln-559";6260;100;7011;7169;7274
+"Germany";"Niedermerz";50.860;6.330;"LBK";"KN-2128";6250;70;7027;7167;7260
+"Germany";"Rodingen";50.960;6.550;"LBK";"H-2117/1536";6250;75;7025;7165;7261
+"Germany";"Zilgendorf";50.160;10.960;"LBK";"GrN-7011";6250;65;7028;7170;7259
+"Germany";"Zollchow";52.530;12.220;"LBK";"Bln-4199";6250;50;7030;7180;7258
+"Italy";"Grotta dei Piccioni";42.467;14.217;"Impressed Ware";"PI-46";6247;130;6988;7141;7305
+"Belgium";"Darion";50.650;5.180;"LBK";"Lv-1579";6240;100;7008;7139;7263
+"France";"Les Rivaux";45.050;3.850;"Early Neolithic";"Ly-3710";6240;110;7003;7136;7267
+"Italy";"Arma dell'Aquila";42.367;13.367;"Cardial";"Bln-3450";6240;90;7015;7142;7259
+"France";"Font Juvenal";43.280;2.330;"PeriCardial";"Ly-4770";6235;85;7017;7135;7255
+"Germany";"Hienheim";48.880;11.750;"LBK";"GrN-7557";6235;45;7029;7162;7250
+"Germany";"Frimmersdorf 122";51.050;6.583;"LBK";"UtC-7179";6230;70;7025;7129;7248
+"Germany";"Rottenburg a. N.";48.467;8.933;"LBK";"ETH-9548";6230;90;7012;7125;7254
+"Germany";"Viesenhäuser Hof";48.500;9.130;"LBK";"Hd-7978";6220;45;7022;7115;7242
+"Austria";"Pulkau";48.700;15.860;"LBK";"Bln-83";6215;100;7004;7106;7249
+"Austria";"Neckenmarkt";47.600;16.550;"LBK";"OxA-1536";6210;80;7006;7103;7244
+"Italy";"Muraccio";44.133;10.417;"Early Neolithic";"R-427";6210;80;7006;7103;7244
+"Poland";"Niemcza";50.717;16.850;"LBK";"Bln-1319";6210;80;7006;7103;7244
+"Poland";"Strachów 2";53.850;18.100;"LBK";"Bln-1790B";6205;102;6996;7096;7248
+"France";"Menneville. Derrière l";50.683;1.867;"LBK";"Ly-1735";6200;190;6862;7076;7310
+"France";"Les Grands Traquiers";49.010;4.260;"LBK";"Ly-4453";6200;140;6935;7085;7265
+"France";"Grotte de l'Aigle";44.060;4.630;"Cardial";"MC-563";6200;100;6991;7091;7246
+"Netherlands";"Sittard";51.000;5.870;"LBK";"GrN-423";6200;150;6911;7083;7266
+"Netherlands";"Wychen. Het Vormer";51.450;5.467;"Hazendonk";"GrN-7201";6195;45;7013;7088;7166
+"Germany";"Northeim-Imbshausen";51.700;10.000;"LBK";"H-1573/1126";6192;140;6914;7077;7260
+"France";"Grotte Lombard";43.680;7.860;"post Epicardial";"Ly-3331";6190;120;6953;7078;7247
+"Germany";"Eilsleben";51.480;11.510;"Early LBK";"OxA-1627";6190;90;6973;7083;7242
+"Germany";"Wang";47.880;12.600;"LBK";"OxA-1538";6190;80;6982;7084;7237
+"Great Britain";"Misbourne Viaduct";51.580;-0.550;"Early Neolithic";"OxA-601";6190;90;6973;7083;7242
+"Poland";"Nowy Browiniec";50.367;17.867;"LBK";"Bln-?";6185;55;7005;7082;7164
+"France";"Balloy les Reaudins";44.400;3.160;"Late LBK";"Ly-12";6180;90;6952;7073;7233
+"Hungary";"Zalavar";46.660;17.160;"Early LBK";"Bln-87";6180;100;6949;7072;7241
+"Hungary";"Ostoros";48.860;20.430;"LBK";"Bln-549";6180;100;6949;7072;7241
+"Italy";"Mileto";43.790;11.210;"Cardial";"Beta-44114";6180;80;6965;7075;7170
+"Poland";"Brzesc Kujawski";52.600;18.900;"LBK";"GrN-9255";6180;35;7018;7078;7159
+"Austria";"Schletz";48.750;16.470;"LBK";"ETH-13289";6175;65;6991;7073;7165
+"France";"Le Roc de Dourgne";42.610;2.150;"Peri-Epicardial";"MC-1102";6170;100;6941;7062;7238
+"Italy";"Vhò-Campo Ceresole";45.133;10.367;"Early Neolithic";"I-11445";6170;110;6937;7060;7243
+"Belgium";"Vlijtingen";50.833;5.583;"Late LBK";"Lv-1117";6160;95;6914;7052;7172
+"Germany";"Zwenkau-Harth";51.220;12.320;"LBK";"GrN-1581";6160;70;6975;7058;7162
+"Spain";"Cueva Chica de Santiag";38.950;-6.910;"Early Neolithic";"UGRA-254";6160;100;6911;7051;7172
+"Hungary";"Sandorresze";47.650;20.150;"LBK";"Bln-676";6155;80;6953;7051;7162
+"Germany";"Usingen";50.330;8.530;"LBK";"UtC-10787";6142;40;6967;7048;7156
+"Germany";"Felsdach Lauterach";48.330;9.560;"Early LBK";"GrN-4750";6140;45;6954;7043;7156
+"Germany";"Lautereck";48.250;9.583;"LBK";"GrN-4750";6140;45;6954;7043;7156
+"Germany";"Westeregeln";52.960;11.400;"LBK";"Bln-92";6140;100;6906;7029;7164
+"Hungary";"Szamossalyi";48.880;22.600;"LBK";"Bln-404";6136;100;6904;7024;7163
+"Hungary";"Vésztö-Magory";46.940;20.230;"Tisza";;6133;126;6807;7016;7170
+"Austria";"Unterpullendorf";47.500;16.500;"Early painted Ware";"VRI-42";6130;140;6801;7011;7231
+"Italy";"Travo. Case Gazza";44.867;9.533;"Early Neolithic";"I-13798";6130;160;6798;7008;7241
+"Italy";"Piano Vento";37.183;13.767;"Cardial";"A-4474";6130;90;6912;7018;7160
+"Poland";"Skoroszowice";51.700;19.180;"LBK";"Bln-1960";6125;50;6940;7015;7156
+"Germany";"Friedberg";50.330;8.750;"Early LBK";"Bln-56";6120;100;6894;7004;7159
+"France";"Derriere le Village";49.410;4.010;"Late LBK";"Ly-2324";6110;140;6798;6987;7165
+"Hungary";"Tápe-Lebö 1";46.270;20.280;"Körös";;6109;124;6805;6988;7161
+"France";"Route de Rouffach";48.080;7.330;"Early LBK";"Ly-3811";6100;120;6805;6977;7158
+"Great Britain";"Westward Ho!";51.030;-4.250;"Neolithic";"HAR-5631";6100;100;6810;6978;7156
+"France";"Le Coq Galleux";49.400;2.800;"LBK";"Ly-2716";6080;110;6795;6952;7155
+"France";"Baume Bourbon";44.900;4.630;"Neolithic";"MC-794";6080;100;6796;6952;7155
+"Hungary";"Bekesszentandras";47.830;20.500;"Late LBK";"BM-1860";6080;60;6804;6946;7146
+"Italy";"Grotta del'Orso";43.980;12.860;"Fiorano";"R-676";6080;50;6808;6943;7141
+"Slovakia";"Domica Cave";48.480;20.480;"Bukk";"GrN-2435";6080;75;6799;6949;7152
+"Solvakia";"Kecovo. Domica-Höhle";48.500;20.483;"LBK";"GrN-2435";6080;75;6799;6949;7152
+"Belgium";"Awans";50.660;5.450;"Late LBK";"Lv-1160";6070;90;6793;6937;7151
+"France";"Grotte de l'Abbe Prial";43.880;3.730;"Epicardial";"MC-1290";6070;100;6790;6938;7154
+"France";"Passy";48.100;3.260;"LBK";"Ly-8823";6065;55;6803;6922;6998
+"Germany";"Hude 1";53.160;8.430;"Group Dummer";"Hv-1220";6060;115;6752;6927;7155
+"Poland";"Lupawa";54.417;17.400;"TRB_East";"Bln-1814";6060;80;6792;6922;7141
+"France";"Kirschnaumen-Evendorff";49.400;0.433;"LBK";"Ly-1181";6050;200;6677;6913;7162
+"Germany";"Klein Denkte";52.150;10.600;"LBK";"UtC-1835";6050;110;6747;6914;7151
+"Germany";"Köttichau";51.133;12.133;"Salzmünde";"Bln-250";6045;120;6740;6908;7153
+"Belgium";"Irchonwelz";50.610;3.750;"Blicquy Group";"Bln-2531";6030;60;6793;6876;6947
+"France";"Berry-au-Bac. Croix-Ma";49.400;3.900;"LBK";"Ly-2327";6030;130;6680;6890;7153
+"France";"La Croix Maigret";49.400;4.880;"LBK";"Ly-2327";6030;130;6680;6890;7153
+"Germany";"Wittislingen";48.620;10.420;"LBK";"Gro-265";6030;110;6736;6888;7144
+"Italy";"Alba";44.700;8.033;"Cardial";"GX-20845";6030;80;6754;6881;6980
+"Italy";"Riparo Gaban";46.070;11.100;"Gaban group";"Bln-1777";6030;45;6798;6873;6939
+"Poland";"Stary Zamek";50.920;16.800;"Stichbandkeramik";"Bln-1737";6030;50;6797;6874;6941
+"France";"Norrois";48.660;4.550;"Early Neolithic";"Ly-3891";6020;110;6728;6876;7140
+"Austria";"Poigen";48.700;15.567;"LBK";"H-2121/1552";6017;90;6743;6867;6973
+"Great Britain";"Boghead Mound. Fochabe";57.620;-3.070;"Neolithic";"SRR-690";6006;60;6757;6847;6931
+"France";"Les Fontinettes";49.380;3.750;"Late LBK";"Ly-2331";6000;120;6677;6852;6989
+"France";"Alfort";45.680;5.350;"Early Neolithic";"Ly-386";6000;60;6749;6840;6925
+"France";"La Grande Rivoire";45.200;5.630;"Epicardial";"Ly-176";6000;70;6749;6842;6931
+"Italy";"Chiozza di Scandiano";44.596;10.706;"Early Neolithic";"R-458";6000;200;6642;6856;7156
+"Austria";"Mold";48.633;15.683;"LBK";"Bln-58";5990;160;6640;6843;7151
+"France";"Les Dependances de Dig";48.160;2.410;"Late Villeneuve St Ge";"Ly-5668";5990;50;6751;6828;6891
+"France";"Ceron";44.000;5.050;"Early Neolithic";"Gif-9997";5990;75;6740;6832;6930
+"Germany";"Hallertau";50.183;11.917;"LBK";"HAM-197";5990;90;6726;6835;6948
+"Italy";"Mont-La-Ville. Mollend";46.633;6.417;"Early Neolithic";"CRG-580";5980;175;6571;6832;7154
+"Germany";"Elbeu";52.233;11.617;"Stichbandkeramik";"Erl-4092";5969;59;6738;6805;6884
+"Belgium";"Trou al'Wesse";50.460;5.250;"Neolithic";"Lv-1752";5950;70;6677;6783;6880
+"France";"Le Guerzit";48.710;-3.830;"Early Neolithic";"Gif-7614";5950;110;6661;6788;6931
+"France";"Les Gouillauds";45.500;-0.600;"Early Neolithic";"Gif-4878";5950;120;6645;6789;6945
+"France";"Unang";44.050;5.150;"Middle Cardial";"Gif-1796";5950;130;6635;6791;6960
+"France";"La Tuilerie";47.430;6.450;"Neolithic";"Gif-1561";5950;140;6572;6792;6978
+"Italy";"Mesocco. Tec Nev";39.930;16.035;"Early Neolithic";"-";5950;110;6661;6788;6931
+"Germany";"Dresden-Nickern";51.030;13.530;"LBK";"Bln-73";5945;100;6659;6781;6901
+"Hungary";"Kisköre";47.500;20.500;"Neolithic";;5942;74;6674;6774;6857
+"Austria";"Winden am See";47.950;16.830;"LBK";"Bln-55";5940;100;6657;6774;6898
+"France";"Reichstett";48.650;7.750;"LBK";"Ly-865";5940;140;6567;6779;6954
+"Austria";"Guttenbrunn";48.600;15.083;"LBK";"Bln-2227";5935;50;6676;6761;6830
+"Germany";"Rehmsdorf";51.067;12.217;"LBK";"Bln-176";5932;100;6645;6764;6893
+"Italy";"Savignano sul Panaro";44.483;11.033;"Early Neolithic";"Bln-2976";5930;130;6569;6765;6943
+"France";"Pente de Croupeton";48.880;2.710;"Neolithic";"Gif-8358";5910;80;6642;6735;6848
+"France";"Port Leucate";42.830;3.000;"Cardial";"Gif-2749";5900;140;6545;6728;6895
+"France";"Les Obaux";49.400;2.960;"Villeneuve";"Ly-3460";5890;120;6559;6713;6879
+"Switzerland";"Hünenberg-Chämleten";47.167;8.417;"Cortaillod";"UZ-2915";5890;95;6567;6711;6848
+"Czech R.";"Zalany";50.580;13.900;"Stichbandkeramik";"Bln-240";5881;100;6562;6700;6842
+"France";"La Fosse Toumise";49.380;3.400;"Late LBK";"Ly-6478";5870;105;6545;6686;6830
+"France";"Monte Leone";41.400;9.160;"Early Neolithic";"Ly-6099";5855;95;6548;6667;6784
+"France";"Roc Troue";43.950;3.180;"Early Neolithic";"Gif-7688";5850;80;6554;6660;6773
+"Italy";"Grotta di Porto Badisc";40.080;18.480;"Neolithic";"R-1225";5850;55;6568;6663;6740
+"Ireland";"Cashelkeelty I";51.720;-9.820;"Neolithic";"UB-2413";5845;100;6505;6654;6777
+"France";"Cuiry-les-Chaudardes";49.380;3.770;"LBK";"Ly-2335";5840;140;6477;6655;6830
+"France";"le Moulin";44.180;5.500;"Epicardial";"Ly-3804";5840;130;6487;6652;6794
+"Germany";"Kaster";51.000;6.550;"LBK";"KN-2130";5840;55;6567;6650;6733
+"Italy";"Colle del Fico";38.151;14.926;"Early/Middle Neolithic";"OxA-654";5840;70;6561;6648;6737
+"Great Britain";"Rocher Moss 2";53.610;-2.030;"Neolithic";"Q-1190";5830;100;6502;6636;6739
+"France";"La Vesignie";44.250;4.610;"Cardial";"Ly-4745";5815;75;6504;6615;6716
+"France";"Roc'h Avel";48.580;-4.580;"Neolithic";"Gif-5510";5800;100;6491;6600;6726
+"France";"Les Reaudins";48.400;3.160;"Villeneuve";"Ly-5543";5800;50;6539;6597;6666
+"France";"Larzicourt";48.630;4.710;"Early Neolithic";"Ly-3907";5800;100;6491;6600;6726
+"France";"Le Culot";49.380;3.430;"Neolithic";"Ly-3750";5790;130;6445;6595;6736
+"France";"Roquemissou";44.410;2.730;"Early Roucadourian";"Ly-4687";5785;105;6453;6585;6716
+"Great Britain";"Runnymede";51.430;-0.560;"Early Neolithic";"OxA-3582";5780;85;6480;6578;6672
+"Slovakia";"Horne Lefantovce";48.410;18.160;"Bukk/SBK";"Bln-304";5775;140;6413;6582;6731
+"France";"Saint just";47.760;-1.950;"Early Neolithic";"Gif-5763";5770;80;6483;6568;6663
+"Italy";"Grotta del Mitreo";45.751;13.675;"Danilo";"R-904";5770;60;6497;6568;6639
+"Ireland";"Ballynagilly";54.710;-6.850;"Neolithic";"UB-305";5745;90;6445;6544;6650
+"France";"Rufacher Huben";48.030;7.330;"LBK";"Ly-2733";5740;130;6399;6544;6711
+"Great Britain";"Mar Dyke";51.500;0.270;"Neolithic";"HAR-4522";5740;80;6452;6538;6635
+"Great Britain";"Knap of Howar";59.350;-2.920;"Neolithic";"SRR-347";5706;85;6407;6502;6627
+"Germany";"Siggeneben-Süd";54.270;11.050;"TRB_North";"KN-2273";5690;60;6406;6478;6550
+"Germany";"Uhyst";51.370;14.520;"Stichbandkeramik";"Bln-3686";5670;60;6354;6455;6535
+"Austria";"Frankenau";47.500;16.500;"LBK";"VRI-207";5660;100;6317;6455;6547
+"France";"Chazelles";44.330;4.330;"Cardial";"Lv-365";5660;110;6315;6458;6552
+"France";"Petit Mont";47.530;-2.900;"Early Neolithic";"Gif-6844";5650;70;6320;6435;6497
+"France";"piece de Pincevent";48.360;2.880;"Villeneuve St Germ.";"Gif-5005";5630;120;6297;6429;6540
+"France";"Grand Louvre";48.860;2.330;"Early Neolithic";"Gif-7618";5620;70;6313;6403;6461
+"France";"Chichery";48.683;3.767;"LBK";"Gif-3354";5600;120;6282;6398;6531
+"France";"Etang David";47.380;4.510;"Late LBK";"Gif-3354";5600;120;6282;6398;6531
+"France";"Sierentz";47.560;7.450;"Late LBK";"Ly-4498";5570;100;6282;6367;6467
+"Poland";"Sarnowo";54.133;20.650;"TRB_East";"GrN-5035";5570;60;6305;6359;6402
+"France";"Abri des Usclades";43.980;3.250;"Roucadourian";"Gif-9143";5550;70;6292;6348;6402
+"Germany";"Carpin";53.350;13.250;"TRB_North";"Bln-4667";5550;51;6298;6346;6396
+"France";"Barbuise-Courtavant";48.550;3.583;"Neolithic";"Ly-2455";5530;150;6124;6323;6496
+"Lithuania";"Daktariske";55.770;22.420;"Neolithic";"Vs-808";5530;110;6209;6327;6443
+"France";"Les Planches";46.910;5.760;"Early Neolithic";"Gif-3826";5520;130;6184;6313;6467
+"Germany";"Prenzlau";53.317;13.867;"LBK";"Bln-4221";5520;100;6208;6317;6411
+"Great Britain";"Capel Eithin";53.220;-4.290;"Neolithic";"CAR-480";5520;80;6219;6320;6403
+"France";"Les longues Raies";48.910;2.760;"Villeneuve St Germ.";"Gif-5002";5510;140;6123;6300;6473
+"Great Britain";"Machrie Moor Site";55.540;-5.320;"Neolithic";"GU-2320";5500;70;6215;6300;6396
+"Sweden";"Skateholm";55.380;13.480;"Neolithic";"LU-2349";5500;60;6217;6300;6395
+"France";"Frigouras";44.130;5.950;"Early Neolithic";"Gif-8479";5450;100;6029;6231;6395
+"Great Britain";"Giants' Hills";53.220;0.130;"Neolithic";"OxA-641";5450;80;6123;6237;6390
+"France";"Saint Priest";45.700;4.910;"Early Neolithic";"Ly-8685";5445;60;6193;6238;6298
+"Great Britain";"Briar Hill";52.220;-0.920;"Neolithic";"HAR-2282";5440;110;6021;6219;6391
+"Great Britain";"Broome Heath";52.460;1.450;"Neolithic";"BM-679";5424;117;6010;6201;6311
+"Switzerland";"Feldmeilen-Vorderfeld";47.283;8.617;"Pfyn";"UCLA-1691F";5415;60;6128;6216;6291
+"Italy";"Grotta del Pertusello";42.775;12.550;"Early Neolithic";"R-157";5400;90;6021;6182;6292
+"France";"Grotte des Teppes";46.430;5.330;"ProtoCortaillod";"Gif-8999";5390;50;6122;6198;6281
+"Denmark";"Christiansholm Mose";55.667;12.583;"Neolithic";"K-750";5370;100;6013;6141;6279
+"Germany";"Irlbach";49.567;11.800;"LBK";"Bln-85";5345;100;6001;6120;6268
+"France";"Abri des pres Mourey";47.050;6.580;"Early Cortaillod";"Gif-9096";5340;70;6002;6118;6256
+"France";"Languidic";47.830;-3.160;"Neolithic";"Gif-5765";5330;80;5999;6109;6201
+"France";"Montbelliard";47.517;6.800;"LBK";"Gif-5165";5320;120;5950;6098;6268
+"Germany";"Wahlitz";51.170;12.080;"Stichbandkeramik";"GrN-433";5300;200;5774;6071;6300
+"France";"Les Longrais. Soumont-";48.983;-0.233;"LBK";"Ly-150";5290;150;5922;6068;6269
+"Germany";"Flintbek";54.250;10.067;"TRB_North";"Ki-3072";5280;120;5927;6065;6190
+"Denmark";"Barkær";56.400;10.700;"TRB_North";"K-2634";5270;75;5942;6060;6178
+"Great Britain";"Midgeholme Moss";54.980;-2.610;"Early Neolithic";"OxA-2326";5270;90;5939;6060;6179
+"Great Britain";"Lismore Fields";53.260;-1.940;"Neolithic";"OxA-2433";5270;100;5935;6059;6180
+"Great Britain";"Cannon Hill. Bray";51.500;-0.720;"Neolithic";"HAR-1198";5270;110;5932;6058;6182
+"Great Britain";"Linlithgow";55.970;-3.600;"Neolithic";"GU-1875";5265;55;5941;6052;6176
+"Great Britain";"Sidlings Copse";51.790;-1.220;"Neolithic";"OxA-3560";5250;75;5926;6039;6176
+"Denmark";"Kongemosen 3 (Kongemos)";55.550;11.630;"TRB_North";"K-4891";5240;65;5921;6018;6174
+"Ireland";"Carrowmore";54.270;-8.530;"Neolithic";"LU-1441";5240;80;5918;6025;6176
+"Czech R.";"Nov? Bydzov";50.240;15.491;"LBK";"Bln-74";5225;100;5907;6004;6178
+"Great Britain";"Sweet Track. Shapwick";51.160;-2.830;"Neolithic";"Q-968";5224;75;5911;5998;6175
+"Switzerland";"Thayngen. Weier";47.730;8.700;"Pfyn";"H-61/149";5222;130;5772;5998;6186
+"France";"Sente Saillancourt";49.080;2.000;"LBK";"Gif-5840";5220;110;5899;5997;6181
+"Great Britain";"Meare Lake Village Wes";51.170;-2.800;"Neolithic";"HAR-2616";5210;80;5901;5982;6176
+"Great Britain";"Worgret. Wareham";50.700;-2.150;"Neolithic";"HAR-9595";5210;70;5904;5979;6174
+"Switzerland";"Twann";47.100;7.150;"Cortaillod";"B-2698";5200;90;5773;5971;6177
+"Ireland";"Ferriters Cove";52.160;10.500;"Early Neolithic";"BM-2227A";5190;110;5757;5959;6176
+"France";"Abri de la Coma";42.830;2.910;"Cardial";"Gif-9080";5180;60;5770;5940;5999
+"Germany";"Bistoft";54.700;9.533;"TRB_North";"Ki-1285";5180;60;5770;5940;5999
+"Switzerland";"Vallon-des-Vaux";46.780;6.780;"Cortaillod";"B-659";5180;120;5751;5945;6175
+"Switzerland";"Greifensee-Storen/Wild";47.360;8.680;"Pfyn";"UCLA-1824";5180;70;5761;5941;6167
+"France";"Myard";47.380;4.510;"Cortaillod";"Gif-2342";5175;135;5748;5939;6175
+"France";"Vitteaux. Oppidum Myar";47.400;4.530;"Cortaillod";"Gif-2342";5175;135;5748;5939;6175
+"Switzerland";"Feldbach";47.230;8.780;"Pfyn";"UCLA-1809A";5170;70;5759;5927;5998
+"Great Britain";"Inchtuthil";56.540;-3.440;"Neolithic";"GU-2760";5160;70;5759;5914;5993
+"Great Britain";"Balbridie";57.050;-2.440;"Neolithic";"GU-1038";5150;60;5760;5902;5988
+"Ireland";"Dooey's Cairn. Ballyma";55.010;-6.410;"Neolithic";"UB-2030";5150;90;5749;5901;5994
+"Switzerland";"Egolzwil 4";47.180;8.010;"Egolzwil";"H-228/276";5150;100;5746;5902;5997
+"Switzerland";"Zurich";47.360;8.580;"Cortaillod";"UCLA-1772 B";5145;70;5754;5893;5989
+"France";"Mannlefelsen";47.450;7.230;"LBK";"Gif-2634";5140;140;5667;5895;6172
+"France";"Oberlag";47.450;7.233;"LBK";"Gif-2634";5140;140;5667;5895;6172
+"Great Britain";"Beeston Castle";53.130;-2.700;"Neolithic";"HAR-6462";5140;90;5749;5885;5990
+"Switzerland";"Auvernier";46.967;6.867;"Cortaillod";"B-2559";5130;120;5668;5877;5999
+"Denmark";"Bodal Mose";55.710;11.720;"TRB_North";"K-6444";5110;75;5748;5836;5925
+"Great Britain";"Monamore. Arran";55.510;-5.140;"Neolithic";"Q-675";5110;110;5722;5848;5988
+"Ireland";"Tankardstown";52.420;-8.620;"Western Neolithic";"GrN-14713";5105;45;5754;5821;5915
+"Great Britain";"Eaton Heath";52.600;1.260;"Mildenhall";"BM-770";5095;49;5753;5819;5911
+"Ireland";"Mad Man's Window. Glen";54.980;-5.930;"Neolithic";"UB-205";5095;120;5663;5834;5985
+"Great Britain";"Maes Howe";58.990;-3.180;"Neolithic";"SRR-791";5094;60;5750;5820;5912
+"Great Britain";"Blackpatch";50.860;-0.440;"Neolithic";"BM-290";5090;130;5661;5833;5983
+"Denmark";"Mosegården";55.433;9.917;"TRB_North";"K-3463";5080;90;5727;5814;5918
+"Denmark";"Ringkloster";56.033;9.933;"TRB_North";"K-4371";5080;70;5747;5814;5908
+"Great Britain";"Street House Farm. Lof";54.560;-0.830;"Neolithic";"BM-2061N";5080;60;5749;5815;5905
+"France";"Les Coudoumines";42.750;2.560;"postCardial";"Ly-225";5060;45;5748;5812;5892
+"Great Britain";"Nether Kinneil";56.000;-3.670;"Neolithic";"SRR-1486.01";5060;50;5748;5810;5892
+"Great Britain";"Abingdon";51.680;-1.260;"Neolithic";"BM-351";5060;130;5656;5806;5922
+"Poland";"Bronocice";50.333;20.350;"TRB_East";"DIC-719";5060;110;5663;5802;5913
+"Great Britain";"Gwernvale";51.870;-3.150;"Neolithic";"CAR-113";5050;75;5728;5795;5899
+"Great Britain";"Coneybury Henge";51.170;-1.810;"Neolithic";"OxA-1402";5050;100;5664;5793;5907
+"Great Britain";"Scord of Brouster";50.930;-1.660;"Neolithic";"CAR-253";5050;90;5668;5793;5906
+"Great Britain";"Long Down";50.880;-0.700;"Neolithic";"OxA-1152";5050;100;5664;5793;5907
+"Great Britain";"Rectory Farm";52.320;-0.160;"Neolithic";"OxA-3370";5050;80;5723;5794;5902
+"Ireland";"Carnanbane";54.750;-6.820;"Western Neolithic";"UB-535";5045;95;5664;5789;5904
+"Great Britain";"Rotten Bottom. Games H";55.420;-3.360;"Neolithic";"OxA-3540";5040;100;5663;5785;5901
+"Great Britain";"Fochabers  Boghead Mou";57.610;-3.070;"Neolithic";"SRR-685";5031;100;5663;5778;5894
+"Denmark";"L?jesm?lle skov (Mosen";55.550;11.400;"TRB_North";"AAR-1850";5030;90;5663;5777;5893
+"Germany";"Heek";52.117;7.100;"TRB_West";"GrN-11762";5030;70;5664;5779;5892
+"Great Britain";"Maiden Castle";50.700;-2.480;"Neolithic";"OxA-1337";5030;80;5664;5777;5892
+"Great Britain";"Seamer Moor. East Ayto";54.260;-0.460;"Neolithic";"NPL-73";5030;90;5663;5777;5893
+"Great Britain";"Port Charlotte";55.730;-6.390;"Neolithic";"HAR-3487";5020;90;5659;5767;5890
+"Great Britain";"Ascott-under-Wychwood";51.850;-1.560;"Neolithic";"BM-833";5020;92;5659;5767;5891
+"Great Britain";"East Heslerton Wold";54.160;-0.570;"Neolithic";"HAR-7030";5020;70;5661;5767;5888
+"Switzerland";"Phyn";47.580;8.930;"Pfyn";"GrN-5957";5020;40;5663;5770;5885
+"Great Britain";"Broken Cave";50.530;-3.690;"Neolithic";"OxA-3207";5015;80;5658;5761;5889
+"Denmark";"Lindebjerg";55.400;11.500;"TRB_North";"K-1659";5010;100;5654;5757;5891
+"Denmark";"Præstelyngen";55.600;11.583;"TRB_North";"K-1473";5010;100;5654;5757;5891
+"Great Britain";"Three holes Cave";50.490;-3.680;"Neolithic";"OxA-4495";5010;70;5657;5754;5886
+"Great Britain";"Coygan Camp";51.750;-4.480;"Neolithic";"NPL-132";5000;95;5646;5746;5890
+"Great Britain";"Hazleton North";51.870;-1.900;"Neolithic";"OxA-910";5000;70;5651;5741;5886
+"Great Britain";"Carn Brea";50.220;-5.240;"Neolithic";"BM-825";4999;64;5653;5738;5883
+"Great Britain";"Spong Hill";52.700;-2.360;"Neolithic";"BM-1535";4990;80;5616;5734;5884
+"Great Britain";"Drayton";51.660;-1.310;"Neolithic";"HAR-6477";4990;100;5612;5737;5886
+"Great Britain";"Raigmore";57.480;-4.190;"Neolithic";"SRR-188";4983;130;5603;5733;5891
+"Denmark";"Vroue Hede II";56.430;9.050;"TRB_North";"K-1570";4980;100;5606;5728;5883
+"Denmark";"Jordl?se Mose";55.200;10.167;"TRB_North";"K-3776";4980;65;5613;5717;5858
+"Switzerland";"Schenkon";47.160;8.130;"Cortaillod";"B-881";4980;120;5603;5730;5889
+"Denmark";"Rustrup I";56.117;9.517;"TRB_North";"K-2254";4970;100;5602;5719;5881
+"Great Britain";"Port St.Mary Rushen";54.080;-4.750;"Early Neolithic";"OxA-2481";4970;80;5604;5714;5858
+"Great Britain";"Pen-y-Wyrlod";51.970;-3.230;"Neolithic";"HAR-674";4970;80;5604;5714;5858
+"Great Britain";"Newton";55.790;-6.260;"Neolithic";"GU-1952";4965;60;5609;5699;5745
+"Great Britain";"Loch Calder  Tulloch o";58.530;-3.600;"Neolithic";"GU-1332";4965;60;5609;5699;5745
+"Denmark";"Norsminde";56.017;10.267;"TRB_North";"K-2192";4960;100;5597;5709;5877
+"Denmark";"T?mmerup mose IV";55.680;11.170;"TRB_North";"K-2775";4960;65;5605;5697;5745
+"Denmark";"Salpetermosen";55.683;12.533;"TRB_North";"K-4771";4960;90;5598;5707;5861
+"Great Britain";"Sarn-y-Bryn-Calod";52.640;-3.160;"Neolithic";"OxA-3997";4960;70;5604;5700;5840
+"Great Britain";"Flagstones House. Dorc";50.710;-2.430;"Early Neolithic";"HAR-9161";4960;80;5601;5704;5853
+"Great Britain";"Fengate";52.570;-0.200;"Neolithic";"GaK-4196";4960;64;5606;5697;5744
+"Ireland";"Tully. Aldergrove Airp";54.460;-7.820;"Neolithic";"UB-2115";4960;85;5600;5706;5857
+"Great Britain";"Camster Long Cairn";58.380;-3.270;"Neolithic";"GU-1707";4950;80;5596;5695;5843
+"Great Britain";"Baker Platform";51.180;-2.820;"Neolithic";"HAR-2845";4950;80;5596;5695;5843
+"Great Britain";"Shippea Hill. Peacocks";52.420;0.410;"Neolithic";"Q-527";4950;120;5588;5701;5887
+"Denmark";"Muldbjerg";56.150;8.483;"TRB_North";"K-129";4940;160;5486;5688;5901
+"Denmark";"S?rbylille I";55.350;11.420;"TRB_North";"Ka-6448";4940;80;5592;5686;5838
+"Denmark";"Ferle Enge";56.083;12.367;"TRB_North";"K-6299";4940;95;5588;5689;5859
+"Great Britain";"Callis Wold. Barrow 27";53.990;-0.730;"Neolithic";"BM-1170";4933;64;5601;5671;5721
+"Ireland";"Shanballyedmond";52.690;-8.250;"Neolithic";"GrN-11431";4930;60;5601;5665;5715
+"Great Britain";"Offham Hill";50.890;-0.020;"Neolithic";"BM-1414";4925;80;5589;5670;5741
+"Denmark";"Paarup";56.067;12.283;"TRB_North";"K-6297";4920;95;5493;5668;5856
+"Germany";"Gittrup";52.050;7.650;"TRB_West";"GrN-12262";4920;70;5594;5660;5720
+"Denmark";"Rude";56.000;10.233;"TRB_North";"K-3124";4910;90;5489;5655;5841
+"Great Britain";"Grindale. Barrow 1";54.120;-0.240;"Neolithic";"HAR-269";4910;120;5482;5657;5877
+"Germany";"Einbeck. Kühner Höhe";51.817;9.867;"TRB_West";"Hv-19722";4900;185;5339;5639;5893
+"Great Britain";"Millbarrow";51.450;-1.870;"Early Neolithic";"OxA-3172";4900;110;5479;5645;5854
+"Denmark";"Orelund Mose I";55.617;11.500;"TRB_North";"Ka-6445";4870;70;5484;5611;5707
+"Great Britain";"Windmill Hill";50.920;-1.880;"Early Neolithic";"OxA-2406";4870;70;5484;5611;5707
+"Great Britain";"Peak Camp";51.830;-2.150;"Neolithic";"OxA-1622";4865;80;5479;5604;5710
+"Great Britain";"Wolla Bank";53.250;0.330;"Neolithic";"OxA-5965";4865;65;5483;5605;5660
+"Denmark";"Ulkestrup Lyng";55.620;11.530;"TRB_North";"K-3778";4860;135;5333;5596;5743
+"Great Britain";"Hambledon Hill";50.900;-2.200;"Neolithic";"HAR-3062";4850;100;5469;5585;5711
+"Denmark";"Dragsholm";55.480;11.240;"TRB_North";"K-2291";4840;100;5335;5569;5709
+"Great Britain";"Chatton Sandyford";55.290;-1.980;"Neolithic";"GaK-1507";4840;90;5338;5569;5696
+"Great Britain";"Boynton. High Easton";54.120;-0.230;"Neolithic";"HAR-268";4840;80;5472;5571;5656
+"Lithuania";"Vilnius";54.680;25.300;"Neolithic";"Vs-420";4840;100;5335;5569;5709
+"Great Britain";"Carreg Coetan";52.020;-4.820;"Neolithic";"CAR-392";4830;80;5471;5548;5651
+"Great Britain";"Kilham";54.090;-0.380;"Neolithic";"BM-293";4830;125;5329;5553;5709
+"Ireland";"Ballymacdermot";54.170;-6.380;"Neolithic";"UB-694";4830;95;5333;5549;5658
+"Great Britain";"West Kennet";51.410;-1.850;"Neolithic";"OxA-449";4825;90;5336;5542;5654
+"Great Britain";"Redlands Farm";52.330;-0.590;"Early Neolithic";"OxA-5632";4825;65;5473;5539;5642
+"Austria";"See am Mondsee";47.820;13.450;"LBK";;4820;82;5469;5535;5644
+"Poland";"Gródek Nadbuzny";53.517;18.367;"TRB_East";"KN-I.243";4820;40;5483;5525;5600
+"Great Britain";"Pitnacree";56.650;-3.740;"Neolithic";"GaK-601";4810;90;5333;5526;5644
+"Great Britain";"Stanwick South";52.320;-0.590;"Neolithic";"OxA-3001";4810;80;5335;5525;5642
+"Great Britain";"Winnall Down";51.080;-1.320;"Neolithic";"HAR-2196";4800;80;5333;5517;5607
+"Ireland";"Ballintruer More";52.990;-6.680;"Drimnagh";"GrN-10469";4800;70;5337;5518;5604
+"Denmark";"Maglemose";56.067;12.290;"TRB_North";"OxA-1326";4790;70;5335;5512;5600
+"Great Britain";"Great Langdale";54.470;-3.140;"Neolithic";"OxA-2181";4790;80;5333;5510;5601
+"Great Britain";"Corhampton House. Corh";50.980;-1.150;"Neolithic";"BM-1889";4790;70;5335;5512;5600
+"Great Britain";"Badshot";51.230;-0.790;"Neolithic";"BM-2273N1";4780;40;5475;5515;5586
+"Great Britain";"Stumble";51.730;0.730;"Neolithic";"OxA-2298";4780;70;5333;5506;5595
+"Ireland";"Dundrum Nature Reserve";54.250;-5.850;"Neolithic";"UB-412";4775;140;5320;5491;5644
+"Poland";"Cmielów";51.167;22.583;"TRB_East";"GrN-5089";4775;40;5474;5515;5585
+"Great Britain";"Dorset Cursus (Down Fa";50.930;-2.000;"Neolithic";"OxA-626";4770;120;5324;5490;5602
+"Great Britain";"Wayland's Smithy. Ashb";51.560;-1.590;"Neolithic";"I-1468";4770;130;5320;5488;5640
+"Denmark";"Sarup I";55.200;10.100;"TRB_North";"K-2632";4760;90;5330;5486;5589
+"Denmark";"Undl?se Mose";55.600;11.580;"TRB_North";"K-6300";4760;95;5328;5485;5590
+"Great Britain";"Chilton 1-2";51.180;-2.880;"Neolithic";"HAR-649";4760;80;5331;5489;5588
+"Great Britain";"South Street. Avebury";51.420;-1.870;"Neolithic";"BM-356";4760;130;5320;5478;5604
+"Great Britain";"Netheravon Bake";51.220;-1.850;"Neolithic";"OxA-1407";4760;90;5330;5486;5589
+"Great Britain";"Markland Grips";53.270;-1.240;"Neolithic";"OxA-4447";4760;90;5330;5486;5589
+"Great Britain";"Shurton Hill";50.920;-1.370;"Neolithic";"UB-2122";4750;50;5334;5495;5584
+"Great Britain";"Burntwood Farm (Site R";51.120;-1.290;"Neolithic";"OxA-1384";4750;140;5312;5464;5640
+"Great Britain";"Eton Wick";51.500;-0.660;"Neolithic";"BM-2533";4750;80;5331;5480;5585
+"Great Britain";"Orsett";50.850;0.340;"Neolithic";"BM-1213";4741;113;5324;5463;5587
+"Denmark";"Bygholm N?rremark";55.700;9.580;"TRB_North";"K-3473";4740;90;5328;5469;5584
+"Great Britain";"Robin Hood's Ball";51.210;-1.860;"Neolithic";"OxA-1400";4740;100;5326;5466;5586
+"Denmark";"Toftum";55.170;8.550;"TRB_North";"K-2988";4730;90;5326;5459;5583
+"Great Britain";"Easton Down";51.390;-1.910;"Early Neolithic";"OxA-3760";4730;65;5329;5466;5581
+"Great Britain";"Rhum (Kinloch)";57.040;-6.270;"Neolithic";"GU-2043";4725;140;5299;5435;5607
+"Great Britain";"Kinloch Farm. Collessi";56.290;-3.160;"Neolithic";"GU-1375";4725;70;5327;5460;5581
+"Great Britain";"Cherhill";51.420;-1.950;"Neolithic";"BM-493";4715;90;5324;5445;5580
+"Poland";"Niedzwiedz";51.483;17.883;"TRB_East";"Bln-927";4715;100;5323;5441;5581
+"Great Britain";"Knap Hill";51.370;-1.820;"Neolithic";"BM-205";4710;115;5319;5428;5583
+"Great Britain";"North Marden";50.940;-0.870;"Neolithic";"HAR-5544";4710;110;5320;5430;5582
+"Great Britain";"Hanging Grimstone";54.040;-0.770;"Neolithic";"HAR-2160";4710;90;5323;5440;5580
+"Denmark";"Maglelyng 3";55.550;11.633;"TRB_North";"K-3779";4700;65;5323;5433;5576
+"Great Britain";"Stepleton";50.880;-2.170;"Neolithic";"OxA-932";4690;70;5321;5422;5575
+"Great Britain";"Meldon Bridge. near Pe";55.650;-3.260;"Neolithic";"SRR-644";4686;90;5317;5415;5577
+"Denmark";"Sigersdal Mose";55.750;12.250;"TRB_North";"K-3745";4680;75;5318;5414;5572
+"Great Britain";"Langdale  Pike of Stic";54.450;-3.120;"Neolithic";"BM-281";4680;135;5088;5386;5590
+"Great Britain";"Bury Hill";50.920;-0.580;"Neolithic";"HAR-3596";4680;80;5317;5413;5575
+"Ireland";"Ballyglass (Ma.13)";54.300;-9.400;"Neolithic";"SI-1450";4680;95;5313;5407;5579
+"Great Britain";"Silbury Hill. Avebury";51.410;-1.850;"Neolithic";"SI-910A";4675;110;5304;5395;5582
+"Ireland";"Ardcrony";52.880;-8.150;"Ballyalton";"GrN-9708";4675;35;5323;5398;5465
+"Great Britain";"North Stoke";51.570;-1.130;"Neolithic";"BM-1405";4672;49;5320;5405;5467
+"Great Britain";"The Ord North. Lairg";58.010;-4.430;"Neolithic";"GU-1169";4665;70;5314;5405;5568
+"Great Britain";"Dalladies Farm. Fetter";56.790;-2.610;"Neolithic";"SRR-289";4660;50;5317;5403;5465
+"Denmark";"S?lager";55.950;11.900;"TRB_North";"K-1724";4650;100;5145;5375;5580
+"Great Britain";"Winterbourne stoke";51.200;-1.850;"Neolithic";"OxA-1405";4640;100;5084;5362;5579
+"Great Britain";"Bridgemere";51.210;-2.410;"Neolithic";"BM-2565";4630;50;5304;5393;5460
+"Lithuania";"Nida";55.300;21.000;"Neolithic";"Vs-321";4630;120;5068;5330;5579
+"Netherlands";"Odoorn";52.850;6.850;"TRB_West";"GrN-13184";4630;60;5301;5385;5465
+"Great Britain";"Ashcott Heath";51.160;-2.780;"Neolithic";"Q-598";4625;120;5066;5322;5578
+"Denmark";"Lohals";55.133;10.917;"TRB_North";"K-2277";4620;100;5069;5326;5574
+"Denmark";"Snoldelev Mose";55.570;12.130;"TRB_North";"K-2778";4600;90;5065;5297;5466
+"Great Britain";"Barnhouse";59.000;-3.220;"Neolithic";"OxA-3499";4590;75;5062;5284;5455
+"Great Britain";"Quanterness";58.990;-3.010;"Neolithic";"Q-1294";4590;75;5062;5284;5455
+"Great Britain";"Jones's Track. Ashcott";51.140;-2.780;"Neolithic";"HAR-3078";4590;70;5065;5287;5450
+"Great Britain";"Combe Hill";50.790;0.210;"Neolithic";"I-11613";4590;110;5053;5265;5464
+"Denmark";"Ulvemose";55.430;11.480;"TRB_North";"K-6306";4580;90;5054;5247;5448
+"Poland";"Matwy";52.767;18.250;"TRB_East";"Bln-1314";4580;50;5070;5275;5445
+"Denmark";"Verup Mose II";55.570;11.520;"TRB_North";"Ka-6452";4570;150;4985;5224;5466
+"Germany";"Odagsen I";51.783;9.883;"TRB_West";"KiA-6987";4564;26;5087;5276;5315
+"Great Britain";"Aldwincle";52.410;-0.540;"Neolithic";"HAR-1411";4560;70;5054;5199;5437
+"Denmark";"Dorthealund N";55.850;9.600;"TRB_North";"K-2432";4550;100;5043;5191;5443
+"Denmark";"Foulum";56.500;9.583;"TRB_North";"K-1601";4540;110;4980;5181;5441
+"Great Britain";"Shapwick Heath";51.160;-2.810;"Neolithic";"Q-430";4540;130;4975;5184;5445
+"Great Britain";"Devil's Kneading Troug";51.160;0.970;"Neolithic";"BM-254";4540;105;4984;5180;5440
+"Ireland";"Newgrange";53.710;-6.490;"Neolithic";"UB-361";4535;105;4981;5175;5437
+"Denmark";"Borremose";54.767;11.517;"TRB_North";"K-5537";4525;90;5044;5163;5313
+"Netherlands";"Harderwijk. Beekhuizer";52.350;5.633;"TRB_West";"GrN-7746";4520;70;5053;5159;5302
+"Great Britain";"Normanton Down. Amesbu";51.160;-1.830;"Neolithic";"BM-505";4510;103;4980;5151;5311
+"Great Britain";"Dorchester Site VIII";51.660;-1.170;"Neolithic";"BM-2443";4510;100;4980;5151;5311
+"Poland";"Szczecin-Ustowo";53.420;14.580;"TRB_East";"Bln-1807";4510;80;5047;5151;5302
+"Germany";"Flögeln";53.667;8.817;"TRB_West";"Hv-8450";4500;65;5049;5148;5289
+"Great Britain";"King Barrow Ridge";51.180;-1.810;"Neolithic";"OxA-1397";4500;120;4973;5143;5312
+%
+%"References";;;;;;;;;;
+%"Forenbaher. S.. Miracle. P.T.. 2005. The spread of farming in the Eastern Adriatic.  Antiquity 79. 514-528.";;;;;;;;;;
+%"Pinhasi. R.. Fort. J.. Ammerman. A.J.. 2005. Tracing the origin and spread of agriculture in Europe. PLOS Biology 3. 2220-2228.";;;;;;;;;;
+%"Reimer. P.J.. Baillie. M.G.L.. Bard. E.. Bayliss. A.. Beck. J.W.. Bertrand. C.J.H.. Blackwell. P.G.. Buck. C.E.. Burr. G.S.. Cutler. K.B.. Damon. P.E.. Edwards. R.L.. ";;;;;;;;;;
+%"Fairbanks. R.G.. Friedrich. M.. Guilderson. T.P.. Hogg. A.G.. Hughen. K.A.. Kromer. B.. 2004. IntCal04 terrestrial radiocarbon age calibration. 0-26 cal kyr BP.  ";;;;;;;;;;
+%"Radiocarbon 46. 1029-1058.";;;;;;;;;;

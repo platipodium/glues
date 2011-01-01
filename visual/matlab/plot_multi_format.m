@@ -36,7 +36,7 @@ for i=1:n
       case {'pdf','svg'}
         print(['-d' ext],'-painters',[basename '.' ext]); % -r600
       case {'tiff','jpeg','ppm','png'}
-        print(['-d' ext],'-r300',[basename '.' ext]); 
+        print(['-d' ext],'-r600',[basename '.' ext]); 
       otherwise
         print(['-d' ext],[basename '.' ext]);      
     end
