@@ -1,5 +1,5 @@
-//#include "../IO.h"
-#include "IO.h"
+#include "../IO.h"
+//#include "IO.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -24,7 +24,8 @@ int main (int argc, char* argv[])
 {
 
 #ifndef DEBUG_MSVC
-    std::string filename("test_IO.tsv");
+//    std::string filename("test_IO.tsv");
+    std::string filename("../../examples/setup/685/region_iiasaclimber_kai_npp_685.tsv");
 #else
 	std::string filename("C:\\SourceForge Projects\\GLUES_driver\\test_IO.tsv");
 #endif
