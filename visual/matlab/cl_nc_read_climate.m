@@ -80,6 +80,11 @@ if any(lon>180) reorder_lons=1;
   ilon2=find(lon>180);
   lon(ilon2)=lon(ilon2)-360;
   [lon,sortlon]=sort(lon);
+elseif  any(lon<180) reorder_lons=1; 
+  ilon1=find(lon>=-180);
+  ilon2=find(lon<-180);
+  lon(ilon2)=lon(ilon2)+360;
+  [lon,sortlon]=sort(lon);
 else
   reorder_lons=0;
 end
@@ -94,7 +99,7 @@ for varid=0:nvar-1
     case {'var142','prec','lsp'}, varname='prec'; 
     case {'var167','temp','t2m','t2','tmean'}, varname='temp'; 
     case {'var301'}, varname='npp';
-    case {'npp','gdd','gdd0','gdd5'}, ; 
+    case {'npp','gdd','gdd0','gdd5','natural_fertility','suitable_species'}, ; 
     otherwise warning('Variable with id %d and name %s not used.',varid,varname);      
   end
   varval=netcdf.getVar(ncid,varid);

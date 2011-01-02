@@ -27,7 +27,7 @@ check_PROGRAMS = $(TESTS)
 noinst_HEADERS = ../GeoRegion.h ../GeoNeighbour.h ../Symbols.h ../LandRegion.h \
 	../Constants.h ../LocalClimate.h ../Population.h ../EffectiveVariable.h \
 	../TechnologyTrait.h ../CulturePopulation.h ../CultureRegion.h \
-	../FarmingQuotaTrait.h ../DomesticationFractionTrait.h
+	../FarmingQuotaTrait.h ../DomesticationFractionTrait.h ../IO.h
 
 EXTRA_DIST = georegions.tsv test_IO.tsv test_glues_distribution.sh test_glues_build.sh
 
@@ -57,4 +57,4 @@ test_CultureRegion_SOURCES=../TechnologyTrait.cc ../CulturePopulation.cc \
 	../EffectiveVariable.cc ../GeoRegion.cc ../GeoNeighbour.cc ../LandRegion.cc  \
 	../LocalClimate.cc ../FarmingQuotaTrait.cc ../DomesticationFractionTrait.cc
 
-test_IO_SOURCES=../IO.cc test_IO.cc
+test_IO_SOURCES=../IO.h test_IO.cc
