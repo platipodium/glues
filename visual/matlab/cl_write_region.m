@@ -57,7 +57,7 @@ if size(map.longrid,1)==1 map.longrid=map.longrid'; end
 nreg=length(region);
 
 %nreg=10;
-for ireg=272:nreg
+for ireg=1:nreg
   % select all cells of this region
     
   
