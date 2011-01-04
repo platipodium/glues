@@ -202,11 +202,12 @@ if isinf(latlim(1)) latlim(1)=-60; end
 if isinf(latlim(2)) latlim(2)=80; end
 
   % plot map
-  figure(varid); 
+  figid=varid+figoffset;
+  figure(figid); 
   clf reset;
   cmap=colormap(colmap);
-  set(varid,'DoubleBuffer','on');    
-  set(varid,'PaperType','A4');
+  set(figid,'DoubleBuffer','on');    
+  set(figid,'PaperType','A4');
   hold on;
   if (marble<2) pb=clp_basemap('lon',lonlim,'lat',latlim,'nogrid',nogrid); end
   if (marble==1)

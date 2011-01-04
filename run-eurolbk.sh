@@ -8,7 +8,7 @@ test -x gsed && SED=$(which gsed)
 export SED=/opt/local/bin/gsed
 
 X=src/glues
-export P=examples/simulations/685/lbk
+export P=examples/simulations/${V}
 S=examples/setup/685
 
 SIM=$P.sim
