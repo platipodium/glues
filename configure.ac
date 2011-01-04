@@ -376,8 +376,8 @@ AC_CONFIG_FILES([Makefile
   examples/simulations/pop/pop.sce
   examples/simulations/pop/pop.sim
   examples/simulations/pop/Makefile
-  examples/simulations/685/lbk.sce
   examples/simulations/685/lbk.sim
+  examples/simulations/685/lbk.sce
   examples/simulations/1/Makefile
   examples/simulations/1/lbk.sce
   examples/simulations/2/Makefile
@@ -387,8 +387,9 @@ AC_CONFIG_FILES([Makefile
   examples/simulations/62483/Makefile
   examples/simulations/62483/onekbc.sce
   examples/simulations/62483/onekbc.sim
-  examples/simulations/eurolbk/lbk.sce
-  examples/simulations/eurolbk/lbk.sim
+  examples/simulations/eurolbk/eurolbk.sce
+  examples/simulations/eurolbk/eurolbk.sim
+  examples/simulations/eurolbk/Makefile
   examples/simulations/plasim/Makefile
   examples/simulations/plasim/plasim.sce
   examples/simulations/plasim/plasim.sim

@@ -12,7 +12,7 @@ float	Time     	0.0	\d Actual simulated Time.
 	     	         	\u calendar years
 	     	         	\o # This is an output variable.
 float	TimeStart	-9500.0	\d Start of simulation.
-float	TimeEnd    	2000.0	\d End of simulation time.
+float	TimeEnd    	1000.0	\d End of simulation time.
 float	TimeStep   	5.0	\d TimeStep of simulation.
 float	OutputStep 	20.0	\d TimeStep of output (results).
 
@@ -21,12 +21,12 @@ int	RandomInit 	100	\d Initializer for a random generator.
 list	IncludeFiles		\d List of all included files.
 	type	string
 data
-	"lbk.ctl"
-	"lbk.init"
-	"lbk.opar"
-	"lbk.par"
-	"lbk.dat"
-	"lbk.sce"
+	"eurolbk.ctl"
+	"eurolbk.init"
+	"eurolbk.opar"
+	"eurolbk.par"
+	"eurolbk.dat"
+	"eurolbk.sce"
 end
 
 list	OutputVariables
