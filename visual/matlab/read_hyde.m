@@ -26,6 +26,7 @@ cl_register_function;
 % garea_cr.asc (total gridcell area in km2, spherical Earth)
 
 dhyde='/h/koedata01/data/model/hyde';
+dhyde='data';
 
 vars={'landlake','mland_cr','garea_cr'};
 nvars=length(vars);

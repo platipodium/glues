@@ -1,7 +1,7 @@
 SUBDIRS=pangaea
 
 # Datei, die von Doxygen bearbeitet werden soll
-EXTRA_DIST = glues.doxygen 
+EXTRA_DIST = glues.doxygen  glues.bib
 # Die zu reinigenden files
 CLEANFILES = *.html *.gif *.css *.png
 # zu erstellende Datei

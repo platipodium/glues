@@ -874,8 +874,80 @@ set(gca,'XLim',[-8000 1850]);
 % natural uncertainty of the parameters is not know, so I don't think this
 % makes sense either.
 
+file='lkk11_0.1_20110105.nc'
+if exist(file,'file') delete(file); end
+
+ncid=netcdf.create(file,'NOCLOBBER');
+nreg=size(s,1)-1;
+
+timedim=netcdf.defDim(ncid,'time',length(ntime));
+regdim=netcdf.defDim(ncid,'supraregion',nreg);
+varid=netcdf.defVar(ncid,'time','NC_DOUBLE',timedim);
+netcdf.putAtt(ncid,varid,'units','Year AD');
+netcdf.putAtt(ncid,varid,'long_name','Time');
+varid=netcdf.defVar(ncid,'supraregion','NC_INT',regdim);
+netcdf.putAtt(ncid,varid,'units','');
+netcdf.putAtt(ncid,varid,'long_name','Unique ID of supraregion');
+varid=netcdf.defVar(ncid,'population_size_glues','NC_FLOAT',[regdim,timedim]);
+netcdf.putAtt(ncid,varid,'units','');
+netcdf.putAtt(ncid,varid,'long_name','Population size from GLUES');
+varid=netcdf.defVar(ncid,'population_size_kk10','NC_FLOAT',[regdim,timedim]);
+netcdf.putAtt(ncid,varid,'units','');
+netcdf.putAtt(ncid,varid,'long_name','Population size from KK10');
+varid=netcdf.defVar(ncid,'population_size_kk10lower','NC_FLOAT',[regdim,timedim]);
+netcdf.putAtt(ncid,varid,'units','');
+netcdf.putAtt(ncid,varid,'long_name','Lower estimate for population size from KK10');
+varid=netcdf.defVar(ncid,'population_size_kk10upper','NC_FLOAT',[regdim,timedim]);
+netcdf.putAtt(ncid,varid,'units','');
+netcdf.putAtt(ncid,varid,'long_name','Upper estimate for population size from KK10');
+varid=netcdf.defVar(ncid,'population_size_lkk11','NC_FLOAT',[regdim,timedim]);
+netcdf.putAtt(ncid,varid,'units','');
+netcdf.putAtt(ncid,varid,'long_name','Population size from LKK11');
+
+varid=netcdf.getConstant('GLOBAL');
+netcdf.putAtt(ncid,varid,'creation_date',datestr(now));
+netcdf.putAtt(ncid,varid,'file_sources',['eurolbk_events.nc',', Pop_estimates.nc']);
+netcdf.putAtt(ncid,varid,'user','lemmen');
+netcdf.putAtt(ncid,varid,'program',struct2stringlines(cl_get_version));
+
+l0=find(ntime==-1000);
+l1=find(ntime==1000);
+for i=1:nreg
+  ikk10(i,:)=spline(time,kk10(i,:),ntime);
+  ikk10l(i,:)=spline(time,kk10lower(i,:),ntime);
+  ikk10u(i,:)=spline(time,kk10upper(i,:),ntime);
+  ikk10(i,1:l0)=NaN;
+  ikk10l(i,1:l0-1)=NaN;
+  ikk10u(i,1:l0-1)=NaN;  
+  glue(i,:)=spline(glues.time,s(i,:),ntime);
+  glue(i,l1+1:end)=NaN;
+end
 
 
+netcdf.endDef(ncid);
+varid=netcdf.inqVarID(ncid,'time');
+netcdf.putVar(ncid,varid,ntime);
+varid=netcdf.inqVarID(ncid,'supraregion');
+netcdf.putVar(ncid,varid,1:nreg);
+varid=netcdf.inqVarID(ncid,'population_size_lkk11');
+netcdf.putVar(ncid,varid,lkk);
+varid=netcdf.inqVarID(ncid,'population_size_kk10');
+netcdf.putVar(ncid,varid,ikk10);
+varid=netcdf.inqVarID(ncid,'population_size_kk10upper');
+netcdf.putVar(ncid,varid,ikk10u);
+varid=netcdf.inqVarID(ncid,'population_size_kk10lower');
+netcdf.putVar(ncid,varid,ikk10l);
+varid=netcdf.inqVarID(ncid,'population_size_glues');
+netcdf.putVar(ncid,varid,glue);
+netcdf.close(ncid);
+
+file=strrep(file,'.nc','_key.txt');
+fid=fopen(file,'w');
+fprintf('# Supra region keys\n');
+for i=1:nreg
+  fprintf(fid,'%d %s\n',i,sregions{i});
+end
+fclose(fid);
 
 return
 
