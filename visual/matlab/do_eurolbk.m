@@ -3,7 +3,7 @@
 %% Define region to lbk
 reg='lbk';
 timelim=[-8000 -4000];
-hreg=[271 255  211 183 178 170 146 142 122 123];
+hreg=[271 255  211 183 178 170 146 142 123 122];
 nhreg=length(hreg);
 letters='ABCDEFGHIJKLMNOPQRSTUVW';
 letters=letters(1:nhreg);
@@ -68,13 +68,185 @@ farming=farming(ifound,itime);
 ncol=19;
 cmap=flipud(jet(ncol));
 stime=1950-sage;
+sutime=stime+(Forenbaher.Lower_cal-Forenbaher.Median_age);
+sltime=stime+(Forenbaher.Upper_cal_-Forenbaher.Median_age);
+srange=sutime-sltime;
 iscol=floor((stime-min(timelim))./(timelim(2)-timelim(1))*ncol)+1;
 viscol=find(iscol>0 & iscol<=ncol & slat>=latlim(1) & slat<=latlim(2) ...
     & slon>=lonlim(1) & slon<=lonlim(2));
   
 
 
-%% Do Ammerman plot (figure 4)
+if (1==0)
+%% Plot region network (figure 1)
+[data,basename]=clp_nc_neighbour('reg',reg,'marble',2,'transparency',1,'nocolor',0,...
+      'showstat',0,'showtime',0,'fontsize',15,'showregion',0,...
+      'file','../../eurolbk_base.nc','figoffset',0,'sce','base','noprint',1,'notitle',1);
+  
+for ir=1:nhreg  
+  t(ir)=m_text(lon(hreg(ir)+1),lat(hreg(ir)+1),letters(ir),'background','y',...
+      'Horizontal','center','Vertical','middle','visible','on');
+  %e=get(t(ir),'Extent');
+  %pt(ir)=patch(e(1)+[0 e(3) e(3) 0 0],e(2)+[0 0 e(4) e(4) 0],'w','EdgeColor','none','FaceAlpha',0.5);
+end
+m_coast('color','k');
+m_grid('box','fancy','linestyle','none');
+
+plot_multi_format(gcf,'region_map_rgb','png');
+% black and white version
+for ir=1:nhreg  
+  set(t(ir),'background',repmat(0.9,3,1));
+end
+
+plot_multi_format(gcf,'region_map_bw','png');
+end
+
+%------------------------------------------------------------------------------
+movtime=-7500:500:-3000;
+nmovtime=length(time);
+
+%% plot farming advance (Figure 2)
+if (0==2) for it=1:nmovtime
+  [d,b]=clp_nc_variable('var','farming','reg',reg,'marble',2,'transparency',1,'nocolor',0,...
+      'showstat',0,'lim',[0 1],'timelim',movtime(it),...
+      'file','../../eurolbk_base.nc','figoffset',0,'sce','base','noprint',1);
+  m_coast('color','k');
+  m_grid('box','fancy','linestyle','none');
+  plot_multi_format(gcf,b,'png');
+ end,end
+
+% Command line postprocessing
+% for F in farming_lbk_66_base_*png ; do ln -s $F `echo $F | awk -F'_' '{print $1 "_" $2 "_" $3 "_" $4 "_" 10000+$5 "_" $5 }'` ; done
+
+
+if (0==3)
+%% plot farming timing (figure 3)
+ncol=19;
+
+[data,basename]=clp_nc_variable('var','farming','threshold',0.5,'reg',reg,'marble',2,'transparency',1,'nocolor',0,...
+      'showstat',0,'timelim',timelim,'showtime',0,'flip',1,'showvalue',0,...
+      'file','../../eurolbk_base.nc','figoffset',0,'sce','base',...
+      'noprint',1,'notitle',1,'ncol',ncol);
+  
+%set(gcf,'Units','centimeters','Position',[0 0 18 18]);
+
+cb=findobj('tag','colorbar');
+cmap=flipud(jet(ncol));
+cmap=rgb2hsv(cmap);
+cmap(:,2)=cmap(:,2)*0.5;
+cmap=hsv2rgb(cmap);
+colormap(cmap);
+ytl=get(cb,'YTickLabel');
+ytl=ytl(:,2:end);
+set(cb,'YTickLabel',ytl);
+ytt=get(cb,'Title');
+set(ytt,'String','Year BC','FontSize',14,'FontName','Times','FontWeight','normal');
+
+for i=1:length(viscol)
+  m_plot(slon(viscol(i)),slat(viscol(i)),'ko','MarkerFaceColor',cmap(iscol(viscol(i)),:));
+end
+
+ct=findobj(gcf,'-property','FontName');
+set(ct,'FontSize',14,'FontName','Times','FontWeight','normal');
+
+
+for ir=1:-nhreg  
+  m_text(lon(hreg(ir)+1),lat(hreg(ir)+1),letters(ir),'background','w',...
+      'Horizontal','center','Vertical','middle');
+end
+m_coast('color','k');
+m_grid('box','fancy','linestyle','none');
+plot_multi_format(gcf,strrep(basename,'farming_','timing_'),'png');
+
+
+%ct=findobj(gcf,'type','text'); set(ct,'visible','off');
+%ct=findobj(gcf,'-property','YTickLabel'); set(ct,'YTickLabel',[]);
+%ct=findobj(gcf,'-property','XTickLabel'); set(ct,'XTickLabel',[]);
+%set(ytt,'visible','off');
+
+%plot_multi_format(gcf,strrep(basename,'farming_','timing_'),'png');
+
+%plot2svg([basename '.svg'],gcf,'png');
+
+
+%return
+% clp_nc_variable('var','farming','threshold',0.5,'reg',reg,'marble',2,'transparency',1,'nocolor',0,...
+%       'showstat',0,'timelim',timelim,'showtime',0,'flip',1,'showvalue',1,...
+%       'file','../../eurolbk_nospread.nc','figoffset',2,'sce','nospread')
+    
+    
+end
+
+
+%% Do pdf plot for highlighted regions
+
+r=250;
+[d,b]=clp_nc_trajectory('reg',hreg+1,'var','farming','timelim',timelim,...
+      'file','../../eurolbk_base.nc','figoffset',0,'sce','base');
+%%
+dd=diff(d');
+ntime=size(dd,1);
+dtime=(timelim(2)-timelim(1))/(ntime-1);
+rtime=timelim(1):dtime:timelim(2);
+clf reset;
+
+dedges=200;
+edges=[-inf -8000+dedges/2.0:dedges:-3000-dedges/2.0 inf];
+centers=[edges(2:end-1)-dedges/2.0 edges(end-1)+dedges/2.0];
+if (4==0)
+for i=1:nhreg
+  
+  figure(i); clf reset; hold on;
+  pos=get(gcf,'position');
+  set(gcf,'Position',[pos(1:2) 500 90]);
+  %pb(i)=bar(rtime,dd(:,i)/max(dd(:,i)),'k','edgecolor','k');
+  %set(pb(i),'FaceColor','k','LineStyle','none');
+  %ymax=max(dd(:,i)/sum(dd(:,i))*length(dd(:,i))*0.5)*1.1;
+  set(gca,'Xlim',[timelim(1),-3000],'YTick',[],'Ylim',[0. 1.1],'color','none');
+  rlat=lat(hreg(i)+1);  rlon=lon(hreg(i)+1);
+  dlat=[slat' repmat(rlat,ns,1)];
+  dlat=reshape(dlat',2*ns,1);
+  dlon=[slon' repmat(rlon,ns,1)];
+  dlon=reshape(dlon',2*ns,1);
+  dists=m_lldist(dlon,dlat);
+  dists=dists(1:2:end);  
+  ir=find(dists<=r);
+%   [hir,hirt]=hist(stime(ir),length(ir)/4.0);
+%   [whir,whirt]=hist([stime(ir) sutime(ir) sltime(ir)],length(3*ir)/4.0);
+%   bar(whirt,whir/sum(whir)*length(whir),.7,'r','edgecolor','none');
+%   bar(hirt,hir/sum(hir)*length(hir),0.4,'c','edgecolor','none');
+ 
+  hir=histc(stime(ir),edges);
+  whir=histc([stime(ir) sutime(ir) sltime(ir)],edges);
+  bar(centers,whir(1:end-1)/max(whir(1:end-1)),0.7,'r','edgecolor','none');
+  bar(centers,hir(1:end-1)/max(whir(1:end-1)),0.4,'c','edgecolor','none');
+  %[sir,isir,jsir]=unique(stime(ir));
+  %csir=0:length(sir);
+  %stime(ir(isir));
+  %dcsir=diff(csir);
+  %sd=interp1(sir,dcsir,rtime,'cubic');  
+  %sdd=diff(sd);
+  %plot(time,interp1(whirt,whir/max(whir),time,'linear'),'r-');
+  %plot(time,interp1(hirt,hir/max(hir),time,'linear'),'b-');
+  
+  
+  %pl(i)=plot(rtime,dd(:,i)/sum(dd(:,i))*length(dd(:,i))*0.5,'k-','LineWidth',3);
+  pl(i)=plot(rtime,dd(:,i)/max(dd(:,i)),'k-','LineWidth',3);
+
+  plot_multi_format(gcf,['timing_histogram_' letters(i)]);
+  
+  per=Forenbaher.Period(ir);
+  [up,ua,ub]=unique(per);
+  sb=hist(ub,length(ua));
+  [sbm,sbmi]=sort(sb);
+  sbmi=fliplr(sbmi); sbm=fliplr(sbm);
+  
+  fprintf('%s %d %s (%d) %s (%d)\n',letters(i),length(ir),up{sbmi(1)},sbm(1),up{sbmi(2)},sbm(2));
+end
+end
+
+if (0==5)
+%% Do Ammerman plot (figure 5)
 figure(1); clf reset; hold on;
 set(gcf,'Units','centimeters','Position',[0 0 18 18]);
 % Single column 90 mm 1063 1772 3543 
@@ -106,7 +278,7 @@ onset(itv)=time(min(it(itv),[],2));
 gtime=timelim(1):200:timelim(2);
 
 set(gca,'color','none','FontSize',14,'FontName','Times');
-p3=plot(-onset(ihreg),dists(ihreg),'ys','MarkerFaceColor','y','MarkerSize',7);
+p3=plot(-onset(ihreg),dists(ihreg),'yo','MarkerFaceColor','y','MarkerSize',14,'MarkerEdgeColor','k');
 p1=plot(-stime,sdists,'bo','MarkerFaceColor','none','MarkerSize',2);
 ylabel('Distance from Levante (km)');
 xlabel('Time (year BC)'); 
@@ -147,6 +319,9 @@ set([p2,p1,p4],'Color',repmat(0,3,1));
 set(p2,'MarkerFaceColor',repmat(0,3,1));
 plot_multi_format(1,'ammerman_bw','pdf');
 
+end
+return
+
 %% Do non-uniform spread
 %movdists=movavg(onset(itv),dists(itv),500,1);
 %[sorton,isorton]=sort(onset(itv));
@@ -158,79 +333,6 @@ plot_multi_format(1,'ammerman_bw','pdf');
 
 
 
-%% plot farming timing (figure 3)
-ncol=19;
-
-[data,basename]=clp_nc_variable('var','farming','threshold',0.5,'reg',reg,'marble',2,'transparency',1,'nocolor',0,...
-      'showstat',0,'timelim',timelim,'showtime',0,'flip',1,'showvalue',0,...
-      'file','../../eurolbk_base.nc','figoffset',0,'sce','base',...
-      'noprint',1,'notitle',1,'ncol',ncol);
-  
-set(gcf,'Units','centimeters','Position',[0 0 18 18]);
-
-cb=findobj('tag','colorbar');
-cmap=flipud(jet(ncol));
-cmap=rgb2hsv(cmap);
-cmap(:,2)=cmap(:,2)*0.5;
-cmap=hsv2rgb(cmap);
-colormap(cmap);
-ytl=get(cb,'YTickLabel');
-ytl=ytl(:,2:end);
-set(cb,'YTickLabel',ytl);
-ytt=get(cb,'Title');
-set(ytt,'String','Year BC','FontSize',14,'FontName','Times','FontWeight','normal');
-
-for i=1:length(viscol)
-  m_plot(slon(viscol(i)),slat(viscol(i)),'ko','MarkerFaceColor',cmap(iscol(viscol(i)),:));
-end
-
-ct=findobj(gcf,'-property','FontName');
-set(ct,'FontSize',14,'FontName','Times','FontWeight','normal');
-
-
-for ir=1:-nhreg  
-  m_text(lon(hreg(ir)+1),lat(hreg(ir)+1),letters(ir),'background','w',...
-      'Horizontal','center','Vertical','middle');
-end
-m_coast('color','k');
-m_grid('box','fancy','linestyle','none');
-plot_multi_format(gcf,strrep(basename,'farming_','timing_'),'pdf');
-
-
-ct=findobj(gcf,'type','text'); set(ct,'visible','off');
-ct=findobj(gcf,'-property','YTickLabel'); set(ct,'YTickLabel',[]);
-ct=findobj(gcf,'-property','XTickLabel'); set(ct,'XTickLabel',[]);
-set(ytt,'visible','off');
-
-plot_multi_format(gcf,strrep(basename,'farming_','timing_'),'png');
-
-%plot2svg([basename '.svg'],gcf,'png');
-
-%% Plot region network (figure 1)
-[data,basename]=clp_nc_neighbour('reg',reg,'marble',2,'transparency',1,'nocolor',0,...
-      'showstat',0,'showtime',0,'fontsize',15,'showregion',0,...
-      'file','../../eurolbk_base.nc','figoffset',0,'sce','base','noprint',1,'notitle',1);
-  
-for ir=1:nhreg  
-  t(i)=m_text(lon(hreg(ir)+1),lat(hreg(ir)+1),letters(ir),'background','y',...
-      'Horizontal','center','Vertical','middle');
-end
-m_coast('color','k','linestyle','none');
-m_grid('box','fancy','linestyle','none');
-
-plot_multi_format(gcf,'region_map_rgb','tif');
-%% black and white version
-for ir=1:nhreg  
-  set(t(i),'background',repmat(0.9,3,1));
-end
-
-plot_multi_format(gcf,'region_map_bw','tif');
-
-
-return
-clp_nc_variable('var','farming','threshold',0.5,'reg',reg,'marble',2,'transparency',1,'nocolor',0,...
-      'showstat',0,'timelim',timelim,'showtime',0,'flip',1,'showvalue',1,...
-      'file','../../eurolbk_nospread.nc','figoffset',2,'sce','nospread')
 
 
 % Only for informational purpose, not in paper (which is without climate)
@@ -264,19 +366,6 @@ plot_multi_format(gcf,[b '_diff']);
 
   
 %return  
-%% Define region to lbk
-reg='lbk';
-time=-7500:100:-3000;
-ntime=length(time);
-
-%% plot farming advance
-for it=1:ntime
-  clp_nc_variable('var','farming','reg',reg,'marble',2,'transparency',1,'nocolor',0,...
-      'showstat',0,'lim',[0 1],'timelim',time(it),...
-      'file','../../eurolbk_base.nc','figoffset',0,'sce','base');
-end
-% Command line postprocessing
-% for F in farming_lbk_66_base_*png ; do ln -s $F `echo $F | awk -F'_' '{print $1 "_" $2 "_" $3 "_" $4 "_" 10000+$5 "_" $5 }'` ; done
 
 %return
 %% Create lbk_background.png
