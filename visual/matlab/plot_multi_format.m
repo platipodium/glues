@@ -5,6 +5,8 @@ function plot_multi_format(varargin)
 %   formats with file basename 
 % PLOT_MULTI_FORMAT(hdl,basename,extensionlist) saves the figure in formats given
 %  in extensionlist
+% PLOT_MULTI_FORMAT(hdl,basename,extensionlist) saves the figure in formats given
+%  in extensionlist
 
 % Carsten Lemmen 
 % GKSS-Forschungzentrum Geesthacht GmbH
