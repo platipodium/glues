@@ -269,12 +269,19 @@ double calc_spread_single(unsigned int i, double t) {
       sprdm[j]+=fabs(dp1*jpop);
     }
 
-    /*std::cerr << t << " " << import_id << " " << export_id 
+   //hreg=[271 255  211 183 178 170 146 142 123 122];
+    /*if (import_id==271 || import_id==255 || import_id==211  || import_id==183 || import_id==178 
+     || import_id==170 || import_id==146 || import_id==142  || import_id==123 || import_id==122
+     || export_id==271 || export_id==255 || export_id==211  || export_id==183 || export_id==178
+     || export_id==170 || export_id==146 || export_id==142  || export_id==123 || export_id==122
+    ) {
+    std::cerr << t << " " << import_id << " " << export_id 
     	<< " " << import_tech_i << " " <<  import_tech_p
     	<< " " << import_ndom_i << " " <<  import_ndom_p
     	<< " " << import_qfarm_p 
     	<< " " << import_pop_p << " " << export_pop_p  	
     	<< std::endl;
+    	}
     //*/	
    /*std::cerr << t << " " << import_id << " " << export_id 
     	<< " " << sprd_p[import_id*N_POPVARS+0] << " " <<  sprd_i[import_id*N_POPVARS+0] //<< " " <<  sprd[import_id*N_POPVARS+0]

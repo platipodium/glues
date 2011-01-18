@@ -25,7 +25,6 @@ $SED -i '/gdd_opt/s/gdd_opt.*$/gdd_opt 0.7/' $PAR
 $SED -i '/spreadv/s/spreadv.*$/spreadv 0.002/' $PAR
 $SED -i '/spreadm/s/spreadm.*$/spreadm 100/' $OPAR
 $X $SIM
-cp $R.out ${R}_fluc04.out
 cp $T.nc ${O}_fluc04.nc
 ncap2 -A -s 'landuse[time,region]=population_density[time,region]*sqrt(technology)/subsistence_intensity;cropfraction[time,region]=landuse/0.1*0.02*farming;cropfraction_static[time,region]=0.02*population_density*farming' ${O}_fluc04.nc ${O}_fluc04.nc &
 
@@ -33,27 +32,18 @@ ncap2 -A -s 'landuse[time,region]=population_density[time,region]*sqrt(technolog
 # Lessen climate disruptions
 $SED -i '/flucampl/s/0\.4/0.1/' $DAT
 $X $SIM
-cp $R.out ${R}_nofluc.out
-cp $T.nc amant_nofluc.nc
-cp $R.out ${R}_fluc01.out
 cp $T.nc ${O}_fluc01.nc
 ncap2 -A -s 'landuse[time,region]=population_density[time,region]*sqrt(technology)/subsistence_intensity;cropfraction[time,region]=landuse/0.1*0.02*farming;cropfraction_static[time,region]=0.02*population_density*farming' ${O}_fluc01.nc ${O}_fluc01.nc &
 
 # Increase climate disruptions
 $SED -i '/flucampl/s/0\.1/0.9/' $DAT
 $X $SIM
-cp $R.out ${R}_nofluc.out
-cp $T.nc amant_nofluc.nc
-cp $R.out ${R}_fluc09.out
 cp $T.nc ${O}_fluc09.nc
 ncap2 -A -s 'landuse[time,region]=population_density[time,region]*sqrt(technology)/subsistence_intensity;cropfraction[time,region]=landuse/0.1*0.02*farming;cropfraction_static[time,region]=0.02*population_density*farming' ${O}_fluc09.nc ${O}_fluc09.nc &
 
 # Remove climate disruptions
 $SED -i '/flucampl/s/0\.9/0.0/' $DAT
 $X $SIM
-cp $R.out ${R}_nofluc.out
-cp $T.nc amant_nofluc.nc
-cp $R.out ${R}_fluc00.out
 cp $T.nc ${O}_fluc00.nc
 ncap2 -A -s 'landuse[time,region]=population_density[time,region]*sqrt(technology)/subsistence_intensity;cropfraction[time,region]=landuse/0.1*0.02*farming;cropfraction_static[time,region]=0.02*population_density*farming' ${O}_fluc00.nc ${O}_fluc00.nc &
 
