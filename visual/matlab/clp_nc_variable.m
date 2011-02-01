@@ -146,6 +146,8 @@ switch (varname)
     otherwise ;
 end
 
+if ~exist('time','var') warning('Skipped, not time dimension'); return; end
+
 if isfinite(threshold)
   %% plot timing maps
   ntime=1;
