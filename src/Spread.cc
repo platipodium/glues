@@ -270,7 +270,7 @@ double calc_spread_single(unsigned int i, double t) {
     }
 
    //hreg=[271 255  211 183 178 170 146 142 123 122];
-    /*if (import_id==271 || import_id==255 || import_id==211  || import_id==183 || import_id==178 
+    if (import_id==271 || import_id==255 || import_id==211  || import_id==183 || import_id==178 
      || import_id==170 || import_id==146 || import_id==142  || import_id==123 || import_id==122
      || export_id==271 || export_id==255 || export_id==211  || export_id==183 || export_id==178
      || export_id==170 || export_id==146 || export_id==142  || export_id==123 || export_id==122
