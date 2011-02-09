@@ -8,7 +8,8 @@ elseif isnumeric(value)
   if (length(value) == 1);
     svalue=num2str(value);
   else
-      svalue=['[' num2str(value) ']'];
+    if size(value,2)==1 value=transpose(value); end
+    svalue=['[' num2str(value) ']'];
   end
 end
 

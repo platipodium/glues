@@ -33,6 +33,7 @@ arguments = {...
   {'showvalue',0},...
   {'scenario',''},...
   {'noprint',0}...
+  {'cmap',NaN},...
 };
 
 cl_register_function;
@@ -176,21 +177,28 @@ end
 seacolor=0.7*ones(1,3);
 landcolor=0.8*ones(1,3);  
 
-if transparency && isnan(threshold)
+if isnan(cmap)
+  if transparency && isnan(threshold)
   %colmap=[linspace(0,0,n)' linspace(0.1,0.6,n)' linspace(1,0.5,n)']
-  colmap=hsv2rgb([linspace(0,0,ncol)' linspace(0.1,0.5,ncol)' linspace(1,0.8,ncol)']);
+    colmap=hsv2rgb([linspace(0,0,ncol)' linspace(0.1,0.5,ncol)' linspace(1,0.8,ncol)']);
+  else
+    colmap=jet(ncol);
+  end
+
+  if nocolor 
+    cmap=flipud(gray(ncol));
+    if ~transparency flip=1; end
+  end
+  if (flip==1) colmap=flipud(colmap); end
+
+  cmap=colormap(colmap);
 else
-  colmap=jet(ncol);
+    eval(['cmap=' cmap '(ncol);']);
+    cmap=colormap(cmap);
+    colmap=cmap;
 end
 
-if nocolor 
-  colmap=flipud(gray(ncol));
-  if ~transparency flip=1; end
-end
-if (flip==1) colmap=flipud(colmap); end
-
-cmap=colormap(colmap);
-
+  
 rlon=lon;
 rlat=lat;
 
