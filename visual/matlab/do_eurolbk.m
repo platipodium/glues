@@ -84,23 +84,49 @@ if ~exist('neolithicsites.mat','file')
 end
 
 
-load('neolithicsites');
-slat=Forenbaher.Latitude;
-slon=Forenbaher.Long;
-period=Forenbaher.Period;
-site=Forenbaher.Site_name;
-sage=Forenbaher.Median_age;
-is=find(slat>=latlim(1) & slat<=latlim(2) & slon>=lonlim(1) & slon<=lonlim(2));
-sage=sage(is);
+% For Turney and Brown do this
+if (1==0)
+  load('neolithicsites');
+  slat=Forenbaher.Latitude';
+  slon=Forenbaher.Long';
+  period=Forenbaher.Period';
+  site=Forenbaher.Site_name';
+  sage=Forenbaher.Median_age';
+  sage_upper=Forenbaher.Upper_cal_';
+  sage_lower=Forenbaher.Lower_cal';
+else
+  % For Pinhasi
+  load('../../data/Pinhasi2005_etal_plosbio_som1.mat');
+  slat=Pinhasi.latitude;
+  slon=Pinhasi.longitude;
+  period=Pinhasi.period;
+  site=Pinhasi.site;
+  sage=Pinhasi.age_cal_bp;
+  sage_upper=sage+Pinhasi.age_cal_bp_s;
+  sage_lower=sage-Pinhasi.age_cal_bp_s;
+end
+
+
+stime=1950-sage;
+sutime=stime+(sage_lower-sage);
+sltime=stime+(sage_upper-sage);
+
+is=find(slat>=latlim(1) & slat<=latlim(2) & slon>=lonlim(1) & slon<=lonlim(2) ...
+    & sltime>=timelim(1) & sutime<=timelim(2));
+
 slon=slon(is);
 slat=slat(is);
 period=period(is);
 site=site(is);
+sltime=sltime(is);
+sutime=sutime(is);
+srange=sltime-sutime;
+stime=stime(is);
 
-ns=length(sage);
-dlat=[slat' repmat(lat(272),ns,1)];
+ns=length(slon);
+dlat=[slat repmat(lat(272),ns,1)];
 dlat=reshape(dlat',2*ns,1);
-dlon=[slon' repmat(lon(272),ns,1)];
+dlon=[slon repmat(lon(272),ns,1)];
 dlon=reshape(dlon',2*ns,1);
 sdists=m_lldist(dlon,dlat);
 sdists=sdists(1:2:end);
@@ -110,15 +136,9 @@ farming=farming(ifound,itime);
 
 ncol=19;
 cmap=flipud(jet(ncol));
-stime=1950-sage;
-sutime=stime+(Forenbaher.Lower_cal(is)-Forenbaher.Median_age(is));
-sltime=stime+(Forenbaher.Upper_cal_(is)-Forenbaher.Median_age(is));
-srange=sutime-sltime;
 iscol=floor((stime-min(timelim))./(timelim(2)-timelim(1))*ncol)+1;
-viscol=find(iscol>0 & iscol<=ncol & slat>=latlim(1) & slat<=latlim(2) ...
-    & slon>=lonlim(1) & slon<=lonlim(2));
-  
-
+iscol(iscol<1)=1;
+viscol=find(iscol<=ncol);
 
 if (0==1)
 %% Plot region network (figure 1)
@@ -138,7 +158,8 @@ for ir=1:nhreg
 end
 gray=repmat(0.4,1,3);
 m_coast('color',gray);
-m_grid('box','fancy','linestyle','none','XTick',[],'YTick',[]);
+m_grid('box','fancy','linestyle','none');
+%,'XTick',[],'YTick',[]);
 
 cl_print('name','region_map','ext','png','res',[150,600]);
 end
@@ -190,7 +211,7 @@ if (2==0) for it=1:nmovtime
 
 
 
-if (3==3)
+if (3==0)
 %% plot farming timing (figure 3)
 ncol=19;
 
@@ -289,7 +310,7 @@ end
 
 
 
-if (37==37)
+if (3==37)
 %% plot farming timing for nospread inset base (part of figure 7)
 ncol=19;
 
@@ -346,7 +367,7 @@ rtime=timelim(1):dtime:timelim(2);
 clf reset;
 
 dedges=200;
-edges=[-inf -8000+dedges/2.0:dedges:-3000-dedges/2.0 inf];
+edges=[-inf -8000+dedges/2.0:dedges:-3400-dedges/2.0 inf];
 centers=[edges(2:end-1)-dedges/2.0 edges(end-1)+dedges/2.0];
 if (4==0)
 for i=1:nhreg
@@ -357,11 +378,11 @@ for i=1:nhreg
   %pb(i)=bar(rtime,dd(:,i)/max(dd(:,i)),'k','edgecolor','k');
   %set(pb(i),'FaceColor','k','LineStyle','none');
   %ymax=max(dd(:,i)/sum(dd(:,i))*length(dd(:,i))*0.5)*1.1;
-  set(gca,'Xlim',[timelim(1),-3000],'YTick',[],'Ylim',[0. 1.1],'color','none');
+  set(gca,'Xlim',[-8000,-3400],'YTick',[],'Ylim',[0. 1.1],'color','none');
   rlat=lat(hreg(i)+1);  rlon=lon(hreg(i)+1);
-  dlat=[slat' repmat(rlat,ns,1)];
+  dlat=[slat repmat(rlat,ns,1)];
   dlat=reshape(dlat',2*ns,1);
-  dlon=[slon' repmat(rlon,ns,1)];
+  dlon=[slon repmat(rlon,ns,1)];
   dlon=reshape(dlon',2*ns,1);
   dists=m_lldist(dlon,dlat);
   dists=dists(1:2:end);  
@@ -372,7 +393,7 @@ for i=1:nhreg
 %   bar(hirt,hir/sum(hir)*length(hir),0.4,'c','edgecolor','none');
  
   hir=histc(stime(ir),edges);
-  whir=histc([stime(ir) sutime(ir) sltime(ir)],edges);
+  whir=histc([stime(ir);sutime(ir); sltime(ir)],edges);
   bar(centers,whir(1:end-1)/max(whir(1:end-1)),0.7,'r','edgecolor','none');
   bar(centers,hir(1:end-1)/max(whir(1:end-1)),0.4,'c','edgecolor','none');
   %[sir,isir,jsir]=unique(stime(ir));
@@ -391,17 +412,23 @@ for i=1:nhreg
 
   plot_multi_format(gcf,['timing_histogram_' letters(i)]);
   
-  per=Forenbaher.Period(ir);
+  per=period(ir);
   [up,ua,ub]=unique(per);
   sb=hist(ub,length(ua));
   [sbm,sbmi]=sort(sb);
   sbmi=fliplr(sbmi); sbm=fliplr(sbm);
   
-  fprintf('%s %d %s (%d) %s (%d)\n',letters(i),length(ir),up{sbmi(1)},sbm(1),up{sbmi(2)},sbm(2));
-end
+  np=length(up);
+  ptext=sprintf('%s (%d) n=%d:',letters(i),hreg(i),length(ir));
+  for ip=1:np 
+    ptext=[ptext sprintf(' %s (%d)',up{sbmi(ip)},sbm(ip)) ];
+  end
+  
+  fprintf('%s\n',ptext);
+  end
 end
 
-if (0==5)
+if (5==5)
 %% Do Ammerman plot (figure 5)
 figure(1); clf reset; hold on;
 set(gcf,'Units','centimeters','Position',[0 0 18 18]);
@@ -416,6 +443,7 @@ for i=1:nhreg
   ihreg(i)=find(ifound==hreg(i)+1);
 end
 
+nfound=size(farming,1);
 dlat=[lat repmat(lat(272),nreg,1)];
 dlat=reshape(dlat',2*nreg,1);
 dlon=[lon repmat(lon(272),nreg,1)];
@@ -435,30 +463,36 @@ gtime=timelim(1):200:timelim(2);
 
 set(gca,'color','none','FontSize',14,'FontName','Times');
 p3=plot(-onset(ihreg),dists(ihreg),'yo','MarkerFaceColor','y','MarkerSize',14,'MarkerEdgeColor','k');
-p1=plot(-stime,sdists,'bo','MarkerFaceColor','none','MarkerSize',2);
+p1=plot(-stime,sdists,'bs','MarkerFaceColor','none','MarkerSize',2);
 ylabel('Distance from Levante (km)');
 xlabel('Time (year BC)'); 
 set(gca,'Xlim',-fliplr([timelim]));
 set(gca,'XDir','reverse');
-p2=plot(-onset,dists,'rd','MarkerFaceColor','r','MarkerSize',5)
+p2=plot(-onset,dists,'rd','MarkerFaceColor','r','MarkerSize',6);
 %plot(7500:-200:3500,0:200:4000,'k--');
 
 pf1=polyfit(-onset(itv),dists(itv),1);
 p4=plot(-gtime,-gtime*pf1(1)+pf1(2),'r-','LineWidth',2);
-pf2=polyfit(-stime(viscol)',sdists(viscol),1);
-% Indistiguishable, thus not shown
-%plot(-gtime,-gtime*pf2(1)+pf2(2),'b--','MarkerSize',2);
+pf2=polyfit(-stime,sdists,1);
+%plot(-gtime,-gtime*pf2(1)+pf2(2),'b--','LineWidth',2);
 
 [cr1,cp1]=corrcoef(onset(itv),dists(itv));
-[cr2,cp2]=corrcoef(stime(viscol),sdists(viscol));
+[cr2,cp2]=corrcoef(stime,sdists);
 
 ytl=get(gca,'YTickLabel');
 ytl(1,:)=' ';
 set(gca,'YTickLabel',ytl);
 
-l=legend([p1,p2],sprintf('Site data (n=%d, r^2=%.2f, v=%.2f km a^{-1})',length(viscol),cr2(2).^2,-pf2(1)),...
-    sprintf('Simulation (n=%d, r^2=%.2f, v=%.2f km a^{-1})',length(itv),cr1(2).^2,-pf1(1)),...
-    'location','NorthWest','FontSize',7);
+%l=legend([p1,p2],sprintf('Site data (n=%d, r^2=%.2f, v=%.2f km a^{-1})',length(viscol),cr2(2).^2,-pf2(1)),...
+%    sprintf('Simulation (n=%d, r^2=%.2f, v=%.2f km a^{-1})',length(itv),cr1(2).^2,-pf1(1)),...
+%    'location','NorthWest','FontSize',7);
+l=legend([p1,p2,p3],'Radiocarbon dated sites','Simulation regions','Focus regions');
+set(l,'location','NorthWest','FontSize',13);
+
+
+fprintf('Site data (n=%d, r^2=%.2f, v=%.2f km a^{-1})',length(stime),cr2(2).^2,-pf2(1));
+fprintf('Simulation (n=%d, r^2=%.2f, v=%.2f km a^{-1})',length(itv),cr1(2).^2,-pf1(1));
+
 %set(l,'color','none');
 
 offsets=100*[0 1 -1 1 -1 0 0 0 0 0];
@@ -479,7 +513,7 @@ end
 
 
 
-if (6==6)
+if (0==6)
   %clp_spread_mechanism('file','../../../../Downloads/eurolbk_0.0020000_0000100.10_000.200000_.log');
   %clp_spread_mechanism('file','../../../../Downloads/eurolbk_0.0000002_1638400.16_000.327680_.log');
   %clp_spread_mechanism('file','../../../../Downloads/eurolbk_0.0080000_0000000.00_000.000000_.log');
