@@ -1,7 +1,7 @@
 /* GLUES initialization; this file is part of
    the Global Land Use and technological Evolution Simulator
    
-   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008,2009,2010
+   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011
    Carsten Lemmen <carsten.lemmen@hzg.de>, Kai Wirtz <kai.wirtz@hzg.de>
 
    This program is free software; you can redistribute it and/or modify it
@@ -21,7 +21,7 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
    @author Kai W Wirtz <kai.wirtz@hzg.de
-   @date   2010-02-24
+   @date   2011-02-10
    @file Initialization.cc
    @brief Initialize all data
 */

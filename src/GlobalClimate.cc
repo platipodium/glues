@@ -1,7 +1,7 @@
 /* GLUES GlobalClimate implementation; this file is part of
    the Global Land Use and technological Evolution Simulator
 
-   Copyright (C) 2008,2009,2010
+   Copyright (C) 2008,2009,2010,2011
    Carsten Lemmen <carsten.lemmen@gkss.de>, Kai Wirtz <kai.wirtz@gkss.de>
 
    This program is free software; you can redistribute it and/or modify it
@@ -22,7 +22,7 @@
    @author Carsten Lemmen <carsten.lemmen@gkss.de>
    @author Kai Wirtz <kai.wirtz@gkss.de>
    @author Caleb K Taylor <calebt@users.sourceforge.net>
-   @date   2010-10-26
+   @date   2011-02-10
    @file   GlobalClimate.cc
    @brief  Input and update of climate data
 */

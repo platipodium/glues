@@ -1,15 +1,30 @@
-/************************************************************************
- *									
- * @file  RegionalClimate.cc
- * @brief Definitions for methods in  class RegionalClimate
- * @author Carsten Lemmen <c.lemmen@fz-juelich.de>
- * @author Kai Wirtz <wirtz@icbm.de>
- * @date 2003-05-21
- * 
- * This file is part of GLUES, the Global Land Use 
- * and Environmental Change Simulator					 
- *
- ************************************************************************/
+/* GLUES regional climate implementation; this file is part of
+   the Global Land Use and technological Evolution Simulator
+   
+   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008,2009,2010
+   Carsten Lemmen <carsten.lemmen@hzg.de>, Kai Wirtz <kai.wirtz@hzg.de>
+
+   This program is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the
+   Free Software Foundation; either version 2, or (at your option) any later
+   version.
+
+   This program is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+   Public License for more details.
+
+   You should have received a copy of the GNU General Public License along
+   with this program; if not, write to the Free Software Foundation, Inc.,
+   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
+*/
+/**
+   @author Carsten Lemmen <carsten.lemmen@hzg.de>
+   @author Kai W Wirtz <kai.wirtz@hzg.de
+   @date   2010-02-24
+   @file RegionalClimate.cc
+   @brief Reginonal climate
+*/
 
 /** PREPROCESSOR section **/
 #include "RegionalClimate.h"
@@ -17,13 +32,13 @@
 #include "variables.h" // for variable kappa
 #include "Constants.h" // for EPS
 
-/** Implementation section, Constructors and  Destructor **/
-/** Vollst?ndiger Konstruktor */
+/** Implementation section, Constructors and  Destructor */
 
 glues::RegionalClimate::RegionalClimate(double l,double np,double tl,double g, double t) {
   lai = (l  > 0 ? l :0);
   npp = (np > 0 ? np:0);
   tlim =(tl > 0 ? tl:0);
+  tlim =(tlim< 1 ? tl:1);
   gdd = (g  > 0 ? g:0);
   time = t;
 }
@@ -94,7 +109,8 @@ double glues::RegionalClimate::SuitableTemp() const {
 /*if(tlim<tlm) return tlim/tlm;*/
 /*if(tlim<tlm) return tlim/tlm*tlim/tlm;
 else return 1.0;*/
-return exp(-expo*expo);
+  return exp(-expo*expo);
+  //return tlim;
 }
 
 
