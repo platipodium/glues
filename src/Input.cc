@@ -1,7 +1,7 @@
 /* GLUES input/output routines; this file is part of
    the Global Land Use and technological Evolution Simulator
    
-   Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010
+   Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011
    Carsten Lemmen <carsten.lemmen@hzg.de>, Kai Wirtz <kai.wirtz@hzg.de>
 
    This program is free software; you can redistribute it and/or modify it
@@ -20,7 +20,7 @@
 
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
    @author Kai W Wirtz <kai.wirtz@hzg.de
-   @date   20010-08-07
+   @date   2011-02-10
    @file Input.cc 
    @brief Input/output routines 
 */
@@ -51,9 +51,8 @@ unsigned int read_ascii_table(std::istream& is, int** table_int);
 unsigned int count_ascii_rows(std::istream& is);
 unsigned int count_ascii_columns(std::istream& is);
 
-/***************************************************
+/**
    @brief Output of constant region properties 
-   @date 2007-11-28 
 */
 int out_statreg() {
   FILE *resfile;
@@ -93,7 +92,6 @@ int out_statreg() {
 /*        Writing box boundaries of civ centers       */
 /*----------------------------------------------------*/
 int out_boxes() {
-  // FILE   *resfile;
   std::ofstream ofs;
   std::string boxfile;
   double norm[5]={1E3,1,1,1,1};
@@ -102,19 +100,14 @@ int out_boxes() {
   boxfile.assign(datapath);
   boxfile.append("civ_boxes.tsv");
 
-  //  resfile=fopen(boxfile.c_str(),"w");
   ofs.open(boxfile.c_str(),ios::out);
   cout << _("Writing boundaries of known civ centers to ") << boxfile <<endl; 
   for(i=0;i<RowsOfdata_agri_start;i++)
-    {
-      ofs.precision(0);
-      for(j=0;j<5;j++) ofs << data_agri_start[i][j]*norm[j];
-      ofs << endl;
-      
-      //	fprintf(resfile,"%2.0f\t",data_agri_start[i][j]*norm[j]);
-      //      fprintf(resfile,"\n");
-    }  
-  //  fclose(resfile);
+  {
+    ofs.precision(0);
+    for(j=0;j<5;j++) ofs << data_agri_start[i][j]*norm[j];
+    ofs << endl;
+  }  
   ofs.close();
   return 0;
 }
@@ -546,20 +539,20 @@ unsigned int read_proxyevents()
 // -------------------------------------------------------------------------------
 //
 // -------------------------------------------------------------------------------
-vector<PopulatedRegion>::size_type  RegionProperties(vector<PopulatedRegion>& region) 
+vector<PopulatedRegion>::size_type RegionProperties(vector<PopulatedRegion>& region) 
 {
   static const unsigned int BUFSIZE=1024;
   static char charbuffer[BUFSIZE];
-    ifstream ifs;
-    unsigned int i=0;
-    char c;
+  ifstream ifs;
+  unsigned int i=0;
+  char c;
     //Input input;
     
   //numberOfRegions=input.getRegionNumber();
   numberOfRegions=RegionNumber();
   assert(numberOfRegions>0);
   
-  regions = new PopulatedRegion[numberOfRegions];
+  regions = new PopulatedRegion[numberOfRegions]; // old
   region.clear();
 
 #ifdef HAVE_NETCDF_H

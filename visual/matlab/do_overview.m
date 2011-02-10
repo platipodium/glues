@@ -1,18 +1,18 @@
 % Run script to plot the most important information from a GLUES result
 
-filename='../../amant_base.nc';
-sce='amant_base_climber';
-reg='swa';
+filename='../../test.nc';
+sce='test';
+reg='all';
 timelim=-4000;
 riverfile=['river_hr_' reg '.mat'];
 
-if ~strcmp('reg','all') & ~exist(riverfile,'file') m_gshhs('fr','save',riverfile); end
+%if ~strcmp('reg','all') & ~exist(riverfile,'file') m_gshhs('fr','save',riverfile); end
 
 [d,b]=clp_nc_variable('var','farming','timelim',[-inf,inf],'reg',reg,...
      'marble',0,'transpar',0,'sce',sce,...
     'nogrid',1,'threshold',0.5,'file',filename,'flip',1);
 f{1}=b;
-if ~strcmp('reg','all') m_usercoast(riverfile); end
+%if ~strcmp('reg','all') m_usercoast(riverfile); end
 
 [d,b]=clp_nc_variable('var','npp','timelim',timelim,'reg',reg,...
      'marble',0,'transpar',0,'sce',sce,...
@@ -23,6 +23,7 @@ f{2}=b;
      'marble',0,'transpar',0,'sce',sce,...
     'nogrid',1,'file',filename,'lim',[0 1]);
 f{3}=b;
+return;
 
 [d,b]=clp_nc_variable('var','population_density','timelim',timelim,'reg',reg,...
      'marble',0,'transpar',0,'sce',sce,...
