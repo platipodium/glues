@@ -3,8 +3,8 @@ function [h,lonlimit,latlimit,lon,lat]=clp_regionpath(varargin)
 cl_register_function;
 
 arguments = {...
-  {'latlim',[-60 70]},...
-  {'lonlim',[-180 180]},...
+  {'latlim',[-inf inf]},...
+  {'lonlim',[-inf inf]},...
   {'colpath','k'},...
   {'drawmode','optimal'},...
   {'reg','all'},...
@@ -16,21 +16,28 @@ for i=1:args.length
   eval([ args.name{i} ' = ' clp_valuestring(args.value{i}) ';']); 
 end
 
-iselect=find_region_numbers(reg,'file',filename);%[216, 279, 315, 170];
+if all(isfinite([latlim lonlim]))
+  [iselect,nfound,loli,lali]=find_region_numbers('lat',latlim,'lon',lonlim,'file',filename);
+else
+  [iselect,nfound,lonlim,latlim]=find_region_numbers(reg,'file',filename);%[216, 279, 315, 170];
+end
+
 load(filename);
 
 
 if exist('region','var') & isstruct(region) 
   nreg=region.nreg; 
   regionpath=region.path;
-  
+  lat=region.lat;
+  lon=region.lon;
 else
     region.path=regionpath;
     region.nreg=nreg;
     region.neighbourhood=regionneighbourhood;
     region.neighbours=regionneighbours;
+    lon=regionlon;
+    lat=regionlat;
 end
-
 
 
 if strcmp(drawmode,'optimal')
@@ -46,8 +53,8 @@ if strcmp(drawmode,'optimal')
 end
 
 % TODO remove correction in lat/lon
-regionpath(:,:,1)=regionpath(:,:,1)+0.5;
-regionpath(:,:,2)=regionpath(:,:,2)+1;
+%regionpath(:,:,1)=regionpath(:,:,1)-0.5;
+%regionpath(:,:,2)=regionpath(:,:,2)-1;
 
 % Adjust to different orientations in regionpath file. generally, lat
 % should be decreasing and lon should be increasing
@@ -73,6 +80,8 @@ end
 
 phdl=[];
 
+lon=lon(iselect);
+lat=lat(iselect);
 for i=1:length(iselect)
   
   valid=find(isfinite(regionpath(iselect(i),:,2)));
@@ -94,8 +103,9 @@ for i=1:length(iselect)
     phdl(i)=m_patch(lonpath,latpath,colpath,'EdgeColor','none');      
     %set(mp,'LineStyle','none');
   end
-  lat(i)=calc_geo_mean(latpath,latpath);
-  lon(i)=calc_geo_mean(latpath,lonpath);
+  
+  %lat(i)=calc_geo_mean(latpath,latpath);
+  %lon(i)=calc_geo_mean(latpath,lonpath);
 end
 
 if nargout>0

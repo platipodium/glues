@@ -51,6 +51,10 @@ while iarg<=nargin
     case 'usa'
           lonlim=[-125,-70];
           latlim=[10,50];
+      case 'swa'
+          % Southwest Asia from Near East to Indus Valley
+          lonlim=[32 80];
+          latlim=[18 40];
     case 'lbk'
       lonlim=[-10,42];
       %lonlim=[6,42];
