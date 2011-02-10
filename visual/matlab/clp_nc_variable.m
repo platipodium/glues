@@ -46,11 +46,15 @@ end
 [d,f]=get_files;
 
 % Choose 'emea' or 'China' or 'World'
-if ischar(reg)
-  [ireg,nreg,loli,lali]=find_region_numbers(reg);
+if all(isinf([lonlim latlim]))
+  if ischar(reg)
+    [ireg,nreg,loli,lali]=find_region_numbers(reg);
+  else
+    ireg=reg;
+    nreg=length(ireg);
+  end
 else
-  ireg=reg;
-  nreg=length(ireg);
+  [ireg,nreg,loli,lali]=find_region_numbers('lat',latlim,'lon',lonlim);
 end
 
 if ~exist(file,'file')
@@ -247,7 +251,8 @@ if isinf(latlim(2)) latlim(2)=80; end
 ncol=length(colormap);
 
   %% Invisible plotting of all regions
-  [hp,loli,lali,lon,lat]=clp_regionpath('lat',latlim,'lon',lonlim,'draw','patch','col',landcolor,'reg',reg);  
+  %[hp,loli,lali,lon,lat]=clp_regionpath('lat',latlim,'lon',lonlim,'draw','patch','col',landcolor,'reg',reg);  
+  [hp,loli,lali,lon,lat]=clp_regionpath('lat',latlim,'lon',lonlim,'draw','patch','col',landcolor);  
   ival=find(hp>0);
   if transparency alpha(hp(ival),0); end
   
@@ -367,7 +372,9 @@ for it=1:ntime
   set(obj,'FontSize',10);
   
   %%
-  bname=[varname '_' reg '_' num2str(nreg)];
+  if ischar(reg) bname=[varname '_' reg '_' num2str(nreg)];
+  else bname=[varname '_'  num2str(nreg)];
+  end
   if length(scenario)>0 bname=[bname '_' scenario]; end
   
   if exist('time','var') if (ntime>1 || showtime>0) bname = [bname '_' num2str(time(it))]; end; end
