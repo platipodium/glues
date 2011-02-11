@@ -221,8 +221,8 @@ int RegionalPopulation::Develop(double step) {
    split up into fertilty and food productivity
 */
 double RegionalPopulation::RelativeGrowthrate() {
-	//double tlm;
-	double tl1=0.7,literacy;
+
+  double literacy;
   double expo;
   
   nrat = ndomesticated/(ndomesticated+1);
@@ -232,22 +232,17 @@ double RegionalPopulation::RelativeGrowthrate() {
   /**
      Effect of Holocene climate fluctuations on fertility
   */
-  //  tlim= tlim0*fluc;         /* improve linear dependence of tlim !!!!! */
-  //  tlim= fluc;         /* improve linear dependence of tlim !!!!! */
   
-  expo=(tl1-tlim0)/(0.5*tl1);
+  expo=(gdd_opt-tlim0)/(0.5*gdd_opt);
   tlim= fluc*exp(-expo*expo);
-  
-  naturalfertility       = region->NatFertility(fluc);
-  //  tlim          = (1.2*tlim0-0.2)*fluc;
-  //  if (tlim<0) tlim=0;
-  cropfertility = region->NatFertility(fluc*kappa/(1+region->Npp()));
   
   /**
      actual fertility accounts for cropland conversion
      exploitation history
   */
-  farmfert  = naturalfertility+0*(cropfertility-naturalfertility)*qfarming*tlim*nrat;
+  naturalfertility  = region->NatFertility(fluc);
+  cropfertility = region->NatFertility(fluc*kappa/(1+region->Npp()));
+  farmfert      = naturalfertility+0*(cropfertility-naturalfertility)*qfarming*tlim*nrat;
   
   /** 
       Implementation of WL2003, Eq 4 with
@@ -279,11 +274,7 @@ double RegionalPopulation::RelativeGrowthrate() {
       replaced with literacy-dependent exponential
       function
   */
-#ifdef ENABLE_LITERACY
     literacy = technology/LiterateTechnology;
-#else
-    literacy = technology/LiterateTechnology;
-#endif
     disease   = (germs-resist)*density*exp(-literacy);
     //disease   = density*exp(-literacy);
   
@@ -294,9 +285,6 @@ double RegionalPopulation::RelativeGrowthrate() {
   */
   birthrate = gammab*actualfertility*product;
   deathrate = disease;
-  // To get global pop right, we should increase deathrate by factor two
-  // deathrate=2*deathrate;
-  //deathrate = (gammab*10)*density/technology;
   rgr = birthrate - deathrate;
   
   return rgr;

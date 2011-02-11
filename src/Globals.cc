@@ -2,7 +2,7 @@
    This file is part of
    the Global Land Use and technological Evolution Simulator
    
-   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008,2009,2010
+   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011
    Carsten Lemmen <carsten.lemmen@hzg.de>
    Kai W. Wirtz <kai.wirtz@hzg.de>
 
@@ -24,7 +24,7 @@
 
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
    @author Kai W. Wirtz <kai.wirtz@hzg.de>
-   @date 2010-10-13
+   @date 2011-02-10
    @file Globals.cc
    @brief Global declaration and definitions 
    @todo recursive method if change>RelChange
@@ -96,12 +96,12 @@ int *DISTANCEMATRIX ;
 
 double IceFac(double lat,double lon)
 {
-    //double lat0=50,lat2=75;
-    double fac2 = hypot(IceExtent[2]-lat,IceExtent[3]+lon)/IceExtent[1];
-    double fac = (90-lat)/IceExtent[0];
-    if(fac2<fac) fac=fac2;
-if(fac>1)  {fac = (90+lat)/IceExtent[0]; if(fac>1)fac=1;}
- return fac;
+  double fac2 = hypot(IceExtent[2]-lat,IceExtent[3]+lon)/IceExtent[1];
+  double fac = (90-lat)/IceExtent[0];
+  fac=(fac2<fac?fac2:fac);
+  fac=(fac<=1?fac:(90+lat)/IceExtent[0]);
+  fac=(fac<=1?fac:1);
+  return fac;
 }
 
 

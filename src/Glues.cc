@@ -21,7 +21,7 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
    @author Kai Wirtz <kai.wirtz@hzg.de>
-   @date   2010-01-10
+   @date   2011-02-10
    @file   Glues.cc
    @brief  Main driver for GLUES simulations
 */
@@ -681,7 +681,7 @@ double simulation() {
 	  gnc_write_record(ncout,"natural_fertility",&float_record,t);
 	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Region()->Npp();
 	  gnc_write_record(ncout,"npp",&float_record,t);
-	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprdm[i];
+	  /*for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprdm[i];
 	  gnc_write_record(ncout,"migration_density",&float_record,t);
 	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprd[i*N_POPVARS+0];
 	  gnc_write_record(ncout,"technology_spread",&float_record,t);
@@ -695,6 +695,11 @@ double simulation() {
 	  gnc_write_record(ncout,"economies_spread_by_information",&float_record,t);
 	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprd_p[i*N_POPVARS+2];
 	  gnc_write_record(ncout,"farming_spread_by_people",&float_record,t);
+	  */
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Region()->SuitableTemp();
+	  gnc_write_record(ncout,"suitable_temperature",&float_record,t);
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Region()->SuitableSpecies();
+	  gnc_write_record(ncout,"suitable_species",&float_record,t);
 	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].SubsistenceIntensity();
 	  gnc_write_record(ncout,"subsistence_intensity",&float_record,t);
 
