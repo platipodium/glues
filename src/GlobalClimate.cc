@@ -255,9 +255,8 @@ int GlobalClimate::Update(double t) {
      tl=0.7*gdd_store[r+it*numberOfRegions]/365;
      else
 */
-	tl = gdd_store.at(r+it*numberOfRegions)/365;
-/*    tl=(2*tlm-tl)*tl/(tlm*tlm);*/
-/*    tl=2*tlm*tl/(tlm*tlm+tl*tl);*/
+    climate.at(r).Gdd(gdd_store.at(r+it*numberOfRegions));
+	tl = climate.at(r).Gdd()/365;
 	climate.at(r).Tlim(tl);
 	regions[r].Tlim(tl);
 

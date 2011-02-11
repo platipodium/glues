@@ -98,13 +98,10 @@ int VegetatedRegion::InterpolateClimate(double time,double pasttime,double futur
     return 0;
   }
 
-  //  climate.Lai(pastweight*pastclimate.Lai()+futureweight*futureclimate.Lai());
-  //if( climate.Npp()<-6500)
-  // printf("IP: %f %f\t%f %f\t%f\t\n",pastweight,pasttime,futureweight,futuretime,time);
-
   climate.Npp(pastweight*pastclimate.Npp()+futureweight*futureclimate.Npp());
   climate.Tlim(pastweight*pastclimate.Tlim()+futureweight*futureclimate.Tlim());
   //climate.Lai(pastweight*pastclimate.Lai()+futureweight*futureclimate.Lai());
+  //climate.Gdd(pastweight*pastclimate.Gdd()+futureweight*futureclimate.Gdd());
   return 1;
 }
 

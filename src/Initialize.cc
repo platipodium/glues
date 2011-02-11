@@ -756,7 +756,7 @@ int CalcContNdommax() {
     cnd[ind]+=area*regions[i].SuitableSpecies()*tl;
   }
   
-  //for (i=1;i<=LengthOfndommaxcont;i++) cout << i << " LOOK " << cnd[i] << endl;
+  for (i=1;i<=LengthOfndommaxcont;i++) cout << i << " LOOK " << cnd[i] << endl;
   
   
   /** Introduced to avoid NaNs if other region is larger than Eurasia
