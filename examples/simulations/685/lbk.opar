@@ -1,8 +1,8 @@
 comment Parameter values not used (or varied) in v2
 comment specific adaptation constants
-float	deltan	1.0
+float	deltan 1.0
 	\d Specific adaptation constant for number of agricultural economies 
-float	deltaq	1.0
+float	deltaq 1.0
 	\d Specific adaptation constant for farming ratio
 float	deltar	0.0
 	\d Specific adaptation constant for resistance to diseases

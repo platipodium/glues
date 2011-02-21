@@ -1,6 +1,6 @@
 % Run script to plot the most important information from a GLUES result
 
-filename='../../test.nc';
+filename='../../lowdelta_base.nc';
 sce='test';
 reg='all';
 timelim=-4000;
@@ -10,7 +10,7 @@ riverfile=['river_hr_' reg '.mat'];
 
 [d,b]=clp_nc_variable('var','farming','timelim',[-inf,inf],'reg',reg,...
      'marble',0,'transpar',0,'sce',sce,...
-    'nogrid',1,'threshold',0.5,'file',filename,'flip',1);
+    'nogrid',1,'threshold',0.5,'file',filename,'flip',1,'fig',0);
 f{1}=b;
 %if ~strcmp('reg','all') m_usercoast(riverfile); end
 

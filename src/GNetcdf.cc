@@ -299,12 +299,12 @@ int gnc_write_header(NcFile& ncfile, int nreg, int nneigh, int ncont) {
 //   var->add_att("coordinates","time lon lat");  
 //   var->add_att("date_of_creation",timestring.c_str());
 // 
-//   var = ncfile.add_var("farming_spread_by_people",ncFloat, timedim, regdim);
-//   var->add_att("units","a^{-1}");
-//   var->add_att("long_name","farming_spread_by_people");
-//   var->add_att("description","Net exchange of farming by migrants");
-//   var->add_att("coordinates","time lon lat");  
-//   var->add_att("date_of_creation",timestring.c_str());
+   var = ncfile.add_var("farming_spread_by_people",ncFloat, timedim, regdim);
+   var->add_att("units","a^{-1}");
+   var->add_att("long_name","farming_spread_by_people");
+   var->add_att("description","Net exchange of farming by migrants");
+   var->add_att("coordinates","time lon lat");  
+   var->add_att("date_of_creation",timestring.c_str());
 
   var = ncfile.add_var("suitable_species",ncFloat, timedim, regdim);
   var->add_att("units","1");

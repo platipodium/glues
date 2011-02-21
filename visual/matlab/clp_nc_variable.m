@@ -152,7 +152,11 @@ switch (varname)
 end
 
 if ~exist('time','var') 
-  warning('Skipped, not time dimension'); return; end
+  warning('No time dimension'); 
+  ntime=1;
+  showtime=0;
+  itime=1;
+end
 
 if isfinite(threshold)
   %% plot timing maps
@@ -297,7 +301,7 @@ for it=1:ntime
       if isnan(h) || h==0 continue; end
       greyval=0.15+0.35*sqrt(i./ncol);
       if transparency
-        if i./ncol>0.33 greyval=0.33; elseif (i./ncol)>0.66 greyval=0.5; else greyval=0; end
+        %if i./ncol>0.33 greyval=0.33; elseif (i./ncol)>0.66 greyval=0.5; else greyval=0; end
         if ~isnan(threshold) greyval=0.33; end
         alpha(h,greyval); 
       end
