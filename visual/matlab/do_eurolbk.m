@@ -44,22 +44,90 @@ nhreg=length(hreg);
 letters='ABCDEFGHIJKLMNOPQRSTUVW';
 letters=letters(1:nhreg);
 
-file='../../eurolbk_base.nc';
+file='../../eurolbk_demic.nc';
 ncid=netcdf.open(file,'NOWRITE');
 varid=netcdf.inqVarID(ncid,'region');
 region=netcdf.getVar(ncid,varid);
 varid=netcdf.inqVarID(ncid,'time');
 time=netcdf.getVar(ncid,varid);
 itime=find(time>=timelim(1) & time<=timelim(2));
-time=time(itime);
 varid=netcdf.inqVarID(ncid,'farming');
 farming=netcdf.getVar(ncid,varid);
+varid=netcdf.inqVarID(ncid,'farming_spread_by_people');
+farmingspread=netcdf.getVar(ncid,varid);
 varid=netcdf.inqVarID(ncid,'latitude');
 lat=double(netcdf.getVar(ncid,varid));
 varid=netcdf.inqVarID(ncid,'longitude');
 lon=double(netcdf.getVar(ncid,varid));
 netcdf.close(ncid);
 nreg=length(region);
+
+if (0==0)
+  cumspread=cumsum(farmingspread,2);
+  threshold=0.9;
+  ivalid=(farming>threshold);
+  timing=repmat(time',nreg,1).*ivalid;
+  timing(timing==0)=inf;
+  [mtiming,itiming]=min(timing,[],2);
+  ivalid=find(isfinite(mtiming));
+  cumrel=cumspread;%./farming;
+  relimmi90=cumspread(ivalid,:);
+  relimmi90=diag(relimmi90(:,itiming(ivalid)));
+  relim(1:nreg)=NaN;
+  relim(ivalid)=relimmi90;
+  ncid=netcdf.open(file,'WRITE');
+  regid=netcdf.inqDimID(ncid,'region');
+  timid=netcdf.inqDimID(ncid,'time');
+  try
+    varid=netcdf.inqVarID(ncid,'fraction_of_farming_immigrants_at_90');
+  catch
+    netcdf.reDef(ncid);
+    varid=netcdf.defVar(ncid,'fraction_of_farming_immigrants_at_90','NC_FLOAT',regid);
+    netcdf.endDef(ncid);
+  end
+  netcdf.putVar(ncid,varid,relim);
+
+  try
+    varid=netcdf.inqVarID(ncid,'cumulative_fraction_of_farming_immigrants');
+  catch
+    netcdf.reDef(ncid);
+    varid=netcdf.defVar(ncid,'cumulative_fraction_of_farming_immigrants','NC_FLOAT',[regid,timid]);
+    netcdf.endDef(ncid);
+  end
+  netcdf.putVar(ncid,varid,cumrel);
+  netcdf.close(ncid);
+
+ [d,b]=clp_nc_variable('var','fraction_of_farming_immigrants_at_90','reg',reg,'marble',2,'transparency',1,'nocolor',0,...
+      'showstat',0,'lim',[0 0.25],'showtime',0,...
+      'file',file,'figoffset',0,'sce','demic','noprint',1,'cmap','jet','fig',2);
+  m_coast('color','k');
+  m_grid('box','fancy','linestyle','none');
+  title('Fraction of immigrant agropastoralists after transition');
+  cb=findobj(gcf,'tag','colorbar')
+  ytl=get(cb,'YTickLabel');
+  ytl=num2str(round(100*str2num(ytl)));
+  set(cb,'YTickLabel',ytl);
+  title(cb,'%');
+  cl_print('name',b,'ext','png','res',[300,600]);
+
+ [d,b]=clp_nc_variable('var','cumulative_fraction_of_farming_immigrants','reg',reg,'marble',2,'transparency',1,'nocolor',0,...
+      'showstat',0,'lim',[0 1],'showtime',1,'timelim',timelim(2),...
+      'file',file,'figoffset',0,'sce','demic','noprint',1,'cmap','jet','fig',2);
+  m_coast('color','k');
+  m_grid('box','fancy','linestyle','none');
+  title('Fraction of immigrant agropastoralists after transition');
+  cb=findobj(gcf,'tag','colorbar')
+  ytl=get(cb,'YTickLabel');
+  ytl=num2str(round(100*str2num(ytl)));
+  set(cb,'YTickLabel',ytl);
+  title(cb,'%');
+  cl_print('name',b,'ext','png','res',[300,600]);
+  
+end
+
+
+time=time(itime);
+
 
 % get lat/lon from regionpath, since they are wrong in the above file
 if ~exist('lonlat_685.mat','file')
@@ -140,24 +208,32 @@ iscol=floor((stime-min(timelim))./(timelim(2)-timelim(1))*ncol)+1;
 iscol(iscol<1)=1;
 viscol=find(iscol<=ncol);
 
-if (0==1)
+if (1==0)
 %% Plot region network (figure 1)
 [data,basename]=clp_nc_neighbour('reg',reg,'marble',2,'transparency',1,'nocolor',0,...
       'showstat',0,'showtime',0,'fontsize',15,'showregion',0,...
       'file','../../eurolbk_base.nc','figoffset',0,'sce','base','noprint',1,'notitle',1);
 
+% Remove connecting lines
+hdl=findobj(gcf,'LineStyle',':');
+delete(hdl);
+ 
+% increase visibility of region borders
+hdl=findobj('-property','edgecolor','-and','LineStyle','-','-and','edgecolor','k');
+set(hdl,'edgecolor','k','LineWidth',2,'EdgeAlpha',0.6);
+ 
 hold on;
-sp=m_plot(slon,slat,'ko');
-set(sp,'MarkerFacecolor','k','MarkerSize',3);
+sp=m_plot(slon,slat,'k^');
+set(sp,'MarkerFacecolor','k','MarkerSize',2);
 
-for ir=1:nhreg  
-  t(ir)=m_text(lon(hreg(ir)+1),lat(hreg(ir)+1),letters(ir),'background','w',...
-      'Horizontal','center','Vertical','middle','visible','on','fontsize',14,'fontweight','bold','Margin',3);
+for ir=1:-nhreg  
+  t(ir)=m_text(lon(hreg(ir)+1),lat(hreg(ir)+1),letters(ir),'background','k','color','w',...
+      'Horizontal','center','Vertical','middle','visible','on','fontsize',16,'fontweight','bold','Margin',2);
   %e=get(t(ir),'Extent');
   %pt(ir)=patch(e(1)+[0 e(3) e(3) 0 0],e(2)+[0 0 e(4) e(4) 0],'w','EdgeColor','none','FaceAlpha',0.5);
 end
 gray=repmat(0.4,1,3);
-m_coast('color',gray);
+%m_coast('color',gray);
 m_grid('box','fancy','linestyle','none');
 %,'XTick',[],'YTick',[]);
 
@@ -169,10 +245,10 @@ movtime=-7500:500:-3500;
 nmovtime=length(movtime);
 
 %% plot farming advance (Figure 2)
-if (2==0) for it=1:nmovtime
+if (2==1) for it=1:nmovtime
   [d,b]=clp_nc_variable('var','farming','reg',reg,'marble',2,'transparency',1,'nocolor',0,...
-      'showstat',0,'lim',[0 1],'timelim',movtime(it),...
-      'file','../../eurolbk_base.nc','figoffset',0,'sce',['base_' sprintf('%03d',it)],'noprint',1);
+      'showstat',0,'lim',[0 1],'timelim',movtime(it),'showtime',0,...
+      'file','../../eurolbk_base.nc','figoffset',0,'sce',['base_' sprintf('%05d',movtime(it))],'noprint',1);
   m_coast('color','k');
   m_grid('box','fancy','linestyle','none');
   title('GLUES agropastoral activity');
@@ -190,7 +266,7 @@ nmovtime=length(movtime);
 if (2==0) for it=1:nmovtime
   [d,b]=clp_nc_variable('var','farming','reg',reg,'marble',2,'transparency',1,'nocolor',0,...
       'showstat',0,'lim',[0 1],'timelim',movtime(it),...
-      'file','../../eurolbk_base.nc','figoffset',0,'sce',['base_' sprintf('%03d',it)],'noprint',1);
+      'file','../../eurolbk_base.nc','figoffset',0,'sce',['base_' sprintf('%03d_%05d',it,movtime(it))],'noprint',1);
   m_coast('color','k');
   m_grid('box','fancy','linestyle','none');
   title('GLUES agropastoral activity');
