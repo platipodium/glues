@@ -7,13 +7,14 @@ cd '../../'
 eventmodel;
 cd 'visual/matlab';
 
-eventregind=ones(686,1);
+eventregind=ones(685,1);
 eventregtime=load('../../eventregtime.tsv','-ascii');
 
-tmax=timeend;
+tmax=10500;
 tmin=0;
+siminit=11500;
 
-nr=686;
+nr=685;
 nt=floor((tmax-tmin*1.0)/timestep+1);
 regionfluc=zeros(nt,nr);
 time=siminit-([0:nt-1]*timestep+tmin);

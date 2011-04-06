@@ -14,10 +14,18 @@ nofind=[];
 lonlim=[-180,180];
 include=0;
 regionpathfile='regionpath_685';
+nfound=0;
 
 iarg=1;
 while iarg<=nargin
   
+  if isnumeric(varargin{iarg}) 
+    ifound=varargin{iarg};
+    nfound=length(ifound);
+    iarg=iarg+1; 
+    continue; 
+  end
+    
   arg=lower(varargin{iarg});
   
   switch arg(1:3)
@@ -117,9 +125,6 @@ if exist('region','var') & isstruct(region)
   regionpath=region.path;
 end
 
-ifound=[1:nreg];
-nfound=nreg;
-
   
 % TODO remove correction in lat/lon
 regionpath(:,:,1)=regionpath(:,:,1)+0.5;
@@ -128,7 +133,9 @@ regionpath(:,:,2)=regionpath(:,:,2)+1.0;
 
 %disp('Limits lon\in %d %d, lat \in %d %d',lonlim,latlim);
 
-ifound=[];
+if nfound==0
+  nfound=nreg;
+  ifound=[];
 
 if isempty(neighlim)  && include==1
   for i=1:nreg
@@ -154,6 +161,7 @@ elseif ~isempty(neighlim)
   for i=1:length(neighlim)
     ifound=[ifound;find(any(regionpath(:,:,3)==neighlim(i),2))];
   end
+end
 end
 
 for i=1:length(nofind)

@@ -1,8 +1,8 @@
 comment Parameter values not used (or varied) in v2
 comment specific adaptation constants
-float	deltan	1.0
+float	deltan 1.0
 	\d Specific adaptation constant for number of agricultural economies 
-float	deltaq	1.0
+float	deltaq 1.0
 	\d Specific adaptation constant for farming ratio
 float	deltar	0.0
 	\d Specific adaptation constant for resistance to diseases
@@ -10,7 +10,7 @@ comment regional dynamics
 float	regenerate	0.80
 	\d rate of natural regneration after
 comment Spreading and trait exchange
-float	spreadm 0
+float	spreadm 100
 	\d Ratio of trait to population spread default 5.0
 float	ndommaxvar	0.0
 	\d rearranges variances of ndommaxcont

@@ -5,7 +5,7 @@ cl_register_function();
 if ~exist('file','var') file='data/indus_varves.red'; end
 
 
-if ~exist(file,'file') error('File does not exist'); end
+if ~exist(file,'file') warning('File does not exist'); return; end
 
 fid=fopen(file,'r');
 while (~feof(fid))
