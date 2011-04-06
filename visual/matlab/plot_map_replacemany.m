@@ -8,7 +8,7 @@ if ~exist('m_proj') addpath('/h/lemmen/matlab/m_map'); end;
 notitle=1;
 
 %extra='eleven';
-if ~exist('year','var') | strcmp(year,'') year=5.5; end
+if ~exist('year','var') | strcmp(year,'') year=6.0; end
 if ~exist('dyear','var') dyear=0.5; end
 if ~exist('ratio','var') ratio=33; end
 if ~exist('fignum','var') fignum=1; end

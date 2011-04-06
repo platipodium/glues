@@ -106,6 +106,8 @@ double calc_spread_single(unsigned int i, double t) {
   iresist= populations[i].Resist();
   idommax= populations[i].Ndommax();
   iid    = populations[i].Region()->Id();
+  double ilat   = populations[i].Region()->Latitude();
+  double ilon   = populations[i].Region()->Longitude();  
   
   irgr = populations[i].Growthrate();
   iinfl=itech*ipop;  
@@ -117,6 +119,9 @@ double calc_spread_single(unsigned int i, double t) {
   while (neigh) {
     j   = neigh->Region()->Index();
     jid = neigh->Region()->Id();
+
+    double jlat   = populations[j].Region()->Latitude();
+    double jlon   = populations[j].Region()->Longitude();  
     
     //cerr << i << "/" <<  iid << " " << j << "/" << jid << endl; 
     /** Only perform an update if j>i to avoid
@@ -274,7 +279,10 @@ double calc_spread_single(unsigned int i, double t) {
      || import_id==170 || import_id==146 || import_id==142  || import_id==123 || import_id==122
      || export_id==271 || export_id==255 || export_id==211  || export_id==183 || export_id==178
      || export_id==170 || export_id==146 || export_id==142  || export_id==123 || export_id==122
-    ) {
+    ) //*/ 
+    /*if ( ( ilon >= -10 || jlon >= -10) && (ilon <= 42 || jlon<=42) 
+    && (ilat >= 31 || jlat >= 31) && (ilat <=57 || jlat <=57))
+    {
     std::cerr << t << " " << import_id << " " << export_id 
     	<< " " << import_tech_i << " " <<  import_tech_p
     	<< " " << import_ndom_i << " " <<  import_ndom_p

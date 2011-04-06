@@ -123,7 +123,7 @@ hmin=min(min(lkk11(:,itime)));
 hmax=max(max(lkk11(:,itime)));
 
 
-for it=1:ntime
+for it=1:-ntime
   yearstring=rtime(it);
   if yearstring==0 yearstring=yearstring+1; end
   if yearstring > 0 yearstring=sprintf('%4d AD',yearstring); else
@@ -174,7 +174,7 @@ p2k=plot(kl(:,1),kl(:,2),'r-.');
 p3k=plot(km(:,1),km(:,2),'r-','Linewidth',5);
 p4k=plot(ku(:,1),ku(:,2),'r-.');
 
-i0=find(time==-1000);
+i0=find(time==0);
 p5=plot(time(1:i0),sum(glues(:,1:i0),1),'b-','LineWidth',5)
 
 %skk=sum(kk10,1); sg=sum(glues,1);
@@ -189,20 +189,21 @@ cl_print('name','worldpop_global','ext','png','res',300);
 
 
 
-for ireg=[1 2 3]
+for ireg=1:12 %[1 2 3]
 figure(ireg); clf reset;
     
 pkk10=patch([time;flipud(time)]',[kk10l(ireg,:) fliplr(kk10u(ireg,:))],'r','facecolor','r','edgecolor','r','visible','on');
 hold on;
 
-p7=plot(time,lkk11(ireg,:),'k-','LineWidth',5);
+p7=plot(time,lkk11(ireg,:),'k-','LineWidth',4);
+p8=plot(time(1:i0),glues(ireg,1:i0),'b-','LineWidth',5);
 
 xlabel('Time (Year AD)','FontSize',fs);
 ylabel('Population size (million)','FontSize',fs);
 set(gca,'XLim',[-8000,1750],'FontSize',fs);
 set(gca,'XLim',[-8000,1750]);
 set(gca,'color','none','xcolor',gray,'ycolor',gray);
-l=legend([p7,pkk10],'GLUES','KK10');
+l=legend([p8,pkk10,p7],'GLUES','KK10','LKK11');
 set(l,'Location','Northwest','color','w','FontSize',16);
 title(contname{ireg},'FontSize',24,'FontWeight','bold');
 cl_print('name',['worldpop_' char(contname{ireg})],'ext','png','res',300);

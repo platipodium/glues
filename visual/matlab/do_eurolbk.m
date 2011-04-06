@@ -30,6 +30,7 @@
 
 
 
+
 %% Define region to lbk
 reg='lbk'; [ireg,nreg,loli,lali]=find_region_numbers(reg);
 lonlim=loli; latlim=lali;
@@ -44,7 +45,7 @@ nhreg=length(hreg);
 letters='ABCDEFGHIJKLMNOPQRSTUVW';
 letters=letters(1:nhreg);
 
-file='../../eurolbk_demic.nc';
+file='../../eurolbk_base.nc';
 ncid=netcdf.open(file,'NOWRITE');
 varid=netcdf.inqVarID(ncid,'region');
 region=netcdf.getVar(ncid,varid);
@@ -59,10 +60,12 @@ varid=netcdf.inqVarID(ncid,'latitude');
 lat=double(netcdf.getVar(ncid,varid));
 varid=netcdf.inqVarID(ncid,'longitude');
 lon=double(netcdf.getVar(ncid,varid));
+varid=netcdf.inqVarID(ncid,'area');
+area=double(netcdf.getVar(ncid,varid));
 netcdf.close(ncid);
 nreg=length(region);
 
-if (0==0)
+if (0==1)
   cumspread=cumsum(farmingspread,2);
   threshold=0.9;
   ivalid=(farming>threshold);
@@ -200,13 +203,96 @@ sdists=m_lldist(dlon,dlat);
 sdists=sdists(1:2:end);
 
 ifound=ireg;nfound=nreg;lonlim=loli; latlim=lali;
-farming=farming(ifound,itime);
 
 ncol=19;
 cmap=flipud(jet(ncol));
 iscol=floor((stime-min(timelim))./(timelim(2)-timelim(1))*ncol)+1;
 iscol(iscol<1)=1;
 viscol=find(iscol<=ncol);
+
+
+if (9==0)
+%% Plot small maps with region highlighted (part of figures 4/6)
+  for ir=1:nhreg
+    figure(ir+40); clf reset; 
+    clp_basemap('lon',lonlim,'lat',latlim);
+    hdl=clp_regionpath('reg',hreg(ir)+1);
+    set(hdl,'FaceColor','g','EdgeColor','k');
+
+    % Remove connecting lines
+    hdl=findobj(gcf,'LineStyle',':');
+    delete(hdl);
+    m_grid('box','fancy','linestyle','none');
+    pname=sprintf('region_map_highlight_%s',letters(ir));
+    cl_print('name',pname,'ext','pdf');
+  end
+
+end
+
+
+if (9==0)
+%% Plot small maps with region highlighted (part of figures 4/6)
+    figure(40); clf reset; 
+    clp_basemap('lon',lonlim,'lat',latlim,'nocoast',1);
+    hdl=findobj('EdgeColor','k');
+    set(hdl,'EdgeColor','none');
+    m_coast('patch',0.9*[1 1 1]);
+    
+    hdl=clp_regionpath('reg',hreg+1);
+    
+    set(hdl,'FaceColor',0.7*[1 1 1],'EdgeColor',0.3*[1 1 1]);
+
+    % Remove connecting lines
+    hdl=findobj(gcf,'LineStyle',':');
+    delete(hdl);
+    m_grid('box','on','linestyle','none');
+    pname=sprintf('region_map_highlight');
+    cl_print('name',pname,'ext','pdf');
+end
+
+
+if (8==0)
+   pc=0.9;
+%% Plot map with spread mechanism for base simulation
+  figure(8); clf reset; hold on;
+  spread=load('spread_mechanism_all_eurolbk_base');
+  nhhreg=length(spread.hreg);
+  timing=zeros(nhhreg,1)+Inf;
+  reldQp=zeros(nhhreg,1)+NaN;
+  clp_basemap('lon',lonlim,'lat',latlim);
+  %m_coast('line','color','k');
+  for i=1:length(spread.hreg) 
+     hdl(i)=clp_regionpath('reg',spread.hreg(i)+1);
+     if hdl(i)<=0 continue; end
+     set(hdl(i),'FaceColor',0.8*[1 1 1]','EdgeColor','k');
+     itiming=min(find(spread.farming(i,:)>=pc));
+     if ~isempty(itiming)
+       timing(i)=spread.rtime(itiming);
+       reldQp(i)=spread.reldQp(i,itiming);
+       %m_text(lon(spread.hreg(i)+1),lat(spread.hreg(i)+1),num2str(reldQp(i)));
+     end     
+  end
+  maxreldQp=1; max(reldQp(isfinite(reldQp)));
+  qncol=10;
+  %cmap=colormap(hotcold(2*qncol)); cmap=cmap(qncol+1:end,:);
+  cmap=(greenred(qncol+qncol/2)); 
+  cmap=cmap([1:2:qncol, qncol+1:1:end],:); cmap(3,3)=0.35; cmap(5,3)=0.2;
+  colormap(cmap);
+  qcol=round(reldQp/maxreldQp*qncol+1);
+  qcol(qcol>qncol)=qncol;
+  for i=1:nhhreg
+    if hdl(i)>0 && isfinite(qcol(i))
+      set(hdl(i),'FaceColor',cmap(qcol(i),:),'EdgeColor','k');
+    end
+  end
+  hdlg=findobj(gcf,'LineStyle',':');
+  delete(hdlg);
+  m_grid('box','fancy','linestyle','none');
+  colorbar;
+  cl_print('name','demic_spread_map','ext','pdf','res',[150,600]);
+
+end
+
 
 if (1==0)
 %% Plot region network (figure 1)
@@ -245,7 +331,7 @@ movtime=-7500:500:-3500;
 nmovtime=length(movtime);
 
 %% plot farming advance (Figure 2)
-if (2==1) for it=1:nmovtime
+if (2==0) for it=1:nmovtime
   [d,b]=clp_nc_variable('var','farming','reg',reg,'marble',2,'transparency',1,'nocolor',0,...
       'showstat',0,'lim',[0 1],'timelim',movtime(it),'showtime',0,...
       'file','../../eurolbk_base.nc','figoffset',0,'sce',['base_' sprintf('%05d',movtime(it))],'noprint',1);
@@ -289,29 +375,51 @@ if (2==0) for it=1:nmovtime
 
 if (3==0)
 %% plot farming timing (figure 3)
-ncol=19;
+ncol=8;
 
 [data,basename]=clp_nc_variable('var','farming','threshold',0.5,'reg',reg,'marble',2,'transparency',1,'nocolor',0,...
-      'showstat',0,'timelim',timelim,'showtime',0,'flip',1,'showvalue',0,...
+      'showstat',0,'timelim',[-7500 -3500],'showtime',0,'flip',1,'showvalue',0,...
       'file','../../eurolbk_base.nc','figoffset',0,'sce','base',...
-      'noprint',1,'notitle',1,'ncol',ncol);
+      'noprint',1,'notitle',1,'ncol',ncol,'cmap','clc_eurolbk');
   
 %set(gcf,'Units','centimeters','Position',[0 0 18 18]);
 
+hdf=findobj(gcf,'-property','EdgeColor');
+set(hdf,'Edgecolor','none')
+cm=get(gcf,'colormap');
+
 cb=findobj('tag','colorbar');
-cmap=flipud(jet(ncol));
-cmap=rgb2hsv(cmap);
-cmap(:,2)=cmap(:,2)*0.5;
-cmap=hsv2rgb(cmap);
-colormap(cmap);
+cbc=get(cb,'Children');
+if iscell(cbc)
+  set(cbc{1},'AlphaData',0.5);
+  set(cbc{2},'AlphaData',0.5);
+else
+  set(cbc,'AlphaData',0.5);
+end
+set(cb,'Ticklength',[0 0],'box','off');
+pos=get(cb,'Position');
+%set(cb,'Position',pos.*[1+pos(3) 1 2.0 1]
 ytl=get(cb,'YTickLabel');
-ytl=ytl(:,2:end);
+if iscell(ytl) ytl=char(ytl{1}); end
+ytl(:,1)=' ';
 set(cb,'YTickLabel',ytl);
 ytt=get(cb,'Title');
+if iscell(ytt) ytt=ytt{1}; end
 set(ytt,'String','Year BC','FontSize',14,'FontName','Times','FontWeight','normal');
 
+cb2=copyobj(cb,gcf);
+set(get(cb2,'Children'),'AlphaData',1);
+ytt=get(cb2,'Title');
+if iscell(ytt) ytt=ytt{1}; end
+set(ytt,'String','');
+pos=get(cb,'Position');
+set(cb2,'Position',pos.*[1 1 0.5 1],'YTick',[],'box','off');
+
+
 for i=1:length(viscol)
-  m_plot(slon(viscol(i)),slat(viscol(i)),'ko','MarkerFaceColor',cmap(iscol(viscol(i)),:));
+  mcolor=cmap(iscol(viscol(i)),:);
+  ps(i)=m_plot(slon(viscol(i)),slat(viscol(i)),'k^','MarkerFaceColor',mcolor,...
+      'MarkerEdgeColor',cmap(iscol(viscol(i)),:),'MarkerSize',4);
 end
 
 ct=findobj(gcf,'-property','FontName');
@@ -343,26 +451,22 @@ end
 
 if (7==0)
 %% plot farming timing for nospread(figure )
-ncol=19;
+ncol=8;
 
 [data,basename]=clp_nc_variable('var','farming','threshold',0.5,'reg',reg,'marble',2,'transparency',1,'nocolor',0,...
-      'showstat',0,'timelim',timelim,'showtime',0,'flip',1,'showvalue',0,...
+      'showstat',0,'timelim',[-7500 -3500],'showtime',0,'flip',1,'showvalue',0,...
       'file','../../eurolbk_nospread.nc','figoffset',0,'sce','nospread',...
-      'noprint',1,'notitle',1,'ncol',ncol);
+      'noprint',1,'notitle',1,'ncol',ncol,'cmap','clc_eurolbk');
   
 %set(gcf,'Units','centimeters','Position',[0 0 18 18]);
 
+hdf=findobj(gcf,'-property','EdgeColor');
+set(hdf,'Edgecolor','none')
+
 cb=findobj('tag','colorbar');
-cmap=flipud(jet(ncol));
-cmap=rgb2hsv(cmap);
-cmap(:,2)=cmap(:,2)*0.5;
-cmap=hsv2rgb(cmap);
-colormap(cmap);
 ytl=get(cb,'YTickLabel');
 ytl=ytl(:,2:end);
 set(cb,'YTickLabel',ytl);
-ytt=get(cb,'Title');
-set(ytt,'String','Year BC','FontSize',14,'FontName','Times','FontWeight','normal');
 
 %for i=1:length(viscol)
 %  m_plot(slon(viscol(i)),slat(viscol(i)),'ko','MarkerFaceColor',cmap(iscol(viscol(i)),:));
@@ -382,61 +486,15 @@ cl_print('name',strrep(basename,'farming_','timing_'),'ext','png','res',[150,600
 
    
 end
-
-
-
-
-if (3==37)
-%% plot farming timing for nospread inset base (part of figure 7)
-ncol=19;
-
-[data,basename]=clp_nc_variable('var','farming','threshold',0.5,'reg',reg,'marble',2,'transparency',1,'nocolor',0,...
-      'showstat',0,'timelim',timelim,'showtime',0,'flip',1,'showvalue',0,...
-      'file','../../eurolbk_base.nc','figoffset',0,'sce','base_nosites',...
-      'noprint',1,'notitle',1,'ncol',ncol);
-  
-%set(gcf,'Units','centimeters','Position',[0 0 18 18]);
-
-cb=findobj('tag','colorbar');
-cmap=flipud(jet(ncol));
-cmap=rgb2hsv(cmap);
-cmap(:,2)=cmap(:,2)*0.5;
-cmap=hsv2rgb(cmap);
-colormap(cmap);
-ytl=get(cb,'YTickLabel');
-ytl=ytl(:,2:end);
-set(cb,'YTickLabel',ytl);
-ytt=get(cb,'Title');
-set(ytt,'String','Year BC','FontSize',14,'FontName','Times','FontWeight','normal');
-
-%for i=1:length(viscol)
-%  m_plot(slon(viscol(i)),slat(viscol(i)),'ko','MarkerFaceColor',cmap(iscol(viscol(i)),:));
-%end
-
-ct=findobj(gcf,'-property','FontName');
-set(ct,'FontSize',14,'FontName','Times','FontWeight','normal');
-
-
-for ir=1:-nhreg  
-  m_text(lon(hreg(ir)+1),lat(hreg(ir)+1),letters(ir),'background','w',...
-      'Horizontal','center','Vertical','middle');
-end
-m_coast('color','k');
-m_grid('box','fancy','linestyle','none');
-cl_print('name',strrep(basename,'farming_','timing_'),'ext','png','res',[150,600]);
-
-   
-end
-
 
 
 %% Do pdf plot for highlighted regions
 
-r=250;
-[d,b]=clp_nc_trajectory('reg',hreg+1,'var','farming','timelim',timelim,...
-      'file','../../eurolbk_base.nc','figoffset',0,'sce','base');
+rmin=250;
+%[d,b]=clp_nc_trajectory('reg',hreg+1,'var','farming','timelim',timelim,...
+%      'file','../../eurolbk_base.nc','figoffset',0,'sce','base','noprint',1);
 %%
-dd=diff(d');
+dd=diff(farming');
 ntime=size(dd,1);
 dtime=(timelim(2)-timelim(1))/(ntime-1);
 rtime=timelim(1):dtime:timelim(2);
@@ -445,16 +503,48 @@ clf reset;
 dedges=200;
 edges=[-inf -8000+dedges/2.0:dedges:-3400-dedges/2.0 inf];
 centers=[edges(2:end-1)-dedges/2.0 edges(end-1)+dedges/2.0];
+collbk=[1 1 0]; % 'y'
+coltrb=[1 0 0]; %'r';
+colppn=[0 1 0]; %'g';
+colkor=[0 1 1]; %'c';
+
+spreadv=0.02*1.0E7;
+radius=sqrt(area/pi);
+rsigma=2*dedges*radius.*radius/spreadv;
+
 if (4==0)
 for i=1:nhreg
   
+  
+  
+    
   figure(i); clf reset; hold on;
   pos=get(gcf,'position');
   set(gcf,'Position',[pos(1:2) 500 90]);
   %pb(i)=bar(rtime,dd(:,i)/max(dd(:,i)),'k','edgecolor','k');
   %set(pb(i),'FaceColor','k','LineStyle','none');
   %ymax=max(dd(:,i)/sum(dd(:,i))*length(dd(:,i))*0.5)*1.1;
-  set(gca,'Xlim',[-8000,-3400],'YTick',[],'Ylim',[0. 1.1],'color','none');
+  set(gca,'Xlim',[-8100,-3300],'YTick',[0 0.2 1],'Ylim',[-0.2 1.2],'color','none','box','off');
+  
+  r=radius(hreg(i)+1);
+  if r<rmin r=rmin; end
+  
+  % calculate exchange coeff
+  sigma=rsigma(hreg(i)+1);
+  ddreg=dd(:,hreg(i)+1);
+  [maxdd,imax]=max(ddreg);
+  g=normpdf(rtime,rtime(imax),sigma)';
+  %figure(20); clf reset; hold on;
+  %plot(rtime,ddreg,'b-');
+  %plot(rtime,g,'r-');
+  ddconv=conv(ddreg,g,'full');
+  [maxddconv,iddconv]=max(ddconv);
+  offset=int16(iddconv-imax);
+  ddconv=ddconv(offset+1:offset+ntime)/0.008;
+  %plot(rtime,ddconv,'m-');
+  
+  
+  
   rlat=lat(hreg(i)+1);  rlon=lon(hreg(i)+1);
   dlat=[slat repmat(rlat,ns,1)];
   dlat=reshape(dlat',2*ns,1);
@@ -468,24 +558,65 @@ for i=1:nhreg
 %   bar(whirt,whir/sum(whir)*length(whir),.7,'r','edgecolor','none');
 %   bar(hirt,hir/sum(hir)*length(hir),0.4,'c','edgecolor','none');
  
-  hir=histc(stime(ir),edges);
-  whir=histc([stime(ir);sutime(ir); sltime(ir)],edges);
-  bar(centers,whir(1:end-1)/max(whir(1:end-1)),0.7,'r','edgecolor','none');
-  bar(centers,hir(1:end-1)/max(whir(1:end-1)),0.4,'c','edgecolor','none');
-  %[sir,isir,jsir]=unique(stime(ir));
-  %csir=0:length(sir);
-  %stime(ir(isir));
-  %dcsir=diff(csir);
-  %sd=interp1(sir,dcsir,rtime,'cubic');  
-  %sdd=diff(sd);
-  %plot(time,interp1(whirt,whir/max(whir),time,'linear'),'r-');
-  %plot(time,interp1(hirt,hir/max(hir),time,'linear'),'b-');
   
-  
-  %pl(i)=plot(rtime,dd(:,i)/sum(dd(:,i))*length(dd(:,i))*0.5,'k-','LineWidth',3);
-  pl(i)=plot(rtime,dd(:,i)/max(dd(:,i)),'k-','LineWidth',3);
-  %set(gca,'YColor','none','XColor',repmat(0.4,1,3));
+  a1=normpdf(0,0,1);
+  a2=normpdf(1,0,1);
+  a3=sum(a1+2*a2);
 
+  hir=histc(stime(ir),edges);
+  whir=(a1*histc(stime(ir),edges)+a2*histc(sutime(ir),edges)+a2*histc(sltime(ir),edges))/a3;  
+  
+  thresh=0.01;
+  idata=find(ddconv(itime)>thresh);
+  xdata=time(idata)';
+  ndata=length(xdata);
+  ydata=zeros(1,ndata);
+  cdata=double(ddconv(itime(idata)))';
+  
+  lightgray=repmat(0.70,3,1);
+  darkgray=repmat(0.3,3,1);
+  pp(i)=patch([xdata fliplr(xdata)]',[cdata cdata*0],'k-');
+  set(pp(i),'FaceColor',lightgray,'edgeColor','none');
+  plot(xdata,cdata,'k-','LineWidth',2.5);
+ 
+  
+  %pp=patch([xdata fliplr(xdata)]',[ydata ydata+1]',[cdata fliplr(cdata)]');
+  
+  %cmap=1-0.3*((repmat(cdata',1,3)));
+  %colormap(cmap);
+  %caxis([0 1]);
+ 
+   
+  irp=strmatch('PPN',period(ir)); pir=ir(irp);
+  phir=(a1*histc(stime(pir),edges)+a2*histc(sutime(pir),edges)+a2*histc(sltime(pir),edges))/a3;  
+  if (size(phir,1)<size(phir,2)) phir=phir'; end
+  nhir=phir(1:end-2)/5.0;
+  irp=strmatch('Körös',period(ir)); pir=ir(irp);
+  phir=(a1*histc(stime(pir),edges)+a2*histc(sutime(pir),edges)+a2*histc(sltime(pir),edges))/a3;  
+  if (size(phir,1)<size(phir,2)) phir=phir'; end
+  khir=phir(1:end-2)/5.0;
+  irp=strmatch('LBK',period(ir)); pir=ir(irp);
+  phir=(a1*histc(stime(pir),edges)+a2*histc(sutime(pir),edges)+a2*histc(sltime(pir),edges))/a3;  
+  if (size(phir,1)<size(phir,2)) phir=phir'; end
+  lhir=phir(1:end-2)/5.0;
+  irp=strmatch('TRB',period(ir)); pir=ir(irp);
+  phir=(a1*histc(stime(pir),edges)+a2*histc(sutime(pir),edges)+a2*histc(sltime(pir),edges))/a3;  
+  if (size(phir,1)<size(phir,2)) phir=phir'; end
+  thir=phir(1:end-2)/5.0;
+  stackedhir=[nhir khir lhir thir];
+  
+  
+  pbar=bar(centers(1:end-1),whir(1:end-2)/5,0.6,'k','edgecolor',darkgray,'LineWidth',1.6,'ShowBaseLine','off');
+  set(pbar,'FaceColor','w');
+  sb=bar(centers(1:end-1),stackedhir,'stacked','edgecolor','none','barwidth',0.4,'ShowBaseLine','off');
+  set(sb(1),'Facecolor',colppn);
+  set(sb(2),'FaceColor',colkor);
+  set(sb(3),'FaceColor',collbk);
+  set(sb(4),'Facecolor',coltrb);
+  set(gca,'XDir','reverse');
+  
+  %plot(xdata,cdata,'k-','LineWidth',2.5);
+ 
   plot_multi_format(gcf,['timing_histogram_' letters(i)]);
   
   per=period(ir);
@@ -495,31 +626,91 @@ for i=1:nhreg
   sbmi=fliplr(sbmi); sbm=fliplr(sbm);
   
   np=length(up);
-  ptext=sprintf('%s (%d) n=%d:',letters(i),hreg(i),length(ir));
+  ptext=sprintf('%s (%d) n=%d r=%04d:',letters(i),hreg(i),length(ir),r);
   for ip=1:np 
     ptext=[ptext sprintf(' %s (%d)',up{sbmi(ip)},sbm(ip)) ];
   end
   
   fprintf('%s\n',ptext);
+ end
+
+  figure(nhreg+1); clf reset; hold on;
+  pos=get(gcf,'position');
+  set(gcf,'Position',[pos(1:2) 500 90]);
+  set(gca,'Xlim',[-8100,-3300],'YTick',[],'Ylim',[-0.2 1.2],'color','none');
+  
+  ir=strmatch('LBK',period);
+  [mu,sigma]=normfit(stime(ir));
+  lbknorm=normpdf(time,mu,sigma)*length(ir);
+  
+  ir=strmatch('Körös',period);
+  [mu,sigma]=normfit(stime(ir));
+  korosnorm=normpdf(time,mu,sigma)*length(ir);
+  
+  ir=strmatch('TRB',period);
+  [mu,sigma]=normfit(stime(ir));
+  trbnorm=normpdf(time,mu,sigma)*length(ir);
+  
+  ir=strmatch('PPN',period);
+  [mu,sigma]=normfit(stime(ir));
+  ppnnorm=normpdf(time,mu,sigma)*length(ir);
+  
+  ir=strmatch('Neolithic',period);
+  [mu,sigma]=normfit(stime(ir));
+  neonorm=normpdf(time,mu,sigma)*length(ir);
+  
+  mnorm=max([ppnnorm;trbnorm;lbknorm;korosnorm]);
+  
+  %pneo=patch([time; flipud(time)],[neonorm/mnorm; time*0],'k-');
+  
+  pppn=patch([time; flipud(time)],[ppnnorm/mnorm; time*0],colppn);
+  ptrb=patch([time; flipud(time)],[trbnorm/mnorm; time*0],coltrb);
+  plbk=patch([time; flipud(time)],[lbknorm/mnorm; time*0],collbk);
+  
+  ltnorm=(trbnorm<lbknorm).*trbnorm+(lbknorm<trbnorm).*lbknorm;
+  plt=patch([time; flipud(time)],[ltnorm/mnorm; time*0],[1 0.75 0.5]); 
+   pkoros=patch([time; flipud(time)],[korosnorm/mnorm; time*0],colkor);
+  
+  %lknorm=(korosnorm<lbknorm).*korosnorm+(lbknorm<korosnorm).*lbknorm;
+  %plk=patch([time; flipud(time)],[lknorm/mnorm; time*0],[0.75 0.75 0.75]); 
+  
+  
+  cl_print('name','timing_histogram_','ext','pdf');
+  
+end
+
+
+%% Calculate distance matrix
+nfound=length(ifound);
+distfile=['distmatrix_' num2str(nfound) '_' num2str(ns) '.mat'];
+if ~exist(distfile,'file')
+  distmatrix=zeros(length(ifound),ns)+Inf;
+  for i=1:length(ifound)
+    rlat=lat(ifound(i));  rlon=lon(ifound(i));
+    dlat=[slat repmat(rlat,ns,1)];
+    dlat=reshape(dlat',2*ns,1);
+    dlon=[slon repmat(rlon,ns,1)];
+    dlon=reshape(dlon',2*ns,1);
+    dists=m_lldist(dlon,dlat);
+    dists=dists(1:2:end);  
+    distmatrix(i,:)=dists;
   end
+  save('distfile','distmatrix');
+else
+  load('distfile');    
 end
 
 if (5==5)
 %% Do Ammerman plot (figure 5)
-figure(1); clf reset; hold on;
-set(gcf,'Units','centimeters','Position',[0 0 18 18]);
 % Single column 90 mm 1063 1772 3543 
 % 1.5 column 140 mm 1654 2756 5512
 % Full width 190 mm 2244 3740 7480
-
-
 
 i272=find(ifound==272);
 for i=1:nhreg
   ihreg(i)=find(ifound==hreg(i)+1);
 end
 
-nfound=size(farming,1);
 dlat=[lat repmat(lat(272),nreg,1)];
 dlat=reshape(dlat',2*nreg,1);
 dlon=[lon repmat(lon(272),nreg,1)];
@@ -528,7 +719,7 @@ dists=m_lldist(dlon,dlat);
 dists=dists(1:2:end);
 dists=dists(ifound);
 threshold=0.5;
-it=(farming>=threshold).*repmat(1:length(itime),nfound,1);
+it=(farming(ifound,itime)>=threshold).*repmat(1:length(itime),nfound,1);
 it(it==0)=inf;
 it=min(it,[],2);
 itv=isfinite(it);
@@ -537,33 +728,159 @@ onset(itv)=time(min(it(itv),[],2));
 
 gtime=timelim(1):200:timelim(2);
 
-set(gca,'color','none','FontSize',14,'FontName','Times');
-p3=plot(-onset(ihreg),dists(ihreg),'yo','MarkerFaceColor','y','MarkerSize',14,'MarkerEdgeColor','k');
-p1=plot(-stime,sdists,'bs','MarkerFaceColor','none','MarkerSize',2);
+figure(1); clf reset; hold on;
+set(gcf,'Units','centimeters','Position',[0 0 18 18]);
+set(gca,'color','w','FontSize',14,'FontName','Times');
+
+irppn=strmatch('PPN',period);
+irkor=strmatch('Körös',period);
+irlbk=strmatch('LBK',period);
+irtrb=strmatch('TRB',period);
+
+[mulbkt,siglbkt]=normfit(-stime(irlbk));
+[mulbkd,siglbkd]=normfit(sdists(irlbk));
+[mutrbt,sigtrbt]=normfit(-stime(irtrb));
+[mutrbd,sigtrbd]=normfit(sdists(irtrb));
+[mukort,sigkort]=normfit(-stime(irkor));
+[mukord,sigkord]=normfit(sdists(irkor));
+[muppnt,sigppnt]=normfit(-stime(irppn));
+[muppnd,sigppnd]=normfit(sdists(irppn));
+
+collbk=[1 1 0.9]; % 'y'
+  coltrb=[1 .95 .95]; %'r';
+  colppn=[.95 1 .95]; %'g';
+  colkor=[.9 1 1]; %'c';
+
+%plbk=cl_ellipse(mulbkt,mulbkd,2*siglbkt,2*siglbkd,'k-','edgecolor','none','FaceColor',collbk,'FaceAlpha',1);
+%ptrb=cl_ellipse(mutrbt,mutrbd,2*sigtrbt,2*sigtrbd,'k-','edgecolor','none','FaceColor',coltrb,'FaceAlpha',1);
+%pkor=cl_ellipse(mukort,mukord,2*sigkort,2*sigkord,'k-','edgecolor','none','FaceColor',colkor,'FaceAlpha',1);
+%pppn=cl_ellipse(muppnt,muppnd,2*sigppnt,2*sigppnd,'k-','edgecolor','none','FaceColor',colppn,'FaceAlpha',1);
+
+simfcolor=[1 0 0];%[1 .9 .8];
+simecolor='none';%[1 .65 .4];
+for ir=1:nfound
+  if ~isfinite(onset(ir)) continue; end
+  cl_ellipse(-onset(ir),dists(ir),radius(ifound(ir)),radius(ifound(ir)),...
+      'k-','edgecolor',simecolor,'FaceColor',simfcolor,'FaceAlpha',0.1);
+end
+p3=plot(-onset,dists,'rs','MarkerFaceColor',simecolor,'MarkerSize',2,...
+    'MarkerEdgeColor',simecolor,'visible','off');
+p1=plot(-stime,sdists,'bd','MarkerFaceColor','b','MarkerSize',2);
 ylabel('Distance from Levante (km)');
 xlabel('Time (year BC)'); 
-set(gca,'Xlim',-fliplr([timelim]));
+%set(gca,'Xlim',-fliplr([timelim]));
+set(gca,'Xlim',[3100 8400],'YLim',[-400 4400]);
 set(gca,'XDir','reverse');
-p2=plot(-onset,dists,'rd','MarkerFaceColor','r','MarkerSize',6);
+%p2=plot(-onset,dists,'rd','MarkerFaceColor','r','MarkerSize',1);
 %plot(7500:-200:3500,0:200:4000,'k--');
 
 pf1=polyfit(-onset(itv),dists(itv),1);
-p4=plot(-gtime,-gtime*pf1(1)+pf1(2),'r-','LineWidth',2);
+p4=plot(-gtime,-gtime*pf1(1)+pf1(2),'r--','LineWidth',4);
 pf2=polyfit(-stime,sdists,1);
-%plot(-gtime,-gtime*pf2(1)+pf2(2),'b--','LineWidth',2);
+p5=plot(-gtime,-gtime*pf2(1)+pf2(2),'b--','LineWidth',4);
+
+
+ikor=find(any(distmatrix(:,irkor)-repmat(radius(ifound),1,length(irkor))<=0,2));
+ilbk=find(any(distmatrix(:,irlbk)-repmat(radius(ifound),1,length(irlbk))<=0,2));
+itrb=find(any(distmatrix(:,irtrb)-repmat(radius(ifound),1,length(irtrb))<=0,2));
+ippn=find(any(distmatrix(:,irppn)-repmat(radius(ifound),1,length(irppn))<=0,2));
+%pippn=plot(-onset(ippn),dists(ippn),'rd','MarkerFaceColor',colppn,'MarkerSize',10);
+%pilbk=plot(-onset(ilbk),dists(ilbk),'ro','MarkerFaceColor',collbk,'MarkerSize',10);
+%pikor=plot(-onset(ikor),dists(ikor),'rd','MarkerFaceColor',colkor,'MarkerSize',6);
+%pitrb=plot(-onset(itrb),dists(itrb),'rs','MarkerFaceColor',coltrb,'MarkerSize',4);
+
+pos=get(gca,'position');
+set(gca,'position',pos.*[1 1 1.1 1]);
+
+diffedge=500;
+edge=0:diffedge:4500;
+nedge=length(edge);
+pcvals=[0.05 0.5 0.95];
+
+for ip=1:3
+  pcval=pcvals(ip);
+  pcd=[];
+
+  for iedge=2:nedge
+    ibin=find(sdists>=edge(iedge-1) & sdists<=edge(iedge));
+    pcd(iedge)=quantile(stime(ibin),pcval);
+  end
+  pedge=reshape(repmat(edge,2,1),1,2*nedge);
+  pcd=reshape(repmat(pcd,2,1),1,2*nedge);
+
+  pcd=pcd(3:end);
+  pedge=pedge(2:end-1);
+  pc1(ip)=plot(-pcd,pedge,'b-','LineWidth',5,'visible','on');
+end
+
+for ip=1:3
+  pcr=[];
+  pcval=pcvals(ip);
+
+  for iedge=2:nedge
+    ibin=find(dists>=edge(iedge-1) & dists<=edge(iedge) & isfinite(onset));
+    pcr(iedge)=quantile(onset(ibin),pcval);
+  end
+  pedge=reshape(repmat(edge,2,1),1,2*nedge);
+  pcr=reshape(repmat(pcr,2,1),1,2*nedge);
+
+  pcr=pcr(3:end);
+  pedge=pedge(2:end-1);
+  pc3(ip)=plot(-pcr+20,pedge+20,'r-','LineWidth',5,'visible','on');
+end
+
+set([pc1([2,3]),pc3([2,3])],'visible','off');
+
+% 
+% mhstime=zeros(nedge,1)-NaN;
+% mhsdist=mhstime;
+% [shistc,shistb]=histc(stime,edge);
+% for i=1:nedge
+%    mhstime(i)=mean(stime(shistb==i));
+%    mhsdist(i)=mean(sdists(shistb==i));
+% end
+
+
+%if isnan(mhstime(nedge)) mhstime(nedge)=timelim(2); end
+%if isnan(mhsdist(nedge)) mhsdist(nedge)=mhsdist(nedge-1); end
+
+% pstairs=stairs(-mhstime+diffedge/2.0,mhsdist+diffedge/2.0,'b-','LineWidth',4);
+% 
+% mhtime=zeros(nedge,1)-NaN;
+% mhdist=mhtime;
+% [rhistc,rhistb]=histc(onset,edge);
+% for i=1:nedge
+%    if rhistc(i)==0; continue; end
+%    mhtime(i)=mean(onset(rhistb==i));
+%    mhdist(i)=mean(dists(rhistb==i));
+% end
+% pstairr=stairs(-mhtime+diffedge/2.0,mhdist+diffedge/2.0,'r-','LineWidth',4);
+
+
+%pirppn=plot(-stime(irppn),sdists(irppn),'bs','MarkerFaceColor',colppn,'MarkerSize',4);
+%pirkor=plot(-stime(irkor),sdists(irkor),'bs','MarkerFaceColor',colkor,'MarkerSize',4);
+%pirtrb=plot(-stime(irtrb),sdists(irtrb),'bs','MarkerFaceColor',coltrb,'MarkerSize',4);
+%pirlbk=plot(-stime(irlbk),sdists(irlbk),'bs','MarkerFaceColor',collbk,'MarkerSize',4);
+ 
+%    'LBK sites','TRB sites','LBK regions','Site regression','Simulation regression',...
+%    'Site histogram','Simulation histogram');
+l=legend([p1,p3,p4,p5,pc1,pc3],'Radiocarbon sites','Simulation regions','Site regression','Simulation regression',...
+    'Site staircase fit','Simulation staircase fit');
+set(l,'location','Northwest','visible','off');
 
 [cr1,cp1]=corrcoef(onset(itv),dists(itv));
 [cr2,cp2]=corrcoef(stime,sdists);
+%set(gca,'YLim',[0 4000]);
 
-ytl=get(gca,'YTickLabel');
-ytl(1,:)=' ';
-set(gca,'YTickLabel',ytl);
+%ytl=get(gca,'YTickLabel');
+%ytl(1,:)=' ';
+%set(gca,'YTickLabel',ytl);
 
 %l=legend([p1,p2],sprintf('Site data (n=%d, r^2=%.2f, v=%.2f km a^{-1})',length(viscol),cr2(2).^2,-pf2(1)),...
 %    sprintf('Simulation (n=%d, r^2=%.2f, v=%.2f km a^{-1})',length(itv),cr1(2).^2,-pf1(1)),...
 %    'location','NorthWest','FontSize',7);
-l=legend([p1,p2,p3],'Radiocarbon dated sites','Simulation regions','Focus regions');
-set(l,'location','NorthWest','FontSize',13);
+%l=legend([p1,p2,p3],'Radiocarbon dated sites','Simulation regions','Focus regions');
+%set(l,'location','NorthWest','FontSize',13);
 
 
 fprintf('Site data (n=%d, r^2=%.2f, v=%.2f km a^{-1})',length(stime),cr2(2).^2,-pf2(1));
@@ -571,19 +888,20 @@ fprintf('Simulation (n=%d, r^2=%.2f, v=%.2f km a^{-1})',length(itv),cr1(2).^2,-p
 
 %set(l,'color','none');
 
-offsets=100*[0 1 -1 1 -1 0 0 0 0 0];
-for i=1:nhreg
-  t1(i)=text(-onset(ihreg(i)),-200+offsets(i),letters(i),'Horizontal','center','FontName','Times','FontSize',14);
-end
+%offsets=100*[0 1 -1 1 -1 0 0 0 0 0];
+%for i=1:nhreg
+ % t1(i)=text(-onset(ihreg(i)),-200+offsets(i),letters(i),'Horizontal','center','FontName','Times','FontSize',14);
+%e%nd
 
-plot_multi_format(1,'ammerman_rgb','pdf');
+cl_print('name','ammerman_rgb','ext','png','res',[300,600]);
+cl_print('name','ammerman_rgb','ext','pdf');
 
 
 %% Do black and white version
-set(p3,'MarkerFaceColor',repmat(0.5,3,1),'Color',repmat(0.5,3,1));
-set([p2,p1,p4],'Color',repmat(0,3,1));
-set(p2,'MarkerFaceColor',repmat(0,3,1));
-plot_multi_format(1,'ammerman_bw','pdf');
+%set(p3,'MarkerFaceColor',repmat(0.5,3,1),'Color',repmat(0.5,3,1));
+%set([p2,p1,p4],'Color',repmat(0,3,1));
+%set(p2,'MarkerFaceColor',repmat(0,3,1));
+%plot_multi_format(1,'ammerman_bw','pdf');
 
 end
 
@@ -753,15 +1071,6 @@ fprintf('Sum in region %d: %f by people, %f by info\n',...
 end
 
 return
-iit=(tex(ii)+9500)/5+1;
-iet=(tex(ie)+9500)/5+1;
-%iit=find(tex(ti==r));
-%iet=find(tex(te==r));
-[uiit,uii,uij]=unique(iit);
-for i=1:length(uiit)
-  iii=find(uiit(i)==iit);
-  ui(i)=sum(ex.d(ii(iii),5));
-end
-ut=(uiit-1)*5-9500;
 
-plot(ut,ui,'m-');
+
+

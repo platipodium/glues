@@ -430,7 +430,11 @@ double simulation() {
   gnc_write_record(ncout,"economies_init",&float_record);
   for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=0;
   gnc_write_record(ncout,"population_density_init",&float_record);
-  for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=populations[i].Region()->Area();
+  for (unsigned int i=0; i<numberOfRegions; i++) 
+  {float_record[i]=populations[i].Region()->Area();
+  //std::cout << float_record[i] << std::endl;
+  }
+  
   gnc_write_record(ncout,"area",&float_record);
   for (unsigned int i=0; i<numberOfRegions; i++) int_record[i]=populations[i].Region()->Sahara();
   gnc_write_record(ncout,"region_is_in_sahara",&int_record);

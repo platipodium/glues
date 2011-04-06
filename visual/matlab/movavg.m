@@ -2,6 +2,8 @@ function movavg=movavg(times,values,window,keepnan)
 
 cl_register_function();
 
+if length(times)<1 movavg=[]; return; end
+
 if ~exist('keepnan','var') keepnan=0; end
 
 ji=1;

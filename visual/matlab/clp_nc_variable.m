@@ -1,4 +1,11 @@
 function [retdata,basename]=clp_nc_variable(varargin)
+% [retdata,basename]=clp_nc_variable(varargin)
+% This function plots a variable from a netcdf file
+% give arguments as key value pairs, i.e. ('file','myfile.nc')
+% see source code for full list of available options
+
+% Carsten Lemmen <carsten.lemmen@hzg.de>
+% License: GNU Public License v3
 
 arguments = {...
   {'latlim',[-inf inf]},...
@@ -197,7 +204,6 @@ if isnan(cmap)
     cmap=flipud(gray(ncol));
     if ~transparency flip=1; end
   end
-  if (flip==1) colmap=flipud(colmap); end
 
   cmap=colormap(colmap);
 else
@@ -205,6 +211,7 @@ else
     cmap=colormap(cmap);
     colmap=cmap;
 end
+if (flip==1) colmap=flipud(colmap); end
 
   
 rlon=lon;
@@ -339,8 +346,9 @@ for it=1:ntime
     if length(units)>0 title(cb,units); end
     if minmax(2)>minmax(1)
       yt=get(cb,'YTick');
+      ytlim=get(cb,'YLim');
       yr=minmax(2)-minmax(1);
-      ytl=scale_precision((yt-yt(1))*yr/(yt(end)-yt(1))+minmax(1),3)';
+      ytl=scale_precision((yt-ytlim(1))*yr/(ytlim(2)-ytlim(1))+minmax(1),4)';
       set(cb,'YTickLabel',num2str(ytl));
     else
       cb=colorbar('FontSize',15,'Ytick',minmax(1));

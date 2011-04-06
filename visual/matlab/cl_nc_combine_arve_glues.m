@@ -20,8 +20,8 @@ file='../../data/Pop_estimates.nc';
 ncid=netcdf.open(file,'NOWRITE');
 varid=netcdf.inqVarID(ncid,'time');
 time=netcdf.getVar(ncid,varid);
-varid=netcdf.inqVarID(ncid,'regname');
-regname=netcdf.getVar(ncid,varid);
+%varid=netcdf.inqVarID(ncid,'regname');
+%regname=netcdf.getVar(ncid,varid);
 varid=netcdf.inqVarID(ncid,'regnum');
 regnum=netcdf.getVar(ncid,varid);
 varid=netcdf.inqVarID(ncid,'population');
@@ -304,9 +304,15 @@ end
   
 itime=find(time>=timelim(1) & time<=timelim(2));
 
+onepage=0;
+
 for i=1:12 
-  %figure(i+2); clf reset; hold on;
-  subplot(4,3,i)
+
+  if onepage subplot(4,3,i);
+  else 
+    figure(i+2); clf reset; hold on;
+    orient('landscape');
+  end
   plot(glues.time,s(i,:),'b-','LineWidth',3); hold on;
   
   plot(time(itime),kk10(i,itime),'r-','LineWidth',3);
@@ -314,11 +320,18 @@ for i=1:12
   plot(time(itime),kk10upper(i,itime),'r--');
   set(gca,'XLim',[-6500,1900],'YLim',[0 ceil(max(kk10upper(i,itime)/10))*10],'YScale','linear');
   title(sregions{i});
-  %xlabel('Time (year AD)');
-  %ylabel('Population size (1E6)'); 
+  
+  if onepage
+    orient('landscape');
+  else
+    xlabel('Time (year AD)');
+    ylabel('Population size (1E6)'); 
+    pos=get(gcf,'Position');
+    %psxw=29.6774;
+    %set(gcf,'PaperSize',[psxw psxw*pos(4)/pos(3)]); 
+    cl_print('name',['combine_arve_glues_' strrep(sregions{i},' ','_')],'ext','pdf');
+  end
 end
-orient('landscape');
-
 
 
 %% Individual continents: North America
@@ -874,7 +887,7 @@ set(gca,'XLim',[-8000 1850]);
 % natural uncertainty of the parameters is not know, so I don't think this
 % makes sense either.
 
-file='lkk11_0.1_20110105.nc'
+file=['lkk11_0.2_' datestr(now,'yyyymmdd') '.nc'];
 if exist(file,'file') delete(file); end
 
 ncid=netcdf.create(file,'NOCLOBBER');
