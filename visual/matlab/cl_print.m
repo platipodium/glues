@@ -22,7 +22,18 @@ for i=1:a.length
 end
 
 if isnan(fig) fig=gcf; end
-set(fig,'PaperPositionMode','auto');
+pos=get(fig,'Position');
+set(fig,'PaperType','A4','PaperPositionMode','auto');
+ppos=get(fig,'PaperPosition');
+psize=get(fig,'PaperSize');
+set(fig,'PaperPositionMode','Manual','PaperOrientation','portrait');
+set(fig,'PaperPosition',ppos.*[0 0 psize(1)/ppos(3) psize(1)/ppos(3)]);
+ppos=get(fig,'PaperPosition');
+set(fig,'PaperSize',psize.*[1 0]+ppos(3:4).*[0 1]);
+%psize=get(gcf,'PaperSize');
+%if psize(2)<psize(1) set(fig,'PaperOrientation','rotated')
+%else set(fig,'PaperOrientation','portrait');
+%closeend
 
 if ~iscell(extension) extension={extension}; end
 

@@ -3,8 +3,8 @@ function cl_nc_combine_arve_glues(varargin)
 % half-degree grid and aggregates over the ARVE population regions.
 
 arguments = {...
-  {'timelim',[-6000,2000]},...
-  {'file','arveaggregate.mat'},...
+  {'timelim',[-8000,2000]},...
+  {'file','arveaggregate_eurolbk_events.mat'},...
 };
 
 cl_register_function;
@@ -775,7 +775,7 @@ set(gca,'XLim',[-8000 1850]);
 % natural uncertainty of the parameters is not know, so I don't think this
 % makes sense either.
 
-file=['lkk11_0.2_' datestr(now,'yyyymmdd') '.nc'];
+file=['lkk11_0.3_' datestr(now,'yyyymmdd') '.nc'];
 if exist(file,'file') delete(file); end
 
 ncid=netcdf.create(file,'NOCLOBBER');
