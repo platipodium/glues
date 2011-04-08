@@ -4,7 +4,7 @@ function cl_nc_combine_arve_glues(varargin)
 
 arguments = {...
   {'timelim',[-6000,2000]},...
-  {'file','arveaggregate_eurolbk_events.mat'},...
+  {'file','arveaggregate.mat'},...
 };
 
 cl_register_function;
@@ -62,11 +62,12 @@ plot(time,sum(lower,1),'r--','LineWidth',1);
 plot(time,sum(best,1),'r-','LineWidth',2);
 plot(time,sum(upper,1),'r--','LineWidth',1);
 
-glues.value=glues.arvedensity;
+glues.value=glues.population_density;
 ntime=size(glues.value,2);
-area=repmat(glues.garea',1,ntime);
+area=repmat(glues.area,1,ntime);
 
-plot(glues.time,sum(area.*glues.value/1E6,1),'b-','LineWidth',2);
+iv= find(all(isfinite(glues.value),2));
+plot(glues.time,sum(area(iv,:).*glues.value(iv,:)/1E6,1),'b-','LineWidth',2);
 legend('KK10 lower','KK10','KK10 upper','GLUES','location','NorthWest');
 xlabel('Time (year AD)');
 ylabel('Population size (1E6)'); 
@@ -74,57 +75,23 @@ ylabel('Population size (1E6)');
 %%
 
 % From Kristen's population paper super regions
-file='../../data/pop_region_key2.txt';
+file='../../data/super_region_key.txt';
 fid=fopen(file,'r');
-keys=textscan(fid,'%d %s');
+keys=textscan(fid,'%d %d %s');
 fclose(fid);
-for i=1:length(keys{1})
-  eval([strrep(char(keys{2}(i)),'-','_') ' = ' num2str(keys{1}(i)) ';']);
+
+super=unique(keys{1});
+nsuper=length(super);
+
+if nsuper==12
+  supernames={'North America','South America','Europe','Former Soviet Union','Southwest Asia',...
+      'North Africa','Subsaharan Africa','Indian subcontinent','China','Japan','Southeast Asia',...
+      'Oceania'};
+  supershorts={'NAM','SAM','EUR','FSU','SWA','NAF','SAF','IND','CHI','JAP','SEA','OCE'};
+else
+  error('Please define new names for the super regions');    
 end
 
-
-
-% Now group these
-continental_usa=[242:291];
-continental_canada=[230:241];
-namerica=[continental_usa continental_canada Greenland];
-
-samerica=[Uruguay Northern_South_America Mayan_America Central_Mexico Central_Brazil Argentina_lowland ...
-Caribbean North_coast_Brazil Aridoamerica Central_America Central_coast_Brazil NE_Brazil South_coast_Brazil Andes ...
-Paraguay Amazon];
-
-% Europe: Azores missing
-europe=[Albania Austria Belgium_Luxembourg Bulgaria Canaries Czechoslovakia Denmark East_Prussia ...
-    England_Wales Finland France Germany Greece Hungary Iceland Ireland Italy Madeira Malta Netherlands Norway ...
-    Poland Portugal Romania Scotland Spain Sweden Switzerland Turkey_in_Europe Yugoslavia];
-
-% FSU west of Ural
-fsu_west=[USSR_Byelarus USSR_Moldova USSR_Donetsk_Dnepr USSR_South USSR_Southwest USSR_Northwest ...
-    USSR_Volgo_Viatsk USSR_Volga USSR_Ural USSR_West USSR_Central  Ciscaucasia Transcaucasia];
-
-fsu_east= [USSR_Central_Chernozem USSR_West_Siberia USSR_East_Siberia USSR_Far_East ...
-    Russian_Turkestan];
-
-fsu=[fsu_west fsu_east];
-
-% Europe + fsu west of Ural europe=[europe fsu_west];
-
-swasia=[Afghanistan Cyprus Iran Iraq Oman Palestine_Jordan Persian_Gulf Saudi_Arabia Syria_Lebanon ...
-    Turkey_in_Asia Yemen];
-
-
-nafrica=[Morocco Algeria Tunisia Libya  Egypt Cape_Verde];
-%Subsaharan Africa: Seychelles missing,  Atlantic_Islands?
-safrica=[Comoros,Equatoria_Zaire_Angola Ethiopia Kenya Madagascar Mauritius Mozambique Reunion ...
-    Rwanda_Burundi Sahel_States  Somalia Southern_Africa South_Central_Africa Sudan SW_Africa_Botswana ...
-    Tanzania Uganda West_Africa Sao_Tome_Principe];
-
-india=[Pakistan_India_Bangladesh Nepal Bhutan];
-
-china=[292:317 Mongolia Taiwan ];
-japan=[Japan];
-seasia=[Vietnam Thailand Sri_Lanka Philippines Malaysia_Singapore Laos Korea Indonesia Cambodia Burma];
-oceania=[Australia Melanesia New_Zealand Polynesia];
 
 nar=max(glues.index);
 for i=1:nar
@@ -135,74 +102,29 @@ for i=1:nar
   end
 end
 
-area=glues.garea;
+area=glues.area;
 
-% calculate total area of superreigions
-ar(1)=sum(area(aindex(namerica)));
-ar(2)=sum(area(aindex(samerica)));
-ar(3)=sum(area(aindex(europe)));
-ar(4)=sum(area(aindex(fsu)));
-ar(5)=sum(area(aindex(swasia)));
-ar(6)=sum(area(aindex(nafrica)));
-ar(7)=sum(area(aindex(safrica)));
-ar(8)=sum(area(aindex(india)));
-ar(9)=sum(area(aindex(china)));
-ar(10)=sum(area(aindex(japan)));
-ar(11)=sum(area(aindex(seasia)));
-ar(12)=sum(area(aindex(oceania)));
+%% calculate total area of superreigions
+% this is an underestimation due to mismatches between the glues and arve
+% areas
+for i=1:nsuper
+  insuper=find(keys{1}==i);
+  ar(i)=sum(area(aindex(keys{2}(insuper))));
+end
+ar(nsuper+1)=sum(ar(1:nsuper));
 
-area=glues.garea;
-
-% Remove countries for which we don't have numbers in GLUES (area=inf)
-namerica=namerica(isfinite(area(aindex(namerica))));
-samerica=samerica(isfinite(area(aindex(samerica))));
-europe=europe(isfinite(area(aindex(europe))));
-fsu=fsu(isfinite(area(aindex(fsu))));
-swasia=swasia(isfinite(area(aindex(swasia))));
-nafrica=nafrica(isfinite(area(aindex(nafrica))));
-safrica=safrica(isfinite(area(aindex(safrica))));
-india=india(isfinite(area(aindex(india))));
-china=china(isfinite(area(aindex(china))));
-japan=japan(isfinite(area(aindex(japan))));
-seasia=seasia(isfinite(area(aindex(seasia))));
-oceania=oceania(isfinite(area(aindex(oceania))));
-
-arc(1)=sum(area(aindex(namerica)));
-arc(2)=sum(area(aindex(samerica)));
-arc(3)=sum(area(aindex(europe)));
-arc(4)=sum(area(aindex(fsu)));
-arc(5)=sum(area(aindex(swasia)));
-arc(6)=sum(area(aindex(nafrica)));
-arc(7)=sum(area(aindex(safrica)));
-arc(8)=sum(area(aindex(india)));
-arc(9)=sum(area(aindex(china)));
-arc(10)=sum(area(aindex(japan)));
-arc(11)=sum(area(aindex(seasia)));
-arc(12)=sum(area(aindex(oceania)));
-arc(13)=sum(arc(1:12));
-arc(:)=1;
-ar(:)=1;
-
-
-glues.value=glues.arvedensity;
+glues.value=glues.population_density;
 ntime=size(glues.value,2);
-area=repmat(glues.garea',1,ntime);
+area=repmat(glues.area,1,ntime);
 
-s(1,:)=sum(area(aindex(namerica),:).*glues.value(aindex(namerica),:)).*ar(1)./arc(1);
-s(2,:)=sum(area(aindex(samerica),:).*glues.value(aindex(samerica),:)).*ar(2)./arc(2);
-s(3,:)=sum(area(aindex(europe),:).*glues.value(aindex(europe),:)).*ar(3)./arc(3);
-s(4,:)=sum(area(aindex(fsu),:).*glues.value(aindex(fsu),:)).*ar(4)./arc(4);
-s(5,:)=sum(area(aindex(swasia),:).*glues.value(aindex(swasia),:)).*ar(5)./arc(5);
-s(6,:)=sum(area(aindex(nafrica),:).*glues.value(aindex(nafrica),:)).*ar(6)./arc(6);
-s(7,:)=sum(area(aindex(safrica),:).*glues.value(aindex(safrica),:)).*ar(7)./arc(7);
-s(8,:)=sum(area(aindex(india),:).*glues.value(aindex(india),:)).*ar(8)./arc(8);
-s(9,:)=sum(area(aindex(china),:).*glues.value(aindex(china),:)).*ar(9)./arc(9);
-s(10,:)=(area(aindex(japan),:).*glues.value(aindex(japan),:)).*ar(10)./arc(10);
-s(11,:)=sum(area(aindex(seasia),:).*glues.value(aindex(seasia),:)).*ar(11)./arc(11);
-s(12,:)=sum(area(aindex(oceania),:).*glues.value(aindex(oceania),:)).*ar(12)./arc(12);
+for i=1:nsuper
+  insuper=find(keys{1}==i);
+  si=area(aindex(keys{2}(insuper)),:).*glues.value(aindex(keys{2}(insuper)),:);  
+  iv=find(isfinite(si(:,1)));
+  s(i,:)=sum(si(iv,:),1);
+  end
 s(13,:)=sum(s(1:12,:),1);
 s=s/1E6;
-
 
 
 %% Context with published estimates
@@ -252,54 +174,20 @@ figure(3); clf reset;
 
 c='rgbcmkrgbcmkr';
 ls='------::::::-';
-sregions={'NAM','SAM','Europe','FSU','SW Asia','N Afr','Subsah Afr','India',...
-    'China','Japan','SE Asia','Oceania'};
-
-isnamerica=[];
-issamerica=[];
-iseurope=[];
-isfsu=[];
-isswasia=[];
-isnafrica=[];
-issafrica=[];
-isindia=[];
-ischina=[];
-isjapan=[];
-isseasia=[];
-isoceania=[];
-
-for i=namerica isnamerica=[isnamerica find(regnum==i)]; end
-for i=samerica issamerica=[issamerica find(regnum==i)]; end
-for i=europe iseurope=[iseurope find(regnum==i)]; end
-for i=fsu isfsu=[isfsu find(regnum==i)]; end
-for i=swasia isswasia=[isswasia find(regnum==i)]; end
-for i=nafrica isnafrica=[isnafrica find(regnum==i)]; end
-for i=safrica issafrica=[issafrica find(regnum==i)]; end
-for i=india isindia=[isindia find(regnum==i)]; end
-for i=china ischina=[ischina find(regnum==i)]; end
-for i=japan isjapan=[isjapan find(regnum==i)]; end
-for i=seasia isseasia=[isseasia find(regnum==i)]; end
-for i=oceania isoceania=[isoceania find(regnum==i)]; end
 
 
-for i=1:12 
-  switch (i)
-      case 1,idx=isnamerica;
-      case 2,idx=issamerica;
-      case 3,idx=iseurope;
-      case 4,idx=isfsu;
-      case 5,idx=isswasia;
-      case 6,idx=isnafrica;
-      case 7,idx=issafrica;
-      case 8,idx=isindia;
-      case 9,idx=ischina;
-      case 10,idx=isjapan;
-      case 11,idx=isseasia;
-      case 12,idx=isoceania;      
+
+for i=1:nsuper
+  insuper=find(keys{1}==i);
+  ink=[];
+  for is=1:length(insuper)
+    ik=find(regnum==keys{2}(insuper(is)));
+    if ~isempty(ik) ink=[ink ik]; end
   end
-  kk10(i,:)=sum(best(idx,:),1);
-  kk10upper(i,:)=sum(upper(idx,:),1);
-  kk10lower(i,:)=sum(lower(idx,:),1);
+  
+  kk10(i,:)=sum(best(ink,:),1);
+  kk10upper(i,:)=sum(upper(ink,:),1);
+  kk10lower(i,:)=sum(lower(ink,:),1);
 end
   
 itime=find(time>=timelim(1) & time<=timelim(2));
@@ -319,7 +207,7 @@ for i=1:12
   plot(time(itime),kk10lower(i,itime),'r--');
   plot(time(itime),kk10upper(i,itime),'r--');
   set(gca,'XLim',[-6500,1900],'YLim',[0 ceil(max(kk10upper(i,itime)/10))*10],'YScale','linear');
-  title(sregions{i});
+  title(supernames{i});
   
   if onepage
     orient('landscape');
@@ -329,7 +217,7 @@ for i=1:12
     pos=get(gcf,'Position');
     %psxw=29.6774;
     %set(gcf,'PaperSize',[psxw psxw*pos(4)/pos(3)]); 
-    cl_print('name',['combine_arve_glues_' strrep(sregions{i},' ','_')],'ext','pdf');
+    cl_print('name',['combine_arve_glues_' supershorts{i}],'ext','pdf');
   end
 end
 
@@ -351,7 +239,7 @@ plot(time(itime),kk10(i,itime),'r-','LineWidth',2);
 plot(time(itime),kk10lower(i,itime),'r--');
 plot(time(itime),kk10upper(i,itime),'r--');
 set(gca,'XLim',[-6500,1900],'YLim',[0 ceil(max(kk10upper(i,itime)/10))*10],'YScale','linear');
-title(sregions{i});
+title(supernames{i});
 xlabel('Time (year AD)');
 ylabel('Population size (1E6)'); 
 
@@ -403,7 +291,7 @@ plot(time(itime),kk10(i,itime),'r-','LineWidth',2);
 plot(time(itime),kk10lower(i,itime),'r--');
 plot(time(itime),kk10upper(i,itime),'r--');
 set(gca,'XLim',[-6500,1900],'YLim',[0 ceil(max(kk10upper(i,itime)/10))*10],'YScale','linear');
-title(sregions{i});
+title(supernames{i});
 xlabel('Time (year AD)');
 ylabel('Population size (1E6)'); 
 
@@ -445,7 +333,7 @@ plot(time(itime),kk10(i,itime),'r-','LineWidth',2);
 plot(time(itime),kk10lower(i,itime),'r--');
 plot(time(itime),kk10upper(i,itime),'r--');
 set(gca,'XLim',[-6500,1900],'YLim',[0 ceil(max(kk10upper(i,itime)/10))*10],'YScale','linear');
-title(sregions{i});
+title(supernames{i});
 xlabel('Time (year AD)');
 ylabel('Population size (1E6)'); 
 
@@ -481,7 +369,7 @@ p2=plot(time(itime),kk10(i,itime),'r-','LineWidth',2);
 plot(time(itime),kk10lower(i,itime),'r--');
 plot(time(itime),kk10upper(i,itime),'r--');
 set(gca,'XLim',[-6500,1900],'YLim',[0 ceil(max(kk10upper(i,itime)/10))*10],'YScale','linear');
-title(sregions{i});
+title(supernames{i});
 xlabel('Time (year AD)');
 ylabel('Population size (1E6)'); 
 
@@ -530,7 +418,7 @@ p2=plot(time(itime),kk10(i,itime),'r-','LineWidth',2);
 plot(time(itime),kk10lower(i,itime),'r--');
 plot(time(itime),kk10upper(i,itime),'r--');
 set(gca,'XLim',[-6500,1900],'YLim',[0 ceil(max(kk10upper(i,itime)/10))*10],'YScale','linear');
-title(sregions{i});
+title(supernames{i});
 xlabel('Time (year AD)');
 ylabel('Population size (1E6)'); 
 
@@ -571,7 +459,7 @@ p2=plot(time(itime),kk10(i,itime),'r-','LineWidth',2);
 plot(time(itime),kk10lower(i,itime),'r--');
 plot(time(itime),kk10upper(i,itime),'r--');
 set(gca,'XLim',[-6500,1900],'YLim',[0 ceil(max(kk10upper(i,itime)/10))*10],'YScale','linear');
-title(sregions{i});
+title(supernames{i});
 xlabel('Time (year AD)');
 ylabel('Population size (1E6)'); 
 
@@ -603,7 +491,7 @@ p2=plot(time(itime),kk10(i,itime),'r-','LineWidth',2);
 plot(time(itime),kk10lower(i,itime),'r--');
 plot(time(itime),kk10upper(i,itime),'r--');
 set(gca,'XLim',[-6500,1900],'YLim',[0 ceil(max(kk10upper(i,itime)/10))*10],'YScale','linear');
-title(sregions{i});
+title(supernames{i});
 xlabel('Time (year AD)');
 ylabel('Population size (1E6)'); 
 
@@ -649,7 +537,7 @@ p2=plot(time(itime),kk10(i,itime),'r-','LineWidth',2);
 plot(time(itime),kk10lower(i,itime),'r--');
 plot(time(itime),kk10upper(i,itime),'r--');
 set(gca,'XLim',[-6500,1900],'YLim',[0 ceil(max(kk10upper(i,itime)/10))*10],'YScale','linear');
-title(sregions{i});
+title(supernames{i});
 xlabel('Time (year AD)');
 ylabel('Population size (1E6)'); 
 
@@ -682,7 +570,7 @@ p2=plot(time(itime),kk10(i,itime),'r-','LineWidth',2);
 plot(time(itime),kk10lower(i,itime),'r--');
 plot(time(itime),kk10upper(i,itime),'r--');
 set(gca,'XLim',[-6500,1900],'YLim',[0 ceil(max(kk10upper(i,itime)/10))*10],'YScale','linear');
-title(sregions{i});
+title(supernames{i});
 xlabel('Time (year AD)');
 ylabel('Population size (1E6)'); 
 
@@ -722,7 +610,7 @@ p2=plot(time(itime),kk10(i,itime),'r-','LineWidth',2);
 plot(time(itime),kk10lower(i,itime),'r--');
 plot(time(itime),kk10upper(i,itime),'r--');
 set(gca,'XLim',[-6500,1900],'YLim',[0 ceil(max(kk10upper(i,itime)/10))*10],'YScale','linear');
-title(sregions{i});
+title(supernames{i});
 xlabel('Time (year AD)');
 ylabel('Population size (1E6)'); 
 
@@ -767,7 +655,7 @@ p2=plot(time(itime),kk10(i,itime),'r-','LineWidth',2);
 plot(time(itime),kk10lower(i,itime),'r--');
 plot(time(itime),kk10upper(i,itime),'r--');
 set(gca,'XLim',[-6500,1900],'YLim',[0 ceil(max(kk10upper(i,itime)/10))*10],'YScale','linear');
-title(sregions{i});
+title(supernames{i});
 xlabel('Time (year AD)');
 ylabel('Population size (1E6)'); 
 
@@ -814,7 +702,7 @@ p2=plot(time(itime),kk10(i,itime),'r-','LineWidth',2);
 plot(time(itime),kk10lower(i,itime),'r--');
 plot(time(itime),kk10upper(i,itime),'r--');
 set(gca,'XLim',[-6500,1900],'YLim',[0 ceil(max(kk10upper(i,itime)/10))*10],'YScale','linear');
-title(sregions{i});
+title(supernames{i});
 xlabel('Time (year AD)');
 ylabel('Population size (1E6)'); 
 
@@ -958,7 +846,7 @@ file=strrep(file,'.nc','_key.txt');
 fid=fopen(file,'w');
 fprintf('# Supra region keys\n');
 for i=1:nreg
-  fprintf(fid,'%d %s\n',i,sregions{i});
+  fprintf(fid,'%d %s\n',i,supernames{i});
 end
 fclose(fid);
 

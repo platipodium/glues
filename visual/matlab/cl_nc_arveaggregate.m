@@ -6,7 +6,7 @@ arguments = {...
   {'timelim',[-9500,1000]},...
   {'variables','population_density'},...
   {'timestep',1},...
-  {'file','../../test.nc'},...
+  {'file','../../eurolbk_events.nc'},...
   {'scenario',''}...
 };
 
@@ -25,7 +25,7 @@ ncid=netcdf.open(file,'NC_NOWRITE');
 varname='region'; varid=netcdf.inqVarID(ncid,varname);
 id=netcdf.getVar(ncid,varid);
 
-[ndim nvar natt udimid] = netcdf.inq(ncid); 
+[ndim, nvar, natt, udimid] = netcdf.inq(ncid); 
 for varid=0:nvar-1
   [varname,xtype,dimids,natts]=netcdf.inqVar(ncid,varid);
   if strcmp(varname,'lat') lat=netcdf.getVar(ncid,varid); end
@@ -92,12 +92,13 @@ arvelon=netcdf.getVar(ncid,varid);
 netcdf.close(ncid);
 
 %% Region region names
-file='../../data/pop_region_key2.txt';
+file='../../data/super_region_key.txt';
 fid=fopen(file,'r');
-C=textscan(fid,'%d %s');
+C=textscan(fid,'%d %d %s');
 fclose(fid);
-arveid=C{1};
-arvename=C{2};
+arvesuper=C{1};
+arveid=C{2};
+arvename=C{3};
 arvename{999}='Not_named';
 arveid(999)=0;
 
@@ -119,12 +120,12 @@ ar=ar(ar>0);
 nar=length(ar);
 [narow,nacol]=size(arveregion);
 
-debug=0
+debug=0;
 if debug>0;figure(1); clf reset;end 
 
 map.region=zeros(720,360);
 for i=1:length(land.region)
-    map.region(land.ilon(i),land.ilat(i))=land.region(i);
+  map.region(land.ilon(i),land.ilat(i))=land.region(i);
 end
   
 
@@ -132,22 +133,39 @@ end
 for i=1:length(id)
   ncell(i,1)=sum(land.region==i);
 end
-  %%
+
+
+%%
+arveregionarea=zeros(nar,1);
+arvedensity=zeros(nar,ntime);
+arvesize=zeros(nar,ntime);
+arvegluessize=zeros(nar,ntime);
+arvearea=zeros(nar,1);
+
 for ia=1:nar
-%for ia=213:213 % MAyan America
+    
+    
+    
   [iarow,iacol,val]=find(arveregion==ar(ia));
+  nval=length(iarow);
   % calculate arve regional area
-  arvearea(ia)=sum(calc_gridcell_area(arvelat(iacol),1/12.0,1/12.0));
+  arvecellarea=calc_gridcell_area(arvelat(iacol),1/12.0,1/12.0);
+  arveregionarea(ia)=sum(arvecellarea);
   
   % convert to GLUES: col->row, reverse lats
   irow=nrow-floor((iacol-1)/(nacol/nrow));
   icol=floor((iarow-1)/(narow/ncol))+1;
+  %icol=ncol-floor((iarow-1)/(narow/ncol));
   [irc,airc,birc]=unique([irow icol],'rows');
   nirc=size(irc,1);
   
-  reg=[];
-  for i=1:nirc reg(i)=map.region(irc(i,2),irc(i,1)); end
+  arvecellgluesregion=zeros(nval,1);
+  for i=1:nval 
+    arvecellgluesregion(i)=map.region(icol(i),irow(i)); 
+  end
  
+  reg=zeros(nirc,1);
+  for i=1:nirc reg(i)=map.region(irc(i,2),irc(i,1)); end
   
   if debug
     clf reset;
@@ -157,55 +175,61 @@ for ia=1:nar
     m_coast;
     m_grid;
     hold on;
-    m_plot(arvelon(iarow),arvelat(iacol),'r.');
-    %m_plot(map.longrid(icol),map.latgrid(irow),'b.');
+    p1=m_pcolor(map.longrid,map.latgrid,map.region');
+    set(p1,'FaceAlpha',0.5,'EdgeColor','none');
+    p2=m_plot(arvelon(iarow),arvelat(iacol),'r.');
+    
+    title(sprintf('%d-%d: %s',ia,arvesuper(ia),arvename{ia})); 
+    m_plot(map.longrid(icol),map.latgrid(irow),'b.');
     for i=1:length(irc)
       m_text(map.longrid(irc(i,2)),map.latgrid(irc(i,1)),num2str(reg(i)),...
           'Vertical','middle','Horizontal','center','fontsize',8);
     end
+    
   end
   
   % Afghanistan area 652.225 km²
   
-  iv=find(reg>0);
-  if size(reg)>0
-    iarea=calc_gridcell_area(map.latgrid(irc(iv,1)),0.5,0.5);
-    garea(ia)=sum(iarea);
-    warea=iarea/garea(ia);
-    arvesize(ia,:)=sum(repmat(iarea,ntime,1).*population_density(reg(iv),itime)',2);
-    arvedensity(ia,:)=sum(repmat(warea,ntime,1).*population_density(reg(iv),itime)',2);
-    
-    % find proportion of glues region in cell
-    gluessize(ia,:)=sum(population_size(reg(iv),itime)./repmat(ncell(reg(iv)),1,ntime));
-    gluesarea(ia)=sum(area(reg(iv))./ncell(reg(iv)));
-    
+  iv=find(arvecellgluesregion>0);
+  nvalid=length(iv);
+  if size(reg)>0 & nvalid>0
+    arvedensity(ia,:)=sum(population_density(arvecellgluesregion(iv),itime))/nvalid;
+    arvesize(ia,:)=sum(repmat(arvecellarea(iv),1,ntime)...
+        .*population_density(arvecellgluesregion(iv),itime))...
+        *sum(arvecellarea)/sum(arvecellarea(iv));
+    arvegluessize(ia,:)=sum(population_size(arvecellgluesregion(iv),itime))/nvalid;
+    arvearea(ia)=arveregionarea(ia);
   else
     arvedensity(ia,1:ntime)=NaN;
     arvesize(ia,1:ntime)=NaN;
-    gluessize(ia,1:ntime)=NaN;
-    gluesarea(ia,1:ntime)=NaN;
-    garea(ia)=inf;
- end
-  %fprintf('.');
+    arvegluessize(ia,1:ntime)=NaN;
+    arvearea(ia)=inf;
+  end
   
   iid=find(arveid==ar(ia));
   if isempty(iid) iid=999; end
   
-  fprintf('%3d %s\t%.2f %.2f %.2f %.2f %.2f %.2f\n',arveid(iid),arvename{iid},gluesarea(ia)/1E6,...
-      garea(ia)/1E6,arvearea(ia)/1E6,gluessize(ia,end)/1E6,...
-      arvesize(ia,end)/1E6,arvedensity(ia,end));
+  fprintf('%3d %s\t%.2f %.2f %.2f(=%.2f) %.2f\n',arveid(iid),arvename{iid},...
+      arveregionarea(ia)/1E6,arvegluessize(ia,end)/1E6,...
+      arvesize(ia,end)/1E6,arvedensity(ia,end)*arveregionarea(ia)/1E6,...
+      arvedensity(ia,end));
   
   
 end
 
 
-  fprintf('999 World\t\t%.2f %.2f %.2f %.2f %.2f %.2f\n',sum(gluesarea)/1E6,...
-      sum(garea)/1E6,sum(arvearea)/1E6,sum(gluessize(:,end))/1E6,...
+fprintf('999 World\t\t%.2f %.2f %.2f %.2f\n',...
+      sum(arveregionarea)/1E6,sum(arvegluessize(:,end))/1E6,...
       sum(arvesize(:,end))/1E6,mean(arvedensity(:,end)));
 
 
 index=ar;
-save('arveaggregate','-v6','arvedensity','arvesize','gluessize','gluesarea','garea','index','time');
+population_density=arvedensity;
+population_size=arvesize;
+area=arveregionarea;
+
+
+save('arveaggregate','-v6','population_density','population_size','area','index','time');
 
 
 
