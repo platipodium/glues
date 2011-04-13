@@ -55,7 +55,7 @@ netcdf.close(ncid);
 % There seems to be a small error in the calculation of the lower boundary
 % in the ARVE data (ask Kristen, in Subsaharan part)
 %
-figure(1); clf reset;
+figure(21); clf reset;
 hold on;
 
 plot(time,sum(lower,1),'r--','LineWidth',1);
@@ -140,7 +140,7 @@ s=s/1E6;
 % Note the equilibration of Mesolithic population in GLUES near the
 % upper boundary of the historic estimates around 9k.  
 
-figure(2); clf reset; hold on;
+figure(22); clf reset; hold on;
 
 h=[-10000 1 10; -8000 5 10; -6500 5 10 ; -5000 5 20; ...
     -4000 7 NaN; -3000 14  NaN ; -2000 27 NaN ; -1000 50 NaN; ...
@@ -170,7 +170,6 @@ title('Global population');
 % estimates are shown to contrast the simulation and the KK10 data with
 % lower and upper bounds. 
 
-figure(3); clf reset;
 
 c='rgbcmkrgbcmkr';
 ls='------::::::-';
@@ -198,16 +197,18 @@ for i=1:12
 
   if onepage subplot(4,3,i);
   else 
-    figure(i+2); clf reset; hold on;
-    orient('landscape');
+    figure(i); clf reset; hold on;
   end
-  plot(glues.time,s(i,:),'b-','LineWidth',3); hold on;
+  p(2,1)=plot(glues.time,s(i,:),'b-','LineWidth',3); hold on;
   
-  plot(time(itime),kk10(i,itime),'r-','LineWidth',3);
-  plot(time(itime),kk10lower(i,itime),'r--');
-  plot(time(itime),kk10upper(i,itime),'r--');
-  set(gca,'XLim',[-6500,1900],'YLim',[0 ceil(max(kk10upper(i,itime)/10))*10],'YScale','linear');
+  p(2,2)=plot(time(itime),kk10(i,itime),'r-','LineWidth',3);
+  p(2,3)=plot(time(itime),kk10lower(i,itime),'r--');
+  p(2,4)=plot(time(itime),kk10upper(i,itime),'r--');
+  set(gca,'XLim',[-7200,1900],'YLim',[0 ceil(max(kk10upper(i,itime)/10))*10],'YScale','linear');
   title(supernames{i});
+  
+  legend([p(2,1) p(2,2) p(2,3)],'GLUES','KK10','KK10 range','Location','Northwest');
+
   
   if onepage
     orient('landscape');
@@ -217,9 +218,279 @@ for i=1:12
     pos=get(gcf,'Position');
     %psxw=29.6774;
     %set(gcf,'PaperSize',[psxw psxw*pos(4)/pos(3)]); 
-    cl_print('name',['combine_arve_glues_' supershorts{i}],'ext','pdf');
+    %cl_print('name',['combine_arve_glues_' supershorts{i}],'ext','pdf');
   end
 end
+
+
+
+%% Joining population:
+% The superregions can be divided in two groups.  Group 1 contains China,
+% Europe, North Africa, India, Southwest Asia, ans South America.  Regions
+% in this group exhibit a good match between GLUES predictions and
+% historical estimates (within uncertainties).  Group 2 contains all other
+% regions (FSU, Jap, Oceania, Subsah. Africa, Southeast Asia, North
+% America).  In these regions, the GLUES prediction is higher than the
+% historic estimates.
+
+alltime=min(glues.time):max(time);
+nalltime=length(alltime);
+lkk=zeros(nsuper,nalltime)+NaN;
+g=lkk;
+k=lkk;
+ku=lkk;
+kl=lkk;
+
+g0=find(alltime==max(glues.time));
+k0=find(alltime==min(time));
+g(:,1:g0)=spline(glues.time,s(1:12,:),alltime(1:g0));
+g(:,g0+1:end)=repmat(max(s(1:12,:),[],2),1,nalltime-g0);
+k(:,1:k0-1)=repmat(min(kk10,[],2),1,k0-1);
+k(:,k0:end)=kk10;
+ku(:,1:k0-1)=repmat(min(kk10upper,[],2),1,k0-1);
+ku(:,k0:end)=kk10upper;
+kl(:,1:k0-1)=repmat(min(kk10lower,[],2),1,k0-1);
+kl(:,k0:end)=kk10lower;
+
+% Assign GLUES to total time series 
+lkk=g;
+
+for i=1:nsuper
+  d0=g(i,:);
+  d2=k(i,:);
+       
+switch (supershorts{i})
+    
+%% Group one algorithms
+% The six regions in group 1 are treated by three different algorithms.
+% The first four, China, Europe, North Africa, and India show a close match
+% between GLUES and KK10, thus a simple linear weighted joining between
+% 1000 BC (GLUES) and 1 AD (KK10) is performed.
+
+    case {'EUR','CHI','IND','NAF'}
+      t0=-1000;
+      t1=0;
+      d1=d2;
+      t2=t1;
+
+% For South America, the KK10 reference point is shifted to 1490 AD; the
+% linear weighted joining period is thus 1000 BC (GLUES) to 1490 AD (KK10).
+
+    case {'SAM'}
+      t0=-1000;
+      t1=1490;
+      d1=d2;
+      t2=t1;
+     
+% For Southwest Asia, we would like to emphasize the possibly higher
+% historic estimates for early Mesopotamian civilizations by joining GLUES
+% to the mean value of KK10 and the upper historic estimate KK10up at 1AD,
+% we then relax this data to KK10 at 1000 AD.
+
+    case {'SWA'}
+      t0=-1000;
+      t1=0;
+      d1=(k(i,:)+ku(i,:))/2;
+      t2=1500;
+
+%% Group 2 algorithm
+% GLUES consistently overestimates population in these six regions.  Thus,
+% we correct the GLUES estimate starting 4000 BC and join this to the 1000
+% AD KK10up historic estimate (for four regions, FSU, Japan, Oceania, 
+% and Southeast Asia by linear weighting; subsequently, we 
+% relax this estimate to the KK10 value at 1500 AD.
+
+    case {'FSU','JAP','OCE','SEA','SAF'}
+      t0=-4000;
+      t1=1000;
+      t2=1500;
+      d1=ku(i,:);
+ 
+% As an exception, we choose for North America AD 1490 as a reference
+% point; for which we take the mean value of KK10 and KK10up to reflect the
+% higher potential population suggested by GLUES.  We linearly weight
+% between GLUES (4000 BC) and (KK10+KK10up)/2 (1490 BC) and then relax to
+% the 1500 AD KK10 value.
+  case {'NAM'}
+      t0=-4000;
+      t1=1490;
+      t2=1500;
+      d1=(k(i,:)+ku(i,:))/2;     
+      
+      
+    otherwise
+      warning('Super regions not defined');
+  end
+
+  a0=find(alltime==t0);
+  a1=find(alltime==t1);
+  a2=find(alltime==t2);
+  
+  % Assign glues to time before joining (until t0, done outside of loop)
+  
+  % Assign glues, then weight with d1 dataset (between t0 and t1)
+  w=[0:a1-a0];
+  w=w./max(w);
+  lkk(i,a0:a1)=(1-w).*lkk(i,a0:a1)+w.*d1(a0:a1);
+  
+  % Assign d1, then weight with d2 dataset (between t1 and t2);
+  lkk(i,a1:a2)=d1(a1:a2);
+  w=[0:a2-a1];
+  w=w./max(w);
+  lkk(i,a1:a2)=(1-w).*lkk(i,a1:a2)+w.*d2(a1:a2);
+  
+  % Assign kk10 to the rest of the data set
+  lkk(i,a2:end)=d2(a2:end);
+ 
+  figure(i); 
+  p(1,1)=plot(alltime(1:a1),d0(1:a1),'b-','LineWidth',4);
+  %p(1,2)=plot(alltime(a0:a2),d1(a0:a2),'r--','LineWidth',4);
+  p(1,3)=plot(alltime(a1:end),d2(a1:end),'r-','LineWidth',4);
+  p(1,4)=plot(alltime,lkk(i,:),'k-','LineWidth',2);
+  legend([p(2,1) p(2,2) p(2,3) p(1,4)],'GLUES','KK10','KK10 range','LKK11','Location','Northwest');
+
+end
+
+
+
+
+
+%% Summary
+% In summary, this shows the global picture again (cmp Figure 1 and 2), with the 
+% newly synthesised dataset (preliminarily called LKK11 for Lemmen, Kaplan,
+% Krumhard 2011).
+%
+
+figure(13); clf reset;
+hold on;
+
+
+p1=patch([h(:,1);flipud(h(:,1))],[h(:,2);flipud(h(:,3))],'y','edgecolor','none');
+
+plot(time,sum(lower,1),'r--','LineWidth',1);
+p2=plot(time,sum(best,1),'r-','LineWidth',2);
+plot(time,sum(upper,1),'r--','LineWidth',1);
+
+p3=plot(glues.time,sum(area.*glues.value/1E6,1),'b-','LineWidth',1);
+p4=plot(alltime,sum(lkk,1),'k-','LineWidth',3);
+legend([p1 p2 p3 p4],'census.gov','KK10','GLUES','LKK11','location','NorthWest');
+xlabel('Time (year AD)');
+ylabel('Population size (1E6)'); 
+set(gca,'XLim',[-8000 1850]);
+
+%% Dissemination
+% I propose to publish the data from 8000 BC (after GLUES has
+% equilibrated). Then we have a 10000 year history of regional population
+% size which could be a) useful for climate impact modeling and b) land use
+% change modeling and c) stimulating research on early population
+% estimates.
+
+
+%% Discussion
+% (1) Our result is higher between -600 and -1500 than prior sources, thus we
+% are likely to overestimate land use.  Most of the historical estimates
+% are very uncertain, however, and we have good reason to believe the -6000
+% increase by relating that to the onset of agriculture in SE Europe/West Asi and China
+%
+% (2) Between -1000 and 500 AD the LKK11 is higher than KK10 but fits well within the uncertainty
+% range given by Kristen for the historical data. 
+%
+% (3) From 500 AD we follow KK10, although, in several regions, even this
+% estimate is uncertain as is shown by the upper/lower limits on these
+% estimates
+%
+% (4) We have to discuss whether my subjective weighting for each region is
+% okay or whether we need to have better evidence.  I am open to suggestions
+%
+% (5) I have tried to assess
+% the uncertainty in GLUES, but there is really no easy way to contrain
+% that.  If at all, I could give some parameter sensitivity, but even the
+% natural uncertainty of the parameters is not know, so I don't think this
+% makes sense either.
+
+file=['lkk11_0.4_' datestr(now,'yyyymmdd') '.nc'];
+if exist(file,'file') delete(file); end
+
+ncid=netcdf.create(file,'NOCLOBBER');
+nreg=size(s,1)-1;
+
+timedim=netcdf.defDim(ncid,'time',nalltime);
+regdim=netcdf.defDim(ncid,'supraregion',nreg);
+chardim=netcdf.defDim(ncid,'charlen',3);
+varid=netcdf.defVar(ncid,'time','NC_DOUBLE',timedim);
+netcdf.putAtt(ncid,varid,'units','Year AD');
+netcdf.putAtt(ncid,varid,'long_name','Time');
+varid=netcdf.defVar(ncid,'supraregion','NC_INT',regdim);
+netcdf.putAtt(ncid,varid,'units','');
+netcdf.putAtt(ncid,varid,'long_name','Unique ID of supraregion');
+varid=netcdf.defVar(ncid,'population_size_glues','NC_FLOAT',[regdim,timedim]);
+netcdf.putAtt(ncid,varid,'units','');
+netcdf.putAtt(ncid,varid,'long_name','Population size from GLUES');
+varid=netcdf.defVar(ncid,'population_size_kk10','NC_FLOAT',[regdim,timedim]);
+netcdf.putAtt(ncid,varid,'units','');
+netcdf.putAtt(ncid,varid,'long_name','Population size from KK10');
+varid=netcdf.defVar(ncid,'population_size_kk10lower','NC_FLOAT',[regdim,timedim]);
+netcdf.putAtt(ncid,varid,'units','');
+netcdf.putAtt(ncid,varid,'long_name','Lower estimate for population size from KK10');
+varid=netcdf.defVar(ncid,'population_size_kk10upper','NC_FLOAT',[regdim,timedim]);
+netcdf.putAtt(ncid,varid,'units','');
+netcdf.putAtt(ncid,varid,'long_name','Upper estimate for population size from KK10');
+varid=netcdf.defVar(ncid,'population_size_lkk11','NC_FLOAT',[regdim,timedim]);
+netcdf.putAtt(ncid,varid,'units','');
+netcdf.putAtt(ncid,varid,'long_name','Population size from LKK11');
+varid=netcdf.defVar(ncid,'supraregion_name','NC_CHAR',[chardim,regdim]);
+netcdf.putAtt(ncid,varid,'long_name','Short name for supra region');
+
+varid=netcdf.getConstant('GLOBAL');
+netcdf.putAtt(ncid,varid,'creation_date',datestr(now));
+netcdf.putAtt(ncid,varid,'file_sources',['eurolbk_events.nc',', Pop_estimates.nc']);
+netcdf.putAtt(ncid,varid,'user','lemmen');
+netcdf.putAtt(ncid,varid,'program',struct2stringlines(cl_get_version));
+
+% Revert to original data sets a new resolution
+g(:,g0+1:end)=NaN;
+k(:,1:k0-1)=NaN;
+ku(:,1:k0-1)=NaN;
+kl(:,1:k0-1)=NaN;
+
+netcdf.endDef(ncid);
+varid=netcdf.inqVarID(ncid,'time');
+netcdf.putVar(ncid,varid,alltime);
+varid=netcdf.inqVarID(ncid,'supraregion');
+netcdf.putVar(ncid,varid,1:nreg);
+varid=netcdf.inqVarID(ncid,'population_size_lkk11');
+netcdf.putVar(ncid,varid,lkk);
+varid=netcdf.inqVarID(ncid,'population_size_kk10');
+netcdf.putVar(ncid,varid,k);
+varid=netcdf.inqVarID(ncid,'population_size_kk10upper');
+netcdf.putVar(ncid,varid,ku);
+varid=netcdf.inqVarID(ncid,'population_size_kk10lower');
+netcdf.putVar(ncid,varid,kl);
+varid=netcdf.inqVarID(ncid,'population_size_glues');
+netcdf.putVar(ncid,varid,g);
+varid=netcdf.inqVarID(ncid,'supraregion_name');
+netcdf.putVar(ncid,varid,char(supershorts));
+netcdf.close(ncid);
+
+file=strrep(file,'.nc','_key.txt');
+fid=fopen(file,'w');
+fprintf('# Supra region keys\n');
+for i=1:nreg
+  fprintf(fid,'%d %s\n',i,supernames{i});
+end
+fclose(fid);
+
+return
+
+
+% From wikipedia 
+%Surface area	510,072,000 km2[9][10][note 5]
+%148,940,000 km2 land (29.2 %)
+
+return
+
+
+
 
 
 %% Individual continents: North America
@@ -720,142 +991,5 @@ lkk(i,l1:end)=kk10(i,i1:end);
 
 p3=plot(ntime,lkk(i,:),'k--','LineWidth',3);
 legend([p1,p2,p3],'GLUES','KK10','LKK11');
-
-
-%% Summary
-% In summary, this shows the global picture again (cmp Figure 1 and 2), with the 
-% newly synthesised dataset (preliminarily called LKK11 for Lemmen, Kaplan,
-% Krumhard 2011).
-%
-
-figure(); clf reset;
-hold on;
-
-
-p1=patch([h(:,1);flipud(h(:,1))],[h(:,2);flipud(h(:,3))],'y','edgecolor','none');
-
-plot(time,sum(lower,1),'r--','LineWidth',1);
-p2=plot(time,sum(best,1),'r-','LineWidth',2);
-plot(time,sum(upper,1),'r--','LineWidth',1);
-
-p3=plot(glues.time,sum(area.*glues.value/1E6,1),'b-','LineWidth',1);
-p4=plot(ntime,sum(lkk,1),'k-','LineWidth',3);
-legend([p1 p2 p3 p4],'census.gov','KK10','GLUES','LKK11','location','NorthWest');
-xlabel('Time (year AD)');
-ylabel('Population size (1E6)'); 
-set(gca,'XLim',[-8000 1850]);
-
-%% Dissemination
-% I propose to publish the data from 8000 BC (after GLUES has
-% equilibrated). Then we have a 10000 year history of regional population
-% size which could be a) useful for climate impact modeling and b) land use
-% change modeling and c) stimulating research on early population
-% estimates.
-
-
-%% Discussion
-% (1) Our result is higher between -600 and -1500 than prior sources, thus we
-% are likely to overestimate land use.  Most of the historical estimates
-% are very uncertain, however, and we have good reason to believe the -6000
-% increase by relating that to the onset of agriculture in SE Europe/West Asi and China
-%
-% (2) Between -1000 and 500 AD the LKK11 is higher than KK10 but fits well within the uncertainty
-% range given by Kristen for the historical data. 
-%
-% (3) From 500 AD we follow KK10, although, in several regions, even this
-% estimate is uncertain as is shown by the upper/lower limits on these
-% estimates
-%
-% (4) We have to discuss whether my subjective weighting for each region is
-% okay or whether we need to have better evidence.  I am open to suggestions
-%
-% (5) I have tried to assess
-% the uncertainty in GLUES, but there is really no easy way to contrain
-% that.  If at all, I could give some parameter sensitivity, but even the
-% natural uncertainty of the parameters is not know, so I don't think this
-% makes sense either.
-
-file=['lkk11_0.3_' datestr(now,'yyyymmdd') '.nc'];
-if exist(file,'file') delete(file); end
-
-ncid=netcdf.create(file,'NOCLOBBER');
-nreg=size(s,1)-1;
-
-timedim=netcdf.defDim(ncid,'time',length(ntime));
-regdim=netcdf.defDim(ncid,'supraregion',nreg);
-varid=netcdf.defVar(ncid,'time','NC_DOUBLE',timedim);
-netcdf.putAtt(ncid,varid,'units','Year AD');
-netcdf.putAtt(ncid,varid,'long_name','Time');
-varid=netcdf.defVar(ncid,'supraregion','NC_INT',regdim);
-netcdf.putAtt(ncid,varid,'units','');
-netcdf.putAtt(ncid,varid,'long_name','Unique ID of supraregion');
-varid=netcdf.defVar(ncid,'population_size_glues','NC_FLOAT',[regdim,timedim]);
-netcdf.putAtt(ncid,varid,'units','');
-netcdf.putAtt(ncid,varid,'long_name','Population size from GLUES');
-varid=netcdf.defVar(ncid,'population_size_kk10','NC_FLOAT',[regdim,timedim]);
-netcdf.putAtt(ncid,varid,'units','');
-netcdf.putAtt(ncid,varid,'long_name','Population size from KK10');
-varid=netcdf.defVar(ncid,'population_size_kk10lower','NC_FLOAT',[regdim,timedim]);
-netcdf.putAtt(ncid,varid,'units','');
-netcdf.putAtt(ncid,varid,'long_name','Lower estimate for population size from KK10');
-varid=netcdf.defVar(ncid,'population_size_kk10upper','NC_FLOAT',[regdim,timedim]);
-netcdf.putAtt(ncid,varid,'units','');
-netcdf.putAtt(ncid,varid,'long_name','Upper estimate for population size from KK10');
-varid=netcdf.defVar(ncid,'population_size_lkk11','NC_FLOAT',[regdim,timedim]);
-netcdf.putAtt(ncid,varid,'units','');
-netcdf.putAtt(ncid,varid,'long_name','Population size from LKK11');
-
-varid=netcdf.getConstant('GLOBAL');
-netcdf.putAtt(ncid,varid,'creation_date',datestr(now));
-netcdf.putAtt(ncid,varid,'file_sources',['eurolbk_events.nc',', Pop_estimates.nc']);
-netcdf.putAtt(ncid,varid,'user','lemmen');
-netcdf.putAtt(ncid,varid,'program',struct2stringlines(cl_get_version));
-
-l0=find(ntime==-1000);
-l1=find(ntime==1000);
-for i=1:nreg
-  ikk10(i,:)=spline(time,kk10(i,:),ntime);
-  ikk10l(i,:)=spline(time,kk10lower(i,:),ntime);
-  ikk10u(i,:)=spline(time,kk10upper(i,:),ntime);
-  ikk10(i,1:l0)=NaN;
-  ikk10l(i,1:l0-1)=NaN;
-  ikk10u(i,1:l0-1)=NaN;  
-  glue(i,:)=spline(glues.time,s(i,:),ntime);
-  glue(i,l1+1:end)=NaN;
-end
-
-
-netcdf.endDef(ncid);
-varid=netcdf.inqVarID(ncid,'time');
-netcdf.putVar(ncid,varid,ntime);
-varid=netcdf.inqVarID(ncid,'supraregion');
-netcdf.putVar(ncid,varid,1:nreg);
-varid=netcdf.inqVarID(ncid,'population_size_lkk11');
-netcdf.putVar(ncid,varid,lkk);
-varid=netcdf.inqVarID(ncid,'population_size_kk10');
-netcdf.putVar(ncid,varid,ikk10);
-varid=netcdf.inqVarID(ncid,'population_size_kk10upper');
-netcdf.putVar(ncid,varid,ikk10u);
-varid=netcdf.inqVarID(ncid,'population_size_kk10lower');
-netcdf.putVar(ncid,varid,ikk10l);
-varid=netcdf.inqVarID(ncid,'population_size_glues');
-netcdf.putVar(ncid,varid,glue);
-netcdf.close(ncid);
-
-file=strrep(file,'.nc','_key.txt');
-fid=fopen(file,'w');
-fprintf('# Supra region keys\n');
-for i=1:nreg
-  fprintf(fid,'%d %s\n',i,supernames{i});
-end
-fclose(fid);
-
-return
-
-
-% From wikipedia 
-%Surface area	510,072,000 km2[9][10][note 5]
-%148,940,000 km2 land (29.2 %)
-
 
 end
