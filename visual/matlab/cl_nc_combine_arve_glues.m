@@ -469,7 +469,7 @@ netcdf.putVar(ncid,varid,kl);
 varid=netcdf.inqVarID(ncid,'population_size_glues');
 netcdf.putVar(ncid,varid,g);
 varid=netcdf.inqVarID(ncid,'supraregion_name');
-netcdf.putVar(ncid,varid,char(supershorts));
+netcdf.putVar(ncid,varid,char(supershorts)');
 netcdf.close(ncid);
 
 file=strrep(file,'.nc','_key.txt');
