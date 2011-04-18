@@ -3,7 +3,7 @@
 cl_register_function;
 
 %% Read results file
-file='lkk11_0.1_20110105.nc';
+file='lkk11_0.4_20110413.nc';
 if ~exist(file,'file') error('File does not exist'); end
 ncid=netcdf.open(file,'NC_NOWRITE');
 
@@ -51,61 +51,29 @@ hu=load('../../data/up_bound_hyde.dat','-ascii');
 
 %% Create maps of regions (9 colors) and add bar at appropriate position
 % From Kristen's population paper super regions
-file='../../data/pop_region_key2.txt';
+% From Kristen's population paper super regions
+file='../../data/super_region_key.txt';
 fid=fopen(file,'r');
-keys=textscan(fid,'%d %s');
+keys=textscan(fid,'%d %d %s');
 fclose(fid);
-for i=1:length(keys{1})
-  eval([strrep(char(keys{2}(i)),'-','_') ' = ' sprintf('int32(%d)',keys{1}(i)) ';']);
+
+super=unique(keys{1});
+nsuper=length(super);
+
+if nsuper==12
+  supernames={'North America','South America','Europe','Former Soviet Union','Southwest Asia',...
+      'North Africa','Subsaharan Africa','Indian subcontinent','China','Japan','Southeast Asia',...
+      'Oceania'};
+  supershorts={'NAM','SAM','EUR','FSU','SWA','NAF','SAF','IND','CHI','JAP','SEA','OCE'};
+else
+  error('Please define new names for the super regions');    
 end
-% Now group these
-continental_usa=[Alabama Alaska Arizona Arkansas California Colorado Connecticut Delaware Washington_DC Florida ...
-    Georgia Idaho Illinois Indiana Iowa Kansas Kentucky Louisiana Maine Maryland Massachusetts Michigan ...
-    Minnesota  Mississippi Missouri Montana Nebraska Nevada New_Hampshire New_Jersey New_Mexico New_York ...
-    North_Carolina North_Dakota Ohio Oklahoma Oregon Pennsylvania Rhode_Island South_Carolina South_Dakota ...
-    Tennessee Texas Utah Vermont Virginia Washington West_Virginia Wisconsin Wyoming];
 
-continental_canada=[Alberta British_Columbia Manitoba New_Brunswick Newfoundland Northwest_Territories ...
-    Nova_Scotia Ontario Prince_Edward_Island Quebec Saskatchewan Yukon_Territory];
-NAM=[continental_usa continental_canada Greenland];
+%for i=1:nsuper
+%  insuper=find(keys{1}==i);
+%end
 
-SAM=[Uruguay Northern_South_America Mayan_America Central_Mexico Central_Brazil Argentina_lowland ...
-Caribbean North_coast_Brazil Aridoamerica Central_America Central_coast_Brazil NE_Brazil South_coast_Brazil Andes ...
-Paraguay Amazon];
-
-% Europe: Azores missing
-Europe=[Albania Austria Belgium_Luxembourg Bulgaria Canaries Czechoslovakia Denmark East_Prussia ...
-    England_Wales Finland France Germany Greece Hungary Iceland Ireland Italy Madeira Malta Netherlands Norway ...
-    Poland Portugal Romania Scotland Spain Sweden Switzerland Turkey_in_Europe Yugoslavia];
-
-FSU=[204:212 214:217 Russian_Turkestan Ciscaucasia USSR_Central USSR_West Transcaucasia];
-
-SW_Asia=[Afghanistan Cyprus Iran Iraq Oman Palestine_Jordan Persian_Gulf Saudi_Arabia Syria_Lebanon ...
-    Turkey_in_Asia Yemen];
-
-
-N_Afr=[Morocco Algeria Tunisia Libya  Egypt Cape_Verde];
-%Subsaharan Africa: Seychelles missing,  Atlantic_Islands?
-Subsah_Afr=[Comoros,Equatoria_Zaire_Angola Ethiopia Kenya Madagascar Mauritius Mozambique Reunion ...
-    Rwanda_Burundi Sahel_States  Somalia Southern_Africa South_Central_Africa Sudan SW_Africa_Botswana ...
-    Tanzania Uganda West_Africa Sao_Tome_Principe];
-
-India=[Pakistan_India_Bangladesh Nepal Bhutan];
-
-China=[292:317 Mongolia Taiwan ];
-Japan=[Japan];
-SE_Asia=[Vietnam Thailand Sri_Lanka Philippines Malaysia_Singapore Laos Korea Indonesia Cambodia Burma];
-Oceania=[Australia Melanesia New_Zealand Polynesia];
-
-% file='../../data/popregions6.nc';
-% ncid=netcdf.open(file,'NOWRITE');
-% varid=netcdf.inqVarID(ncid,'z');
-% regnum=netcdf.getVar(ncid,varid);
-% lat=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'lat'));
-% lon=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'lon'));
-% netcdf.close(ncid);
-
-rcol=jet(9);
+rcol=jet(nsuper);
 gray=repmat(0.5,1,3);
 fs=14;
 
@@ -113,7 +81,10 @@ fs=14;
 rlat=[30   -30 45  60   30  15 -30   5  15  35   5 -30]';
 rlon=[-100 -60 0   60   40  10  25  80 110 135 110 165]';
 
-[rx,ry]=m_ll2xy(rlon,rlat);
+figure(1); clf reset; hold on;
+m_proj('equidistant','lat',[-60 80],'lon',[-180 180]);
+
+  [rx,ry]=m_ll2xy(rlon,rlat);
 
 rtime=[-8000 -6000 -4000 -2000 -1000 0 1000 1490 1500 1750];
 ntime=length(rtime);
@@ -157,10 +128,7 @@ hydecol=[0.95 0.95 0.67];
 kk10col=[0.67 0.95 0.95];
 
 phyde=patch([hl(:,1);flipud(hu(:,1))],[hl(:,2);flipud(hu(:,2))],hydecol,'edgecolor','none','visible','on');
-%alpha(phyde,0.5);
-
 pcensus=patch([h(:,1);flipud(h(:,1))],[h(:,2);flipud(h(:,3))],censcol,'edgecolor','none','visible','on');
-%alpha(pcensus,0.5);
 
 phydemean=plot(hm(:,1),hm(:,2),'g-','Linewidth',5,'Color',hydecol,'visible','off');
 
@@ -185,28 +153,35 @@ p7=plot(time,sum(lkk11,1),'k-','LineWidth',5)
 l=legend([phyde,pcensus,p3k,p5,p7],'Hyde','Census Bureau','KK10','GLUES','LKK11');
 set(l,'Location','Northwest','color','w','FontSize',16);
 
-cl_print('name','worldpop_global','ext','png','res',300);
+cl_print('name','worldpop_global','ext',{'png','pdf'},'res',300);
 
 
 
 for ireg=1:12 %[1 2 3]
-figure(ireg); clf reset;
+  figure(ireg); clf reset;
     
-pkk10=patch([time;flipud(time)]',[kk10l(ireg,:) fliplr(kk10u(ireg,:))],'r','facecolor','r','edgecolor','r','visible','on');
-hold on;
+  val=isfinite(kk10l(ireg,:)) & isfinite(kk10u(ireg,:));
+  
+  pcol=[.95 .85 .85]
+  
+  pkk10=patch([time(val);flipud(time(val))]',[kk10l(ireg,val) fliplr(kk10u(ireg,val))],...
+      'y','facecolor',pcol,'edgecolor',pcol,'visible','on');
+  hold on;
 
-p7=plot(time,lkk11(ireg,:),'k-','LineWidth',4);
-p8=plot(time(1:i0),glues(ireg,1:i0),'b-','LineWidth',5);
-
-xlabel('Time (Year AD)','FontSize',fs);
-ylabel('Population size (million)','FontSize',fs);
-set(gca,'XLim',[-8000,1750],'FontSize',fs);
-set(gca,'XLim',[-8000,1750]);
-set(gca,'color','none','xcolor',gray,'ycolor',gray);
-l=legend([p8,pkk10,p7],'GLUES','KK10','LKK11');
+  p9=plot(time(val),kk10(ireg,val),'r-','LineWidth',5);
+  p8=plot(time(1:i0),glues(ireg,1:i0),'b-','LineWidth',5);
+  p7=plot(time,lkk11(ireg,:),'k-','LineWidth',4);
+  
+  
+  xlabel('Time (Year AD)','FontSize',fs);
+  ylabel('Population size (million)','FontSize',fs);
+  set(gca,'XLim',[-8000,1750],'FontSize',fs);
+  set(gca,'XLim',[-8000,1750]);
+  set(gca,'color','none','xcolor',gray,'ycolor',gray);
+  l=legend([p8,pkk10,p9,p7],'GLUES','KK10 range','KK10','LKK11');
 set(l,'Location','Northwest','color','w','FontSize',16);
-title(contname{ireg},'FontSize',24,'FontWeight','bold');
-cl_print('name',['worldpop_' char(contname{ireg})],'ext','png','res',300);
+title(supernames{ireg},'FontSize',24,'FontWeight','bold');
+cl_print('name',['worldpop_' supershorts{ireg}],'ext',{'png','pdf'},'res',300);
 
 end
 
