@@ -803,7 +803,7 @@ for ip=1:3
 
   for iedge=2:nedge
     ibin=find(sdists>=edge(iedge-1) & sdists<=edge(iedge));
-    pcd(iedge)=quantile(stime(ibin),pcval);
+    pcd(iedge)=cl_quantile(stime(ibin),pcval);
   end
   pedge=reshape(repmat(edge,2,1),1,2*nedge);
   pcd=reshape(repmat(pcd,2,1),1,2*nedge);
@@ -819,7 +819,7 @@ for ip=1:3
 
   for iedge=2:nedge
     ibin=find(dists>=edge(iedge-1) & dists<=edge(iedge) & isfinite(onset));
-    pcr(iedge)=quantile(onset(ibin),pcval);
+    pcr(iedge)=cl_quantile(onset(ibin),pcval);
   end
   pedge=reshape(repmat(edge,2,1),1,2*nedge);
   pcr=reshape(repmat(pcr,2,1),1,2*nedge);
