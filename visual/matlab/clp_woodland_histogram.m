@@ -176,7 +176,7 @@ file=['/h/lemmen/projects/glues/tex/2010/saa/card/table_Woodland.csv'];
   fclose(fid);
   age=site{6};
   
-  q=quantile(age,[0 0.05 0.5 0.95 1]);
+  q=cl_quantile(age,[0 0.05 0.5 0.95 1]);
   qr=round(q);
   %age=age(age>q(2) & age < q(4));
   
