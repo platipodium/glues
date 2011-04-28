@@ -1,6 +1,6 @@
 # Subsidiary makefile for GLUES.
 
-# Copyright (C) 2007,2008,2009,2010,2011
+# Copyright (C) 2010
 # Carsten Lemmen, Helmholtz-Zentrum Geesthacht
 
 ## This program is free software; you can redistribute it and/or modify
@@ -18,4 +18,4 @@
 ## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 ## 02110-1301, USA.
 
-SUBDIRS = matlab gnuplot plots plot tex python
+SUBDIRS = quicklook
