@@ -57,7 +57,7 @@ for varname in ncv:
   pw=ax.plot(time,ymax,'r--',lw=2.0)
   pw=ax.plot(time,yw,'r-',lw=5.0)
 
-  pfile='../plot/quicklook/' + ncfile.split('/')[-1].replace('.nc','') + '_' + varname + '.png'
+  pfile='../plot/quicklook/' + ncfile.split('/')[-1].replace('.nc','') + '_' + varname + '.pdf'
   savefig(pfile,dp=150)
 
   close()

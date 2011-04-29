@@ -1,7 +1,7 @@
 # Makefile for GLUES.
 
-# Copyright (C) 2009,2010
-# Carsten Lemmen, GKSS-Forschungszentrum Geesthacht GmbH
+# Copyright (C) 2009,2010,2011
+# Carsten Lemmen, Helmholtz-Zentrum Geesthacht
 
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -20,4 +20,9 @@
 
 SUBDIRS = 
 EXTRA_DIST=
+
+NOINST_SCRIPTS=cl_global_timeseries.py \
+  cl_map_grid.py \
+  cl_map_region.py
+
 all:
