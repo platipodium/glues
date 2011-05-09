@@ -12,7 +12,7 @@
 % 7. woodland historgram
 
 % select which figures to plot
-doplot=[1:7];
+doplot=[6];
 
 % Lon/lat limits for both regions EUR+NAM
 blatlim=[25 60];
@@ -118,7 +118,7 @@ if any(doplot==51)
 end
 
 
-etimelim=[-8000 -1000];
+etimelim=[-7500 -1000];
 ustimelim=[-5000 1500];
 
 if any(doplot==5)
@@ -139,6 +139,7 @@ if any(doplot==5)
   ax(1)=gca;
   ax(2)=axes;
   axes(ax(1));
+  set(ax,'FontSize',18);
   p1a=plot(time(itime),population_density(ereg,itime),'k-','Linewidth',1.5,'Color',...
       0.7*[1 1 1]);
   p1b=plot(time(itime),mean(population_density(ereg,itime)),'k-','LineWidth',5);
@@ -149,12 +150,18 @@ if any(doplot==5)
       'color','none','YColor','r');
   set(p2,'LineWidth',4,'color','r','Linestyle','--');
   pname=sprintf('trajectory_amant_nofluc_%s_%d','population_density',length(ereg));
+  set(p1a,'visible','off');
+  set(findobj('-property','fontsize'),'FontSize',18);
+  cl_bcad(ax(1));
+  cl_bcad(ax(2));
+  cl_fixticklabel(ax(2),'b');
   cl_print('name',pname,'ext','pdf');  
   
   figure(54); clf reset; hold on;
   itime=find(time>=ustimelim(1) & time<=ustimelim(2));
   ax(1)=gca;
   ax(2)=axes;
+  set(ax,'FontSize',18);
   axes(ax(1));
   p1a=plot(time(itime),population_density(usreg,itime),'k-','Linewidth',1.5,'Color',...
       0.7*[1 1 1]);
@@ -166,83 +173,241 @@ if any(doplot==5)
       'color','none','YColor','r');
   set(p2,'LineWidth',4,'color','r','Linestyle','--');
   pname=sprintf('trajectory_amant_nofluc_%s_%d','population_density',length(usreg));
+  set(p1a,'visible','off');
+  cl_bcad(ax(1));
+  cl_bcad(ax(2));
+  cl_fixticklabel(ax(1),'b');
   cl_print('name',pname,'ext','pdf');  
  
   figure(55); clf reset; hold on;
   itime=find(time>=etimelim(1) & time<=etimelim(2));
+  set(gca,'FontSize',18);
   p1a=plot(time(itime),economies(ereg,itime),'k-','Linewidth',1.5,'Color',...
       0.7*[1 1 1]);
   p1b=plot(time(itime),mean(economies(ereg,itime)),'k-','LineWidth',5);
   set(gca,'YAxisLocation','left','XLim',etimelim,'box','on','Ylim',[0 6.5],'color','none');
   pname=sprintf('trajectory_amant_nofluc_%s_%d','economies',length(ereg));
+  set(p1a,'visible','off');
+  cl_fixticklabel(gca,'b');
+  cl_bcad;
   cl_print('name',pname,'ext','pdf');  
 
   figure(56); clf reset; hold on;
+  set(gca,'FontSize',18);
   itime=find(time>=ustimelim(1) & time<=ustimelim(2));
   p1a=plot(time(itime),economies(usreg,itime),'k-','Linewidth',1.5,'Color',...
       0.7*[1 1 1]);
   p1b=plot(time(itime),mean(economies(usreg,itime)),'k-','LineWidth',5);
   set(gca,'YAxisLocation','left','XLim',ustimelim,'box','on','Ylim',[0 6.5],'color','none');
   pname=sprintf('trajectory_amant_nofluc_%s_%d','economies',length(usreg));
+  set(p1a,'visible','off');
+  cl_fixticklabel(gca,'l');
+  cl_bcad;
   cl_print('name',pname,'ext','pdf');  
 
   figure(57); clf reset; hold on;
+  set(gca,'FontSize',18);
   itime=find(time>=etimelim(1) & time<=etimelim(2));
   p1a=plot(time(itime),farming(ereg,itime),'k-','Linewidth',1.5,'Color',...
       0.7*[1 1 1]);
   p1b=plot(time(itime),mean(farming(ereg,itime)),'k-','LineWidth',5);
   set(gca,'YAxisLocation','left','XLim',etimelim,'box','on','Ylim',[0 1],'color','none');
   pname=sprintf('trajectory_amant_nofluc_%s_%d','farming',length(ereg));
+  set(p1a,'visible','off');
+  cl_percent;
+  cl_fixticklabel(gca,'b');
+  cl_bcad;
   cl_print('name',pname,'ext','pdf');  
 
   figure(58); clf reset; hold on;
+  set(gca,'FontSize',18);
   itime=find(time>=ustimelim(1) & time<=ustimelim(2));
   p1a=plot(time(itime),farming(usreg,itime),'k-','Linewidth',1.5,'Color',...
       0.7*[1 1 1]);
   p1b=plot(time(itime),mean(farming(usreg,itime)),'k-','LineWidth',5);
   set(gca,'YAxisLocation','left','XLim',ustimelim,'box','on','Ylim',[0 1],'color','none');
   pname=sprintf('trajectory_amant_nofluc_%s_%d','farming',length(usreg));
+  set(p1a,'visible','off');
+  cl_percent;
+  cl_fixticklabel(gca,'l');
+  cl_bcad;
   cl_print('name',pname,'ext','pdf');  
   
   figure(59); clf reset; hold on;
+  set(gca,'FontSize',18);
   itime=find(time>=etimelim(1) & time<=etimelim(2));
   p1a=plot(time(itime),economies(ereg,itime)./economies_potential(ereg,itime),'k-','Linewidth',1.5,'Color',...
       0.7*[1 1 1]);
   p1b=plot(time(itime),mean(economies(ereg,itime)./economies_potential(ereg,itime)),'k-','LineWidth',5);
   set(gca,'YAxisLocation','left','XLim',etimelim,'box','on','Ylim',[0 1],'color','none');
   pname=sprintf('trajectory_amant_nofluc_%s_%d','qeconomies',length(ereg));
+  set(p1a,'visible','off');
+  cl_percent;
+  cl_bcad;
   cl_print('name',pname,'ext','pdf');  
 
   figure(60); clf reset; hold on;
+  set(gca,'FontSize',18);
   itime=find(time>=ustimelim(1) & time<=ustimelim(2));
   p1a=plot(time(itime),economies(ereg,itime)./economies_potential(ereg,itime),'k-','Linewidth',1.5,'Color',...
       0.7*[1 1 1]);
   p1b=plot(time(itime),mean(economies(ereg,itime)./economies_potential(ereg,itime)),'k-','LineWidth',5);
   set(gca,'YAxisLocation','left','XLim',ustimelim,'box','on','Ylim',[0 1],'color','none');
   pname=sprintf('trajectory_amant_nofluc_%s_%d','qeconomies',length(usreg));
+  set(p1a,'visible','off');
+  cl_percent;
+  cl_bcad;
+  cl_fixticklabel(gca,'b');
   cl_print('name',pname,'ext','pdf');  
   
   figure(51); clf reset; hold on;
+  set(gca,'FontSize',18);
   itime=find(time>=etimelim(1) & time<=etimelim(2));
   p1a=plot(time(itime),economies_potential(ereg,itime),'k-','Linewidth',1.5,'Color',...
       0.7*[1 1 1]);
   p1b=plot(time(itime),mean(economies_potential(ereg,itime)),'k-','LineWidth',5);
   set(gca,'YAxisLocation','left','XLim',etimelim,'box','on','Ylim',[0 6.5],'color','none');
   pname=sprintf('trajectory_amant_nofluc_%s_%d','economies_potential',length(ereg));
+  set(p1a,'visible','off');
+  cl_bcad;
+  cl_fixticklabel(gca,'l');
   cl_print('name',pname,'ext','pdf');  
 
   figure(52); clf reset; hold on;
+  set(gca,'FontSize',18);
   itime=find(time>=ustimelim(1) & time<=ustimelim(2));
   p1a=plot(time(itime),economies_potential(usreg,itime),'k-','Linewidth',1.5,'Color',...
       0.7*[1 1 1]);
   p1b=plot(time(itime),mean(economies_potential(usreg,itime)),'k-','LineWidth',5);
   set(gca,'YAxisLocation','left','XLim',ustimelim,'box','on','Ylim',[0 6.5],'color','none');
   pname=sprintf('trajectory_amant_nofluc_%s_%d','economies_potential',length(usreg));
+  set(p1a,'visible','off');
+  cl_bcad;
   cl_print('name',pname,'ext','pdf');  
   
   
 end
   
+
+if any(doplot==6)
+    
+    etimelime=[-7000 1000];
+    ustimelim=etimelim;
+  % Figure 5 trajectories in Europe and NAM
+  file='../../amant_nospread.nc';
+  ncid=netcdf.open(file,'NOWRITE');
+  time=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'time'));
+  area=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'area'));
+  population_density=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'population_density'));
+  population_size=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'population_size'));
+  economies=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'economies'));
+  economies_potential=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'economies_potential'));
+  farming=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'farming'));
+  netcdf.close(ncid);
+  
+  figure(53); clf reset; hold on;
+  itime=find(time>=etimelim(1) & time<=etimelim(2));
+  ax(1)=gca;
+  ax(2)=axes;
+  axes(ax(1));
+  set(ax,'FontSize',18);
+  p1a=plot(time(itime),population_density(ereg,itime),'k-','Linewidth',1.5,'Color',...
+      0.7*[1 1 1]);
+  p1b=plot(time(itime),mean(population_density(ereg,itime)),'k-','LineWidth',5);
+  axes(ax(2));
+  p2=plot(time(itime),sum(population_size(ereg,itime))/1E6,'k-');
+  set(ax(1),'YAxisLocation','left','XLim',etimelim,'box','on','Ylim',[0 10],'color','none');
+  set(ax(2),'YAxisLocation','right','XLim',etimelim,'box','off','Ylim',[0 15],...
+      'color','none','YColor','r');
+  set(p2,'LineWidth',4,'color','r','Linestyle','--');
+  pname=sprintf('trajectory_amant_nospread_%s_%d','population_density',length(ereg));
+  set(p1a,'visible','off');
+  set(findobj('-property','fontsize'),'FontSize',18);
+  cl_bcad(ax(1));
+  cl_bcad(ax(2));
+  cl_fixticklabel(ax(2),'b');
+  cl_print('name',pname,'ext','pdf');  
+  
+  figure(54); clf reset; hold on;
+  itime=find(time>=ustimelim(1) & time<=ustimelim(2));
+  ax(1)=gca;
+  ax(2)=axes;
+  set(ax,'FontSize',18);
+  axes(ax(1));
+  p1a=plot(time(itime),population_density(usreg,itime),'k-','Linewidth',1.5,'Color',...
+      0.7*[1 1 1]);
+  p1b=plot(time(itime),mean(population_density(usreg,itime)),'k-','LineWidth',5);
+  axes(ax(2));
+  p2=plot(time(itime),sum(population_size(usreg,itime))/1E6,'k-');
+  set(ax(1),'YAxisLocation','left','XLim',ustimelim,'box','on','Ylim',[0 2],'color','none');
+  set(ax(2),'YAxisLocation','right','XLim',ustimelim,'box','off','Ylim',[0 4],...
+      'color','none','YColor','r');
+  set(p2,'LineWidth',4,'color','r','Linestyle','--');
+  pname=sprintf('trajectory_amant_nospread_%s_%d','population_density',length(usreg));
+  set(p1a,'visible','off');
+  cl_bcad(ax(1));
+  cl_bcad(ax(2));
+  cl_fixticklabel(ax(1),'b');
+  cl_print('name',pname,'ext','pdf');  
+ 
+  figure(55); clf reset; hold on;
+  itime=find(time>=etimelim(1) & time<=etimelim(2));
+  set(gca,'FontSize',18);
+  p1a=plot(time(itime),economies(ereg,itime),'k-','Linewidth',1.5,'Color',...
+      0.7*[1 1 1]);
+  p1b=plot(time(itime),mean(economies(ereg,itime)),'k-','LineWidth',5);
+  set(gca,'YAxisLocation','left','XLim',etimelim,'box','on','Ylim',[0 6.5],'color','none');
+  pname=sprintf('trajectory_amant_nospread_%s_%d','economies',length(ereg));
+  set(p1a,'visible','off');
+  cl_fixticklabel(gca,'b');
+  cl_bcad;
+  cl_print('name',pname,'ext','pdf');  
+
+  figure(56); clf reset; hold on;
+  set(gca,'FontSize',18);
+  itime=find(time>=ustimelim(1) & time<=ustimelim(2));
+  p1a=plot(time(itime),economies(usreg,itime),'k-','Linewidth',1.5,'Color',...
+      0.7*[1 1 1]);
+  p1b=plot(time(itime),mean(economies(usreg,itime)),'k-','LineWidth',5);
+  set(gca,'YAxisLocation','left','XLim',ustimelim,'box','on','Ylim',[0 6.5],'color','none');
+  pname=sprintf('trajectory_amant_nospread_%s_%d','economies',length(usreg));
+  set(p1a,'visible','off');
+  cl_fixticklabel(gca,'l');
+  cl_bcad;
+  cl_print('name',pname,'ext','pdf');  
+
+  figure(57); clf reset; hold on;
+  set(gca,'FontSize',18);
+  itime=find(time>=etimelim(1) & time<=etimelim(2));
+  p1a=plot(time(itime),farming(ereg,itime),'k-','Linewidth',1.5,'Color',...
+      0.7*[1 1 1]);
+  p1b=plot(time(itime),mean(farming(ereg,itime)),'k-','LineWidth',5);
+  set(gca,'YAxisLocation','left','XLim',etimelim,'box','on','Ylim',[0 1],'color','none');
+  pname=sprintf('trajectory_amant_nospread_%s_%d','farming',length(ereg));
+  set(p1a,'visible','off');
+  cl_percent;
+  cl_fixticklabel(gca,'b');
+  cl_bcad;
+  cl_print('name',pname,'ext','pdf');  
+
+  figure(58); clf reset; hold on;
+  set(gca,'FontSize',18);
+  itime=find(time>=ustimelim(1) & time<=ustimelim(2));
+  p1a=plot(time(itime),farming(usreg,itime),'k-','Linewidth',1.5,'Color',...
+      0.7*[1 1 1]);
+  p1b=plot(time(itime),mean(farming(usreg,itime)),'k-','LineWidth',5);
+  set(gca,'YAxisLocation','left','XLim',ustimelim,'box','on','Ylim',[0 1],'color','none');
+  pname=sprintf('trajectory_amant_nospread_%s_%d','farming',length(usreg));
+  set(p1a,'visible','off');
+  cl_percent;
+  cl_fixticklabel(gca,'l');
+  cl_bcad;
+  cl_print('name',pname,'ext','pdf');  
+  
+  
+end
+
+
 %% Figure 7 histogram of timing
 if any(doplot==7)
   [d,b]=clp_woodland_histogram('file','../../amant_nospread.nc','sce','nospread','fig',2);
