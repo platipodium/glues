@@ -19,9 +19,7 @@
 ## 02110-1301, USA.
 
 SUBDIRS = 
-EXTRA_DIST=
-
-NOINST_SCRIPTS=cl_global_timeseries.py \
+EXTRA_DIST=cl_global_timeseries.py \
   cl_map_grid.py \
   cl_map_region.py
 
