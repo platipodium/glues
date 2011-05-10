@@ -1,6 +1,8 @@
 # Subsidiary make file for GLUES
 
-# Copyright (C) 2010 Carsten Lemmen, GKSS-Forschungszentrum Geesthacht GmbH
+# Copyright (C) 2010,2011
+# Carsten Lemmen
+# Helmholtz-Zentrum Geesthacht
 
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -17,3 +19,4 @@
 ## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 ## 02110-1301, USA.
 
+all:

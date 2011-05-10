@@ -1,7 +1,8 @@
 # Subsidiary makefile for GLUES.
 
-# Copyright (C) 2010
-# Carsten Lemmen, Helmholtz-Zentrum Geesthacht
+# Copyright (C) 2010,2011
+# Carsten Lemmen <carsten.lemmen@hzg.de>
+# Helmholtz-Zentrum Geesthacht
 
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -19,3 +20,5 @@
 ## 02110-1301, USA.
 
 SUBDIRS = quicklook
+
+all:
