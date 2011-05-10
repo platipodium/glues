@@ -403,6 +403,7 @@ AC_CONFIG_FILES([Makefile
   visual/tex/Makefile
   visual/python/Makefile
   visual/gnuplot/Makefile visual/plots/Makefile visual/plot/Makefile
+  visual/plot/quicklook/Makefile
   variation/Makefile 
   doc/Makefile doc/pangaea/Makefile
 ])
