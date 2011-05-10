@@ -402,7 +402,7 @@ AC_CONFIG_FILES([Makefile
   visual/matlab/doc/Makefile
   visual/tex/Makefile
   visual/python/Makefile
-  visual/gnuplot/Makefile visual/plots/Makefile
+  visual/gnuplot/Makefile visual/plots/Makefile visual/plot/Makefile
   variation/Makefile 
   doc/Makefile doc/pangaea/Makefile
 ])
