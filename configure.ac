@@ -26,8 +26,8 @@ AC_INIT([GLUES],[GLUES_VERSION],[carsten.lemmen@hzg.de],[glues])
 
 dnl configuring options for auxiliary directories
 AC_CONFIG_AUX_DIR([config])
+AC_CONFIG_MACRO_DIR([config])
 AC_CONFIG_SRCDIR([src/Glues.cc])
-AC_CONFIG_MACRO_DIR([m4])
 
 dnl configuration actions
 
