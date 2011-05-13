@@ -257,10 +257,10 @@ dnl /autoconf/Present-But-Cannot-Be-Compiled.html
          #include <netcdfcpp.h>
          #endif
        ]])
-   AC_CHECK_LIB([netcdf],[nc_close])
-   AC_CHECK_LIB([netcdf_c++],[nc_close])
-   AC_SEARCH_LIBS([nc_close],[netcdf])
-   AC_SEARCH_LIBS([nc_close],[netcdf_c++])
+   AC_CHECK_LIB(netcdf,ncclose)
+   AC_CHECK_LIB(netcdf_c++,ncclose)
+   AC_SEARCH_LIBS(ncclose,netcdf)
+   AC_SEARCH_LIBS(ncclose,netcdf_c++)
   
 else
 
