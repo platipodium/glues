@@ -27,6 +27,7 @@ AC_INIT([GLUES],[GLUES_VERSION],[carsten.lemmen@hzg.de],[glues])
 dnl configuring options for auxiliary directories
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_SRCDIR([src/Glues.cc])
+AC_CONFIG_MACRO_DIR([m4])
 
 dnl configuration actions
 
@@ -48,6 +49,8 @@ ALL_LINGUAS="en de"
 
 dnl Platform configuration
 AC_CANONICAL_HOST
+#AC_CANONICAL_BUILD
+#AC_CANONICAL_TARGET
 AC_DEFINE_UNQUOTED(GLUES_PLATFORM, "${host}",
 [Define this to be the canonical name (cpu-vendor-os) of your system.])
 AC_DEFINE_UNQUOTED(GLUES_CPU, "${host_cpu}",
@@ -185,7 +188,7 @@ AC_SUBST(SISILIBNAME)
 
 dnl FIXME	AC_DEFINE(HAVE_SISI,[],"Whether we have the SiSi package")],
 dnl Check if we can link with SiSi
-AC_SEARCH_LIBS(SiSi::finalize,SiSi2.0) #,,,[SiSi sisi sisi2.0]
+AC_SEARCH_LIBS(finalize,SiSi2.0) #,,,[SiSi sisi sisi2.0]
 #AC_CHECK_LIB(SiSi2.0, SiSi::finalize, [LIBS="-lSiSi2.0 $LIBS"],
 # [AC_MSG_ERROR(libSiSi2.0 not found or uses a different ABI..)])
 
@@ -254,10 +257,10 @@ dnl /autoconf/Present-But-Cannot-Be-Compiled.html
          #include <netcdfcpp.h>
          #endif
        ]])
-   AC_CHECK_LIB(netcdf,ncclose)
-   AC_CHECK_LIB(netcdf_c++,ncclose)
-   AC_SEARCH_LIBS(ncclose,netcdf)
-   AC_SEARCH_LIBS(ncclose,netcdf_c++)
+   AC_CHECK_LIB([netcdf],[nc_close])
+   AC_CHECK_LIB([netcdf_c++],[nc_close])
+   AC_SEARCH_LIBS([nc_close],[netcdf])
+   AC_SEARCH_LIBS([nc_close],[netcdf_c++])
   
 else
 
