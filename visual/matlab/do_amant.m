@@ -12,7 +12,7 @@
 % 7. woodland historgram
 
 % select which figures to plot
-doplot=[6];
+doplot=[71];
 
 % Lon/lat limits for both regions EUR+NAM
 blatlim=[25 60];
@@ -405,6 +405,53 @@ if any(doplot==6)
   cl_print('name',pname,'ext','pdf');  
   
   
+end
+
+%% Figure 7
+if any(doplot==71)
+    
+    etimelime=[-7000 1000];
+    ustimelim=etimelim;
+  % Figure 5 trajectories in Europe and NAM
+  file='../../nospread.nc';
+  ncid=netcdf.open(file,'NOWRITE');
+  time=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'time')); 
+  farming=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'farming'));
+  farming_nospread=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'farming_nospread'));
+  farming_by_spread=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'farming_by_spread'));
+  netcdf.close(ncid);
+ 
+  figure(58); clf reset; hold on;
+  set(gca,'FontSize',18);
+  itime=find(time>=ustimelim(1) & time<=ustimelim(2));
+  p1a=plot(time(itime),farming(usreg,itime),'k-','Linewidth',1.5,'Color',...
+      0.7*[1 1 1]);
+  p1b=plot(time(itime),mean(farming_by_spread(usreg,itime)),'k-','LineWidth',5);
+  p1b=plot(time(itime),mean(farming(usreg,itime)),'r-','LineWidth',5);
+  p1b=plot(time(itime),mean(farming_nospread(usreg,itime)),'b-','LineWidth',5);
+  set(gca,'YAxisLocation','left','XLim',ustimelim,'box','on','Ylim',[0 1],'color','none');
+  pname=sprintf('trajectory_amant_nospread_%s_%d','farming',length(usreg));
+  set(p1a,'visible','off');
+  cl_percent;
+  cl_fixticklabel(gca,'l');
+  cl_bcad;
+  %cl_print('name',pname,'ext','pdf');  
+  
+  figure(59); clf reset; hold on;
+  set(gca,'FontSize',18);
+  itime=find(time>=etimelim(1) & time<=etimelim(2));
+  p1a=plot(time(itime),farming(ereg,itime),'k-','Linewidth',1.5,'Color',...
+      0.7*[1 1 1]);
+  p1b=plot(time(itime),mean(farming_by_spread(ereg,itime)),'k-','LineWidth',5);
+  p1b=plot(time(itime),mean(farming(ereg,itime)),'r-','LineWidth',5);
+  p1b=plot(time(itime),mean(farming_nospread(ereg,itime)),'b-','LineWidth',5);
+  set(gca,'YAxisLocation','left','XLim',etimelim,'box','on','Ylim',[0 1],'color','none');
+  pname=sprintf('trajectory_amant_nospread_%s_%d','farming',length(ereg));
+  set(p1a,'visible','off');
+  cl_percent;
+  cl_fixticklabel(gca,'l');
+  cl_bcad;
+  %cl_print('name',pname,'ext','pdf');  
 end
 
 
