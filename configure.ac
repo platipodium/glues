@@ -115,10 +115,12 @@ dnl Check for multiprocessing
 #AX_MPI from autoconf archive
 
 dnl Check for libraries
-AC_CHECK_LIB(m,cos) # for region package
-AC_CHECK_LIB(m,min) 
-AC_CHECK_LIB(m,max)
-#AC_CHECK_LIB(intl,bindtextdomain)
+AC_SEARCH_LIBS(cos,m)
+AC_SEARCH_LIBS(min,m)
+AC_SEARCH_LIBS(exp,m)
+AC_SEARCH_LIBS(pow,m)
+AC_SEARCH_LIBS(sqrt,m)
+AC_SEARCH_LIBS(bindtextdomain,intl)
 	
 dnl Checking for SiSi in explicit configure setting
 
@@ -181,9 +183,10 @@ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 
 AC_SUBST(SISILIBNAME)
 
-# FIXME	AC_DEFINE(HAVE_SISI,[],"Whether we have the SiSi package")],
+dnl FIXME	AC_DEFINE(HAVE_SISI,[],"Whether we have the SiSi package")],
 dnl Check if we can link with SiSi
-#AC_CHECK_LIB(SiSi2.0, SiSi::finalize(), [LIBS="-lSiSi2.0 $LIBS"],
+AC_SEARCH_LIBS(SiSi::finalize,SiSi2.0) #,,,[SiSi sisi sisi2.0]
+#AC_CHECK_LIB(SiSi2.0, SiSi::finalize, [LIBS="-lSiSi2.0 $LIBS"],
 # [AC_MSG_ERROR(libSiSi2.0 not found or uses a different ABI..)])
 
 #AC_SEARCH_LIBS([sisi_is_available],
@@ -191,8 +194,6 @@ dnl Check if we can link with SiSi
 #[AC_MSG_NOTICE([sisi library found : $ac_cv_search_sisi_is_available])],
 #[AC_MSG_ERROR(libSiSi2.0 not found or uses a different ABI..)],[])
 
-# it is better to use ac_serach libs over ac_check_lib
-dnl AC_SEARCH_LIBS (function, search-libs, [action-if-found], [action-if-not-found], [other-libraries])
 
 dnl Checking for netcdf 
 netcdf_path=""
@@ -255,6 +256,8 @@ dnl /autoconf/Present-But-Cannot-Be-Compiled.html
        ]])
    AC_CHECK_LIB(netcdf,ncclose)
    AC_CHECK_LIB(netcdf_c++,ncclose)
+   AC_SEARCH_LIBS(ncclose,netcdf)
+   AC_SEARCH_LIBS(ncclose,netcdf_c++)
   
 else
 
@@ -303,7 +306,7 @@ AC_CHECK_HEADER(cstring, , GLUES_ERROR([The standard <cstring> header file could
 # AC_CONFIG_LIBOBJ_DIR (arch)
 # This can cause a nasty bug ::malloc not found
 
-AC_CHECK_FUNCS([pow exp sqrt strstr strrchr])
+AC_CHECK_FUNCS([strstr strrchr])
 
 #AC_ARG_WITH(sisi, [ --with-sisi location of SISI library])
 #if test x"$with_openssl" != "x" ; then
