@@ -119,12 +119,25 @@ dnl Check for multiprocessing
 #AX_MPI from autoconf archive
 
 dnl Check for libraries
-AC_SEARCH_LIBS(cos,m)
-AC_SEARCH_LIBS(min,m)
-AC_SEARCH_LIBS(exp,m)
-AC_SEARCH_LIBS(pow,m)
-AC_SEARCH_LIBS(sqrt,m)
-AC_SEARCH_LIBS(bindtextdomain,intl)
+AC_SEARCH_LIBS([cos], [m], [], [
+  AC_MSG_ERROR([unable to find the cos() function])
+])
+AC_SEARCH_LIBS([exp], [m], [], [
+  AC_MSG_ERROR([unable to find the exp() function])
+])
+AC_SEARCH_LIBS([pow], [m], [], [
+  AC_MSG_ERROR([unable to find the pow() function])
+])
+AC_SEARCH_LIBS([sqrt], [m], [], [
+  AC_MSG_ERROR([unable to find the sqrt() function])
+])
+#AC_SEARCH_LIBS([min], [m], [], [
+#  AC_MSG_ERROR([unable to find the min() function])
+#])
+#AC_SEARCH_LIBS([gettext], [intl], [], [
+#  AC_MSG_ERROR([unable to find the bindtextdomain() function])
+#])
+
 	
 dnl Checking for SiSi in explicit configure setting
 
@@ -189,7 +202,7 @@ AC_SUBST(SISILIBNAME)
 
 dnl FIXME	AC_DEFINE(HAVE_SISI,[],"Whether we have the SiSi package")],
 dnl Check if we can link with SiSi
-AC_SEARCH_LIBS(finalize,SiSi2.0) #,,,[SiSi sisi sisi2.0]
+AC_SEARCH_LIBS([finalize],[SiSi2.0 SiSi sisi sisi2.0]) #,,,[SiSi sisi sisi2.0]
 #AC_CHECK_LIB(SiSi2.0, SiSi::finalize, [LIBS="-lSiSi2.0 $LIBS"],
 # [AC_MSG_ERROR(libSiSi2.0 not found or uses a different ABI..)])
 
