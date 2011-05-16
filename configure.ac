@@ -98,7 +98,8 @@ fi
 
 dnl Check for libtool and changes to libtool
 dnl disabling shared libs speeds up compilation significantly
-LT_INIT([disable-shared])
+LT_INIT
+#LT_INIT([disable-shared])
 AC_SUBST([LIBTOOL_DEPS])
 
 dnl Check for programs
