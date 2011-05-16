@@ -222,7 +222,7 @@ int GlobalClimate::Update(double t) {
 
     unsigned long int it;
 
-    it=floor(t/ClimUpdateTimes[0]);
+    it=lrint(floor(t/ClimUpdateTimes[0]));
     if (it>=ClimUpdateTimes[1]) it=ClimUpdateTimes[1]-1;
 
     for (unsigned int r=0; r<numberOfRegions; r++) {
@@ -249,10 +249,10 @@ int GlobalClimate::Update(double t) {
 //    if(r==1) cout << it<<" NPP[1]="<<npp_store[r+it*numberOfRegions]<<"\t"<<regions[1].Npp()<<endl;
 	}
 /*   if((ci<corrn && ci>=10) || r==82)
-     tl=1.2*gdd_store[r+it*numberOfRegions]/365;
+     tl=1.2*gdd_store[r+it*numberOfRegions]/365.0;
      else
      if(r>=195)
-     tl=0.7*gdd_store[r+it*numberOfRegions]/365;
+     tl=0.7*gdd_store[r+it*numberOfRegions]/365.0;
      else
 */
     climate.at(r).Gdd(gdd_store.at(r+it*numberOfRegions));
@@ -277,3 +277,4 @@ unsigned int GlobalClimate::geo2id(double lat,double lon) const {
 }
 
 /** EOF GlobalClimate.cc */
+
