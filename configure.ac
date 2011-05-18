@@ -103,10 +103,10 @@ LT_INIT
 AC_SUBST([LIBTOOL_DEPS])
 
 dnl Check for programs
-AC_PROG_CXX(["ccache g++" g++ c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC])
+AC_PROG_CC(["ccache gcc" gcc cc acc c.exe xlc xlc_r icc pgcc]) # for region package
+AC_PROG_CXX(["ccache g++" g++ c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC pgCC])
 #AX_GXX_VERSION
 AC_LANG([C++])
-AC_PROG_CC # for region package
 # AC_PROG_AWK
 # AC_PROG_RANLIB # for sisi (move to sisi configure?)
 
@@ -180,7 +180,7 @@ AC_MSG_NOTICE([Including SiSi headers from ${sisi_include_path}])
 AC_MSG_NOTICE([Linking to SiSi library in  ${sisi_lib_path}])
 
 dnl Check SISI Header
-AC_MSG_CHECKING(for SiSi's Version.hh)
+AC_MSG_CHECKING([for SiSi's Version.hh])
 AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 #include "Version.hh"
 ]])],[AC_MSG_RESULT(yes)
@@ -271,8 +271,8 @@ dnl /autoconf/Present-But-Cannot-Be-Compiled.html
          #include <netcdfcpp.h>
          #endif
        ]])
-   AC_CHECK_LIB(netcdf,ncclose)
-   AC_CHECK_LIB(netcdf_c++,ncclose)
+   AC_CHECK_LIB([netcdf],[ncclose])
+   AC_CHECK_LIB([netcdf_c++],[ncclose])
    AC_SEARCH_LIBS(ncclose,netcdf)
    AC_SEARCH_LIBS(ncclose,netcdf_c++)
   
@@ -436,4 +436,26 @@ fi
 
 AC_OUTPUT
 
+
+echo ""
+echo "Configuration Parameters:"
+echo "AR_FLAGS............. ${AR_FLAGS}"
+echo "CC................... ${CC}"
+echo "CFLAGS............... ${CFLAGS}"
+echo "CPP.................. ${CPP}"
+echo "CPPFLAGS............. ${CPPFLAGS}"
+echo "CXX.................. ${CXX}"
+echo "CXXFLAGS............. ${CXXFLAGS}"
+echo "ENABLE_MPI........... ${enable_mpi}"
+echo "ENABLE_NETCDF4....... ${enable_netcdf4}"
+echo "HAVE_NETCDF4_H....... ${HAVE_NETCDF4_H}"
+echo "HOST................. ${HOST}"
+echo "host................. ${host}"
+echo "HOSTNAME............. ${HOSTNAME}"
+echo "LDFLAGS.............. ${LDFLAGS}"
+echo "LIBS................. ${LIBS}"
+echo "LOCALSISI.............${LOCALSISI}"
+
 GLUES_CHECK_ERRORS
+
+
