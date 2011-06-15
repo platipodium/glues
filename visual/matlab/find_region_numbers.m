@@ -8,7 +8,7 @@ if nargin<1 return; end
 
 
 % defaults
-latlim=[-80,80];
+latlim=[-60,80];
 neighlim=[];
 nofind=[];
 lonlim=[-180,180];

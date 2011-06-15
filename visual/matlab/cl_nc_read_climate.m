@@ -1,16 +1,20 @@
-function [time,lon,lat,climate]=cl_nc_read_arve(varargin)
+function [time,lon,lat,climate]=cl_nc_read_climate(varargin)
 
 %% Standard arguments block
 cl_register_function;
 
 arguments = {...
-  {'file','../../data/plasim_LSG_6999_6000_mean.nc'},...
+  {'file','../../src/test/plasim_11k.nc'},...
   {'timelim',[-inf inf]}
 };
 
 [a,rargs]=clp_arguments(varargin,arguments);
 for i=1:a.length eval([a.name{i} '=' clp_valuestring(a.value{i}) ';']); end
 
+if ~exist(file,'file') 
+  warning('File %s does not exist. Skipped.',file);
+  return;
+end
 ncid=netcdf.open(file,'NC_NOWRITE');
 [ndim nvar natt udimid] = netcdf.inq(ncid);
 

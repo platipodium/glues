@@ -1,10 +1,10 @@
 function cl_print(varargin)
 %
 arguments = {...
-  {'extension','png'},...
+  {'extension','pdf'},...
   {'resolution',300},... 
   {'fig',NaN},...
-  {'name','figure'},...
+  {'name','test'},...
 };
 
 cl_register_function;
@@ -23,17 +23,42 @@ end
 
 if isnan(fig) fig=gcf; end
 pos=get(fig,'Position');
-set(fig,'PaperType','A4','PaperPositionMode','auto');
+set(fig,'PaperType','A4','PaperPositionMode','auto','PaperUnits','points');
 ppos=get(fig,'PaperPosition');
 psize=get(fig,'PaperSize');
 set(fig,'PaperPositionMode','Manual','PaperOrientation','portrait');
-set(fig,'PaperPosition',ppos.*[0 0 psize(1)/ppos(3) psize(1)/ppos(3)]);
-ppos=get(fig,'PaperPosition');
-set(fig,'PaperSize',psize.*[1 0]+ppos(3:4).*[0 1]);
+set(fig,'PaperPosition',ppos.*[0 0 psize(1)/ppos(3) psize(1)/ppos(3)]+[-20 -20 -40 -40]);
+ppos=get(fig,'PaperPosition')
+set(fig,'PaperSize',psize.*[1 0]+ppos(3:4).*[0 1])
+
+
 %psize=get(gcf,'PaperSize');
 %if psize(2)<psize(1) set(fig,'PaperOrientation','rotated')
 %else set(fig,'PaperOrientation','portrait');
 %closeend
+% 
+% ax=findobj(gcf,'type','axes');
+% for i=1:length(ax);
+%   axes(ax(i));
+%   apos=get(gca,'Position');
+%   axlim=get(gca,'XLim');
+%   aylim=get(gca,'YLim');
+%   axw=axlim(2)-axlim(1);
+%   ayw=aylim(2)-aylim(1);
+%   t=findobj(gca,'-property','position','type','text');
+%   tpos=cell2mat(get(t,'Position'));
+%   ext=cell2mat(get(t,'Extent'));
+%  
+%   b=[min([ext(:,1); tpos(:,1)]) ...
+%           min([ext(:,2); tpos(:,2)]) ...
+%           max([ext(:,1)+ext(:,3); tpos(:,1)]) ...
+%           max([ext(:,2)+ext(:,4); tpos(:,2)])];
+%       
+%   bpos=apos(1)-(axlim(1)-b(1))*apos(3)/axw;
+%   
+% end
+
+%pos=cell2mat(get(ax,'Position'));
 
 if ~iscell(extension) extension={extension}; end
 
