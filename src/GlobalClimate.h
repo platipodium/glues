@@ -69,10 +69,7 @@ class GlobalClimate {
     static int InitRead(char* filename);
   private:
     static int ReadTsv(const std::string& filename);
-
-#ifdef HAS_NETCDF_H
-    static int ReadNetCDF(char* filename);
-#endif
+    static int ReadNetcdf(const std::string& filename);
 };
 #endif
 

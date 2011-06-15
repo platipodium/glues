@@ -1,7 +1,7 @@
 /* GLUES netcdf interface; this file is part of
    the Global Land Use and technological Evolution Simulator
 
-   Copyright (C) 2010
+   Copyright (C) 2010,2011
    Carsten Lemmen <carsten.lemmen@hzg.de>
 
    This program is free software; you can redistribute it and/or modify it
@@ -20,7 +20,7 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
-   @date   2010-10-20
+   @date   2011-06-15
    @file   GNetcdf.cc
 */
 
