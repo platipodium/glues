@@ -59,17 +59,16 @@ int GlobalClimate::InitRead(char* cfilename)
 {
    std::string filename(cfilename);
    size_t len=filename.size();
+   int nreg=0;
    
    std::string extension = filename.substr(len-4,4);
    std::cerr << extension << std::endl; 
    if (filename.substr(len-4,4)==".tsv")
-     ReadTsv(filename.c_str());
+     nreg=ReadTsv(filename.c_str());
    else if (filename.substr(len-4,4)==".dat")
-     ReadTsv(filename.c_str());
-   else
-     return 1;  
-
-   return 0; 
+     nreg=ReadTsv(filename.c_str());
+   
+   return nreg; 
 }
 
 
@@ -144,7 +143,7 @@ int GlobalClimate::ReadTsv(const std::string& filename)
       {
           for( j = 0; j < ncol-joffset; j++ )
           {
-             // This assumes that npp_store has been adusted to correct size
+             /// This assumes that npp_store has been adusted to correct size
               npp_store.at(j+numberOfRegions*i) = vdata.at(i).at(j);
           }
       }
@@ -163,7 +162,7 @@ int GlobalClimate::ReadTsv(const std::string& filename)
   ifs.close();
   std::cout << ", found " << nrow << " x " << ncol-joffset << " climates." << std::endl;
 
-  size_t charOffset=filename.find_first_of("npp",0);
+  size_t charOffset=filename.find("npp",0);
   
   std::string gddname=filename;
   gddname.replace(charOffset,3,"gdd");
