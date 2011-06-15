@@ -14,7 +14,7 @@ function [production,share,carbon,p]=clc_vecode(temp,prec,gdd0,co2)
 % Output arguments
 %  prod production variables (lai, nppt, nppg)
 %  share fraction of forest, grass, desert
-%  carbon carbon stock in leaves, stems, soil
+%  carbon carbon stock in leaves, stems, soil (kg C/m2)
 
 % Copyright 2009,2010 Carsten Lemmen
 % GKSS-Forschungzentrum Geesthacht
@@ -29,7 +29,7 @@ function [production,share,carbon,p]=clc_vecode(temp,prec,gdd0,co2)
     gdd0=3600; % Year-round 10 degree
   end
   
-  if max(gdd0)<361
+  if max(gdd0)<366
       warning('Did you provide gdd instead of gdd0? Please double-check your input!');
   end
   
@@ -40,7 +40,7 @@ function [production,share,carbon,p]=clc_vecode(temp,prec,gdd0,co2)
   p=ccstat(production,share,p);
   [production,share,carbon,p]=climpar(production,share,p);
 
-  return
+  return;
 end
 
 function [production,share,p]=ccparam(temp,prec,gdd0,co2,p)
@@ -84,7 +84,7 @@ vd=find(gdd0<100.0);
 desertshare(vd)=1.0;
 
 % slow decrease of desert when gdd0>100
-vd=find(gdd0>=100.0 & gdd0<p.GDD0MIN)
+vd=find(gdd0>=100.0 & gdd0<p.GDD0MIN);
 desertshare(vd)=(p.GDD0MIN-gdd0(vd))/(p.GDD0MIN-100.);
 
 % variable desert faction when gdd0>GDD0MAX
@@ -103,8 +103,8 @@ npp=clc_npp(temp,prec);
 %npp=vecode_co2_enrichment(npp,co2);
 
 % CO2 enrichment
-nppt=npp*(1.0+(p.betat.*log(co2/280.)))
-nppg=npp*(1.0+(p.betag.*log(co2/280.)))
+nppt=npp.*(1.0+(p.betat.*log(co2/280.)));
+nppg=npp.*(1.0+(p.betag.*log(co2/280.)));
 
 
 % allocation factors and residence time of leaves biomass
@@ -128,8 +128,8 @@ p.t4g=p.t4t;
 
 %calculation of potential nedleleaves trees ratio
 nlshare=(p.t1t-p.t1td)/(p.t1tn-p.t1td);
-nlshare(find(nlshare>1))=1.0;
-nlshare(find(nlshare<0))=0.0;
+nlshare(nlshare>1)=1.0;
+nlshare(nlshare<0)=0.0;
 
 share.needle = nlshare;
 share.forest = forestshare; 
@@ -149,7 +149,7 @@ function [production,share,carbon,p]=climpar(production,share,p)
 % Calculationof annual average LAI
 p.laig=p.b1g*p.deng;
 p.lait=p.b1t.*(p.dentn*share.needle+p.dentd*(1-share.needle));
-lai=p.lait.*share.forest+p.laig.*share.grass
+lai=p.lait.*share.forest+p.laig.*share.grass;
 
 % Calculation of  annual uptake
 %if isfield(p,'b1');

@@ -272,7 +272,7 @@ double RegionalPopulation::RelativeGrowthrate() {
       disease=gammad/technology*density;
       
       replaced with literacy-dependent exponential
-      function
+      function, described by Lemmen 2011
   */
     literacy = technology/LiterateTechnology;
     disease   = (germs-resist)*density*exp(-literacy);

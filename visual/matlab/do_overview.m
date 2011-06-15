@@ -1,14 +1,14 @@
 % Run script to plot the most important information from a GLUES result
 
-filename='../../lowdelta_base.nc';
-sce='test';
+filename='../../plasim_base.nc';
+sce='plasim_base';
 reg='all';
-timelim=-4000;
+timelim=-1000;
 riverfile=['river_hr_' reg '.mat'];
 
 %if ~strcmp('reg','all') & ~exist(riverfile,'file') m_gshhs('fr','save',riverfile); end
 
-[d,b]=clp_nc_variable('var','farming','timelim',[-inf,inf],'reg',reg,...
+[d,b]=clp_nc_variable('var','farming','timelim',[-7000,1500],'reg',reg,...
      'marble',0,'transpar',0,'sce',sce,...
     'nogrid',1,'threshold',0.5,'file',filename,'flip',1,'fig',0);
 f{1}=b;
@@ -23,7 +23,7 @@ f{2}=b;
      'marble',0,'transpar',0,'sce',sce,...
     'nogrid',1,'file',filename,'lim',[0 1]);
 f{3}=b;
-return;
+%return;
 
 [d,b]=clp_nc_variable('var','population_density','timelim',timelim,'reg',reg,...
      'marble',0,'transpar',0,'sce',sce,...
@@ -50,9 +50,9 @@ f{7}=b;
     'nogrid',1,'file',filename,'lim',[1 inf]);
 f{8}=b;
 
-[d,b]=clp_nc_variable('var','cropfraction_static','timelim',timelim,'reg',reg,...
-     'marble',0,'transpar',0,'sce',sce,...
-    'nogrid',1,'file',filename,'mult',100);
+%[d,b]=clp_nc_variable('var','cropfraction_static','timelim',timelim,'reg',reg,...
+%     'marble',0,'transpar',0,'sce',sce,...
+%    'nogrid',1,'file',filename,'mult',100);
 f{9}=b;
 
 [d,b]=clp_nc_variable('var','subsistence_intensity','timelim',timelim,'reg',reg,...
@@ -86,8 +86,8 @@ t{4}=b;
 [d,b]=clp_nc_trajectory('var','subsistence_intensity','timelim',[-inf inf],'reg',reg,...
      'sce',sce,'file',filename,'lim',[0 inf],'nosum',1);
 t{5}=b;
-[d,b]=clp_nc_trajectory('var','cropfraction_static','timelim',[-inf inf],'reg',reg,...
-     'sce',sce,'file',filename,'lim',[0 15],'nosum',1,'mult',100);
+%[d,b]=clp_nc_trajectory('var','cropfraction_static','timelim',[-inf inf],'reg',reg,...
+%     'sce',sce,'file',filename,'lim',[0 15],'nosum',1,'mult',100);
 t{6}=b;
 
 
