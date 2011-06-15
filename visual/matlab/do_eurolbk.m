@@ -327,24 +327,42 @@ cl_print('name','region_map','ext','png','res',[150,600]);
 end
 
 %------------------------------------------------------------------------------
-movtime=-7500:500:-3500;
+movtime=-7500:50:-3500;
 nmovtime=length(movtime);
 
 %% plot farming advance (Figure 2)
 if (2==0) for it=1:nmovtime
   [d,b]=clp_nc_variable('var','farming','reg',reg,'marble',2,'transparency',1,'nocolor',0,...
-      'showstat',0,'lim',[0 1],'timelim',movtime(it),'showtime',0,...
-      'file','../../eurolbk_base.nc','figoffset',0,'sce',['base_' sprintf('%05d',movtime(it))],'noprint',1);
+      'showstat',0,'lim',[0 1],'timelim',movtime(it),'showtime',1,'noaxes',1,...
+      'file','../../eurolbk_base.nc','figoffset',0,'sce',['base_' sprintf('%03d',it)],'noprint',1);
   m_coast('color','k');
-  m_grid('box','fancy','linestyle','none');
+  m_grid('box','fancy','linestyle','none','LineWidth',0.2);
+  
   title('GLUES agropastoral activity');
+  set(gca,'XTick',[],'YTick',[]);
   cb=findobj(gcf,'tag','colorbar')
   ytl=get(cb,'YTickLabel');
   ytl=num2str(round(100*str2num(ytl)));
   set(cb,'YTickLabel',ytl);
   title(cb,'%');
+  
+  t=findobj(gcf,'tag','Time');
+  set(t,'FontSize',24,'FontWeight','bold');
+  
+  t=findobj(gcf,'tag','m_grid');
+  t=get(t,'Children');
+  t=findobj(t,'-property','String');
+  for i=1:length(t)
+    if strfind(get(t(i),'String'),'^o') delete(t(i));
+  end,end
+
+  t=findobj(gcf,'-property','FontName');
+  set(t,'FontName','Times');
+  
   cl_print('name',b,'ext','png','res',[300,600]);
- end,end
+  
+  
+end,end
 
 %% plot farming advance (as Figure 2, movie)
 movtime=-7500:50:-3500;
@@ -370,7 +388,8 @@ if (2==0) for it=1:nmovtime
 
 % Command line postprocessing
 %mencoder mf://farming_lbk_66_base_???_*_150.png  -mf w=800:h=600:fps=5:type=png -ovc lavc -lavcopts vcodec=mpeg4:mbd=2:trell -oac copy -o output.avi
-
+%mencoder mf://farming_lbk_66_base_???_-*_600.png  -mf w=800:h=600:fps=5:type=png -ovc lavc -lavcopts vcodec=mpeg4:mbd=2:trell -oac copy -o movie_1_600.avi
+ 
 
 
 if (3==0)
@@ -474,6 +493,7 @@ set(cb,'YTickLabel',ytl);
 
 ct=findobj(gcf,'-property','FontName');
 set(ct,'FontSize',14,'FontName','Times','FontWeight','normal');
+
 
 
 for ir=1:-nhreg  
@@ -700,7 +720,7 @@ else
   load('distfile');    
 end
 
-if (5==5)
+if (0==5)
 %% Do Ammerman plot (figure 5)
 % Single column 90 mm 1063 1772 3543 
 % 1.5 column 140 mm 1654 2756 5512
@@ -916,6 +936,8 @@ if (0==6)
   clp_spread_mechanism('file','../../eurolbk_demic.log');
   
 end
+
+
 
 
 return
