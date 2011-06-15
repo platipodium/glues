@@ -7,7 +7,9 @@ arguments = {...
   {'variables',{'population_density','technology'}},...
   {'timestep',100},...
   {'file','../../test.nc'},...
-  {'resolution',0.5}
+  {'resolution',0.5},...
+  {'latlim',[-90 90]},...
+  {'lonlim',[-180 180]},...
 };
 
 cl_register_function;
@@ -74,7 +76,13 @@ if exist(ofile,'file') delete(ofile); end
 ncout=netcdf.create(ofile,'NOCLOBBER');
 
 latgrid=[90-resolution/2.0:-resolution:-90+resolution/2.0];
+iglat=find(latgrid>=latlim(1) & latgrid<=latlim(2));
+latgrid=latgrid(iglat);
+
 longrid=[-180+resolution/2.0:resolution:180-resolution/2.0];
+iglon=find(longrid>=lonlim(1) & longrid<=lonlim(2));
+longrid=longrid(iglon);
+
 nglon=length(longrid);
 nglat=length(latgrid);
 
@@ -189,14 +197,35 @@ for i=1:length(land.region)
 end
   
 % find ncell for each glues region
-for i=1:length(id)
-  ncell(i,1)=sum(land.region==i);
+%for i=1:length(id)
+%  ncell(i,1)=sum(land.region==i);
+%end
+%mapping=ones(nreg,max(ncell));
+%for i=1:nreg
+%  mapping(i,1:ncell(i))=find(map.region==i);
+%end
+
+% find ncell for each glues region
+%for i=1:length(id)
+%  ncell(i,1)=sum(land.region==i);
+%end
+%mapping=ones(nreg,max(ncell));
+
+%%% begin new version
+
+map.smallregion=map.region(iglon,iglat);
+ncell=zeros(nreg,1);
+for i=1:nreg
+  ncell(i)=length(find(map.smallregion==id(i)));
 end
 mapping=ones(nreg,max(ncell));
+
 for i=1:nreg
-  mapping(i,1:ncell(i))=find(map.region==i);
+  mapping(i,1:ncell(i))=find(map.smallregion==id(i));
 end
 
+
+%%%%%%%%% end new version
 
 % Put new time records and lat/lon grid
 for i=1:length(time)
