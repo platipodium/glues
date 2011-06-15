@@ -1,8 +1,8 @@
 /* GLUES GlobalClimate implementation; this file is part of
    the Global Land Use and technological Evolution Simulator
 
-   Copyright (C) 2008,2009,2010
-   Carsten Lemmen <carsten.lemmen@gkss.de>, Kai Wirtz <kai.wirtz@gkss.de>
+   Copyright (C) 2008,2009,2010,2011
+   Carsten Lemmen <carsten.lemmen@hzg.de>, Kai Wirtz <kai.wirtz@hzg.de>
 
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the
@@ -67,7 +67,12 @@ class GlobalClimate {
     int UpdateNPP(int r, double npp);
 
     static int InitRead(char* filename);
+  private:
+    static int ReadTsv(const std::string& filename);
 
+#ifdef HAS_NETCDF_H
+    static int ReadNetCDF(char* filename);
+#endif
 };
 #endif
 
