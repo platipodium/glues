@@ -55,10 +55,26 @@ GlobalClimate::~GlobalClimate() {
     @param filename name of file on disk
  */
 
-int GlobalClimate::InitRead(char* filename)
+int GlobalClimate::InitRead(char* cfilename)
 {
-  std::string gddname;
-  size_t charOffset = 0;
+   std::string filename(cfilename);
+   size_t len=filename.size();
+   
+   std::string extension = filename.substr(len-4,4);
+   std::cerr << extension << std::endl; 
+   if (filename.substr(len-4,4)==".tsv")
+     ReadTsv(filename.c_str());
+   else if (filename.substr(len-4,4)==".dat")
+     ReadTsv(filename.c_str());
+   else
+     return 1;  
+
+   return 0; 
+}
+
+
+int GlobalClimate::ReadTsv(const std::string& filename)
+{
 
   unsigned int num=0,method=0;
   long unsigned int nrow=0,ncol=0,i=0,j=0;
@@ -66,7 +82,7 @@ int GlobalClimate::InitRead(char* filename)
 
   // Read the number of rows
   std::ifstream ifs;
-  ifs.open(filename,std::ios::in);
+  ifs.open(filename.c_str(),std::ios::in);
   if (ifs.bad()) {
     cerr << "\nERROR\tTried to open file " << filename << " and failed" << endl;
     return 0;  // The file does not exist
@@ -120,7 +136,7 @@ int GlobalClimate::InitRead(char* filename)
 
   cout << "Read NPP from " << filename;
 
-  ifs.open(filename,std::ios::in);
+  ifs.open(filename.c_str(),std::ios::in);
 
   if (method==0) { // old data version nclim rows * nreg columns
       glues::IO<double>::read_ascii_table(ifs,vdata,0,joffset,0,0);
@@ -147,9 +163,11 @@ int GlobalClimate::InitRead(char* filename)
   ifs.close();
   std::cout << ", found " << nrow << " x " << ncol-joffset << " climates." << std::endl;
 
-  gddname = filename;
-  charOffset = gddname.find( "npp", 0 );
-  gddname.replace( charOffset, 3, std::string("gdd") );
+  size_t charOffset=filename.find_first_of("npp",0);
+  
+  std::string gddname=filename;
+  gddname.replace(charOffset,3,"gdd");
+
   cout << "Read GDD from " << gddname;
 
   ifs.open(gddname.c_str(),std::ios::in);
