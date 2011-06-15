@@ -30,6 +30,7 @@
 #include "GlobalClimate.h"
 #include "Globals.h"
 #include "variables.h"
+#include "GNetcdf.h"
 #include "IO.h"
 #include <fstream>
 #include <string>
@@ -64,13 +65,25 @@ int GlobalClimate::InitRead(char* cfilename)
    std::string extension = filename.substr(len-4,4);
    std::cerr << extension << std::endl; 
    if (filename.substr(len-4,4)==".tsv")
-     nreg=ReadTsv(filename.c_str());
+     nreg=ReadTsv(filename);
    else if (filename.substr(len-4,4)==".dat")
-     nreg=ReadTsv(filename.c_str());
+     nreg=ReadTsv(filename);
+   else if (filename.substr(len-3,3)==".nc")
+     nreg=ReadNetcdf(filename);
    
    return nreg; 
 }
 
+int GlobalClimate::ReadNetcdf(const std::string& filename)
+{
+#ifndef HAVE_NETCDF_H
+  std::cerr << "Cannot read " << filename << " because NetCDF library is not linked." << std::endl;  
+  exit(1);
+#else
+  std::cerr << "Cannot read " << filename << " because NetCDF interface not implemented yet." << std::endl;  
+  exit(1);
+#endif
+}
 
 int GlobalClimate::ReadTsv(const std::string& filename)
 {
