@@ -172,7 +172,7 @@ if findstr('plasim',file)
   climate.temp=squeeze(mean(climate.mtemp,3));
   climate.prec=squeeze(sum(climate.mprec,3));
   %time=1950+[1:nyear]*50-11000;
-  time=([1:nyear]*50+1950-11000)*360;
+  time=([1:nyear]*50+1925-11000);
   ntime=length(time);
 end
 
@@ -194,7 +194,7 @@ end
 
 %% Calculate npp if necessary
 if ~isfield(climate,'npp') & isfield(climate,'temp') & isfield(climate,'prec')
-    climate.npp=clc_npp(climate.temp,climate.prec);
+  climate.npp=clc_npp(climate.temp,climate.prec);
 end
 
 %% Calculate gdd if necessary
@@ -242,7 +242,7 @@ end
 netcdf.putAtt(ncid,varid,'calendar','360 day');
 netcdf.putAtt(ncid,varid,'scale_factor',1.0);
 netcdf.putAtt(ncid,varid,'add_offset',0.0);
-netcdf.putAtt(ncid,varid,'units','days since 0001-01-01');
+netcdf.putAtt(ncid,varid,'units','years since 0001-01-01');
 netcdf.putAtt(ncid,varid,'average','central time in 50 a average');
 
 varname='lat';
