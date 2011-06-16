@@ -7,7 +7,7 @@ cl_register_function;
 
 arguments = {...
   {'file','../../plasim_k550.nc'},...
-  {'climate','../../src/test/plasim_11k.nc'},...
+  {'climate','../../data/plasim_11k_vecode_685.nc'},...
 };
 
 [args,rargs]=clp_arguments(varargin,arguments);
@@ -15,15 +15,15 @@ for i=1:args.length
   eval([ args.name{i} ' = ' clp_valuestring(args.value{i}) ';']); 
 end
 
-
 %% Read variables from glues result file
 ncid=netcdf.open(file,'NC_NOWRITE');
 time=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'time'));
 region=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'region'));
 farming=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'farming'));
-density=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'population_density'));
-technology=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'cropfraction_static'));
-cropfraction=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'time'));
+population_density=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'population_density'));
+cropfraction=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'cropfraction_static'));
+technology=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'technology'));
+area=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'area'));
 netcdf.close(ncid);
 
 
@@ -38,103 +38,102 @@ cropfraction(cropfraction>1)=1;
 % forest
 % naturalforest=repmat(climate.fshare',1,r.nstep)*100;
 
+
 % new VECODE formulation
+ncid=netcdf.open(climate,'NC_NOWRITE');
+ctime=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'time'));
+ctime=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'time'));
+forest_share=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'forest_share'));
+grassland_share=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'grassland_share'));
+soilcarbon=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'carbon_in_soil'));
+leafcarbon=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'carbon_in_leaves'));
+stemcarbon=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'carbon_in_stems'));
+littercarbon=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'carbon_in_litter'));
+netcdf.close(ncid);
 
+fshare=interp1(ctime,forest_share',time,'linear',NaN);
+iprior=find(time<ctime(1));
+fshare(iprior,:)=repmat(fshare(iprior(end)+1,:),[length(iprior) 1]);
 
-%% Add a routine to get from plasim temp and prec the respective vecode data.
+gshare=interp1(ctime,grassland_share',time,'linear',NaN);
+gshare(iprior,:)=repmat(gshare(iprior(end)+1,:),[length(iprior) 1]);
 
+c_leaf=interp1(ctime,leafcarbon',time,'linear',NaN);
+c_leaf(iprior,:)=repmat(c_leaf(iprior(end)+1,:),[length(iprior) 1]);
+c_litter=interp1(ctime,littercarbon',time,'linear',NaN);
+c_litter(iprior,:)=repmat(c_litter(iprior(end)+1,:),[length(iprior) 1]);
+c_soil=interp1(ctime,soilcarbon',time,'linear',NaN);
+c_soil(iprior,:)=repmat(c_soil(iprior(end)+1,:),[length(iprior) 1]);
+c_stem=interp1(ctime,stemcarbon',time,'linear',NaN);
+c_stem(iprior,:)=repmat(c_stem(iprior(end)+1,:),[length(iprior) 1]);
 
-climate.temp=mean(climate.tmean,2);
-climate.precip=sum(climate.prec,2);
-[climate.gdd,climate.gdd0,climate.gdd5]=clc_gdd(climate.tmean);
-[production,share,carbon,p]=clc_vecode(climate.temp,climate.precip,climate.gdd0);
+naturalcarbon=(c_leaf + c_litter + c_stem + c_soil)';
+livecarbon=(c_leaf + c_stem);
 
+% Growing crops = forest conversion
+grassfraction=gshare';
+forestfraction=fshare'-cropfraction;
 
+% Crops remove the stems, leave the leaves, and destroy 42% of litter/soil
+% TODO: adjust to prior definition 
+emission=cropfraction.*(c_stem'+0.42*c_soil'+0.42*c_litter');
+remainingcarbon=naturalcarbon-emission;
 
-fshare=repmat(climate.fshare',1,r.nstep);
-gshare=repmat(climate.gshare',1,r.nstep);
-b12f=repmat(climate.b12f',1,r.nstep);
-b12g=repmat(climate.b12g',1,r.nstep);
-b34f=repmat(climate.b34f',1,r.nstep);
-b34g=repmat(climate.b34g',1,r.nstep);
-
+% Emission is in kg/m2, multiply with area and convert to t
+cumulative_emission=emission.*repmat(area,1,length(time))*10E6/10E3;
 
 % carbon is calculated as t/ha
-naturalcarbon=b12f.*fshare+b12g.*gshare ...
-    +b34f.*fshare+b34g.*gshare;
-remainingcarbon=b12f.*(fshare-cropfraction) ...
-    +b12g.*(gshare+cropfraction) ...
-    +b34f.*(fshare-cropfraction)...
-    +0.58*b34f.*cropfraction...
-    +b34g.*gshare;
+% naturalcarbon=b12f.*fshare+b12g.*gshare ...
+%     +b34f.*fshare+b34g.*gshare;
+% remainingcarbon=b12f.*(fshare-cropfraction) ...
+%     +b12g.*(gshare+cropfraction) ...
+%     +b34f.*(fshare-cropfraction)...
+%     +0.58*b34f.*cropfraction...
+%     +b34g.*gshare;
 
+ncid=netcdf.open(file,'NC_WRITE');
+timedimid=netcdf.inqDimID(ncid,'time');
+regdimid=netcdf.inqDimID(ncid,'region');
 
-%load('regionpath_685.mat');
-load('regionmap_sea_685.mat');
-if ~exist('region','var')
-  region.area=regionarea;
+try
+  varid=netcdf.inqVarID(ncid,'carbon_in_live_vegetation');
+catch ('MATLAB:netcdf:inqVarID:variableNotFound');   
+  netcdf.reDef(ncid);
+
+  varid=netcdf.defVar(ncid,'carbon_in_live_vegetation','NC_FLOAT',[regdimid timedimid]);
+  netcdf.putAtt(ncid,varid,'units','kg m-2');
+  netcdf.putAtt(ncid,varid,'min_value',0);
+  netcdf.putAtt(ncid,varid,'model','VECODE');
+  netcdf.putAtt(ncid,varid,'date_of_creation',datestr(now));
+
+  varid=netcdf.defVar(ncid,'carbon_in_potential_vegetation','NC_FLOAT',[regdimid timedimid]);
+  netcdf.putAtt(ncid,varid,'units','kg m-2');
+  netcdf.putAtt(ncid,varid,'min_value',0);
+  netcdf.putAtt(ncid,varid,'model','VECODE');
+  netcdf.putAtt(ncid,varid,'date_of_creation',datestr(now));
+
+  varid=netcdf.defVar(ncid,'carbon_emission','NC_FLOAT',[regdimid timedimid]);
+  netcdf.putAtt(ncid,varid,'units','10E3 kg');
+  netcdf.putAtt(ncid,varid,'min_value',0);
+  netcdf.putAtt(ncid,varid,'model','GLUES');
+  netcdf.putAtt(ncid,varid,'date_of_creation',datestr(now));
+
+  varid=netcdf.defVar(ncid,'carbon_in_used_vegetation','NC_FLOAT',[regdimid timedimid]);
+  netcdf.putAtt(ncid,varid,'units','kg m-2');
+  netcdf.putAtt(ncid,varid,'model','VECODE+GLUES');
+  netcdf.putAtt(ncid,varid,'min_value',0);
+  netcdf.putAtt(ncid,varid,'date_of_creation',datestr(now));
+
+  netcdf.endDef(ncid);
 end
 
-if ~isfield(region,'area')
-  land.area=calc_gridcell_area(map.latgrid(land.ilat))';
-  for i=1:region.nreg
-    r.area(i)=sum(land.area(land.region==i));
-  end
-end
+netcdf.putVar(ncid,netcdf.inqVarID(ncid,'carbon_in_potential_vegetation'),naturalcarbon);
+netcdf.putVar(ncid,netcdf.inqVarID(ncid,'carbon_in_used_vegetation'),remainingcarbon);
+netcdf.putVar(ncid,netcdf.inqVarID(ncid,'carbon_in_live_vegetation'),livecarbon);
+netcdf.putVar(ncid,netcdf.inqVarID(ncid,'carbon_emission'),cumulative_emission);
+netcdf.close(ncid);
 
-
-deforestation=cropfraction*100.*repmat(r.area',1,r.nstep);
-%save('hyde_glues_cropfraction','cropfraction','naturalcarbon',...
-%   'remainingcarbon','deforestation');
-
-
-
-
-
-
-
-
-
-
-return
-
-
-hydefile='region_hyde_685.mat';
-climatefile='region_iiasa_685.mat';
-%resultfilename='result_iiasaclimber_ref_all.mat';
-resultfilename='results.mat';
-
-hyde=load(hydefile);
-hyde=hyde.climate;
-climateload(resultfilename);
-    
-% per capita cropland
-cpc=hyde.crop./hyde.popd/100; % in km2 per person
-
-% farmer density
-dfarm=r.Farming.*r.Density; % in person per km2
-
-% select farming regions at 3000 BP
-[mtime,itime]=min(abs(r.time-3000));
-ifarm=find(r.Farming(:,itime)>0.9);
-
-% per farmer cropland share
-hyde.time=[12000:-1000:1000];
-[mtime,itime]=min(abs(hyde.time-3000));
-hc=hyde.crop(ifarm,itime)/100.;
-hp=hyde.popd(ifarm,itime);
-hv=(hc>0 & isfinite(hp));
-iv=find(hv);
-hp=hp(iv); hc=hc(iv);
-
-p=polyfit(hp,hc,3);
-
-% the above is leading to nothing ...
-
-
-
-
-return
+return;
 end
 
 

@@ -20,20 +20,21 @@ T=test
 $SED -i '/LocalSpread/s/LocalSpread.*$/LocalSpread 1/' $CTL
 $SED -i '/flucampl/s/flucampl.*$/flucampl 0.0/' $DAT
 $SED -i '/gdd_opt/s/gdd_opt.*$/gdd_opt 0.7/' $PAR
-$SED -i '/kappa/s/kappa.*$/kappa 450.0/' $PAR
+$SED -i '/kappa/s/kappa.*$/kappa 550.0/' $PAR
 $SED -i '/spreadv/s/spreadv.*$/spreadv 0.002/' $PAR
 $SED -i '/spreadm/s/spreadm.*$/spreadm 100/' $OPAR
-$SED -i '/climatefile/s/string.*$/string climatefile "regions_npp_11k_685.dat"/' $SCE
-$X $SIM && cp $T.nc plasim_k450.nc
+#$SED -i '/climatefile/s/string.*$/string climatefile "regions_npp_11k_685.dat"/' $SCE
+$SED -i '/climatefile/s/string.*$/string climatefile  "..\/..\/..\/data\/plasim_11k_vecode_685_npp.tsv"/' $SCE
+$X $SIM && cp $T.nc plasim_550.nc
 
 
 # simulation without lower nppstar
-$SED -i '/kappa/s/kappa.*$/kappa 400.0/' $PAR
-$X $SIM && cp $T.nc plasim_k400.nc
+$SED -i '/kappa/s/kappa.*$/kappa 500.0/' $PAR
+$X $SIM && cp $T.nc plasim_k500.nc
 
 # simulation without higher nppstar
-$SED -i '/kappa/s/kappa.*$/kappa 650.0/' $PAR
-$X $SIM && cp $T.nc plasim_k650.nc
+$SED -i '/kappa/s/kappa.*$/kappa 600.0/' $PAR
+$X $SIM && cp $T.nc plasim_k600.nc
 
 
 

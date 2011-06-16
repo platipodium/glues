@@ -130,10 +130,19 @@ if ~exist(tmpfilename,'file')
     sweight=sum(weight{ireg});
     weight{ireg}=weight{ireg}/sweight;
   end
-  save(tmpfilename,'weight','subindex');
+  save(tmpfilename,'weight','subindex','iselect');
 else load(tmpfilename);
 end
 
+if ~isfield(land,'area')
+  land.area=calc_gridcell_area(land.lat);
+end
+
+for ireg=1:nreg
+  area(ireg)=sum(land.area(iselect{ireg}));
+  clat(ireg)=sum(weight{ireg}.*land.lat(iselect{ireg}));
+  clon(ireg)=mean(land.lon(iselect{ireg}));
+end
 
 for i=1:length(variables)
   varid=netcdf.inqVarID(ncid,variables{i});
@@ -209,6 +218,18 @@ for i=1:length(variables)
   varname=variables{i};
   varid=netcdf.defVar(ncout,varname,'NC_FLOAT',[regdim,timedim]);
 end
+varid=netcdf.defVar(ncout,'area','NC_FLOAT',[regdim]);
+netcdf.putAtt(ncout,varid,'calculated_from','area of grid cells');
+netcdf.putAtt(ncout,varid,'units','km^2');
+
+varid=netcdf.defVar(ncout,'latitude','NC_FLOAT',[regdim]);
+netcdf.putAtt(ncout,varid,'description','center of gravity latitude');
+netcdf.putAtt(ncout,varid,'units','degree_north');
+
+varid=netcdf.defVar(ncout,'longitude','NC_FLOAT',[regdim]);
+netcdf.putAtt(ncout,varid,'description','center of gravity longitude');
+netcdf.putAtt(ncout,varid,'units','degree_east');
+
 
 [ndim nvar natt udimid] = netcdf.inq(ncout);
 
@@ -220,6 +241,9 @@ for ovar=0:nvar-1
   else
     [varname,xtype,dimids,natts]=netcdf.inqVar(ncout,ovar);
     if strcmp(varname,'region') continue; end
+    if strcmp(varname,'area') continue; end
+    if strcmp(varname,'longitude') continue; end
+    if strcmp(varname,'latitude') continue; end
     ivar=netcdf.inqVarID(ncid,varname);
     [varname,xtype,dimids,natts]=netcdf.inqVar(ncid,ivar);
   end
@@ -240,6 +264,9 @@ for i=1:ntime
 end
 
 netcdf.putVar(ncout,netcdf.inqVarID(ncout,'region'),1:nreg);
+netcdf.putVar(ncout,netcdf.inqVarID(ncout,'latitude'),clat);
+netcdf.putVar(ncout,netcdf.inqVarID(ncout,'longitude'),clon);
+netcdf.putVar(ncout,netcdf.inqVarID(ncout,'area'),area);
 
 for i=1:length(variables)
   varid=netcdf.inqVarID(ncout,variables{i});

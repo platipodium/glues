@@ -63,7 +63,6 @@ int GlobalClimate::InitRead(char* cfilename)
    int nreg=0;
    
    std::string extension = filename.substr(len-4,4);
-   std::cerr << extension << std::endl; 
    if (filename.substr(len-4,4)==".tsv")
      nreg=ReadTsv(filename);
    else if (filename.substr(len-4,4)==".dat")
@@ -113,7 +112,6 @@ int GlobalClimate::ReadTsv(const std::string& filename)
       cout << "\nERROR\tFile " << filename << " appears to have 0 columns" << endl;
       return 0;
   }
-  std::cerr << "Rows by colums " << nrow << " x " << ncol << std::endl;
 
   unsigned long int joffset=0;
 

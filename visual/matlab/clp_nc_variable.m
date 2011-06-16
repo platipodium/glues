@@ -27,6 +27,8 @@ arguments = {...
   {'movie',1},...
   {'mult',1},...
   {'div',1},...
+  {'sub',0},...
+  {'add',0},...
   {'file','../../eurolbk_base.nc'},...%  {'retdata',NaN},...
   {'basename','variable'},...
   {'nocolor',0},...
@@ -114,7 +116,7 @@ end
 data=double(netcdf.getVar(ncid,varid));
 [varname,xtype,dimids,natt] = netcdf.inqVar(ncid,varid);
 
-if isnumeric(mult) data=data .* mult; 
+if isnumeric(mult) data=data .* mult;
 else
   factor=double(netcdf.getVar(ncid,netcdf.inqVarID(ncid,mult)));    
   data = data .* repmat(factor,size(data)./size(factor));
@@ -125,6 +127,19 @@ else
   factor=double(netcdf.getVar(ncid,netcdf.inqVarID(ncid,div)));    
   data = data ./ repmat(factor,size(data)./size(factor));
 end
+
+if isnumeric(sub) data=data - sub; 
+else
+  factor=double(netcdf.getVar(ncid,netcdf.inqVarID(ncid,sub)));    
+  data = data - repmat(factor,size(data)./size(factor));
+end
+
+if isnumeric(add) data=data + sub; 
+else
+  factor=double(netcdf.getVar(ncid,netcdf.inqVarID(ncid,add)));    
+  data = data +  repmat(factor,size(data)./size(factor));
+end
+
 
 if length(timelim)==1 timelim(2)=timelim(1); end
 
