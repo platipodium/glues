@@ -64,8 +64,15 @@ if all(isinf([lonlim latlim]))
     nreg=length(ireg);
   end
 else
-  [ireg,nreg,loli,lali]=find_region_numbers('lat',latlim,'lon',lonlim);
+  if ischar(reg)
+    [ireg,nreg,loli,lali]=find_region_numbers('lat',latlim,'lon',lonlim);
+  else
+     ireg=reg;
+     nreg=length(ireg);
+  end
 end
+
+
 
 if ~exist(file,'file')
     error('File does not exist');
@@ -85,7 +92,7 @@ for varid=0:nvar-1
 end
 
 if exist('lat','var') 
-  if length(lat)~=(region)
+  if length(lat)~=length(region)
     if exist('latit','var') lat=latit; end
   end
 else
@@ -93,7 +100,7 @@ else
 end
 
 if exist('lon','var') 
-  if length(lon)~=(region)
+  if length(lon)~=length(region)
     if exist('lonit','var') lon=lonit; end
   end
 else
@@ -107,6 +114,8 @@ try
 catch
     description=varname;
 end
+
+
 
 try
     units=netcdf.getAtt(ncid,varid,'units');
@@ -134,7 +143,7 @@ else
   data = data - repmat(factor,size(data)./size(factor));
 end
 
-if isnumeric(add) data=data + sub; 
+if isnumeric(add) data=data + add; 
 else
   factor=double(netcdf.getVar(ncid,netcdf.inqVarID(ncid,add)));    
   data = data +  repmat(factor,size(data)./size(factor));
@@ -244,7 +253,7 @@ if isinf(latlim(1)) latlim(1)=-60; end
 if isinf(latlim(2)) latlim(2)=80; end
 
   % plot map
-  figid=varid+figoffset;
+  figid=max([1,varid+figoffset]);
   figure(figid); 
   clf reset;
   cmap=colormap(colmap);
@@ -412,8 +421,10 @@ end
 
 if nargout>0 
   retdata.value=data(ireg,itime); 
-  retdata.lat=lat;
-  retdata.lon=lon;
+  retdata.lat=lat';
+  retdata.lon=lon';
+  retdata.handle=hp';
+  retdata.region=ireg;
   if exist('time','var') retdata.time=time;end
 end
 if nargout>1 basename=fullfile(fdir,bname); end

@@ -1,7 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 ## This makefile is part of the glues distribution
 ##
-## Copyright (C) 2007,2008, 2009, 2010
+## Copyright (C) 2007,2008, 2009, 2010,2011
 ## Carsten Lemmen <carsten.lemmen@hzg.de>
 ## Helmholtz-Zentrum Geesthacht GmbH
 ##
@@ -26,7 +26,7 @@ ACLOCAL_AMFLAGS = -I config
 
 AM_CPPFLAGS = -I ./src/sisi
  
-EXTRA_DIST = ChangeLog run.sh run-krisen.sh run-amant.sh bootstrap BUGS
+EXTRA_DIST = ChangeLog run.sh run-krisen.sh run-harappa run-amant.sh bootstrap BUGS
 
 SUBDIRS = src config examples variation visual doc #po intl
 

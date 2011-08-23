@@ -9,7 +9,14 @@ elseif isnumeric(value)
     svalue=num2str(value);
   else
     if size(value,2)==1 value=transpose(value); end
-    svalue=['[' num2str(value) ']'];
+    if size(value,1)==1 svalue=['[' num2str(value) ']']; 
+    else
+      svalue=['[[' num2str(value(1,:)) ']' ];
+      for i=2:size(value,1)
+        svalue=[ svalue ';[' num2str(value(i,:)) ']' ];
+      end
+      svalue=[svalue ']'];      
+    end
   end
 end
 
