@@ -73,7 +73,7 @@ $SED -i '/flucampl/s/flucampl.*$/flucampl 0.4/' $DAT
 LOG=eurolbk_events.log; 
 NC=eurolbk_events.nc
 $X $SIM 2> ${LOG} && \
-  ncks -O -v time,population_size,population_density,technology,economies,farming,region,latitude,longitude,area,farming_spread_by_people test.nc ${NC}
+  ncks -O -v time,natural_fertility,temperature_limitation,population_size,population_density,technology,economies,farming,region,latitude,longitude,area,farming_spread_by_people test.nc ${NC}
 test -f ${LOG} && $SED -i '/[A-d]/d' ${LOG}
 
 # Return to base setup

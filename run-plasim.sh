@@ -27,7 +27,7 @@ $SED -i '/spreadm/s/spreadm.*$/spreadm 100/' $OPAR
 $SED -i '/climatefile/s/string.*$/string climatefile  "..\/..\/..\/data\/plasim_11k_vecode_685_npp.tsv"/' $SCE
 $X $SIM && cp $T.nc plasim_550.nc
 
-
+exit
 # simulation without lower nppstar
 $SED -i '/kappa/s/kappa.*$/kappa 500.0/' $PAR
 $X $SIM && cp $T.nc plasim_k500.nc

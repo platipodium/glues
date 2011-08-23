@@ -1,0 +1,53 @@
+# Parameter file written by XSiSi 2.0
+comment Model parameter values
+comment specific adaptation constants
+float	deltat	0.15
+	\d Specific adaptation constant for technology exploitation
+	\v 
+comment Spreading and trait exchange
+float	spreadv 0.002
+	\u km/y
+	\d Population migration velocity 0.006
+	\v 
+comment RGR constants
+float	overexp	0.01
+	\u Ind^{-1} m^2
+	\d Specific decrease in fertility due to high pop densitiy and technology
+	\v 
+float	kappa	550.0
+	\d NPP where fertility=0.5 and biodiversity is maximal
+	\v 
+float	gdd_opt	0.7
+	\d GDD/365 with maximal abundance of domesticables
+	\v 
+float	omega	0.04
+	\d Specific decrease in food productivity due to artisans
+	\v 
+comment gammab 0.0040
+float	gammab 0.0040
+	\u 1/y
+	\d Specific population growth rate, This should be corrected with the 0.929875 fluc factor
+	\v 
+float	ndommaxmean	7.0
+	\d rearranges mean of ndommaxcont 8.5
+	\v 
+comment 1:Eurasia 2:America-South 3:America-North  4:Africa  5:Australia  6:Greenland
+comment 7:Malaysia 8:New Guinea   9:Div.Islands
+array	ndommaxcont
+	\d correct continental dom index due glacial
+	typeOfArray	float
+	dimension	9
+data
+	1.0	1.0	1.0	1.0	1.0	1.0	1.0	1.0	1.0
+end
+comment Kai's version with differential data (creates too fast South America)
+comment  1.0	2.2	1.8	1.0	0.8	1.0	1.0	1.0	1.0
+
+
+comment knowledge loss under stress 
+float	LiterateTechnology	12.0
+	\v 
+	\d technology corresponding to literacy and decreased knowledge loss in crises
+float	KnowledgeLoss	0.3
+	\d knowledge loss in tech and ndom relative to RGR (RGR<0: crises)
+	\v 

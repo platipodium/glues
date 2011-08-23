@@ -407,8 +407,11 @@ AC_CONFIG_FILES([Makefile
   examples/simulations/62483/Makefile
   examples/simulations/62483/onekbc.sce
   examples/simulations/62483/onekbc.sim
+  examples/simulations/harappa/harappa.sce
   examples/simulations/eurolbk/eurolbk.sce
   examples/simulations/eurolbk/eurolbk.sim
+  examples/simulations/harappa/Makefile
+  examples/simulations/harappa/harappa.sim
   examples/simulations/eurolbk/Makefile
   examples/simulations/plasim/Makefile
   examples/simulations/plasim/plasim.sce

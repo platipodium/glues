@@ -59,10 +59,14 @@ while iarg<=nargin
     case 'usa'
           lonlim=[-125,-70];
           latlim=[10,50];
-      case 'swa'
+    case 'swa'
           % Southwest Asia from Near East to Indus Valley
           lonlim=[32 80];
           latlim=[18 40];
+    case 'ivc'
+          % Indus Valley Culture
+          lonlim=[60 80];
+          latlim=[20 40];
     case 'lbk'
       lonlim=[-10,42];
       %lonlim=[6,42];
