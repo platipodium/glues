@@ -1,6 +1,6 @@
 function do_pakistan
 
-plots=[1,3];
+plots=[1:11];
 
 %% Load country boundaries
 load('../../data/naturalearth/10m_admin_0_countries.mat');
@@ -114,8 +114,18 @@ period=period(im);
 rlat=data.latitude(im);
 rlon=data.longitude(im);
 
+ikili=strmatch('Kili',data.period(im));
+imehr=strmatch('Mehrga',data.period(im));
+iburj=vertcat(strmatch('Burj',data.period(im)),strmatch('Bhurj',data.period(im)))
+itogau=strmatch('Togau',data.period(im));
+iskt=strmatch('SKT',data.period(im));
+ihakra=strmatch('Hakra',data.period(im));
+ikechi=strmatch('Kechi',data.period(im));
+ianarta=strmatch('Anarta',data.period(im));
+ineo=vertcat(ikili,imehr,iburj,itogau,iskt,ihakra,ikechi,ianarta);
+
 randall=cl_randall_periods;
-info={'Kili','Burj','Bhurj','Togau','SKT','Hakra','Kechi','Anarta'};
+info={'Kili','Mehrgarh','Burj','Bhurj','Togau','SKT','Hakra','Kechi','Anarta'};
 fprintf('Randall''s data set contains %d data, of these %d archaeological.\n',nall,narch);
 for i=1:length(info)
   im=strmatch(info{i},data.period);
@@ -130,6 +140,8 @@ for i=1:length(info)
 
 end
 
+
+
 % From Harappan-sites.kml
 % Early Harappa 5000-2600 BC: Ravi + Hakra + Amri-Nal + Sothi-Siswal 
 % + Kot Diji 
@@ -137,10 +149,7 @@ end
 % + Late Sorath 
 % Post-Urban: Post-Urban + Late harappan + Cemetery H
 
-
-
-
-timelim=[[-9000 p_times]' , [p_times -1900]'];
+timelim=[[-9000 p_times]' , [p_times -1000]'];
 timelim=cell2mat(timelim);
 tlim=[min(min(timelim)) max(max(timelim))];
 
@@ -154,127 +163,419 @@ varid=netcdf.inqVarID(ncid,'latitude'); latitude=netcdf.getVar(ncid,varid);
 varid=netcdf.inqVarID(ncid,'time'); time=netcdf.getVar(ncid,varid);
 varid=netcdf.inqVarID(ncid,'area'); area=netcdf.getVar(ncid,varid);
 varid=netcdf.inqVarID(ncid,'population_density'); pdensity=netcdf.getVar(ncid,varid);
-varid=netcdf.inqVarID(ncid,'population_size'); psize=netcdf.getVar(ncid,varid);
 varid=netcdf.inqVarID(ncid,'technology'); technology=netcdf.getVar(ncid,varid);
 varid=netcdf.inqVarID(ncid,'farming'); farming=netcdf.getVar(ncid,varid);
 varid=netcdf.inqVarID(ncid,'natural_fertility'); natfert=netcdf.getVar(ncid,varid);
 varid=netcdf.inqVarID(ncid,'temperature_limitation'); templim=netcdf.getVar(ncid,varid);
 netcdf.close(ncid);
 
+%% Prepare gridded file of farming
+gridfile=strrep(file,'.nc','_0.5x0.5.nc');
+if ~exist(gridfile,'file')
+  cl_glues2grid('timelim',tlim,'variables',{'farming','region'},'latlim',latlim,'lonlim',lonlim,'file',file)
+end
 
+% minmax timing in this area is -6160:3810
 %% Do plots
 global naturalearth
+fs=15;
 
-if any(plots==3)
-  figure(3); clf reset;
+if any(plots==1)
+  figure(1); clf reset;
   m_proj('equidistant','lat',latlim,'lon',lonlim);
   pe=clp_naturalearth('lat',latlim,'lon',lonlim);
   %mb=m_patch(plon,plat,'y','FaceAlpha',0.3,'EdgeColor','k','EdgeAlpha',0.5);
-  mb=m_patch(plon,plat,'y','FaceAlpha',0.,'EdgeColor','r','EdgeAlpha',1,'LineStyle','-','LineWidth',2);
+  mb=m_patch(plon,plat,'y','FaceAlpha',0.,'EdgeColor',repmat(0.6,1,3),'EdgeAlpha',1,'LineStyle','-','LineWidth',3);
   m_grid; hold on;
   im=find(rlon>=lonlim(1) & ...
       rlon<=lonlim(2) & ...
       rlat>=latlim(1) & ...
       rlat<=latlim(2));
-  parch=m_plot(rlon(im),rlat(im),'k.','MarkerSize',6,'Color',repmat(0.5,1,3));
+  parch=m_plot(rlon(im),rlat(im),'ks','MarkerSize',3,'Color',repmat(0.5,1,3),'MarkerFaceColor',repmat(0.5,1,3));
   fprintf('Found %d sites in geographic area',length(im));
-  irandall=[strmatch('Neolithic',randall.period) ; strmatch('Pre-Harappan',randall.period)];
-  ifarm=[randall.index{irandall(1)}; randall.index{irandall(2)}];
-  rlat=data.latitude(ifarm);
-  rlon=data.longitude(ifarm);
-
-  im=find(rlon>=lonlim(1) & ...
-      rlon<=lonlim(2) & ...
-      rlat>=latlim(1) & ...
-      rlat<=latlim(2));
-  pneolithic=m_plot(rlon(im),rlat(im),'r.','MarkerSize',6,'Color',repmat(0.2,1,3));
+  
+  im=find(rlon(ineo)>=lonlim(1) & ...
+      rlon(ineo)<=lonlim(2) & ...
+      rlat(ineo)>=latlim(1) & ...
+      rlat(ineo)<=latlim(2));
+  pneolithic=m_plot(rlon(ineo(im)),rlat(ineo(im)),'ks','MarkerSize',3,'Color',repmat(0.2,1,3),'MarkerFaceColor',repmat(0.5,1,3));
   fprintf('Found %d agricultural sites in geographic area',length(im));
   
-  cities={'Togau','Kechi Beg','Amri','Harappa',...
-      'Mohenjo-Daro','Harappa','Mehrgarh'};
+  %cities={'Togau','Kechi Beg','Amri','Harappa',...
+  %    'Mohenjo-Daro','Harappa','Mehrgarh'};
+  cities={'Togau','Kechi Beg','Amri','Harappa'};
+  latcorr=[-0.2 -0.5 +0.4 0 0.4 0 0.3];
   for i=1:length(cities)
     icity=strmatch(cities{i},data.sitename);
     if isempty(icity) continue; end
     pc(i)=m_plot(data.longitude(icity(1)),data.latitude(icity(1)),'ko',...
-      'MarkerFaceColor','r','MarkerSize',10,'tag',[cities{i} '/' data.period{icity(1)}]);
-    pct(i)=m_text(data.longitude(icity(1))+0.2,data.latitude(icity(1)),...
-      cities{i},'FontSize',12,'Color',[0.3 0 0]);
+      'MarkerFaceColor','w','MarkerSize',9,'tag',[cities{i} '/' data.period{icity(1)}]);
+    pct(i)=m_text(data.longitude(icity(1))+0.3,data.latitude(icity(1))+latcorr(i),...
+      cities{i},'FontSize',fs,'Color','w','FontWeight','normal');
+    extent=get(pct(i),'extent');
+    pcb(i)=patch(repmat(extent(1),1,4)+[0 extent(3) extent(3) 0],...
+           [0 0 extent(4) extent(4)]+repmat(extent(2),1,4),'w','FaceAlpha',0.4,'EdgeColor','none');
   end
+  uistack(pct,'top');
+  hdlt=findobj(gcf,'-property','FontName');
+  set(hdlt,'FontSize',fs,'FontName','Times');
   cl_print('name','../plots/map/pakistan_randall_sites_neolithic','ext','png');
+  set([pct,pcb],'visible','off');
+  cl_print('name','../plots/map/pakistan_randall_sites_neolithic','ext','pdf');
+ 
   
 end
 
 [ifound,nfound,lonlim,latlim]=find_region_numbers('lat',latlim,'lon',lonlim);    
+rarea=repmat(area,1,length(time));
+natfertmax=repmat(max(natfert,[],2),1,length(time));
+itime=find(time>=-7000 & time<=-2666);
+climdist=natfert(ifound,itime)./natfertmax(ifound,itime);
 
-if any(plots==4)
-  figure(4); clf reset;
-  rarea=repmat(area,1,length(time));
-  natfertmax=repmat(max(natfert,[],2),1,length(time));
-  itime=find(time>=-7000 & time<=-2666);
-  climdist=natfert(ifound,itime)./natfertmax(ifound,itime);
-  
-  plot(mean(climdist),time(itime),'k-','LineWidth',4);
-  set(gca,'box','off','color','none');
-  cl_print('name','../plots/harappa_resource_depletion','ext','pdf');
-  
-end
 
-if any(plots==1)
 
-  threshold=0.5;
-  ntime=1;
-  timing=(farming>=threshold)*1.0;
-  izero=find(timing==0);
-  timing(izero)=NaN;
-  timing=timing.*repmat(time',size(farming,1),1);
-  timing(isnan(timing))=inf;
-  timing=min(timing,[],2);
-  timing(isinf(timing))=NaN;
+threshold=0.5;
+ntime=1;
   
+timing=(farming>=threshold)*1.0;
+izero=find(timing==0);
+timing(izero)=NaN;
+timing=timing.*repmat(time',size(farming,1),1);
+timing(isnan(timing))=inf;
+timing=min(timing,[],2);
+timing(isinf(timing))=NaN;
+
+
+ ctimelim=[
+    [-7000,-6300,-5600];
+    [-5000,-4700,-4500];
+    [-4300,-4100,-3900];
+    [-3800,-3600,-3400];
+    [-3200,inf,inf]]';
+
+  plim=[1 4];
+  nplim=range(plim)+1;
+  nsub=size(ctimelim,1);
+  %hue=(([1:nplim]+1)/(nplim+3.0));
+  hue=[0.6 0.45 0.25 0.1];
+  sat=([nplim-1:-1:1]+1)/(nsub+3.0);
+  val=repmat(1,[1,nplim]);
+  cmap=zeros(nplim*nplim,3);
+  for i=1:nplim
+     cmap((i-1)*nsub+1:i*nsub,1)=hue(i);  
+     cmap((i-1)*nsub+1:i*nsub,2)=sat;  
+     %cmap(i:nsub:end,2)=sat(i);
+     cmap(i:nsub:end,3)=val(i);
+  end
+  
+  cmap=hsv2rgb(cmap);
+  %colormap(cmap);
+  
+
+ 
+if any(plots==2)
   [hp,loli,lali,lon,lat]=clp_regionpath('lat',latlim,'lon',lonlim,'draw','patch','col','k');  
   ival=find(hp>0);
   alpha(hp(ival),0.);
 
   set(parch,'visible','off');
   set(pneolithic,'visible','off');
-  set(pc,'visible','off');
-  set(pct,'visible','off');
+  set([pc,pct,pcb],'visible','off');
  % [d,b]=clp_nc_variable('var','farming','thresh',0.5','showstat',0,...
  % 'noprint',1,'latlim',latlim,'lonlim',lonlim,...
  % 'timelim',tlim,'file','../../eurolbk_events.nc','showtime',0);
+   
+  %set(hp(ival),'EdgeColor','w');
+
+  %% Plot 7k-5k period
+  %   cities={'Togau','Kechi Beg','Amri','Harappa',...
+  %    'Mohenjo-Daro','Harappa','Mehrgarh'};
+  %set(pct([6,7]),'visible','on');
+  %set(pc([6,7]),'visible','on');
+
+  pkili=m_plot(rlon([ikili;imehr]),rlat([ikili;imehr]),'k^','MarkerFaceColor','k','MarkerSize',7,'MarkerEdgeColor','k'); 
+  pl=legend([pkili],'Kili Ghul Mohammad & Mehrgarh','location','NorthWest');
+  set(pl,'FontName','Times','FontSize',15,'Box','on');
+  pt=m_text(lonlim(2)-0.2,latlim(1)+0.2,' 7000-5000 cal BC','horizontal','right',...
+    'vertical','bottom','background','w','FontSize',fs,'FontName','Times');
+  cl_print('name','../plots/map/pakistan_randall_sites_kili','ext','png');
+
+  delete([pkili,pl,pt]);
+  pburj=m_plot(rlon(iburj),rlat(iburj),'k^','MarkerFaceColor','k','MarkerSize',7,'MarkerEdgeColor','k'); 
+  pl=legend([pburj],'Burj Basket Marker','location','NorthWest');
+  set(pl,'FontName','Times','FontSize',15,'Box','on');
+  pt=m_text(lonlim(2)-0.2,latlim(1)+0.2,' 5000-4300 cal BC','horizontal','right',...
+   'vertical','bottom','background','w','FontSize',fs,'FontName','Times');
+  cl_print('name','../plots/map/pakistan_randall_sites_burj','ext','png');
+
+  delete([pburj,pl,pt]);
+  %set(pct([1]),'visible','on');
+  %set(pc([1]),'visible','on');
+  ptogau=m_plot(rlon([itogau;iskt]),rlat([itogau;iskt]),'k^','MarkerFaceColor','k','MarkerSize',7,'MarkerEdgeColor','k'); 
+  pl=legend(ptogau,'Togau & Sheri Khan Tarakai','location','NorthWest');
+  set(pl,'FontName','Times','FontSize',15,'Box','on');
+  pt=m_text(lonlim(2)-0.2,latlim(1)+0.2,' 4300-3800 cal BC','horizontal','right',...
+   'vertical','bottom','background','w','FontSize',fs,'FontName','Times');
+  uistack(pct,'top');
+  cl_print('name','../plots/map/pakistan_randall_sites_togau','ext','png');
+
+  delete([ptogau,pl,pt]);
+  %set(pct([2]),'visible','on');
+  %set(pc([2]),'visible','on');
+  phakra=m_plot(rlon(ihakra),rlat(ihakra),'k^','MarkerFaceColor','k','MarkerSize',7,'MarkerEdgeColor','k'); 
+  pkechi=m_plot(rlon(ikechi),rlat(ikechi),'ko','MarkerFaceColor','k','MarkerSize',7,'MarkerEdgeColor','k'); 
+  panarta=m_plot(rlon(ianarta),rlat(ianarta),'ks','MarkerFaceColor','k','MarkerSize',7,'MarkerEdgeColor','k'); 
+  pl=legend([phakra,pkechi,panarta],'Hakra Ware','Kechi Beg','Anarta','location','NorthWest');
+  set(pl,'FontName','Times','FontSize',15,'Box','on');
+  pt=m_text(lonlim(2)-0.2,latlim(1)+0.2,' 4300-3800 cal BC','horizontal','right',...
+   'vertical','bottom','background','w','FontSize',fs,'FontName','Times');
+  uistack(pct,'top');
+  cl_print('name','../plots/map/pakistan_randall_sites_hakra','ext','png');
+
+  delete([phakra,pkechi,panarta,pl,pt]);
+  set(pct,'visible','off');
+  set(pc,'visible','off');
+  set(pcb,'visible','off');
+  set(hp(ival),'EdgeColor','none');
   
-  cmap=jet(5);
-  colorbar;
-  colormap(cmap);
+end
+
+
+if any(plots==3)
+ 
+  cbar=colorbar;
   
-  plim=[1 4];
-  
-  for i=max(plim)+1:-1:min(plim)+1
-     iperiod=find(timing(ifound)<=timelim(i,2) & timing(ifound)>=timelim(i,1) & hp'>0);
-     if ~isempty(iperiod)   
-       set(hp(iperiod),'FaceColor',cmap(i,:),'FaceAlpha',1);
-     end
-     if (i>1 & i<7)
-       p(i)=m_plot(data.longitude(p_index{i-1}),data.latitude(p_index{i-1}),...
-         'ko','MarkerFaceColor',cmap(i,:),'MarkerSize',19);
-       uistack(p(i),'top');
-     end
-  end
   ax=gca;
-  cbar=cl_colorbar('val',cell2mat(p_times(plim(1):plim(2)+1)),'cmap',cmap(plim(1)+1:plim(2)+1,:));
+  cbar=cl_colorbar('cbar',cbar,'val',ctimelim(1:nplim*size(ctimelim,1)+1),'cmap',cmap);
   axes(ax);
+  
+  for i=nplim*nsub:-1:1
+    iperiod=find(timing(ifound)<=ctimelim(i+1) & timing(ifound)>=ctimelim(i) & hp'>0);
+    if ~isempty(iperiod)   
+       set(hp(iperiod),'FaceColor',cmap(i,:),'FaceAlpha',.5);
+       fprintf('%2d (%5d-%5d)',i,ctimelim(i),ctimelim(i+1));
+       fprintf(' %5d',timing(ifound(iperiod)));
+       fprintf('\n');
+       hdlp{i}=hp(iperiod);
+    else hdlp{i}=NaN;
+    end
+  end
+  
+  % for results section description
+  for i=1:nplim*nsub
+    if i>1 & isfinite(hdlp{i-1}) set(hdlp{i-1},'EdgeColor','none'); end
+    if isnan(hdlp{i}) continue; end
+    set(hdlp{i},'EdgeColor','r','LineWidth',4);
+  end
+  
+  
+  for i=max(plim)+1:-1:min(plim)+1    
+     if (i>1 && i<7)
+       ps(i)=m_plot(data.longitude(p_index{i-1}),data.latitude(p_index{i-1}),...
+         'ko','MarkerFaceColor',cmap((i-1)*nsub-1,:),'MarkerSize',18-2*i);
+       uistack(ps(i),'top');
+     end
+   end
   
   ct=get(cbar,'title');
   ytl=get(cbar,'YTickLabel');
   set(cbar,'YTickLabel',num2str(abs(str2num(ytl))));
   
   set(ct,'string','cal BC');
-  title(' Indus valley neolithization and site chronology');
-  cl_print('name','../plots/variable/farming/pakistan_farming_threshold','ext','png');
+  tt=title(' Indus valley neolithization and site chronology');
+  hdlt=findobj(gcf,'-property','FontName');
+  set([hdlt;ct],'FontSize',15,'FontName','Times');
+  cl_print('name','../plots/map/pakistan_farming_threshold_fine','ext','png');
+
+  ax=gca;
+  cbar=cl_colorbar('cbar',cbar,'val',ctimelim(1,:),'cmap',cmap(2:nsub:end,:));
+  axes(ax);
+  cl_print('name','../plots/map/pakistan_farming_threshold_coarse','ext','png');
+
+  %% do only transparent map
+  %set(cbar,'visible','off');
+  %set(ps(ps>0),'visible','off');
+  %set(gca,'XTick',[]);
   
 end
 
-if any(plots==2)
+
+if any(plots==4)
+  figure(4); clf reset;
+  
+  plot(mean(climdist),time(itime),'k-','LineWidth',4);
+  set(gca,'box','off','color','none');
+  hdlt=findobj(gcf,'-property','FontName');
+  set(hdlt,'FontSize',15,'FontName','Times');
+  cl_print('name','../plots/harappa_resource_depletion','ext','pdf');
+  
+end
+
+  gridfile='../../data/glues_map.nc';
+  ncid=netcdf.open(gridfile,'NOWRITE');
+  varid=netcdf.inqVarID(ncid,'region'); grid.region=netcdf.getVar(ncid,varid);
+  varid=netcdf.inqVarID(ncid,'lon'); grid.longitude=netcdf.getVar(ncid,varid);
+  varid=netcdf.inqVarID(ncid,'lat'); grid.latitude=netcdf.getVar(ncid,varid);
+  netcdf.close(ncid);
+  
+  ilon=find(grid.longitude>=lonlim(1) & grid.longitude<=lonlim(2));
+  ilat=find(grid.latitude>=latlim(1) & grid.latitude<=latlim(2));
+  gtiming=zeros(length(ilon),length(ilat))-NaN;
+  gregion=grid.region(ilon,ilat);
+  
+  for i=1:nfound
+    ir=find(gregion==ifound(i));
+    gtiming(ir)=timing(ifound(i));  
+  end
+  lat2=repmat(grid.latitude(ilat),1,length(ilon))';
+  lon2=repmat(grid.longitude(ilon),1,length(ilat));
+  n2=numel(lon2);
+  lat2=reshape(lat2,n2,1);
+  lon2=reshape(lon2,n2,1);
+  gti2=reshape(gtiming,n2,1);
+  gri2=reshape(gregion,n2,1);
+
+  ineo=vertcat(ikili,imehr,iburj,itogau,iskt,ihakra,ikechi,ianarta);
+  lon1=rlon(ineo);
+  lat1=rlat(ineo)
+  n1=length(lat1);
+  igrid=[];
+  for j=1:n1
+      la1=repmat(lat1(j),n2,1); 
+      lo1=repmat(lon1(j),n2,1); 
+      dist=m_lldist(reshape([lo1,lon2]',2*n2,1),reshape([la1,lat2]',2*n2,1));
+      dist=dist(1:2:end);
+      radius=100;
+      idist=find(dist<=radius);
+      if isempty(idist) continue; end
+      igrid=vertcat(igrid,idist);
+  end
+ 
+  
+  
+if any(plots==6)
+  
+  timepoints=mean(timelim,2);
+  %n=10;
+  for i=1:length(p_index) 
+    n(i)=length(p_index{i}); 
+    nsites(i)=length(unique(data.sitename(p_index{i})));
+  end
+  
+  igrid=unique(igrid);
+  igrid=igrid(gri2(igrid)>0);
+  sa=repmat(calc_gridcell_area(lat2(igrid)),1,length(time));
+  sas=min(sum(sa)); % should be near 796095 km2
+  
+  s=sum(pdensity(gri2(igrid),:).*sa,1);
+  
+  %pa=m_plot(lon2(igrid),lat2(igrid),'ks','MarkerSize',5);
+  % Surovell (2009) taphonomic correction based
+  % on volcanic ash deposits
+  nt=flipud(5.73E6*(2176.4+1950-timepoints(2:end-1)).^-1.39);
+  %yi=interp1(timepoints(1:end-1),nt.*n',time,'pchip');
+  
+  tlim=[-7300 -3100];
+  itime=find(time>tlim(1) & time<tlim(2));
+  scalefactor=max(s(itime))/max(nt'.*n);
+  
+  ns=n*scalefactor;
+  nts=double(n.*nt'*scalefactor);
+  
+  % Scale the number of sites
+  scalefactor=max(s(itime))/max(nt'.*nsites);
+  nssites=double(nsites.*nt'*scalefactor);
+ 
+  figure(6); clf reset;
+  hold on; 
+
+  for i=2:5
+    ppnt(i)=patch([timelim(i,:),fliplr(timelim(i,:))],...
+      [0 0 nts(i-1) nts(i-1)],'b','FaceColor',repmat(0.82,1,3));
+    ppn(i)=patch([timelim(i,:),fliplr(timelim(i,:))],...
+      [0 0 ns(i-1) ns(i-1)],'b','FaceColor',repmat(0.7,1,3));
+    xt(i)=mean(timelim(i,:));
+    yt(i)=1.1*nts(i-1);
+    ppt(i)=text(xt(i),yt(i),sprintf('%d x %d',n(i-1),round(nt(i-1))),...
+        'Vert','bottom','horiz','center','FontSize',fs,'FontName','times');
+  end
+  set(gca,'Xlim',[tlim],'Ylim',[0 1.2*max(s(itime))]);
+
+  ppnth=plot(time(itime),s(itime),'k-','LineWidth',10,'Color',repmat(0.82,1,3),'visible','off');
+  ppnh=plot(time(itime),s(itime),'k-','LineWidth',10,'Color',repmat(0.7,1,3),'visible','off');
+  pg=plot(time(itime),s(itime),'k-','LineWidth',4)
+  
+  cl=legend([ppnth,ppnh,pg],' Number of artifacts',' Artifacts (uncorrected)',' Simulated population size','location','NorthWest')
+  set(cl,'FontSize',fs);
+  ylabel('Population size','FontSize',fs,'FontName','Times');
+  xlabel('Time (cal BC)','FontSize',fs,'FontName','Times');
+  hdlt=findobj(gcf,'-property','FontName');
+  set(hdlt,'FontSize',15,'FontName','Times');
+  cl_print('name','../plots/map/pakistan_population_size','ext','pdf');
+
+ 
+  for i=2:5
+    it=find(time>=timelim(i,1) & time<=timelim(i,2));     
+    ys(i)=mean(s(it));
+    %plot(timelim(i,:),repmat(ys(i),1,2),'r-');
+    %plot(timelim(i,:),2*repmat(nssites(i-1),1,2),'m-','LineWidth',3);
+  end
+  
+  c=polyfit(log(0.9*yt(2:5)),log(ys(2:5)),1);
+  
+end
+
+figure(1);
+%set([pct,pc,pcb],'visible','on');
+%set(hp(ival),'EdgeColor','none','FaceColor','none');
+%ipsval=find(ps>0);
+%set(ps(ipsval),'MarkerFaceColor',repmat(0.7,1,3));
+
+pa=m_plot(lon2(igrid),lat2(igrid),'ks','MarkerSize',5);  
+cl_print('name','../plots/map/pakistan_farming_threshold_grid','ext','png');
+
+
+
+return  
+  
+if any(plots==7)
+  
+  
+  for i=nplim*nplim:-1:1
+    [iglo,igla]=find(gtiming<=ctimelim(i+1) & gtiming>=ctimelim(i));
+    if ~isempty(iglo)
+      iperiod=find(gtiming<=ctimelim(i+1) & gtiming>=ctimelim(i));
+      ptg(i)=m_plot(grid.longitude(ilon(iglo)),grid.latitude(ilat(igla)),'ks','MarkerFaceColor',cmap(i,:),...
+         'MarkerSize',4);
+    end
+  end
+  
+  figure(5); clf reset; hold on;
+   
+  
+  for i=max(plim)+1:-1:min(plim)+1    
+    lon1=data.longitude(p_index{i-1});
+    lat1=data.latitude(p_index{i-1});
+    n1=length(lat1);
+    for j=1:n1
+      la1=repmat(lat1(j),n2,1); 
+      lo1=repmat(lon1(j),n2,1); 
+      dist=m_lldist(reshape([lo1,lon2]',2*n2,1),reshape([la1,lat2]',2*n2,1));
+      dist=dist(1:2:end);
+      radius=250;
+      idist=find(dist<=radius);
+      if isempty(idist) continue; end
+      plot((p_times{i+1}-p_times{i})/2.0+p_times{i},unique(gti2(idist)),'ko')
+    end
+  end
+
+  
+  
+end
+
+  
+
+if any(plots==6)
   % Find pakistan regions
   %[d,b]=clp_nc_variable('var','region','showstat',0,...
   %'noprint',1,'latlim',latlim+5*[-1 1],'lonlim',lonlim+5*[-1 1],'showvalue',1,...
@@ -284,13 +585,12 @@ if any(plots==2)
   for i=1:3 allindex=vertcat(allindex,p_index{i}); end
   pakreg=cl_regionfind(d.lon,d.lat,data.longitude(allindex),data.latitude(allindex),500);
   
- 
 
   timepoints=mean(timelim,2);
   n=10;
   for i=1:length(p_index) n(i+1)=length(p_index{i}); end
   
-  figure(1); clf reset;
+  figure(6); clf reset;
   hold on;
   %plot(timepoints,n,'b.','Marker','o');
   set(gca,'xlim',tlim,'ylim',[0 4E5]);
@@ -314,6 +614,7 @@ if any(plots==2)
   legend('Population of Neolithic Indus valley','location','NorthEast');
  
 end
+
 
 
 return;
