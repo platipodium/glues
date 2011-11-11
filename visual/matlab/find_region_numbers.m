@@ -108,6 +108,10 @@ while iarg<=nargin
     case 'fil'
           regionpathfile=varargin{iarg+1};
           iarg=iarg+1;
+    case 'zim' % Zimbabwe
+      lonlim=[23.8,34.6];
+      latlim=[-23.8,-14.2];
+
       
       otherwise
         arg=varargin{iarg}

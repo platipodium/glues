@@ -5,6 +5,7 @@ arguments = {...
   {'resolution',300},... 
   {'fig',NaN},...
   {'name','test'},...
+  {'noshrink',0},...
 };
 
 cl_register_function;
@@ -26,11 +27,13 @@ pos=get(fig,'Position');
 set(fig,'PaperType','A4','PaperPositionMode','auto','PaperUnits','points');
 ppos=get(fig,'PaperPosition');
 psize=get(fig,'PaperSize');
-set(fig,'PaperPositionMode','Manual','PaperOrientation','portrait');
-set(fig,'PaperPosition',ppos.*[0 0 psize(1)/ppos(3) psize(1)/ppos(3)]+[-20 -20 -40 -40]);
-ppos=get(fig,'PaperPosition')
-set(fig,'PaperSize',psize.*[1 0]+ppos(3:4).*[0 1])
 
+if ~noshrink
+  set(fig,'PaperPositionMode','Manual','PaperOrientation','portrait');
+  set(fig,'PaperPosition',ppos.*[0 0 psize(1)/ppos(3) psize(1)/ppos(3)]+[-20 -20 -40 -40]);
+  ppos=get(fig,'PaperPosition')
+  set(fig,'PaperSize',psize.*[1 0]+ppos(3:4).*[0 1])
+end
 
 %psize=get(gcf,'PaperSize');
 %if psize(2)<psize(1) set(fig,'PaperOrientation','rotated')

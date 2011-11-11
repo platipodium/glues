@@ -1,6 +1,6 @@
 function [production,share,carbon,p]=clc_vecode(temp,prec,gdd0,co2)
 % [prod,share,carbon] = CLC_VECODE(t,p,g)
-% is the matlab implementation of V. Brovkins's VECODE
+% is the matlab implementation of V. Brovkins's VECODE (Brovkin 1997)
 % dynamical vegetation model
 % Input arguments (required) 
 %  t temperature (anuual mean, degree C)
@@ -16,9 +16,10 @@ function [production,share,carbon,p]=clc_vecode(temp,prec,gdd0,co2)
 %  share fraction of forest, grass, desert
 %  carbon carbon stock in leaves, stems, soil (kg C/m2)
 
-% Copyright 2009,2010 Carsten Lemmen
-% GKSS-Forschungzentrum Geesthacht
+% Copyright 2009,2010,2011 Carsten Lemmen
+% Helmholtz-Zentrum Geesthacht
 % This software is released under GPL
+% If you use it for scientific purpose, please acknowledge appropriately.
 
   cl_register_function;
   
