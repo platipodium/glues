@@ -2,9 +2,9 @@
 
 
 %% Define region to lbk
-datastring='Pinhasi';
+%datastring='Pinhasi';
 %datastring='Turney';
-%datastring='Vanderlinden';
+datastring='Vanderlinden';
 
 
 
@@ -18,7 +18,9 @@ letters='ABCDEFGHIJKLMNOPQRSTUVW';
 letters=letters(1:nhreg);
 
 %file='../../eurolbk_base.nc';
-file='/h/lemmen/projects/glues/tex/2011/eurolbk/data/eurolbk_base.nc';
+sce='base';
+file=['/h/lemmen/projects/glues/tex/2011/eurolbk/data/eurolbk_' sce '.nc'];
+[d f e]=fileparts(file);
 ncid=netcdf.open(file,'NOWRITE');
 varid=netcdf.inqVarID(ncid,'region');
 region=netcdf.getVar(ncid,varid);
@@ -253,7 +255,7 @@ if (0==8)
    pc=0.9;
 %% Plot map with spread mechanism for base simulation
   figure(8); clf reset; hold on;
-  spread=load('spread_mechanism_all_eurolbk_events');
+  spread=load(['spread_mechanism_all_eurolbk_' sce ]);
   nhhreg=length(spread.hreg);
   timing=zeros(nhhreg,1)+Inf;
   reldQp=zeros(nhhreg,1)+NaN;
@@ -287,16 +289,17 @@ if (0==8)
   delete(hdlg);
   m_grid('box','fancy','linestyle','none');
   colorbar;
-  cl_print('name','demic_spread_map','ext','pdf','res',[150,600]);
+  cl_print('name',[sce '_demic_spread_map'],'ext','pdf','res',[150,600]);
 
 end
 
 
-if (1==0)
+
+if (1==1)
 %% Plot region network (figure 1)
 [data,basename]=clp_nc_neighbour('reg',reg,'marble',2,'transparency',1,'nocolor',0,...
       'showstat',0,'showtime',0,'fontsize',15,'showregion',0,...
-      'file','../../eurolbk_events.nc','figoffset',0,'sce','base','noprint',1,'notitle',1);
+      'file',['../../eurolbk_' sce '.nc'],'figoffset',0,'sce',sce,'noprint',1,'notitle',1);
 
 % Remove connecting lines
 hdl=findobj(gcf,'LineStyle',':');
@@ -366,7 +369,7 @@ onset(itv)=time(min(it(itv),[],2));
 if (2==0) for it=1:nmovtime
   [d,b]=clp_nc_variable('var','farming','reg',reg,'marble',2,'transparency',1,'nocolor',0,...
       'showstat',0,'lim',[0 1],'timelim',movtime(it),'showtime',0,...
-      'file','../../eurolbk_events.nc','figoffset',0,'sce',['events_' sprintf('%05d',movtime(it))],'noprint',1);
+      'file',['../../eurolbk_' sce '.nc'],'figoffset',0,'sce',[sce '_' sprintf('%05d',movtime(it))],'noprint',1);
   m_coast('color','k');
   m_grid('box','fancy','linestyle','none');
   title('GLUES agropastoral activity');
@@ -384,7 +387,7 @@ nmovtime=length(movtime);
 if (2==0) for it=1:nmovtime
   [d,b]=clp_nc_variable('var','farming','reg',reg,'marble',2,'transparency',1,'nocolor',0,...
       'showstat',0,'lim',[0 1],'timelim',movtime(it),...
-      'file','../../eurolbk_base.nc','figoffset',0,'sce',['base_' sprintf('%03d_%05d',it,movtime(it))],'noprint',1);
+      'file',['../../eurolbk_' sce '.nc'],'figoffset',0,'sce',[sce '_' sprintf('%03d_%05d',it,movtime(it))],'noprint',1);
   m_coast('color','k');
   m_grid('box','fancy','linestyle','none');
   title('GLUES agropastoral activity');
@@ -411,7 +414,7 @@ ncol=8;
 
 [data,basename]=clp_nc_variable('var','farming','threshold',0.5,'reg',reg,'marble',2,'transparency',1,'nocolor',0,...
       'showstat',0,'timelim',[-7500 -3500],'showtime',0,'flip',1,'showvalue',0,...
-      'file','../../eurolbk_events.nc','figoffset',0,'sce','events',...
+      'file',['../../eurolbk_' sce '.nc'],'figoffset',0,'sce',sce,...
       'noprint',1,'notitle',1,'ncol',ncol,'cmap','clc_eurolbk');
   
 %set(gcf,'Units','centimeters','Position',[0 0 18 18]);
@@ -611,7 +614,7 @@ for ir=1:-nhreg
 end
 m_coast('color','k');
 m_grid('box','fancy','linestyle','none');
-cl_print('name',strrep(basename,'farming_','timing_'),'ext','png','res',[150,600]);
+cl_print('name',[sce '_' strrep(basename,'farming_','timing_')],'ext','png','res',[150,600]);
 
    
 end
@@ -749,6 +752,9 @@ for i=1:nhreg
   
   pbar=bar(centers(1:end-1),whir(1:end-2),0.6,'k','edgecolor',darkgray,'LineWidth',1.6,'ShowBaseLine','off');
   set(pbar,'FaceColor','w');
+  [m,im]=max(hir);
+  text(centers(im),0.8,num2str(m),'FontSize',9,'Horizontal','center');
+  
   sb=bar(centers(1:end-1),stackedhir,'stacked','edgecolor','none','barwidth',0.4,'ShowBaseLine','off');
   set(sb(1),'Facecolor',colppn);
   set(sb(2),'FaceColor',colkor);
@@ -758,7 +764,7 @@ for i=1:nhreg
   
   %plot(xdata,cdata,'k-','LineWidth',2.5);
  
-  cl_print('name',sprintf('timing_histogram_%s_%s',datastring,letters(i)),'ext','pdf','noshrink',1);
+  cl_print('name',sprintf('%s_timing_histogram_%s_%s',sce,datastring,letters(i)),'ext','pdf','noshrink',1);
   
   
   per=culture(ir);
@@ -1067,7 +1073,7 @@ nhreg=length(hreg);
 timelim=[-8000 -2000];
 
 [d,b]=clp_nc_trajectory('reg',hreg+1,'var','farming','timelim',timelim,...
-      'file','../../eurolbk_base.nc','figoffset',0,'sce','base');
+      'file',['../../eurolbk_' sce '.nc'],'figoffset',0,'sce',sce);
 %%
 dd=diff(d');
 ntime=size(dd,1);
