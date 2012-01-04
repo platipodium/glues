@@ -47,10 +47,18 @@ for (( i=0 ; i<10; i=i+1 )) ; do
   NC=${LOG%%.log}.nc
   echo File output: $NC >> $L
   $X $SIM 2> ${LOG} && \
-  ncks -O -v time,natural_fertility,temperature_limitation,population_size,population_density,technology,economies,farming,region,latitude,longitude,area,farming_spread_by_people test.nc ${NC}
+  ncks -O -v time,region_neighbour,natural_fertility,temperature_limitation,population_size,population_density,technology,economies,farming,region,latitude,longitude,area,farming_spread_by_people test.nc ${NC}
   test -f ${LOG} && $SED -i '/[A-d]/d' ${LOG}
 done
 
+# Last scenario with most complete information
+SCE=1.0
+$SED -i '/flucampl/s/flucampl.*$/flucampl '$SCE'/' $DAT
+LOG=${B}_${SCE}.log 
+NC=${LOG%%.log}.nc
+echo File output: $NC >> $L
+$X $SIM 2> ${LOG} && mv test.nc $NC
+test -f ${LOG} && $SED -i '/[A-d]/d' ${LOG}
 
 # Return to base setup
 $SED -i '/flucampl/s/flucampl.*$/flucampl 0.0/' $DAT
