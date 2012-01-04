@@ -1,11 +1,10 @@
-% Run script for eurolbk paper about climate triggering in Europe
+% Run script for euroclim papers about climate triggering in Europe
 
 
 %% Define region to lbk
-%datastring='Pinhasi';
+datastring='Pinhasi';
 %datastring='Turney';
-datastring='Vanderlinden';
-
+%datastring='Vanderlinden';
 
 
 reg='lbk'; [ireg,nreg,loli,lali]=find_region_numbers(reg);
@@ -18,8 +17,8 @@ letters='ABCDEFGHIJKLMNOPQRSTUVW';
 letters=letters(1:nhreg);
 
 %file='../../eurolbk_base.nc';
-sce='base';
-file=['/h/lemmen/projects/glues/tex/2011/eurolbk/data/eurolbk_' sce '.nc'];
+sce='0.4';
+file=['/Users/lemmen/devel/glues/euroclim_' sce '.nc'];
 [d f e]=fileparts(file);
 ncid=netcdf.open(file,'NOWRITE');
 varid=netcdf.inqVarID(ncid,'region');
@@ -40,10 +39,7 @@ area=double(netcdf.getVar(ncid,varid));
 netcdf.close(ncid);
 nreg=length(region);
 
-
 time=time(itime);
-
-
 
 
 % get lat/lon from regionpath, since they are wrong in the above file
@@ -175,8 +171,6 @@ else
     error;
 end
 
-
-
 stime=1950-sage;
 sutime=stime+(sage_lower-sage);
 sltime=stime+(sage_upper-sage);
@@ -299,7 +293,7 @@ if (1==1)
 %% Plot region network (figure 1)
 [data,basename]=clp_nc_neighbour('reg',reg,'marble',2,'transparency',1,'nocolor',0,...
       'showstat',0,'showtime',0,'fontsize',15,'showregion',0,...
-      'file',['../../eurolbk_' sce '.nc'],'figoffset',0,'sce',sce,'noprint',1,'notitle',1);
+      'file','../../euroclim_1.0.nc','figoffset',0,'sce',sce,'noprint',1,'notitle',1);
 
 % Remove connecting lines
 hdl=findobj(gcf,'LineStyle',':');
@@ -369,7 +363,7 @@ onset(itv)=time(min(it(itv),[],2));
 if (2==0) for it=1:nmovtime
   [d,b]=clp_nc_variable('var','farming','reg',reg,'marble',2,'transparency',1,'nocolor',0,...
       'showstat',0,'lim',[0 1],'timelim',movtime(it),'showtime',0,...
-      'file',['../../eurolbk_' sce '.nc'],'figoffset',0,'sce',[sce '_' sprintf('%05d',movtime(it))],'noprint',1);
+      'file',['../../euroclim_' sce '.nc'],'figoffset',0,'sce',[sce '_' sprintf('%05d',movtime(it))],'noprint',1);
   m_coast('color','k');
   m_grid('box','fancy','linestyle','none');
   title('GLUES agropastoral activity');
@@ -387,7 +381,7 @@ nmovtime=length(movtime);
 if (2==0) for it=1:nmovtime
   [d,b]=clp_nc_variable('var','farming','reg',reg,'marble',2,'transparency',1,'nocolor',0,...
       'showstat',0,'lim',[0 1],'timelim',movtime(it),...
-      'file',['../../eurolbk_' sce '.nc'],'figoffset',0,'sce',[sce '_' sprintf('%03d_%05d',it,movtime(it))],'noprint',1);
+      'file',['../../euroclim_' sce '.nc'],'figoffset',0,'sce',[sce '_' sprintf('%03d_%05d',it,movtime(it))],'noprint',1);
   m_coast('color','k');
   m_grid('box','fancy','linestyle','none');
   title('GLUES agropastoral activity');
@@ -406,146 +400,80 @@ if (2==0) for it=1:nmovtime
 % Command line postprocessing
 %mencoder mf://farming_lbk_66_base_???_*_150.png  -mf w=800:h=600:fps=5:type=png -ovc lavc -lavcopts vcodec=mpeg4:mbd=2:trell -oac copy -o output.avi
 
-
-
 if (3==3)
-%% plot farming timing (figure 3)
-ncol=8;
-
-[data,basename]=clp_nc_variable('var','farming','threshold',0.5,'reg',reg,'marble',2,'transparency',1,'nocolor',0,...
+  %% plot farming timing for all scenarios 
+  ncol=8;
+  for s=0.0:0.1:1.0
+    sce=sprintf('%3.1f',s);
+    file=['../../euroclim_' sce '.nc'];
+    [data,basename]=clp_nc_variable('var','farming','threshold',0.5,'reg',reg,'marble',2,'transparency',1,'nocolor',0,...
       'showstat',0,'timelim',[-7500 -3500],'showtime',0,'flip',1,'showvalue',0,...
-      'file',['../../eurolbk_' sce '.nc'],'figoffset',0,'sce',sce,...
+      'file',file,'figoffset',0,'sce',sce,...
       'noprint',1,'notitle',1,'ncol',ncol,'cmap','clc_eurolbk');
   
-%set(gcf,'Units','centimeters','Position',[0 0 18 18]);
+    %set(gcf,'Units','centimeters','Position',[0 0 18 18]);
 
-hdf=findobj(gcf,'-property','EdgeColor','-and','-property','FaceColor');
-nh=length(hdf);
-fcc=get(hdf,'FaceColor');
-fc=zeros(nh,3)*1.0;
+    hdf=findobj(gcf,'-property','EdgeColor','-and','-property','FaceColor');
+    nh=length(hdf);
+    fcc=get(hdf,'FaceColor');
+    fc=zeros(nh,3)*1.0;
 
-for ih=1:nh
-  fc(ih,:)=double(fcc{ih});
-end
-hdf=hdf(find(sum(fc)>0));
+    for ih=1:nh
+      fc(ih,:)=double(fcc{ih});
+    end
+    hdf=hdf(find(sum(fc)>0));
+    
+    set(hdf,'Edgecolor','none')
+    cm=get(gcf,'colormap');
+    
+    cb=findobj('tag','colorbar');
+    cbc=get(cb,'Children');
+    if iscell(cbc)
+      set(cbc{1},'AlphaData',0.5);
+      set(cbc{2},'AlphaData',0.5);
+    else
+      set(cbc,'AlphaData',0.5);
+    end
+    set(cb,'Ticklength',[0 0],'box','off');
+    pos=get(cb,'Position');
+    %set(cb,'Position',pos.*[1+pos(3) 1 2.0 1]
+    ytl=get(cb,'YTickLabel');
+    if iscell(ytl) ytl=char(ytl{1}); end
+    ytl(:,1)=' ';
+    set(cb,'YTickLabel',ytl);
+    ytt=get(cb,'Title');
+    if iscell(ytt) ytt=ytt{1}; end
+    set(ytt,'String','Year BC','FontSize',14,'FontName','Times','FontWeight','normal');
+    
+    cb2=copyobj(cb,gcf);
+    set(get(cb2,'Children'),'AlphaData',1);
+    ytt=get(cb2,'Title');
+    if iscell(ytt) ytt=ytt{1}; end
+    set(ytt,'String','');
+    pos=get(cb,'Position');
+    set(cb2,'Position',pos.*[1 1 0.5 1],'YTick',[],'box','off');
+    
+    ps=0;
+    for i=1:length(viscol)
+        mcolor=cmap(iscol(viscol(i)),:);
+        ps(i)=m_plot(slon(viscol(i)),slat(viscol(i)),'k^','MarkerFaceColor',mcolor,...
+            'MarkerEdgeColor',cmap(iscol(viscol(i)),:),'MarkerSize',4);
+    end
+    
+    ct=findobj(gcf,'-property','FontName');
+    set(ct,'FontSize',14,'FontName','Times','FontWeight','normal');
+    
+    
+    for ir=1:-nhreg
+        m_text(lon(hreg(ir)+1),lat(hreg(ir)+1),letters(ir),'background','w',...
+            'Horizontal','center','Vertical','middle');
+    end
+    m_coast('color','k');
+    m_grid('box','fancy','linestyle','none');
+    title(['EuroClim experiment with fluc=' sce ]);
+    cl_print('name',strrep(basename,'farming_','timing_'),'ext','png','res',[150,600]);
+  end % of for loop
 
-set(hdf,'Edgecolor','none')
-cm=get(gcf,'colormap');
-
-cb=findobj('tag','colorbar');
-cbc=get(cb,'Children');
-if iscell(cbc)
-  set(cbc{1},'AlphaData',0.5);
-  set(cbc{2},'AlphaData',0.5);
-else
-  set(cbc,'AlphaData',0.5);
-end
-set(cb,'Ticklength',[0 0],'box','off');
-pos=get(cb,'Position');
-%set(cb,'Position',pos.*[1+pos(3) 1 2.0 1]
-ytl=get(cb,'YTickLabel');
-if iscell(ytl) ytl=char(ytl{1}); end
-ytl(:,1)=' ';
-set(cb,'YTickLabel',ytl);
-ytt=get(cb,'Title');
-if iscell(ytt) ytt=ytt{1}; end
-set(ytt,'String','Year BC','FontSize',14,'FontName','Times','FontWeight','normal');
-
-cb2=copyobj(cb,gcf);
-set(get(cb2,'Children'),'AlphaData',1);
-ytt=get(cb2,'Title');
-if iscell(ytt) ytt=ytt{1}; end
-set(ytt,'String','');
-pos=get(cb,'Position');
-set(cb2,'Position',pos.*[1 1 0.5 1],'YTick',[],'box','off');
-
-ps=0;
-for i=1:length(viscol)
-  mcolor=cmap(iscol(viscol(i)),:);
-  ps(i)=m_plot(slon(viscol(i)),slat(viscol(i)),'k^','MarkerFaceColor',mcolor,...
-      'MarkerEdgeColor',cmap(iscol(viscol(i)),:),'MarkerSize',4);
-end
-
-ct=findobj(gcf,'-property','FontName');
-set(ct,'FontSize',14,'FontName','Times','FontWeight','normal');
-
-
-for ir=1:-nhreg  
-  m_text(lon(hreg(ir)+1),lat(hreg(ir)+1),letters(ir),'background','w',...
-      'Horizontal','center','Vertical','middle');
-end
-m_coast('color','k');
-m_grid('box','fancy','linestyle','none');
-%cl_print('name',strrep(basename,'farming_','timing_'),'ext','png','res',[150,600]);
-
-
-set(ps,'visible','off');
-%cl_print('name',strrep(basename,'farming_','timing_nosites_'),'ext','png','res',[150,600]);
-
-hdf=findobj(gcf,'-property','EdgeColor','-and','-property','FaceColor');
-set(hdf,'FaceColor','none','EdgeColor','k');
-m_grid('box','fancy','linestyle','none');
-%cl_print('name',strrep(basename,'farming_','timing_empty_'),'ext','png','res',[150,600]);
-
-set(ps,'visible','on');
-%cl_print('name',strrep(basename,'farming_','timing_sites_'),'ext','png','res',[150,600]);
-
-rings=0:500:4000;
-nring=length(rings);
-hr=m_range_ring(lon(272),lat(272),rings,'color','k','LineWidth',5)
-%cl_print('name',strrep(basename,'farming_','timing_rings500_'),'ext','png','res',[150,600]);
-
-for ir=2:length(rings)
-  irs=find(sdists>rings(ir-1) & sdists<rings(ir));
-  sringtime(ir-1)=mean(stime(irs));
-
-  xdata=[get(hr(ir-1),'xdata'),fliplr(get(hr(ir),'xdata'))];
-  ydata=[get(hr(ir-1),'ydata'),fliplr(get(hr(ir),'ydata'))];
-  iv=find(isfinite(xdata) & isfinite(ydata));
-  %patch(xdata(iv),ydata(iv),'y-');
-end
-
-for ir=2:-length(rings)
-  irr=find(dists>rings(ir-1) & dists<=rings(ir));
-  rringtime(ir-1)=mean(rtime(irr));
-
-  xdata=[get(hr(ir-1),'xdata'),fliplr(get(hr(ir),'xdata'))];
-  ydata=[get(hr(ir-1),'ydata'),fliplr(get(hr(ir),'ydata'))];
-  iv=find(isfinite(xdata) & isfinite(ydata));
-  %patch(xdata(iv),ydata(iv),'y-');
-end
-
-trings=[-500:500:5000]-7000;
-ntring=length(trings);
-for ir=2:ntring
-  its=find(stime>trings(ir-1) & stime<=trings(ir));
-  sringdist(ir-1)=mean(sdists(its));
-end
-set(hr,'visible','off');
-ht=m_range_ring(lon(272),lat(272),sringdist(isfinite(sringdist)),'color','m','LineWidth',4);
-%cl_print('name',strrep(basename,'farming_','timing_trings500_'),'ext','png','res',[150,600]);
-
-set(hr,'visible','on');
-%cl_print('name',strrep(basename,'farming_','timing_rtrings500_'),'ext','png','res',[150,600]);
-
-set(hr,'visible','off');
-set(ht,'visible','off');
-
-for ir=2:ntring
-  itr=find(onset>trings(ir-1) & onset<=trings(ir));
-  itr=itr(isfinite(onset(itr)));
-  rringdist(ir-1)=mean(dists(itr));
-end
-
-hts=m_range_ring(lon(272),lat(272),sringdist,'LineWidth',4);
-htr=m_range_ring(lon(272),lat(272),rringdist,'LineWidth',4,'LineStyle','--');
-
-%return;
-%itrcol=floor((trings-min(timelim))./(timelim(2)-timelim(1))*ncol)+1;
-%itrcol(itrcol<1)=1;
-%vtrcol=find(itrcol<=ncol);
-
-%cl_print('name',strrep(basename,'farming_','timing_bothtring500_'),'ext','png','res',[150,600]);
 
 % Contour plot
 if (0==9)
