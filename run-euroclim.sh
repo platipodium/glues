@@ -2,7 +2,7 @@
 # TODO why does the regular sed not accept this?
 
 V=eurolbk
-S=euroclim
+B=euroclim
 L=${0%%.sh}.log
 
 for SED in gsed sed; do  
@@ -15,7 +15,7 @@ pwd >> $L
 echo $0 >> $L
 echo $SED >> $L
 echo Setup: $V >> $L
-echo Scenarios: $S >> $L
+echo Scenario base: $B >> $L
 
 X=src/glues
 export P=examples/simulations/${V}/${V}
@@ -43,7 +43,8 @@ $SED -i '/gammab/s/gammab.*$/gammab 0.0040/' $PAR
 for (( i=0 ; i<10; i=i+1 )) ; do
   SCE=0.$i
   $SED -i '/flucampl/s/flucampl.*$/flucampl '$SCE'/' $DAT
-  LOG=${S}_${SCE}.log; NC=${S}_${SCE}.nc
+  LOG=${B}_${SCE}.log 
+  NC=${LOG%%.log}.nc
   echo File output: $NC >> $L
   $X $SIM 2> ${LOG} && \
   ncks -O -v time,natural_fertility,temperature_limitation,population_size,population_density,technology,economies,farming,region,latitude,longitude,area,farming_spread_by_people test.nc ${NC}
