@@ -331,6 +331,9 @@ for it=1:ntime
     for ij=1:length(j)
       h=hp(j(ij));
       if isnan(h) || h==0 continue; end
+      ud.data=squeeze(data(ireg(j(ij)),itime));
+      ud.time=time;
+      set(h,'ButtonDownFcn',@onclick,'UserData',ud);
       greyval=0.15+0.35*sqrt(i./ncol);
       if transparency
         %if i./ncol>0.33 greyval=0.33; elseif (i./ncol)>0.66 greyval=0.5; else greyval=0; end
@@ -433,12 +436,29 @@ end
 
 
 
+function offclick(gcbo,eventdata,handles)
+ud=get(gcbo,'UserData');
+set(gcbo,'ButtonDownFcn',@onclick);
+set(gcbo,'EdgeColor',ud.EdgeColor);
+set(gcbo,'LineWidth',ud.lineWidth);
+return;
+end
 
+function onclick(gcbo,eventdata,handles)
+ud=get(gcbo,'UserData');
+ud.figure=gcf;
+ud.EdgeColor=get(gcbo,'EdgeColor');
+ud.LineWidth=get(gcbo,'LineWidth');
+set(gcbo,'EdgeColor','y');
+set(gcbo,'LineWidth',4);
 
-
-
-
-
+auxfig=findobj('-tag','Auxiliary figure');
+if isempty(auxfig) figure(); else figure(auxfig); end
+set(auxfig,'tag','Auxiliary figure');
+plot(ud.time,ud.data,'k-');
+figure(ud.figure);
+return;
+end
 
 
 
