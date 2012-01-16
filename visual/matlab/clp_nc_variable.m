@@ -332,7 +332,7 @@ for it=1:ntime
       h=hp(j(ij));
       if isnan(h) || h==0 continue; end
       ud.data=squeeze(data(ireg(j(ij)),itime));
-      ud.time=time;
+      if exist('time','var') ud.time=time; else ud.time=[]; end
       set(h,'ButtonDownFcn',@onclick,'UserData',ud);
       greyval=0.15+0.35*sqrt(i./ncol);
       if transparency
