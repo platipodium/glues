@@ -12,10 +12,7 @@
  *******************************************************/
 #include "Globals.h"
 #include "Symbols.h"
-#include "Exchange.h"
 #include <assert.h>
-
-class Exchange;
 
 double dpr;
 double calc_spread_single(unsigned int,double t=0);
