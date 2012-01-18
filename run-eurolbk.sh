@@ -55,7 +55,7 @@ LOG=eurolbk_demic.log
 NC=eurolbk_demic.nc
 #test -f ${LOG} || 
 $X $SIM 2> ${LOG} && \
-  ncks -O -v time,population_density,technology,economies,farming,region,latitude,longitude,area,farming_spread_by_people test.nc ${NC}
+ ncks -O -v time,population_density,technology,economies,farming,region,latitude,longitude,area,farming_spread_by_people test.nc ${NC}
 test -f ${LOG} && $SED -i '/[A-d]/d' ${LOG}
 
 $SED -i '/spreadv/s/spreadv.*$/spreadv 0/' $PAR
