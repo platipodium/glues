@@ -34,9 +34,9 @@ int exchange(void) {
     populations[id].CreateVector();
     for(unsigned int i=0;i<N_POPVARS;i++) {
       ch=TimeStep*sprd[id*N_POPVARS+i];
-      if(fabs(ch/(ev[i]+0.01))>RelChange  && !VarActive) //
+      if(fabs(ch/(ev[i]+0.01))>RelChange  && !VarActive && id>0) //
 		cout<<"HighExch "<<state_names[i]<<" "<<id<<"\t:"<<ev[i]
-		<<"+"<<ch<<endl;  // */
+		<<"+"<<ch<<endl;  
       ev[i]+=min(ch,RelChange*ev[i]);
     }
 
@@ -258,11 +258,11 @@ double calc_spread_single(unsigned int i, double t) {
   
       double ch;
       ch=TimeStep*sprd_p[i*N_POPVARS+4];
-      if(fabs(ch/(ipop+0.01))>RelChange)
+      if(fabs(ch/(ipop+0.01))>RelChange && iid>0)
 	    cout<<"HighDeni "<< state_names[4] <<" "<<iid<<"\t: "<< ipop
 	      <<"+"<<ch<<endl;
       ch=TimeStep*sprd_p[j*N_POPVARS+4];
-      if(fabs(ch/(jpop+0.01))>RelChange)
+      if(fabs(ch/(jpop+0.01))>RelChange && jid>0)
 	    cout<<"HighDenj "<< state_names[4] <<" "<<jid<<"\t: "<< jpop
 	 <<"+"<<ch<<endl;
       
