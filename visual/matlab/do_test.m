@@ -2,6 +2,36 @@
 % which occured in Jan 2012
 
 
+
+
+predir='/Users/lemmen/devel';
+prefixes={'glues','glues-1.1.14','glues-1.1.13','glues-1.1.12','glues-1.1.11'};
+postfix='test';
+
+for ipre=1:length(prefixes)
+    file=fullfile(predir,prefixes{ipre},[postfix '.nc']);
+    if ~exist(file,'file'); continue; end
+    
+    pfile=fullfile(predir,prefixes{ipre},[postfix '_map.png']);
+    if exist(pfile,'file');
+      fdir=dir(file);
+      pdir=dir(pfile);
+      if datenum(fdir.date)<datenum(pdir.date) continue; end;
+    end
+      
+    [d,b]=clp_nc_variable('var','farming','threshold',0.5,'reg','lbk','file',file,'noprint',1,'timelim',[-7000 -3000],'showvalue',1);
+    title(['Timing ' prefixes{ipre} '_' postfix]);
+    cl_print(gcf,'name',fullfile(predir,prefixes{ipre},[postfix '_map']),'ext','png');
+    clp_nc_trajectory('var','farming','timelim',[-7000 -1000],'file',file,'noprint',1,'reg','lbk','ylim',[0 1],'nosum',1)
+    title(['Farming ' prefixes{ipre} '_' postfix]);
+    cl_print(gcf,'name',fullfile(predir,prefixes{ipre},[postfix '_farming']),'ext','png');
+    clp_nc_trajectory('var','population_density','timelim',[-7000 -1000],'file',file,'noprint',1,'reg','lbk','ylim',[0 5],'nosum',1)
+    title(['Population ' prefixes{ipre} '_' postfix]);
+    cl_print(gcf,'name',fullfile(predir,prefixes{ipre},[postfix '_population_density']),'ext','png');
+    
+end
+
+
 predir='/Users/lemmen/devel/glues/';
 prefixes={'ref','eurolbk'};
 postfixes={'base','demic','cultural','nospread','events'};
