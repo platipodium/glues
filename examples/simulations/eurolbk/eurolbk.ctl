@@ -10,7 +10,7 @@ float	CultIndex	0.5
 float	Space2Time	2.0
 	\u y/km
 	\d Conversion of distance error to time error
-int	MaxCivNum	232
+int	MaxCivNum 1000
 	\d Maximal number of independet civilizations; stop condition for simulation		
 int	DataActive	0
 	\d 1: Vergleich mit Daten (not used yet)
