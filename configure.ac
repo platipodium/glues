@@ -119,6 +119,9 @@ dnl Check for multiprocessing
 #AX_MPI from autoconf archive
 
 dnl Check for libraries
+AC_SEARCH_LIBS([lrint], [m], [], [
+  AC_MSG_ERROR([unable to find the lrint() function])
+])
 AC_SEARCH_LIBS([cos], [m], [], [
   AC_MSG_ERROR([unable to find the cos() function])
 ])
