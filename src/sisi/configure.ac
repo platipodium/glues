@@ -4,8 +4,8 @@
 AC_PREREQ([2.59])
 AC_INIT([SiSi], [2.0a], [carsten.lemmen@hzg.de])
 
-AC_CONFIG_AUX_DIR([config])
-AC_CONFIG_MACRO_DIR([config])'
+AC_CONFIG_AUX_DIR([../../config])
+AC_CONFIG_MACRO_DIR([../../config])'
 AM_INIT_AUTOMAKE([SiSi],[2.0])
 
 dnl automake-1.11 has AM_SILENT_RULES but we need to be 
