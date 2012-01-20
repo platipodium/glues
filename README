@@ -5,6 +5,7 @@ README file for the Global Land Use and technological Evolution Simulator (GLUES
 Glues is set up for building on many platforms.  To facilitate cross-platform compatibility, the
 GNU autotools are used.
 
+
 == Quick install ==
 
 From the .tgz distribution archive, run the file ./configure, then make
@@ -52,6 +53,9 @@ You should (but you can) not install GLUES in your system, rather use the provid
 
  3. Cannot find -lSiSi
     You might have to copy the libSiSi.* files to src/sisi/lib (see above 1.)
+
+
+ 4. Makefile.in not created: please upgrade your version of libtool
 
 == What do do if you don't get sisi to build or run ==
 
