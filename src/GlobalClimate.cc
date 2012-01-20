@@ -250,7 +250,7 @@ int GlobalClimate::Update(double t) {
 
     unsigned long int it;
 
-    it=lrint(floor(t/ClimUpdateTimes[0]));
+    it=(long int)(floor(t/ClimUpdateTimes[0]));
     if (it>=ClimUpdateTimes[1]) it=ClimUpdateTimes[1]-1;
 
     for (unsigned int r=0; r<numberOfRegions; r++) {
