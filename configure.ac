@@ -330,6 +330,15 @@ AC_CHECK_FUNCS([strstr strrchr])
 #AC_CHECK_LIB(SiSi2.0,_ZN6StringC2Ev)
 #fi
 
+
+AC_DEFINE([WITH_MERCURIAL],[],[Which mercurial to use])
+AC_PATH_PROG(MERCURIAL, hg, "no")
+if test "x$MERCURIAL" = "xno" ; then
+  GLUES_WARNING([Optional program hg not found])
+else
+  AC_DEFINE(WITH_MERCURIAL,"$MERCURIAL")
+fi
+
 AC_DEFINE([WITH_GNUPLOT],[],[Which gnuplot to use])
 AC_PATH_PROG(GNUPLOT, gnuplot, "no")
 if test "x$GNUPLOT" = "xno" ; then

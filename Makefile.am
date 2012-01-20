@@ -30,6 +30,8 @@ EXTRA_DIST = ChangeLog run.sh run-euroclim.sh run-eurolbk.sh run-krisen.sh run-h
 
 SUBDIRS = src config examples variation visual doc #po intl
 
+REVISION = `$MERCURIAL summary`
+
 # Rule for rebuilding libtool if necessary
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status --recheck
