@@ -1,7 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 ## This makefile is part of the glues distribution
 ##
-## Copyright (C) 2010
+## Copyright (C) 2010,2011,2012
 ## Carsten Lemmen <carsten.lemmen@hzg.de>
 ## GKSS-Forschungszentrum Geesthacht GmbH
 ##
