@@ -95,9 +95,10 @@ fi
 
 dnl Check for libtool and changes to libtool
 dnl disabling shared libs speeds up compilation significantly
-LT_INIT
+dnl Comented in bug search
+#LT_INIT
 #LT_INIT([disable-shared])
-AC_SUBST([LIBTOOL_DEPS])
+#AC_SUBST([LIBTOOL_DEPS])
 
 dnl Check for programs
 AC_PROG_CC(["ccache gcc" gcc cc acc c.exe xlc xlc_r icc pgcc]) # for region package
