@@ -11,7 +11,7 @@
  *\date  26.06.2001                                     *
  *******************************************************/
 #include "Exchange.h"
-
+#ifdef USE_EXCHANGE
 //namespace glues {
 
 Exchange::Exchange(unsigned int n) 
@@ -163,5 +163,5 @@ inline double Exchange::Genospread(double it,double jt,double exporter_tech, dou
 }
 
 //}
-
+#endif
 /** EOF Exchange.cc */
