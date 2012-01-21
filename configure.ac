@@ -82,9 +82,6 @@ AC_SUBST(GLUES_OSTYPE)
 dnl End of platform configuration
 
 
-
-
-
 dnl Optimization or debug
 AC_DEFINE([DEBUG], [], [Debugging enabled])
 AC_ARG_ENABLE(debug,[  --enable-debug enables debug support [default=no]],DEBUG=$enableval,DEBUG=no)
@@ -295,6 +292,7 @@ AC_SUBST(LITTLE_ENDIAN)
 AC_CHECK_HEADERS([locale.h])
 
 dnl Make sure all the necessary standard headers are installed on the system.
+AC_CHECK_HEADER(ostream, , GLUES_ERROR([The standard <ostream> header file could not be found.]))
 AC_CHECK_HEADER(iostream, , GLUES_ERROR([The standard <iostream> header file could not be found.]))
 AC_CHECK_HEADER(vector, , GLUES_ERROR([The standard <vector> header file could not be found.]))
 AC_CHECK_HEADER(list, , GLUES_ERROR([The standard <list> header file could not be found.]))
