@@ -6,7 +6,7 @@ AC_PREREQ(2.59)
 dnl only m4 macros are allowed before AC_INIT
 dnl get version from file VERSION with some m4 magic
 m4_define([GLUES_MICRO_VERSION],
- m4_bpatsubst(m4_esyscmd([cat VERSION]),
+m4_bpatsubst(m4_esyscmd([cat VERSION]),
  [\([0-9]*\)\.\([0-9]*\)\.\([0-9a-z]*\)\(\w\|\W\)*],[\3]))
 m4_define([GLUES_MINOR_VERSION],
  m4_bpatsubst(m4_esyscmd([cat VERSION]),
