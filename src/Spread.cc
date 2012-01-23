@@ -248,13 +248,13 @@ double calc_spread_single(unsigned int i, double t) {
       //spreadmatrix[numberOfRegions*(import_id*N_POPVARS+2)*j] = (export_qfarm*export_pop/import_pop)*import_change;
       
     
-      /* cerr << import_id << " " populations[import_id] << " rgr= " << populations[import_id].RelativeGrowthrate() 
+      /*cerr << import_id << " " populations[import_id] << " rgr= " << populations[import_id].RelativeGrowthrate() 
     	<< "/ import_change = " << import_change << endl
     	<< force << " / " << dp0 << " / " << dp1  << endl
     	<< ijpop << " / " << iinfl << " / " << jinfl << " / " << exch << endl 
     	<< export_id // populations[export_id] 
-    	<< endl;*/
-
+    	<< endl;
+ */
   
       double ch;
       ch=TimeStep*sprd_p[i*N_POPVARS+4];

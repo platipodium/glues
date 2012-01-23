@@ -1,7 +1,7 @@
 /* GLUES input/output routines; this file is part of
    the Global Land Use and technological Evolution Simulator
    
-   Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011
+   Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012
    Carsten Lemmen <carsten.lemmen@hzg.de>, Kai Wirtz <kai.wirtz@hzg.de>
 
    This program is free software; you can redistribute it and/or modify it
@@ -693,30 +693,41 @@ int read_neighbours() {
 
   
   while (i<numberOfRegions && !ifs.eof() ) {
+    // Skip lines which do not start with a number
     c=ifs.peek();
     if ( (c < '0') || (c > '9') ) {
 	  ifs.getline(charbuffer,BUFSIZE);
 	  continue;  
     }
 
-    ifs >> selfid;
-  
+    // Read id, skip four fields and read number of neighbours
+    ifs >> selfid;  
     for (unsigned int j=0; j<5; j++) ifs >> numneigh;
+    
+    //std::cerr << i << " " << numneigh; 
+    
+    // For all numneighbours add them
     for (unsigned int j=0; j<numneigh; j++) {
 
+	  // Read neighbour id, boundary length and distance 
+	  /** @todo implement neighbour distance calculation */
       ifs >> charbuffer;
-      sscanf(charbuffer,"%d:%f:%d",&neighid,&neigh_boundary,&neigh_distance);
+      sscanf(charbuffer,"%d:%f:%f",&neighid,&neigh_boundary,&neigh_distance);
      
+      // neighbours with negative id are sea, positive and 0 is land area,
+      // only consider land areas
       if ( neighid>=0 ) {
-        unsigned int in=idmap[neighid];
+        //unsigned int in=idmap[neighid]; // some bug here, TODO
+        unsigned int in=neighid;
         regions[i].AddNeighbour(&regions[in],neigh_boundary,1);
         if (in < i) regions[in].AddNeighbour(&regions[i],
 						     neigh_boundary,1);
+
+        //std::cerr << " " << neighid << ":" << in << ":" << regions[i].Neighbour()->Region()->Id();
     }				     
-	//if (1) std::cerr << i << " " << selfid << " " << numneigh << " "
-	//<< neighid << " " << neigh_boundary << std::endl;
     
     }
+    //std::cerr << std::endl;
     i++;
     // if (i>680 || i<10) printf("read %d %d %d \n",i,selfid,numneigh);
   }
@@ -729,9 +740,11 @@ int read_neighbours() {
   for (unsigned int i=0; i<numberOfRegions; i++) {
     numneigh=0;
     maxneighbours=0;
+    std::cerr << i; 
     if (gn=regions[i].Neighbour())  {
       numneigh++;
       unsigned int j=gn->Region()->Id();
+      //std::cerr << " " << j; 
       GeographicalNeighbour *jn=regions[j].Neighbour();
       while (jn) { 
           if (jn->Region()->Id()==i) break;
@@ -751,9 +764,10 @@ int read_neighbours() {
     }
     regions[i].Numneighbours(numneigh);
     if (numneigh>maxneighbours) maxneighbours=numneigh;
+    //std::cerr << std::endl;
   }
 	 
-  std::cout << " OK (max=" << maxneighbours << ")" << std::endl;;
+ // std::cout << " OK (max=" << maxneighbours << ")" << std::endl;;
   return maxneighbours;
 }
 
