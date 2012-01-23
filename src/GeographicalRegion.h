@@ -98,6 +98,8 @@ class GeographicalRegion {
   int    Write(FILE* ,unsigned int ) const;
   float x2lat(unsigned int) const;
   float x2lon(unsigned int) const;
+  unsigned int lat2x(float) const;
+  unsigned int lon2x(float) const;
   
   const static char* DataHeader();
   char*  DataValues() const;
