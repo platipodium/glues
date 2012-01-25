@@ -1,7 +1,22 @@
 % Run script for hunter-gatherer simulations
 
 timelim=[-9500 2000];
-file='../../hg_dq0.nc';
+file='../../hg_q0.nc';
+
+
+clp_nc_trajectory('var','population_density','timelim',[-9500 1000],'file',file,'noprint',1,'reg','all','ylim',[0 1]);
+ax=get(gcf,'Children')
+set(ax(1),'visible','on','ylim',[0 20])
+
+
+clp_nc_trajectory('var','population_density','timelim',[-9500 1000],'file','../../eurolbk_events.nc','noprint',1,...
+    'reg','all','ylim',[0 1],'figoff',1);
+ax=get(gcf,'Children')
+set(ax(1),'visible','on','ylim',[0 200])
+
+
+return
+
 reg='lbk';
 noprint=0;
 
