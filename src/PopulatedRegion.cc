@@ -247,7 +247,17 @@ int PopulatedRegion::Write(FILE* resfile,unsigned int id) {
 }
 
 int PopulatedRegion::Write(FILE* resfile) const {
-  fprintf(resfile,"%5d %7.2f %7.2f %8.0f %8.0f %4d %2d %1d\n",id,latitude,longitude,area,boundarylength,numneighbours,contind,sahara);
+  //fprintf(resfile,"%5d %7.2f %7.2f %8.0f %8.0f %4d %2d %1d\n",id,latitude,longitude,area,boundarylength,numneighbours,contind,sahara);
+  // Implemented for testing purposes Jan 2012, try to recreate input file
+  // which is id numcells, area longitude latitude 
+  fprintf(resfile,"%d %ld %d %d %d\t%d",id,numcells,(long int)area,lon2x(longitude),lat2x(latitude),numneighbours);
+  GeographicalNeighbour* neigh=Neighbour();
+  
+  while (neigh) {
+    fprintf(resfile,"\t%d:%.1f",neigh->Region()->Id(),neigh->Length());
+    neigh=neigh->Next();
+  }
+  fprintf(resfile,"\n");
   return 0;
 }
 

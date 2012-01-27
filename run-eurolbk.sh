@@ -41,6 +41,7 @@ LOG=eurolbk_base.log; NC=eurolbk_base.nc
 $X $SIM 2> ${LOG} && mv test.nc ${NC}
 test -f ${LOG} && $SED -i '/[A-d]/d' ${LOG}
 
+
 $SED -i '/spreadv/s/spreadv.*$/spreadv 0.0000002/' $PAR
 $SED -i '/spreadm/s/spreadm.*$/spreadm 1500000/' $OPAR
 LOG=eurolbk_cultural.log 

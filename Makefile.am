@@ -26,7 +26,7 @@ ACLOCAL_AMFLAGS = -I config
 
 AM_CPPFLAGS = -I ./src/sisi
  
-EXTRA_DIST = ChangeLog run.sh run-euroclim.sh run-eurolbk.sh run-krisen.sh run-harappa run-amant.sh bootstrap BUGS
+EXTRA_DIST = ChangeLog run.sh run-euroclim.sh run-eurolbk.sh run-krisen.sh run-harappa.sh run-amant.sh bootstrap BUGS
 
 SUBDIRS = src config examples variation visual doc #po intl
 

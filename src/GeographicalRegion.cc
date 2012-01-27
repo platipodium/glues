@@ -200,6 +200,15 @@ float GeographicalRegion::x2lon(unsigned int index) const {
   return index/2.0-180.;
 }
 
+
+unsigned int GeographicalRegion::lat2x(float _latitude) const {
+  return (unsigned int) (2 * (90.0 - _latitude));
+}
+
+unsigned int GeographicalRegion::lon2x(float _longitude) const {
+  return (unsigned int) (2 * (180.0 + _longitude));
+}
+
 int GeographicalRegion::Mapping(unsigned int num, unsigned int* ids) {
 
   if (mapping) {
