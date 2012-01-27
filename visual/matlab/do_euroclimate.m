@@ -9,12 +9,96 @@ datastring='Pinhasi';
 
 reg='lbk'; [ireg,nreg,loli,lali]=find_region_numbers(reg);
 lonlim=loli; latlim=lali;
-
-timelim=[-8000 -3500];
+timelim=[-7000 -3000];
 hreg=[271 255  211 183 178 170 146 142 123 122];
 nhreg=length(hreg);
 letters='ABCDEFGHIJKLMNOPQRSTUVW';
 letters=letters(1:nhreg);
+
+doplots=1;
+
+
+%-------------------------
+predir='/Users/lemmen/devel/glues';
+basename='euroclim';
+sces=0.0:0.1:1.0;
+
+if (any(doplots==1))
+for isce=1:length(sces)
+    file=fullfile(predir,[basename sprintf('_%.1f.nc',sces(isce))]);
+    if ~exist(file,'file'); continue; end
+    
+    pfile=fullfile(predir,[basename strrep(sprintf('_%.1f_map',sces(isce)),'.','-')]);
+    if exist([pfile '.png'],'file');
+      fdir=dir(file);
+      pdir=dir([pfile '.png']);
+      if datenum(fdir.date)<datenum(pdir.date) continue; end;
+    end
+      
+    [d,b]=clp_nc_variable('var','farming','threshold',0.5,'reg','lbk','file',file,'noprint',1,'timelim',timelim,'showvalue',1);
+    title(['Timing ' basename ' ' num2str(sces(isce))]);
+    cl_print(gcf,'name',pfile,'ext','png');
+    clp_nc_trajectory('var','farming','timelim',[-7000 -1000],'file',file,'noprint',1,'reg','lbk','ylim',[0 1],'nosum',1)
+    title(['Farming ' basename ' ' num2str(sces(isce)) ]);
+    cl_print(gcf,'name',strrep(pfile,'_map','_farming'),'ext','png');
+    clp_nc_trajectory('var','population_density','timelim',[-7000 -1000],'file',file,'noprint',1,'reg','lbk','ylim',[0 5],'nosum',1)
+    title(['Population ' prefixes{ipre} '_' postfix]);
+    cl_print(gcf,'name',strrep(pfile,'_map','_population_density'),'ext','png');
+      
+end
+
+  fprintf('\\begin{tabular}{c c}\n');
+  for isce=1:length(sces)
+    pfile=fullfile(predir,[basename strrep(sprintf('_%.1f_map',sces(isce)),'.','-')]);
+    if ~exist([pfile '.png'],'file'); end
+
+    fprintf('\\includegraphics[viewport=70 75 465 370,clip=,width=0.5\\hsize]{%s}',pfile);
+    if (mod(isce,2)==1) fprintf(' & '); else fprintf('\\\\\n'); end
+
+  end
+  fprintf('\\end{tabular}\n');  
+end % if doplots
+  
+return
+
+    
+ 
+
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 %file='../../eurolbk_base.nc';
 sce='0.4';
