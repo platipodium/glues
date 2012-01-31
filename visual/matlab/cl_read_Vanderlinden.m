@@ -1,8 +1,10 @@
-function cl_read_Vanderlinden(varargin)
+function Vanderlinden=cl_read_Vanderlinden(varargin)
 % CL_READ_Vanderlinden reads a .csv file exported from Excel with " as text
 % delimiter and ; as field delimiter
 
 file='../../data/VanDerLinden_unpub_mesoneo14C.csv';
+[filepath filename]=fileparts(file);
+
 
 fid=fopen(file,'r');
 C=textscan(fid,'%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s','Delimiter','|');
@@ -19,8 +21,9 @@ site=strrep(C{4}(roff+1:end),'"','');
 typesite=strrep(C{5}(roff+1:end),'"','');
 lab=strrep(C{6}(roff+1:end),'"','');
 
-txt=char(strrep(C{7}(roff+1:end),',','.')); age_cal_bp=str2num(txt);
+txt=char(strrep(C{7}(roff+1:end),',','.')); age_uncal_bp=str2num(txt);
 txt=char(strrep(C{8}(roff+1:end),',','.')); age_cal_bp_sdev=str2num(txt);
+
 
 material=strrep(C{9}(roff+1:end),'"','');
 species=strrep(C{10}(roff+1:end),'"','');
@@ -42,8 +45,10 @@ Vanderlinden.lab=lab;
 Vanderlinden.country=country;
 Vanderlinden.culture=culture;
 Vanderlinden.period=period;
-Vanderlinden.age_cal_bp=age_cal_bp;
+Vanderlinden.age_uncal_bp=age_uncal_bp;
+Vanderlinden.age_cal_bp=age_uncal_bp*NaN;
 Vanderlinden.age_cal_bp_s=age_cal_bp_sdev;
+Vanderlinden.filename=filename;
 
 save(strrep(file,'.csv','.mat'),'Vanderlinden');
 

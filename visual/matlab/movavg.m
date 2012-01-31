@@ -7,7 +7,7 @@ if length(times)<1 movavg=[]; return; end
 if ~exist('keepnan','var') keepnan=0; end
 
 ji=1;
-nt=length(times);
+nt=length(unique(times));
 for it = 1:nt
   ind=find(times>times(it)-window/2.0 & times<times(it)+window/2.0);
   if ind

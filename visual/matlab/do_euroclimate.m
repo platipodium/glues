@@ -15,10 +15,12 @@ nhreg=length(hreg);
 letters='ABCDEFGHIJKLMNOPQRSTUVW';
 letters=letters(1:nhreg);
 
-doplots=1;
+doplots=[2];
 
 
 %-------------------------
+% 1) Make plots of Timing (as map) and Farming and Population (as
+% trajectories) for all scenarios (differing fluctuation intensity)
 predir='/Users/lemmen/devel/glues';
 basename='euroclim';
 sces=0.0:0.1:1.0;
@@ -45,7 +47,7 @@ for isce=1:length(sces)
     title(['Population ' prefixes{ipre} '_' postfix]);
     cl_print(gcf,'name',strrep(pfile,'_map','_population_density'),'ext','png');
       
-end
+  end
 
   fprintf('\\begin{tabular}{c c}\n');
   for isce=1:length(sces)
@@ -59,90 +61,126 @@ end
   fprintf('\\end{tabular}\n');  
 end % if doplots
   
+
+sites=cl_read_neolithic('Turney',[-12000 0],lonlim,latlim);
+
+if (any(doplots==2))
+  file=fullfile(predir,[basename sprintf('_%.1f.nc',sces(1))]);
+  if ~exist(file,'file'); break; end
+  ncid=netcdf.open(file,'NOWRITE');
+  varid=netcdf.inqVarID(ncid,'region');
+  region=netcdf.getVar(ncid,varid);
+  varid=netcdf.inqVarID(ncid,'time');
+  time=netcdf.getVar(ncid,varid);
+  itime=find(time>=timelim(1) & time<=timelim(2));
+  varid=netcdf.inqVarID(ncid,'farming');
+  farmingspread=netcdf.getVar(ncid,varid);
+  varid=netcdf.inqVarID(ncid,'latitude');
+  lat=double(netcdf.getVar(ncid,varid));
+  varid=netcdf.inqVarID(ncid,'longitude');
+  lon=double(netcdf.getVar(ncid,varid));
+  varid=netcdf.inqVarID(ncid,'area');
+  area=double(netcdf.getVar(ncid,varid));
+  netcdf.close(ncid);
+
+  % get lat/lon from regionpath, since they are wrong in the above file
+  if ~exist('lonlat_685.mat','file')
+    load('regionpath_685');
+    regionpath(:,:,1)=regionpath(:,:,1)+0.5;
+    regionpath(:,:,2)=regionpath(:,:,2)+1;
+    lats=squeeze(regionpath(:,:,2));
+    lons=squeeze(regionpath(:,:,1));
+
+    for ir=1:nreg
+      lat(ir)=calc_geo_mean(lats(ir,:),lats(ir,:));
+      lon(ir)=calc_geo_mean(lats(ir,:),lons(ir,:));
+    end
+    save('lonlat_685','lon','lat');
+  else load('lonlat_685');
+  end
+
+  radius=250;
+  farming_threshold=0.5;
+  nsites=length(sites.lat);
+  nn=zeros(nreg,nsites);
+  nd=nn;
+   
+  for ir=1:nreg
+      dlat=[sites.lat repmat(lat(ireg(ir)),nsites,1)];
+      dlat=reshape(dlat',2*nsites,1);
+      dlon=[sites.lon repmat(lon(ireg(ir)),nsites,1)];
+      dlon=reshape(dlon',2*nsites,1);
+      dists=m_lldist(dlon,dlat);
+      dists=dists(1:2:end);
+      [sdists,isort]=sort(dists);
+      nn(ir,:)=isort;
+      nd(ir,:)=sdists;
+  end
+ 
+    % Calculate neighbour weight
+  nw = exp(-nd/radius);
+  sw = sum(nw,2);
+  
+  figure(1); clf reset;
+  clp_basemap('latlim',latlim,'lonlim',lonlim);
+  m_plot(lon(ireg),lat(ireg),'kd');
+  hold on;
+  m_plot(sites.lon,sites.lat,'k.','color',[0.8 0.8 0.8]);
+  m_plot(sites.lon(nn(find(nd<radius))),sites.lat(nn(find(nd<radius))),'ko');
+  
+  rpmatrix=zeros(length(sces),2)+NaN;
+  
+  figure(2); clf reset;
+  figure(3); clf reset;
+
+  
+  for isce=1:length(sces)
+    file=fullfile(predir,[basename sprintf('_%.1f.nc',sces(isce))]);
+    if ~exist(file,'file'); continue; end
+    
+    ncid=netcdf.open(file,'NOWRITE');
+    varid=netcdf.inqVarID(ncid,'farming');
+    farming=netcdf.getVar(ncid,varid);
+    netcdf.close(ncid);
+    
+    
+    farming=farming(ireg,:);
+    timing=farming;
+    timing(farming<farming_threshold)=inf;
+    [timing,itiming]=min(timing,[],2);
+    timing=time(itiming);
+    timing(itiming==1)=inf;
+    
+    stiming=timing+inf;
+    for ir=1:nreg
+      stiming(ir)=sum(nw(ir,:).*sites.time(nn(ir,:))')./sw(ir);
+    end
+    
+    plot(timing,stiming,'ks');
+    ivalid=isfinite(timing) & isfinite(stiming);
+    
+    [r,p]=corrcoef(timing(ivalid),stiming(ivalid));
+    rpmatrix(isce,1:2)=[r(2,1) p(2,1)];
+    
+      pfile=fullfile(predir,[basename strrep(sprintf('_%.1f_correlation',sces(isce)),'.','-')]);
+      if exist([pfile '.png'],'file');
+        fdir=dir(file);
+        pdir=dir([pfile '.png']);
+        if datenum(fdir.date)<datenum(pdir.date) continue; end;
+      end
+      
+       
+    
+    
+    
+end
+end
+
+
 return
 
-    
- 
-
-    
-    
-    
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-%file='../../eurolbk_base.nc';
-sce='0.4';
-file=['/Users/lemmen/devel/glues/euroclim_' sce '.nc'];
-[d f e]=fileparts(file);
-ncid=netcdf.open(file,'NOWRITE');
-varid=netcdf.inqVarID(ncid,'region');
-region=netcdf.getVar(ncid,varid);
-varid=netcdf.inqVarID(ncid,'time');
-time=netcdf.getVar(ncid,varid);
-itime=find(time>=timelim(1) & time<=timelim(2));
-varid=netcdf.inqVarID(ncid,'farming');
-farming=netcdf.getVar(ncid,varid);
-varid=netcdf.inqVarID(ncid,'farming_spread_by_people');
-farmingspread=netcdf.getVar(ncid,varid);
-varid=netcdf.inqVarID(ncid,'latitude');
-lat=double(netcdf.getVar(ncid,varid));
-varid=netcdf.inqVarID(ncid,'longitude');
-lon=double(netcdf.getVar(ncid,varid));
-varid=netcdf.inqVarID(ncid,'area');
-area=double(netcdf.getVar(ncid,varid));
-netcdf.close(ncid);
-nreg=length(region);
-
-time=time(itime);
-
-
-% get lat/lon from regionpath, since they are wrong in the above file
-if ~exist('lonlat_685.mat','file')
-  load('regionpath_685');
-  regionpath(:,:,1)=regionpath(:,:,1)+0.5;
-  regionpath(:,:,2)=regionpath(:,:,2)+1;
-  lats=squeeze(regionpath(:,:,2));
-  lons=squeeze(regionpath(:,:,1));
-
-  for ir=1:nreg
-    lat(ir)=calc_geo_mean(lats(ir,:),lats(ir,:));
-    lon(ir)=calc_geo_mean(lats(ir,:),lons(ir,:));
-  end
-  save('lonlat_685','lon','lat');
-else load('lonlat_685');
-end
-  
-ncol=9;
 
 if (1==0)
 % plot european timeseries
@@ -216,69 +254,8 @@ end
 %end
 
 
-% For Turney and Brown do this
-if strcmp(datastring,'Turney')
-  load('neolithicsites');
-  slat=Forenbaher.Latitude';
-  slon=Forenbaher.Long';
-  culture=Forenbaher.Period';
-  period=culture; period(:)={'Neolithic'};
-  site=Forenbaher.Site_name';
-  sage=Forenbaher.Median_age';
-  sage_upper=Forenbaher.Upper_cal_';
-  sage_lower=Forenbaher.Lower_cal';
-  culture=period;
-elseif strcmp(datastring,'Pinhasi')
-  % For Pinhasi
-  load('../../data/Pinhasi2005_etal_plosbio_som1.mat');
-  slat=Pinhasi.latitude;
-  slon=Pinhasi.longitude;
-  culture=Pinhasi.period;
-  period=culture; period(:)={'Neolithic'};
-  site=Pinhasi.site;
-  sage=Pinhasi.age_cal_bp;
-  sage_upper=sage+Pinhasi.age_cal_bp_s;
-  sage_lower=sage-Pinhasi.age_cal_bp_s;
-  culture=period;
-elseif strcmp(datastring,'Vanderlinden');
-  % For Pinhasi
-  load('../../data/VanDerLinden_unpub_mesoneo14C.mat');
-  slat=Vanderlinden.latitude;
-  slon=Vanderlinden.longitude;
-  period=Vanderlinden.period;
-  culture=Vanderlinden.culture;
-  site=Vanderlinden.site;
-  sage=Vanderlinden.age_cal_bp;
-  sage_upper=sage+Vanderlinden.age_cal_bp_s;
-  sage_lower=sage-Vanderlinden.age_cal_bp_s;
-else
-    error;
-end
 
-stime=1950-sage;
-sutime=stime+(sage_lower-sage);
-sltime=stime+(sage_upper-sage);
 
-is=find(slat>=latlim(1) & slat<=latlim(2) & slon>=lonlim(1) & slon<=lonlim(2) ...
-    & sltime>=timelim(1) & sutime<=timelim(2) & strcmp('Neolithic',period));
-
-slon=slon(is);
-slat=slat(is);
-period=period(is);
-culture=culture(is);
-site=site(is);
-sltime=sltime(is);
-sutime=sutime(is);
-srange=sltime-sutime;
-stime=stime(is);
-
-ns=length(slon);
-dlat=[slat repmat(lat(272),ns,1)];
-dlat=reshape(dlat',2*ns,1);
-dlon=[slon repmat(lon(272),ns,1)];
-dlon=reshape(dlon',2*ns,1);
-sdists=m_lldist(dlon,dlat);
-sdists=sdists(1:2:end);
 
 ifound=ireg;nfound=nreg;lonlim=loli; latlim=lali;
 
