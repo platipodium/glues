@@ -57,18 +57,19 @@ t=ts.time(it);
 v=ts.value(it);
 ts.sitename=sitename;
 
-m50=movavg(t,v,0.1);
-m2000=movavg(t,v,6.0);
-vsize=size(v);
+[ut,m50]=movavg(t,v,0.1);
+[ut,m2000]=movavg(t,v,6.0);
+vsize=size(t);
 %if vsize(2)>vsize(1) v=v'; end
-plot(t,m50,'r-','LineWidth',3);
+plot(ut,m50,'r-','LineWidth',3);
 hold on
 plot(t,v,'kd','MarkerSize',8,'MarkerFaceColor','k');
 set(gca,'XLim',timelim,'XDir','reverse');
 if ~no_title title(sprintf('Time series %s',strrep(sitename,'_','\_'))); end
 hold on;
 %plot(t,m2000,'b-');
-if ~no_legend legend('Raw data','100-yr mov.avg.','6-kyr mov.avg.',0); end;
+%if ~no_legend legend('Raw data','100-yr mov.avg.','6-kyr mov.avg.',0); end;
+if ~no_legend legend('Raw data','100-yr mov.avg.',0); end;
 
 if no_xticks 
   %set(gca,'XTicklabel',{'Present day',1,2,3,4,5,'6 kBP'});
