@@ -11,6 +11,7 @@ if ~exist('timelim','var') timelim=[-12000,0]; end
 % For Turney and Brown do this
 if strcmp(author,'Turney')
   load('neolithicsites');
+  filename='neolithicsites (Turney)';
   lat=Forenbaher.Latitude';
   lon=Forenbaher.Long';
   culture=Forenbaher.Period';
@@ -34,8 +35,8 @@ elseif strcmp(author,'Pinhasi')
   location=Pinhasi.site;
   age_cal_bp=Pinhasi.age_cal_bp;
   age_uncal_bp=age_cal_bp+NaN;
-  age_upper=age_cal_bp+Pinhasi.age_cal_bp_s;
-  age_lower=age_cal_bp-Pinhasi.age_cal_bp_s;
+  age_upper=age_cal_bp+Pinhasi.age_cal_bp_sdev;
+  age_lower=age_cal_bp-Pinhasi.age_cal_bp_sdev;
   culture=period;
 elseif strcmp(author,'Vanderlinden');
   % For Van der Linden
@@ -47,11 +48,30 @@ elseif strcmp(author,'Vanderlinden');
   culture=Vanderlinden.culture;
   location=Vanderlinden.site;
   age_uncal_bp=Vanderlinden.age_uncal_bp;
-  age_cal_bp=Vanderlinden.age_cal_bp;
+  if exist('Vanderlinden_calibrated.mat','file')
+     load('Vanderlinden_calibrated.mat');
+  else
+    age_cal_bp=Vanderlinden.age_cal_bp;
+  end
   age_upper=age_cal_bp+Vanderlinden.age_cal_bp_s;
   age_lower=age_cal_bp-Vanderlinden.age_cal_bp_s;
+elseif strcmp(author,'Fepre');
+  % Fepre data, also Vanderlinden
+  file='../../data/Fort2012_etal_americanantiquity_som1.mat';
+  [ filepath filename]=fileparts(file);
+  load(file);
+  lat=fepre.latitude;
+  lon=fepre.longitude;
+  period=fepre.period;
+  culture=fepre.culture;
+  location=fepre.site;
+  age_uncal_bp=fepre.age_uncal_bp;
+  age_cal_bp=fepre.age_cal_bp;
+  age_upper=age_cal_bp+fepre.age_cal_bp_s;
+  age_lower=age_cal_bp-fepre.age_cal_bp_s;
+  
 else
-  error('Not a valid dataset author, choose Turney, Vanderlinden, or Pinhasi');
+  error('Not a valid dataset author, choose Turney, Vanderlinden, Fepre, or Pinhasi');
 end
 
 time=1950-age_cal_bp;

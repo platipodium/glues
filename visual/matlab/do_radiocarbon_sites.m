@@ -21,7 +21,9 @@ cl_print(gcf,'name',d.filename,'ext',exts);
 
 uage=d.age_uncal_bp;
 ivalid=find(uage>=mintime & uage<=maxtime);
-d.age_cal_bp=calf(uage(ivalid)-mintime+1);
+d.age_cal_bp(ivalid)=calf(uage(ivalid)-mintime+1);
+age_cal_bp=d.age_cal_bp;
+save('-v6','Vanderlinden_calibrated','age_cal_bp');
 clp_radiocarbon_sites(d);
 cl_print(gcf,'name',[d.filename '_calibrated'],'ext',exts);
 
@@ -38,12 +40,12 @@ cl_print(gcf,'name',[d.filename '_calibrated'],'ext',exts);
 
 
 % Pinhasi data set
-d=cl_read_Pinhasi;
+d=cl_read_neolithic('Pinhasi',[-inf inf],[-inf inf],[-inf inf]);
 clp_radiocarbon_sites(d);
 cl_print(gcf,'name',d.filename,'ext',exts);
 
 % Turney dataset
-d=cl_read_Turney;
+d=cl_read_neolithic('Turney',[-inf inf],[-inf inf],[-inf inf]);
 clp_radiocarbon_sites(d);
 cl_print(gcf,'name',d.filename,'ext',exts);
 

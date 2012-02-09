@@ -1,8 +1,10 @@
-function cl_read_Pinhasi(varargin)
+function Pinhasi=cl_read_Pinhasi(varargin)
 % CL_READ_PINHASI reads a .csv file exported from Excel with " as text
 % delimiter and ; as field delimiter
 
 file='../../data/Pinhasi2005_etal_plosbio_som1.csv';
+[filepath filename]=fileparts(file);
+
 
 fid=fopen(file,'r');
 C=textscan(fid,'%s%s%s%s%s%s%s%s%s%s%s%s%s','Delimiter',';');
@@ -28,7 +30,9 @@ Pinhasi.country=country;
 Pinhasi.period=period;
 Pinhasi.location=location;
 Pinhasi.age_cal_bp=age_cal_bp;
-Pinhasi.age_cal_bp_s=age_cal_bp_sdev;
+Pinhasi.age_cal_bp_sdev=age_cal_bp_sdev;
+Pinhasi.age_uncal_bp=age_cal_bp_sdev*NaN;
+Pinhasi.filename=filename;
 
 save(strrep(file,'.csv','.mat'),'Pinhasi');
 
