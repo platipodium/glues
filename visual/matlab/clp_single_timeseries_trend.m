@@ -1,4 +1,4 @@
-function trend=clp_single_timeseries_trend(timeseries,varargin)
+function data=clp_single_timeseries_trend(timeseries,varargin)
 
 cl_register_function;
 
@@ -32,7 +32,7 @@ end
 fid=fopen(file,'r');
 if (fid<0) 
     warning('File %s not found',file);
-    trend=[NaN NaN];
+    data=NaN;
     return; 
 end
 
@@ -79,7 +79,12 @@ end
 fit=polyfit(t,v,1);
 %plot(t,t.*fit(1)+fit(2),'k:');
 fit(3)=std(v-t.*fit(1)-fit(2));
-trend=[fit(1)*(timelim(1)-timelim(2)) fit(3)]
+data.trend=[fit(1)*(timelim(1)-timelim(2)) fit(3)]
 plot(t,t.*fit(1)+fit(2),'b-','LineWidth',5);
+
+data.ts=ts;
+data.m50=m50;
+data.m2000=m2000;
+data.ut=ut;
 
 return;

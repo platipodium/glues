@@ -8,8 +8,8 @@ if ~exist('delim') delim=' '; end;
 if ~exist('textdelim') textdelim='"'; end;
 commentmarker='#';
 
-[pathstr,name,ext,dummy] = fileparts(filename);
-[dummy,name,dummy1,dummy2]=fileparts(name);
+[pathstr,name,ext] = fileparts(filename);
+[dummy,name,dummy1]=fileparts(name);
 
 data = struct('CSVFilename',[name ext]);
 
