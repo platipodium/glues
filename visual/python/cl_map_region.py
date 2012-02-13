@@ -1,41 +1,53 @@
-from pylab import *
+import pylab,numpy
 import netCDF4
-import os
+import os,sys
 from mpl_toolkits.basemap import Basemap
-#from mpl_toolkits.basemap import interp as binterp
-import numpy
-import sys
+
+def _get_region_mapping(filename=None):
+
+  # Get region id field from grid
+  if (filename==None):
+    filename='../../test_0.5x0.5.nc'
+
+  if (not(os.path.isfile(filename))):
+    return None
+    
+  nc=netCDF4.Dataset(filename)
+  ncv=nc.variables
+
+  if ncv.has_key('lat'): lat=ncv['lat'][:]
+  else: lat=ncv['latitude'][:]
+
+  if ncv.has_key('lon'): 
+    lon=ncv['lon'][:]
+  else: 
+    lon=ncv['longitude'][:]
+
+  region=ncv['region'][:]
+  nc.close()
+  
+  return lon,lat,region
 
 
-timelim=(-8000,-1000)
-timestep=1000
 
+timelim=(-8000,1000)
+timestep=500
 
-# Get region id field from grid
-ncfile='../../test_0.5x0.5.nc'
-nc=netCDF4.Dataset(ncfile)
-ncv=nc.variables
-
-if ncv.has_key('lat'): lat=ncv['lat'][:]
-else: lat=ncv['latitude'][:]
-
-if ncv.has_key('lon'): 
-  lon=ncv['lon'][:]
-else: 
-  lon=ncv['longitude'][:]
-
-region=ncv['region'][:]
-nc.close()
+lon,lat,region=_get_region_mapping()
 
 if len(sys.argv)>1:
   ncfile=sys.argv[len(sys.argv)-1]
 else:
   ncfile='../../test.nc'
 
+if not(os.path.isfile(ncfile)):
+  print ncfile
+  quit()
+
 if len(sys.argv)>2:
-  varnames=sys.argv[1]
+  varnames=sys.argv[len(sys.argv)-2]
 else:
-  varnames='farming,carbon_emission'
+  varnames='farming,population_density'
 
 varlist = []
 for v in varnames.split(","):
@@ -48,15 +60,15 @@ ncv=nc.variables
 
 time=ncv['time'][:]
 timeres=numpy.abs(time[2]-time[1])
-itmin=numpy.min(where(time>=timelim[0]))
-itmax=numpy.max(where(time<=timelim[1]))
+itmin=numpy.min(pylab.where(time>=timelim[0]))
+itmax=numpy.max(pylab.where(time<=timelim[1]))
 itstep=numpy.int(numpy.round(timestep/timeres))
 itrange=range(itmin,itmax,itstep)
 
-glon,glat=meshgrid(lon,lat)
+glon,glat=pylab.meshgrid(lon,lat)
 nlat,nlon=region.shape
 
-if size(varlist)==1 and varlist[0]=='all':
+if pylab.size(varlist)==1 and varlist[0]=='all':
   varlist=nc.variables.keys()
   varlist.remove('time')
   
@@ -84,27 +96,27 @@ for varname in varlist:
 
   x,y=proj(glon,glat)
 
-  order=int(ceil(log10(ntime)))
+  order=int(pylab.ceil(pylab.log10(ntime)))
 
   for it in itrange:
   
     print(time[it])
-    f=figure(num=it+1,figsize=(10,7),dpi=dpi,facecolor=None,edgecolor=None,frameon=True)
-    hold(False)
-
+    f=pylab.figure(1,figsize=(10,7),dpi=dpi,facecolor=None,edgecolor=None,frameon=True)
+    pylab.clf()
+    
     gdata=numpy.zeros((nlat,nlon))+numpy.NaN
     for ir in range(nreg):
-      ireg=where(region == ir) 
+      ireg=pylab.where(region == ir) 
       gdata[ireg]=data[it,ir]
 
     mdata=numpy.ma.masked_array(gdata,numpy.isnan(gdata))
 
-    pc=proj.contourf(x,y,squeeze(mdata[:,:]),extend='max',levels=linspace(mindata,maxdata,10))
-    hold(True)
-    cb=colorbar(mappable=pc,cax=None, ax=None,orientation='vertical',format='%.2f');
+    pc=proj.contourf(x,y,pylab.squeeze(mdata[:,:]),extend='max',levels=pylab.linspace(mindata,maxdata,10))
+    pylab.hold(True)
+    cb=pylab.colorbar(mappable=pc,cax=None, ax=None,orientation='vertical',format='%.2f');
     
     # todo: check for existence of attribute
-    if size(ncv[varname].ncattrs())>0:
+    if pylab.size(ncv[varname].ncattrs())>0:
       cb.set_label(ncv[varname].units)
 
     proj.drawcoastlines(linewidth=0.1)
@@ -124,7 +136,7 @@ for varname in varlist:
     timestring += str(numpy.int(numpy.abs(time[it]))).zfill(4)
     titletext=varname.replace('_',' ') + ' ' + str(numpy.int(numpy.abs(time[it]))) + ' ' + title
   
-    ax=gca()
+    ax=pylab.gca()
     #ax.set_xlabel('Longitude')
     #ax.set_ylabel('Latitude')
     ax.set_title(titletext)
@@ -133,7 +145,8 @@ for varname in varlist:
     pfile=ncfile.split('/')[-1] + '_map_region_' + varname + '_' + timestring + '.' + extension
     if os.access(pfile,os.F_OK):
       os.remove(pfile)
-    savefig(pfile,dpi=dpi)
-    hold(False)
-
+    pylab.savefig(pfile,dpi=dpi)
+ 
 nc.close()
+
+
