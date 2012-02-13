@@ -15,7 +15,7 @@ nhreg=length(hreg);
 letters='ABCDEFGHIJKLMNOPQRSTUVW';
 letters=letters(1:nhreg);
 
-doplots=[6];
+doplots=[7];
 
 
 %-------------------------
@@ -25,6 +25,9 @@ predir='/Users/lemmen/devel/glues';
 basename='euroclim';
 sces=0.0:0.1:1.0;
 
+
+%% First chapter: 
+% Plot maps of timing and trajectories of farming and population
 if (any(doplots==1))
 for isce=1:length(sces)
     file=fullfile(predir,[basename sprintf('_%.1f.nc',sces(isce))]);
@@ -66,24 +69,30 @@ sites=cl_read_neolithic(datastring,[-12000 0],lonlim,latlim);
 
 % Read default scenario
 file=fullfile(predir,[basename '_0.4.nc']);
-  if ~exist(file,'file'); error('File does not exist'); end
-  ncid=netcdf.open(file,'NOWRITE');
+if ~exist(file,'file'); error('File does not exist'); end
+ncid=netcdf.open(file,'NOWRITE');
   varid=netcdf.inqVarID(ncid,'region');
-  region=netcdf.getVar(ncid,varid);
+  id=netcdf.getVar(ncid,varid);
   varid=netcdf.inqVarID(ncid,'time');
   time=netcdf.getVar(ncid,varid);
   itime=find(time>=timelim(1) & time<=timelim(2));
   varid=netcdf.inqVarID(ncid,'farming');
   farming=netcdf.getVar(ncid,varid);
   varid=netcdf.inqVarID(ncid,'latitude');
-  lat=double(netcdf.getVar(ncid,varid));
+lat=double(netcdf.getVar(ncid,varid)); % need to be corrected
   varid=netcdf.inqVarID(ncid,'longitude');
-  lon=double(netcdf.getVar(ncid,varid));
+lon=double(netcdf.getVar(ncid,varid)); % need to be corrected
   varid=netcdf.inqVarID(ncid,'area');
   area=double(netcdf.getVar(ncid,varid));
   netcdf.close(ncid);
+  
+oldnreg=nreg;
+load('regionpath_685');
+lat=regionlat;
+lon=regionlon;
+nreg=oldnreg;
 
-
+%% Chapter 2: calculate correlation and plot scatter between data and model
 if (any(doplots==2))
 
   % get lat/lon from regionpath, since they are wrong in the above file
@@ -197,72 +206,160 @@ if (any(doplots==2))
 end
 end
 
-
+%% Chapter 3: plot European time series and map with locations
 
 if any(doplots==3)
-% plot european timeseries
-load('holodata.mat');
-dirs.total='~/projects/glues/m/holocene/redfit/data/eleven';
-dirs.red='/h/lemmen/projects/glues/m/holocene/redfit/data/output/repl_5.5_0.5_eleven';
+  load('holodata.mat');
+  dirs.total='~/projects/glues/m/holocene/redfit/data/eleven';
+  dirs.red='/h/lemmen/projects/glues/m/holocene/redfit/data/output/repl_5.5_0.5_eleven';
 
-lg=repmat(0.5,1,3);
+  lg=repmat(0.5,1,3);
 
-ip=find(holodata.Latitude>=latlim(1) & holodata.Latitude<=latlim(2) ...
+  ip=find(holodata.Latitude>=latlim(1) & holodata.Latitude<=latlim(2) ...
     & holodata.Longitude>=lonlim(1) & holodata.Longitude<=lonlim(2));
-nip=length(ip);
-plotcolors=jet(nip);
+  nip=length(ip);
+  plotcolors=jet(nip);
+  isort=reshape([1:nip/2 ; nip/2+1:nip],1,nip)
+  plotcolors=plotcolors(isort,:);
+  
+  figure(5); clf reset; hold on;
+  set(5,'Position',[124         114        1054         587]);
+  clp_basemap('latlim',latlim,'lonlim',lonlim);
+  set(gca,'Fontsize',9,'color',lg,'xcolor',lg,'ycolor',lg);
+  clp_relief;
+  m_plot(holodata.Longitude(ip),holodata.Latitude(ip),'ko','MarkerFaceColor','k');
+  m_grid('color',lg,'fontSize',10);
+  ax0=gca;
+  set(gca,'xcolor',lg,'ycolor',lg,'color',lg,'FontSize',10);
+  pos=get(ax0,'Position');
+    
+  [px,py]=m_ll2xy(holodata.Longitude(ip),holodata.Latitude(ip),'clip','on');
+  [lx,ly]=m_ll2xy(lonlim,latlim);
+  dlx=lx(2)-lx(1);
+  dly=ly(2)-ly(1);
+  %m_plot(sites.lon,sites.lat,'k.','color',[0.8 0.8 0.8]);
+  %m_plot(sites.lon(nn(find(nd<radius))),sites.lat(nn(find(nd<radius))),'ko');
 
-for ipi=1:nip
-  figure(6); clf reset;
-  [p,f,e]=fileparts(holodata.Datafile{ip(ipi)});
-  tsfile=fullfile(dirs.total,[f e]);
-  tlim=abs((fliplr(timelim)-1950)/1000.0);
   
+  for ipi=1:nip
+    figure(6); clf reset;
+    [p,f,e]=fileparts(holodata.Datafile{ip(ipi)});
+    tsfile=fullfile(dirs.total,[f e]);
+    tlim=abs((fliplr(timelim)-1950)/1000.0);
   
-  data=clp_single_timeseries_trend(ip(ipi),'timelim',tlim);
+    data=clp_single_timeseries_trend(ip(ipi),'timelim',tlim);
   
-   
-  interpret=holodata.Interpret{ip(ipi)};
-  yl=sprintf('%s %s',holodata.Proxy{ip(ipi)});
-  if ~strmatch(interpret,'?') yl=sprintf('%s (%s)',yl,interpret); end
-  ylabel(yl);
-  set(gca,'YColor',plotcolors(ipi,:),'color','none','XColor','k');
+    interpret=holodata.Interpret{ip(ipi)};
+    yl=sprintf('%s %s',holodata.Proxy{ip(ipi)});
+    if ~strmatch(interpret,'?') yl=sprintf('%s (%s)',yl,interpret); end
+    ylabel(yl);
+    set(gca,'YColor',plotcolors(ipi,:),'color','none','XColor','k');
   
-  cl=findobj(gca,'color','r');
-  set(cl,'color',plotcolors(ipi,:));
+    cl=findobj(gca,'color','r');
+    set(cl,'color',plotcolors(ipi,:));
   
-  cl=findobj(gcf,'tag','legend')
-  set(cl,'visible','off');
+    cl=findobj(gcf,'tag','legend')
+    %set(cl,'visible','off');
 
-  ct=findobj(gcf,'color','b');
-  set(ct,'visible','off');
+    ct=findobj(gcf,'color','b');
+    %set(ct,'visible','off');
   
-  cp=findobj(gcf,'Marker','diamond');
-  set(cp,'MarkerFaceColor','y','MarkerEdgeColor','k','visible','off');
+    cp=findobj(gcf,'Marker','diamond');
+    %set(cp,'MarkerFaceColor','y','MarkerEdgeColor','k','visible','off');
   
-  set(gca,'Xlim',tlim+0.5*[-1 1],'YAxis','left');
+    set(gca,'Xlim',tlim+0.5*[-1 1],'YAxis','left');
   
-  ylim=get(gca,'Ylim');
-  %hb=patch([8.350 8.050 8.050 8.350],[ylim(1) ylim(1) ylim(2) ylim(2)],lg);
-  %alpha(hb,0.5);
-  %set(hb,'EdgeColor','none');
+    ylim=get(gca,'Ylim');
+    %hb=patch([8.350 8.050 8.050 8.350],[ylim(1) ylim(1) ylim(2) ylim(2)],lg);
+    %alpha(hb,0.5);
+    %set(hb,'EdgeColor','none');
  
   
-  cl_print('name',sprintf('proxy_timeseries_%s',f),'ext','pdf');
-  %matlab2tikz(sprintf('proxy_timeseries_%s.tex',f));
+    %cl_print(6,'name',sprintf('proxy_timeseries_%s',f),'ext','pdf');
+    %matlab2tikz(sprintf('proxy_timeseries_%s.tex',f));
   
+    
+    figure(6);clf;
+    fs=20;
+    set(gcf,'Position',[ 360   546   518   152]);
+    plot(data.ut,cl_normalize(data.m50),'b-','color',plotcolors(ipi,:),'LineWidth',5);
+    set(gca,'xcolor',plotcolors(ipi,:),'ycolor',plotcolors(ipi,:),'FontSize',fs);
+    set(gca,'box','off','color','none');
+    set(gca,'Xlim',tlim+0.3*[-1 1],'YAxis','left');
+    ylabel(strrep(holodata.Proxy{ip(ipi)},'$',''));
+    
+   
+    xtl=get(gca,'XTickLabel');
+    xl=repmat(' ',size(xtl,1),5);
+    xl(:,1:size(xtl,2))=xtl;
+    xl(end,:)='ka BP';
+    set(gca,'XTickLabel',xl);
+    %print('-dpdf',sprintf('proxy_timeseries_%02d_%s',ipi,f));
+    cl_print(6,'name',sprintf('proxy_timeseries_%02d_%s',ipi,f),'ext','pdf','noshrink',0);
   
-  rffile=fullfile(dirs.red,[f '_red.mat']);
-  if ~exist(rffile,'file') 
-    rffile=fullfile(dirs.red,[f '.red']);
-    cl_red2mat(rffile);
+     
+    figure(5);
+    axes(ax0);
+    uistack(ax0,'bottom');
+
+    if ~any([6 7 13 16 17]==ipi) 
+      m_plot(holodata.Longitude(ip(ipi)),holodata.Latitude(ip(ipi)),'ko','MarkerFaceColor',plotcolors(ipi,:),'MarkerSize',12);
+      mt(ipi)=m_text(holodata.Longitude(ip(ipi)),holodata.Latitude(ip(ipi)),num2str(ipi),'color','y','FontSize',10,'horizontal','center');
+      hs=rgb2hsv(plotcolors(ipi,:));
+      if hs(1)<0.5 set(mt(ipi),'color','k'); end
+    end
+    
+    ax(ipi)=axes('Position',[pos(1)+(px(ipi)-lx(1))*pos(3)/dlx pos(2)+(py(ipi)-ly(1))*pos(4)/dly 0.15 0.1]);
+    plot(ax(ipi),data.ut,cl_normalize(data.m50),'b-','color',plotcolors(ipi,:),'LineWidth',3);
+    set(gca,'xcolor',plotcolors(ipi,:),'ycolor',plotcolors(ipi,:));
+    set(gca,'box','off','color','none');
+    ylabel(holodata.Proxy{ip(ipi)});
+    xtl=get(gca,'XTickLabel');
+    xl=repmat(' ',size(xtl,1),5);
+    xl(:,1:size(xtl,2))=xtl;
+    xl(end,:)='ka BP';
+    set(gca,'XTickLabel',xl);
+    
+    switch(ipi)
+        case 1,set(ax(ipi),'Position',[0.1018    0.7639    0.1500    0.1000]);
+        case 2,set(ax(ipi),'Position',[0.1140    0.2180    0.1500    0.1000]);
+        case 3,set(ax(ipi),'Position',[0.1381    0.3512    0.1500    0.1000]);
+        case 4,set(ax(ipi),'Position',[0.2654    0.8402    0.1500    0.1000]);
+        case 5,set(ax(ipi),'Position',[0.2735    0.5620    0.1500    0.1000]);
+        case 6,set(ax(ipi),'Position',[0.1018    0.7639    0.1500    0.1000]); delete(ax(ipi));
+        case 7,set(ax(ipi),'Position',[0.1018    0.7639    0.1500    0.1000]); delete(ax(ipi));
+        case 8,set(ax(ipi),'Position',[0.3551    0.4044    0.1500    0.1000]);
+        case 9,set(ax(ipi),'Position',[0.4936    0.5083    0.1500    0.1000]);
+        case 10,set(ax(ipi),'Position',[0.3940    0.6515    0.1500    0.1000]);
+        case 11,set(ax(ipi),'Position',[0.6823    0.8130    0.1500    0.1000]);
+        case 12,set(ax(ipi),'Position',[0.5505    0.3145    0.1500    0.1000]);
+        case 13,set(ax(ipi),'Position',[0.6823    0.8130    0.1500    0.1000]); delete(ax(ipi));
+        case 14,set(ax(ipi),'Position',[0.6570    0.5288    0.1500    0.1000]);
+        case 15,set(ax(ipi),'Position',[0.7164    0.3649    0.1500    0.1000]);
+        case 16,set(ax(ipi),'Position',[0.7164    0.3649    0.1500    0.1000]); delete(ax(ipi));
+        case 17,set(ax(ipi),'Position',[0.7164    0.3649    0.1500    0.1000]); delete(ax(ipi));
+        case 18,set(ax(ipi),'Position',[0.7189    0.1453    0.1500    0.1000]);
+    end
+    
     rffile=fullfile(dirs.red,[f '_red.mat']);
-  end
-  if ~exist(rffile,'file') continue; end
+    if ~exist(rffile,'file') 
+      rffile=fullfile(dirs.red,[f '.red']);
+      cl_red2mat(rffile);
+      rffile=fullfile(dirs.red,[f '_red.mat']);
+    end
+    if ~exist(rffile,'file') continue; end
   %figure(7); clf;
   %clp_single_redfit('file',rffile);
+  end
+  cl_print('name','euroclim_proxytimeseries_on_map','ext','png');
+  for ipi=1:nip
+    try delete(ax(ipi)); catch end
+  end
+  cl_print(5,'name','euroclim_proxylocation_on_map','ext','pdf','noshrink',0);
 end
-end
+
+
+%% Chapter 4
 
 if any(doplots==4)
 % Look at event time series
@@ -579,7 +676,113 @@ if any(doplots==6);
 end % doplots = 6
 
 
-%% Next chapter:
+%% Chapter 7: plot European fluc time series and map with locations
+% be consistent with map in chapter 3
+
+if any(doplots==7)
+  load('holodata.mat');
+  dirs.total='~/projects/glues/m/holocene/redfit/data/eleven';
+  dirs.red='/h/lemmen/projects/glues/m/holocene/redfit/data/output/repl_5.5_0.5_eleven';
+
+  lg=repmat(0.5,1,3);
+
+  ip=find(holodata.Latitude>=latlim(1) & holodata.Latitude<=latlim(2) ...
+    & holodata.Longitude>=lonlim(1) & holodata.Longitude<=lonlim(2));
+  nip=length(ip);
+  plotcolors=jet(nip);
+  isort=reshape([1:nip/2 ; nip/2+1:nip],1,nip)
+  plotcolors=plotcolors(isort,:);
+  
+  figure(5); clf reset; hold on;
+  set(5,'Position',[124         114        1054         587]);
+  clp_basemap('latlim',latlim,'lonlim',lonlim);
+  clp_relief;
+  %m_plot(holodata.Longitude(ip),holodata.Latitude(ip),'ko','MarkerFaceColor','k');
+  m_grid('color',lg);
+  ax0=gca;
+  pos=get(ax0,'Position');
+    
+  [px,py]=m_ll2xy(holodata.Longitude(ip),holodata.Latitude(ip),'clip','on');
+  [lx,ly]=m_ll2xy(lonlim,latlim);
+  dlx=lx(2)-lx(1);
+  dly=ly(2)-ly(1);
+  %m_plot(sites.lon,sites.lat,'k.','color',[0.8 0.8 0.8]);
+  %m_plot(sites.lon(nn(find(nd<radius))),sites.lat(nn(find(nd<radius))),'ko');
+
+  
+  
+  run('../../eventmodel.m');
+  eventregtime=load('../../eventregtime.tsv','-ascii');
+  eventregtime(eventregtime<0)=NaN;
+  ntime=length(time);
+  regionfluc=zeros(size(eventregtime,1),ntime);
+  eventregtime=1950-eventregtime;
+  flucampl=0.4;
+  for ir=1:size(regionfluc,1) 
+    for ie=1:maxevent
+      if isnan(eventregtime(ir,ie)) break; end
+      omt=(time-eventregtime(ir,ie))/flucperiod;
+      fluc=1-flucampl*exp(-omt.*omt);
+      if ie==1 regionfluc(ir,:)=fluc';
+      else regionfluc(ir,:)=regionfluc(ir,:).*fluc';
+      end
+    end
+  end
+  
+  for ipi=1:nip
+    if any([6 7 13 16 17]==ipi) continue; end 
+    
+    %m_plot(holodata.Longitude(ip(ipi)),holodata.Latitude(ip(ipi)),'ko','MarkerFaceColor',plotcolors(ipi,:),'MarkerSize',12);
+    %mt(ipi)=m_text(holodata.Longitude(ip(ipi)),holodata.Latitude(ip(ipi)),num2str(ipi),'color','w','FontSize',12,'horizontal','center');
+    %hs=rgb2hsv(plotcolors(ipi,:));
+    %if hs(1)<0.5 set(mt(ipi),'color','k'); end
+    
+    dist=cl_distance(lon,lat,holodata.Longitude(ip(ipi)),holodata.Latitude(ip(ipi)));
+    [sdist,mindist]=sort(dist);
+    ir(ipi)=mindist(1);
+    %m_plot([holodata.Longitude(ip(ipi)) lon(ir(ipi))],[holodata.Latitude(ip(ipi)) lat(ir(ipi))],'k-','color',plotcolors(ipi,:));
+  end
+  
+  
+  %clp_nc_variable(file,'var','region','showvalue',1,'reg',reg);
+  
+  ir=[108 142 124 209 198 211 262 215 255 314 315];
+  ir=unique(ir);
+  ir=ir(ir>0);
+  
+  [h,llimit,llimit,rlon,rlat]=clp_regionpath('reg',ir+1);
+  
+  [px,py]=m_ll2xy(rlon,rlat,'clip','on');
+  [lx,ly]=m_ll2xy(lonlim,latlim);
+  dlx=lx(2)-lx(1);
+  dly=ly(2)-ly(1);
+
+  for ipi=1:length(ir)
+     set(h(ipi),'FaceColor',plotcolors(ipi,:),'Facealpha',0.7);
+     
+     ax(ipi)=axes('Position',[-0.1+pos(1)+(px(ipi)-lx(1))*pos(3)/dlx -0.05+pos(2)+(py(ipi)-ly(1))*pos(4)/dly 0.15 0.1]);
+     hold on;
+     plot(ax(ipi),time,(regionfluc(ir(ipi),:)),'b-','color',plotcolors(ipi,:),'LineWidth',3);
+     plot(ax(ipi),time,(regionfluc(ir(ipi),:)),'k-','LineWidth',1.5);
+     %set(gca,'xcolor',plotcolors(ipi,:),'ycolor',plotcolors(ipi,:));
+     set(gca,'box','off','color','none','xlim',[min(time) max(time)]);
+     xtl=get(gca,'XTickLabel');
+     xtl(end,:)=' ';
+     xtl(end,end-1:end)='AD';
+     set(gca,'XTickLabel',xtl);
+     axis off;
+  end
+  
+  % Look at event time series
+
+
+  
+  
+  
+  cl_print('name','euroclim_fluctimeseries_on_map','ext','pdf');
+end
+
+
 
 
 return
