@@ -36,7 +36,7 @@ for it=1:nt
   np=0;
   ip=find(peakind<=signchange(1));
   if ~isempty(ip)
-    [mp,p]=max(values(ip));
+    [mp,p]=max(abs(values(peakind(ip))));
     peakindex(1)=peakind(ip(p));
     np=1;
   end
@@ -44,13 +44,13 @@ for it=1:nt
     ip=find(peakind>signchange(is) & peakind<=signchange(is+1));
     if ~isempty(ip)
       np=np+1;
-      [mp,p]=max(values(ip));
+      [mp,p]=max(abs(values(peakind(ip))));
       peakindex(np)=peakind(ip(p));
     end
   end  
   ip=find(peakind>signchange(end));
   if ~isempty(ip)
-    [mp,p]=max(values(ip));
+    [mp,p]=max(abs(values(peakind(ip))));
     np=np+1;
     peakindex(np)=peakind(ip(p));
   end

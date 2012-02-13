@@ -9,7 +9,9 @@ arguments = {...
   {'fontsize',16},...
   {'no_title',0},...
   {'no_xticks',0},...
-  {'no_legend',0}
+  {'no_legend',0},...
+  {'highpass',0.1},...
+  {'lowpass',2.0}
 };
 
 [a,rargs]=clp_arguments(varargin,arguments);
@@ -57,8 +59,8 @@ t=ts.time(it);
 v=ts.value(it);
 ts.sitename=sitename;
 
-[ut,m50]=movavg(t,v,0.1);
-[ut,m2000]=movavg(t,v,6.0);
+[ut,m50]=movavg(t,v,highpass);
+[ut,m2000]=movavg(t,v,lowpass);
 vsize=size(t);
 %if vsize(2)>vsize(1) v=v'; end
 plot(ut,m50,'r-','LineWidth',3);
