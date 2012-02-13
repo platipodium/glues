@@ -45,7 +45,7 @@ pos0=get(gca,'Position');
 
 
 
-for ir=1:1:length(ireg)
+for ir=20:5:length(ireg)
   [h,llimit,llimit,rlon,rlat]=clp_regionpath('reg',ireg(ir));
   pt(ir)=m_text(rlon,rlat,num2str(ireg(ir)),'FontSize',16,'FontWeight','bold','Color','m');
   
@@ -70,17 +70,25 @@ for ir=1:1:length(ireg)
   end  
   set(gca,'Xlim',[3 12],'XDir','reverse','YLim',[0 1],'color','none','box','off','YTick',[]);
 
+  thresh=2;%1.5.^[-1 0 1 2];
   
-  for ie=1:nevids
-    figure(2);
-    data=clp_single_timeseries_trend(evids(ie));
+  for ie=1:1:nevids
+    figure(2); clf;
+    data=clp_single_timeseries_trend(evids(ie),'timelim',[0 12],'highpass',0.050,'lowpass',2.0);
+    clf; hold on;
+    data.norm=cl_normalize(data.m50-data.m2000);
+    plot(data.ut,data.norm,'b-');
+    peakindex=cl_findpeaks(data.norm,thresh);
+    peakindex=peakindex(isfinite(peakindex));
+    plot(data.ut(peakindex),data.norm(peakindex),'rv');;
     figure(1);
 
     ax(ie)=axes('Position',[0.5 pos0(2)+0.1+height*(ie-1.0) width height],...
         'XDir','reverse','Xlim',[3 12]);
     hold on;
     %plot(data.ut,cl_normalize(data.m50-data.m2000),'k-');
-    plot(data.ts.time,cl_normalize(detrend(data.ts.value)),'k-');
+    plot(data.ut,data.norm,'k-');
+    plot(data.ut(peakindex),data.norm(peakindex),'r.');
     plot(evseries(evids(ie),:),1,'kv','MarkerFaceColor',evcolors(ie,:),'MarkerSize',7);
     
     set(gca,'color','none','box','off','YTick',[]);

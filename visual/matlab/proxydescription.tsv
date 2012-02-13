@@ -1,0 +1,258 @@
+No;No_sort;Datafile;t_min;t_max;Plotname;Proxy;Interpret;Latitude;Longitude;CutoffFreq;SourcePDF;Source ;Comment
+1;1;NAtlantic_SST_boreas_32_447.dat;1;11;N Atlantic;SST;??;75;13.97;-1;boreas_32_447.pdf;Sarnthein2003;GIK23258-2
+2;2;boreas_32_485_PollenTemp.dat;0;11;N Siberia;Pollen;T7;74;100;-1;boreas_32_485.pdf;Andreev2003;Andreev2003_etal_bor, Multi, Pollen spectra information-statistical reconstruction, Also available T, T1, P
+3;3;GISP2_intcal98_14c.dat;0;11;Greenland Ice;$\delta^{14}$C;??;72.6;-38.5;-1;???;Stuiver1998;??
+4;4;sunspot_natur_431_1084_xpm.dat;0;11;Greenland Ice;SSN;Solar events;72.6;-38.5;-1;nature_431_1084.pdf;Solanki2004;??
+5;5;holo_d18O_ice.dat;0;10;Greenland Ice;$\delta^{18}$O;??;72.6;-38.5;-1;?jgeophysres_102_26455.pdf;Grootes1997;??
+6;6;Greenland_Be10.dat;3;11;Greenland Ice;Be$^{10}$;Solar activity;72.6;-38.5;-1;?jgeophysres_102_26699.pdf;Finkel1997;??
+7;7;Norway_Temp_holocene_14_877.dat;1;8;N Norway;T;??;69;16;-1;holocene_14_877.pdf;Husum2004;??
+8;8;GSD_Sweden_jquatsci_18_757.dat;1;11;Sweden;GSD;??;68.2;18.5;-1;jquatsci_18_757.pdf;Rubensdotter2003;GSD in Swedish lakes minerogenic accumulation
+9;9;NAtlantic_nature_421_354_Haematite.dat;0;11;N Atlantic;HSG;??;68.18;-29.6;-1;nature_421_354.pdf;Gupta2003;??
+10;10;Finland_Temp_holocene_14_877.dat;1;8;N Finland;T;??;68;25;-1;holocene_14_877.pdf;Husum2004;??
+11;11;Kola_qsr_23_833_d18O.dat;0;9;Kola;$\delta^{18}$O;??;67.95;32.48;-1;qsr_23_833.pdf;Jones2004;??
+12;12;holo_NA_eolian.dat;1;11;N Atlantic;LG;??;64.78;-29.57;11;science_278_1257.pdf;Bond1997;site?
+13;13;MgCa_Alaska_quatres_49_86.dat;0;11;NW Alaska;Mg/Ca T;??;62.33;-153.4;-1;quatres_49_86.pdf;Hu1998;??
+14;14;Schiff2008_Alaska_LkMica_d18O_diatom.dat;0;9;Mica Lk, Alaska;Storminess;diatom d18O;60.95;148.15;NaN;??;Schiff2009;
+15;15;NAtlantic_Lightness_holocene_10_287.dat;1;11;N Atlantic;GSD;??;56.2;27.5;-1;holocene_10_287.pdf;Chapman2000;??
+16;16;TempAnom_NW_quatscirev_22_1701.dat;0;11;NW Europe;$\Delta$T;??;55;-2;-1;quatscirev_22_1701.pdf;Davis2003;??
+17;17;HSG_science_294_2130.dat;0;11;N Atlantic;HSG;??;54.17;-16.48;-1;science_294_2130.pdf;Bond2001;??
+18;18;WCanada_canjbot_81_267_bulkdensity.dat;0;8;W Canada;Density;??;53.58;-118.02;-1;canjbot_81_267.pdf;Yu2003;??
+19;19;Ireland_qsr_23_901_d18O.dat;0;10;Ireland;$\delta^{18}$O;??;52.24;-9.47;-1;qsr_23_901.pdf;McDermott2004;approx. site (castleisland)
+20;20;ECanada_Pessiere_joe_89_930_CAR.dat;0;8;E Canada;Charcoal;??;49.5;-79.23;-1;joe_89_930.pdf;Carcaillet2001;??
+21;21;ECanada_Francis_joe_89_930_CAR.dat;0;7;E Canada;Charcoal;??;48.52;-79.47;-1;joe_89_930.pdf;Carcaillet2001;??
+22;22;holo_Ammersee_d18O.dat;0;11;S Germany;$\delta^{18}$O;??;47.1;11.02;11;climdyn_14_73.pdf;VonGrafenstein1998;??
+23;23;moonlake_sal.dat;0;11;Moon Lk, ND;Salinity;??;46.86;-98.16;-1;clivar_poster.pdf;Laird1996;??
+24;24;SwissAlp_jpaleolim_30_261_JulTemp.dat;0;9;Swiss Alpes;T7;??;46.67;7.97;-1;jpaleolim_30_261.pdf;Wick2003;??
+25;25;Precip_jpaleolimn_30_261.dat;0;8;Swiss Alpes;P;??;46.67;7.97;-1;jpaleolimn_30_261;Wick2003;??
+26;26;SwissAlp_jpaleolim_30_261_Prec.dat;0;9;Swiss Alpes;P  ;??;46.67;7.97;-1;jpaleolim_30_261.pdf;Wick2003;??
+27;27;Drysdale2007BucadellaRenella_Italy_d18O.dat;1;7;C Italy;$\delta^{18}$O;??;45;11;NaN;??;Drysdale2006;Calcite flowstone, alos d13C
+28;28;Minnesota_Sharkey_joe_91_822_CHAR.dat;0;11;Sharkey, MN;Charcoal;??;44.58;-93.4;7.5;joe_91_822.pdf;Camill2003;??
+29;29;NWPacific_ThaNitz_holocene_14_641.dat;0;7;NW Pacific;\%Nitzschia;??;44.5;145;-1;holocene_14_641.pdf;Shimada2004;??
+30;30;NWPacific_ozeanica_holocene_14_641.dat;0;7;NW Pacific;\%Ozeanica;??;44.5;145;-1;holocene_14_641.pdf;Shimada2004;??
+31;31;Minnesota_Kimble_joe_91_822_CHAR.dat;0;11;Kimble, MN;Charcoal;??;44.22;-93.83;-1;joe_91_822.pdf;Camill2003;??
+32;32;Drysdale2007BucadellaRenella_Italy_MgCa.dat;1;7;C Italy;Mg/Ca T;??;44;10;NaN;??;Drysdale2006;Calcite flowstone, alos d13C
+33;33;NewEngland_StormFreq.dat;0;11;New England;Storms;??;44;-73;-1;nature_419_821.pdf;Noren2002;Terrigenous input layers, work based on Brown2000_etal_geol, SSA on composite measure, identify local anomalies.
+34;34;holocene_9_671_d18O.dat;0;9;NC America;$\delta^{18}$O;??;43.73;-92.4;-1;?holocene_9_671.pdf;Denniston1999;no pdf yet
+35;35;science_258_1626_d18O.dat;0;8;Cold Water Cv, IA;$\delta^{18}$O;??;43.47;-91.97;-1;?science_258_1626.pdf;Dorale1992;??
+36;36;ricketts2001_d18O.dat;3;9;Lk Issyk-Kul, Kyrgyzstan;$\delta^{18}$O;??;42.42;77.33;-1;palaeo3_176_207.pdf;Ricketts2001;Ostracod Mg/Ca and Sr/Ca (solinty/mositure)  on Cardona neglecta, no pdf yet
+37;37;Hydrol_EfEdratio_NChina_paleo3_211_1.dat;2;11;NW China;P (Ef);??;41.89;101.85;-1;paleo3_211_1.pdf;Herzschuh2004;??
+38;38;Hydrol_ACratio_NChina_paleo3_211_1.dat;2;11;NW China;P (AC);??;41.89;101.85;-1;paleo3_211_1.pdf;Herzschuh2004;??
+39;39;Alkenone_MarmaraSea.dat;0;11;Marmara Sea;U$^{k'}_{37}$\,SST;??;40.84;27.76;-1;palaeo3_190_9.pdf;Sperling2003;??
+40;40;d18O_MarmaraSea.dat;0;11;Marmara Sea;$\delta^{18}$O;??;40.84;27.76;-1;palaeo3_190_9.pdf;Sperling2003;??
+41;41;NChina_Lightness_boreas_33_260.dat;5;10;N China;GSD;??;40.3;112.3;-1;boreas_33_260.pdf;Jin2004;??
+42;42;TempAnom_SW_quatscirev_22_1701.dat;0;11;SW Europe;$\Delta$T;??;40;-5;-1;quatscirev_22_1701.pdf;Davis2003;??
+43;43;d18O_owens_lake.dat;0;11;Owens Lk, CA;$\delta^{18}$O;??;40;-120;-1;qsr_21_659.pdf;Benson2002;??
+44;44;holo_SE_Europe_Temp.dat;0;11;SE Europe;$\Delta$T;??;40;31;-1;quatscirev_22_1701.pdf;Davis2003;??
+45;45;Clay_NChina_epsl_197_11.dat;0;10;N China;Clay;??;37.6;109;-1;epsl_197_11.pdf;Xiao2002;??
+46;46;holo_NWAmerica_Precip.dat;0;8;E California;P;P;37.43;-118.17;-1;?nato_141_109.pdf;Hughes1996;site?
+47;47;Pacific_d18O.dat;0;11;NW Pacific;$\delta^{18}$O;??;36;-141;-1;jquatscirev_19_335.pdf;Oba2004;??
+48;48;d18O_science_274_1504_GRuber2.dat;1;10;Bermuda Rise;$\delta^{18}$O;??;33.42;-57.37;-1;science_274_1503.html;Keigwin1996;??
+49;49;Tibet_d18O_paleo3_120_25.dat;0;11;Tibet;$\delta^{18}$O;??;33.4;79;-1;paleo3_120_25.pdf;Fontes1996;??
+50;50;science_304_575_dongge_d18O.dat;0;11;Dongge Cv, China;$\delta^{18}$O;??;32.5;119.17;11;science_304_575.pdf;Yuan2004;??
+51;51;holo_moisture_stjoaquin.dat;0;7;S California;Moisture;P;32;-115;-1;?quatres_23_227.pdf;Davis1992;??
+52;52;Holo_d18O_Soreq.dat;0;11;Soreq Cv, Israel;$\delta^{18}$O;P;31.8;34.8;10;earthplanscilet_166_85.pdf;BarMatthews1999;BarMatthews1999_etal_epsl, Multi, D18O with temperature correction model, Also available d13C, Koordinaten im Paper sind verwunderlich
+53;53;Fengming2008_etal_qint_OkinawaTrough_EastChinaSea.dat;0;11;E China Sea;SST;SST;29.23;128.14;NaN;??;Fengming2008;Radiolaria
+54;54;Canary_d18O.dat;0;11;Canary;$\delta^{18}$O;??;29.02;-13.67;-1;deepsearesII_49_3655.pdf;Freudenthal2002;GeoB4223
+55;55;Sun2005_Okinawa_SST.dat;1;11;E China Sea;SST;SST;28.01;127.02;NaN;??;Sun2005;G. Ruber MgCa thermometry, Age model 2
+56;56;China_Dunde_d18O_qsr_23_2207.dat;0;9;Dunde, China;$\delta^{18}$O;??;27;95;-1;qsr_23_2207.pdf;Jung2004;??
+57;57;RedSea_d18O.dat;1;11;Red Sea;$\delta^{18}$O;??;26.12;35.21;-1;margeol_209_279.pdf;SeebergElverfeldt2004;Poster_Greece.jpg
+58;58;Xiangshui_d18O_holocene_14_697.dat;0;6;Xiangshui Cv, China;$\delta^{18}$O;??;26;110.5;-1;holocene_14_697.pdf;Zhang2004;??
+59;59;Dykoski2005_epsl_DonggeCv_d18O_stalagmite_UTh.dat;0;11;Dongge Cv, China;P;stalagmite d18O;25.28;105.08;NaN;Dykoski2005_etal_epsl.pdf;Dykoski2005;U/Th dating to 1% accuracy, Monsoon strength
+60;60;Wang2005_Dongge_China_d18O.dat;0;9;Dongge Cv, China;$\delta^{18}$O;??;25.28;105.08;NaN;??;Wang2005;Stalagmite, redfit spectrum weird
+61;61;arabian_sea_d18O.dat;0;11;NE Arabian Sea;$\delta^{18}$O;??;24.83;65.92;11;?paleoce_16_358.pdf;DooseRolinski2001;site?
+62;62;holo_Dry_SouthChina.dat;0;10;S China;Moisture;??;21.15;110.28;-1;chinscibul_45_1712.pdf;Liu2000;??
+63;63;Atlantic_d18O_Gruber.dat;0;11;Trop Atlantic;$\delta^{18}$O;??;20.75;-18.58;-1;???;Knaack1997;ODP108-658C
+64;64;TropAtlantic_SST_AugAnom_science_288_2198.dat;0;11;Trop Atlantic;SST;??;20.45;-18.35;-1;science_288_2198.pdf;DeMenocal2000;??
+65;65;d18O_GIK17940_SChinaSea.dat;0;11;S China Sea (GIK17940);$\delta^{18}$O;??;20.12;117.38;-1;margeol_156_245.pdf;Wang1999;??
+66;66;SChinaSea_d18O_qsr_23_2207.dat;0;9;S China Sea;SSS;??;20.12;117.38;-1;qsr_23_2207.pdf;Jung2004;GIK17490
+67;67;Silt_SChinaSea.dat;0;11;S China Sea;Silt;??;20.12;117.38;-1;margeol_156_245.pdf;Wang1999;??
+68;68;SChina_d18O_15k.dat;0;11;S China Sea (GIK17939);$\delta^{18}$O;??;19.97;117.46;-1;margeol_156_245.pdf;Wang1999;GIK17939???20.11-117.3833
+69;69;Chichancanab_d18O_Physocypria.dat;0;8;Yucatan;$\delta^{18}$O (Ph);??;19;-89;-1;?nature_364_203.pdf;Hodell1995;??
+70;70;Chichancanab_d18O_Pyrgophorus.dat;0;8;Yucatan;$\delta^{18}$O (Py);??;19;-89;-1;?nature_364_203.pdf;Hodell1995;??
+71;71;Taiwan_LOI_epsl_146_59.dat;2;11;Taiwan;LOI;??;18.5;115;-1;epsl_146_59.pdf;Huang1997;??
+72;72;d18O_Haiti_quatres_52_159.dat;0;10;Haiti;$\delta^{18}$O;??;18.25;-73.06;-1;quatres_52_159.pdf;HigueraGundy1999;??
+73;73;ArabSea_nature_421_354_d18O.dat;0;11;Arabian Sea;$\delta^{18}$O;??;18;57.3;-1;nature_421_354.pdf;Gupta2003;??
+74;74;Oman_science_300_1737_A_d18O.dat;3;8;Oman;$\delta^{18}$O;??;17.17;54.3;-1;science_300_1737.pdf;Fleitmann2003;??
+75;75;Fleitmann2007_QunfCave_Oman_d18O.dat;0;11;Qunf Cv, Oman;$\delta^{18}$O;P;17.1;54.18;NaN;??;Fleitmann2007;Stalagmite
+76;76;jpaleolim_19_139_d18O.dat;0;10;Guatemala;$\delta^{18}$O;??;16.92;-89.83;-1;paleolimn_19_139.pdf;Curtis1998;??
+77;77;Yucatan_d18O_pyrgophorus.dat;0;10;Guatemala;$\delta^{18}$O (Py);??;16.55;-89.5;-1;jpaleolimn_19_139.pdf;Curtis1998;??
+78;78;Yucatan_d18O_cochliopina.dat;0;10;Guatemala;$\delta^{18}$O (Co);??;16.55;-89.5;-1;jpaleolimn_19_139.pdf;Curtis1998;??
+79;79;Yucatan_d18O_cytheridella.dat;0;8;Guatemala;$\delta^{18}$O (Cy);??;16.55;-89.5;-1;jpaleolimn_19_139.pdf;Curtis1998;??
+80;80;DiatomChange_Titicaca.dat;0;11;Peru;P (diatom);E-P Balance;16;69;NaN;Tapia2003;Tapia2003;Data Fritz2004_ngdc, % of fresh/benthic/S-insensitive diatom species, data/paleo/America/Peru/titicaca_2003.txt
+81;81;ArabianSea_SST_W.dat;0;11;Arabian Sea;SSTW;??;14.32;57.35;-1;???;Schulz1995;??
+82;82;Sahel_d18O_qsr_21_737.dat;0;11;Sahel;$\delta^{18}$O;??;13;13;-1;qsr_21_737.pdf;Gasse2002;??
+83;83;EArabSea_d18O_epsl_177_209.dat;0;10;E Arabian Sea;$\delta^{18}$O;??;12.5;74;-1;epsl_177_209.pdf;Sarkar2000;??
+84;84;NECanada_nature_400_344_grey.dat;4;9;NE Canada;GSD;High latitude cooling;10.7;-64.95;-1;nature_400_344.pdf;Barber1999;Barber1999_etal_nat, Hughen1996_etal_nat, paleo/Atlantic/Tropical/Hughen2000ngdc, 
+85;85;sst_cariaco_lea2003.dat;0;11;Cariaco Basin;SST;??;10.3;-63.3;11.5;science_301_1361.pdf;Lea2003;??
+86;86;science_293_1304_ti.dat;0;11;Cariaco Basin;Titanium;??;10.3;-63.3;9.5;science_293_1304.pdf;Haug2001;??
+87;87;cariaco_gray2.dat;0;11;Cariaco Basin;GSD;??;10.3;-63.3;9.5;science_293_1304.pdf;Haug2001;??
+88;88;Venezuala_d18O_valencia.dat;0;8;Venezuela;$\delta^{18}$O;??;10.1;-67.4;-1;?holocene_9_609.pdf;Curtis1999;??
+89;89;Somalia_Core905_d18O_qsr_23_2207.dat;0;10;Somalia;$\delta^{18}$O;??;10;53;-1;qsr_23_2207.pdf;Jung2004;??
+90;90;d18O_GIK17961_SChinaSea.dat;0;11;S China Sea (g61);$\delta^{18}$O;??;8.51;112.33;-1;margeol_156_245.pdf;Wang1999;??
+91;91;SuluSea_d18O.dat;4;11;Sulu Sea;$\delta^{18}$O;??;8.47;121.17;-1;geophysreslet_30_1428.pdf;Rosenthal2003;??
+92;92;d18O_MD81_Stott2004.dat;0;11;W Pacific;$\delta^{18}$O (81);??;6.3;125.83;-1;nature_431_56.pdf;Stott2004;??
+93;93;WPacific_d18O_geophysreslet_30_1428.dat;0;11;W Pacific;$\delta^{18}$O;??;6.3;128.8;-1;geophysreslet_30_1428.pdf;Rosenthal2003;data not identical with source Stott2002
+94;94;SChina_d18O_quatres_55_352.dat;3;11;S China Sea;$\delta^{18}$O;??;5.6;110.66;-1;science_291_2132.pdf;;??
+95;95;Victoria_pilkington_diatom_2.dat;0;10;Lk Victoria;Diat.CA1;??;0.18;33.2;-1;quatres_59_172.pdf;Stager1997;??
+96;96;Victoria_pilkington_diatom_1.dat;0;10;Lk Victoria;Diat.CA2;??;0.18;33.2;-1;quatres_59_172.pdf;Stager1997;??
+97;97;MtKenya_science_292_2307_Hall_d18O.dat;1;11;Lk Hall, Kenia;$\delta^{18}$O;Tropical Indian/Atlantic ocean SST;-0.15;37.35;-1;science_292_2307.pdf;Barker2001;Barker2001_etal_sci, Small Hall Tarn, Benthic freshwater diatoms taxa, mostly Fragilaria
+98;98;MtKenya_science_292_2307_Sim_d18O.dat;1;10;Lk Sim, Kenia;$\delta^{18}$O;Tropical Indian/Atlantic ocean SST;-0.15;37.32;-1;science_292_2307.pdf;Barker2001;Barker2001_etal_sci, Simba Tarn, Benthic freshwater diatoms taxa, mostly Fragilaria
+99;99;EPacific_d18O_geophysreslet_30_1428.dat;2;11;E Pacific;$\delta^{18}$O;??;-1.1;-89.41;-1;geophysreslet_30_1428.pdf;Rosenthal2003;??
+100;100;Ecuador_grayscale2.dat;0;11;Ecuador;GSD;??;-2.4;-79;-1;science_283_516.pdf;Rodbell1999;??
+101;101;Holo_ENSO_Ecuador.dat;0;10;Ecuador;ENSO;??;-2.77;-79.23;-1;nature_420_162.pdf;Moy2002;??
+102;102;EqAtlantic_climdyn_21_337_dSST.dat;0;11;Eq Atlantic;$\Delta$SST;??;-2.87;-36.13;11;climdyn_21_337.pdf;Kim2003;DELTA-SST!
+103;103;Burundi_Precip.dat;0;11;Burundi;P ;??;-3;30;11;globplanchan_26_25.pdf;Bonnefille2000;??
+104;104;Holo_d18O_KilimanSoreq.dat;0;11;Kilimanjaro;$\delta^{18}$O;??;-4;38;-1;science_298_589.pdf;Thompson2002;??
+105;105;Arz2001_WestBrasil_1.dat;0;11;W Atlantic;$\delta^{18}$O;Trade wind intensity;-4.25;-36.35;-1;?geology_29_239.pdf;Arz2001;Arz2001_etal_geol, GeoB 3910-2, Globigerinoides sacculifer (surface planktonic foram)
+106;106;Arz2001_WestBrasil_2.dat;0;11;W Atlantic;$\delta^{18}$O (Tu);THC;-4.25;-36.35;-1;?geology_29_239.pdf;Arz2001;Arz2001_etal_geol, GeoB 3910-2, Globorotalia tumida (thermocline planktonic foram)
+107;107;d18O_MD76_Stott2004.dat;0;11;W Pacific;$\delta^{18}$O (76);??;-5;133.26;-1;nature_431_56.pdf;Stott2004;??
+108;108;climchange_58_137_d18O.dat;0;11;Huascaran, Peru;$\delta^{18}$O;??;-9.12;-77.62;10;climchange_59_137.pdf;Thompson2003;??
+109;109;science_296_113_mar.dat;0;11;Lk Malawi;MAR;??;-10.27;34.32;9.5;science_296_113.pdf;Johnson2002;??
+110;110;science_296_113_si.dat;0;11;Lk Malawi;Si;??;-10.27;34.32;-1;science_296_113.pdf;Johnson2002;??
+111;111;climdyn_21_337_sst.dat;0;11;Angola Basin;U$^{k'}_{37}$SST;??;-17.17;11;11;climdyn_21_337.pdf;Kim2003;??
+112;112;sajama_dust.dat;0;11;Sajama, Bolivia;Particles;??;-18.1;-68.9;-1;climchange_59_137.pdf;Thompson2003;??
+113;113;sajama_d18O.dat;0;11;Sajama, Bolivia;$\delta^{18}$O;??;-18.1;-68.9;11;climchange_59_137.pdf;Thompson2003;??
+114;114;holo_d18O_SEAfrica.dat;0;10;SE Africa;$\delta^{18}$O;??;-24.02;29.18;-1;quatscirev_22_3211.pdf;Holmgren2003;??
+115;115;Cruz2005_BotuveraCave_SA_d18O.dat;0;11;Botuvera Cv, Brasil;$\delta^{18}$O;Convection/Circulation;-27.22;-49.16;NaN;??;Cruz2005;Stalagmite
+116;116;particles_jpaleolimn_27_207.dat;1;11;SW Australia;Particles;??;-36;148;-1;jpaleolimn_27_207.pdf;Stanley2002;??
+117;117;SST_epsl_185_369.dat;0;8;Chilean Coast;SST;T;-41;-74.4;-1;epsl_185_369.pdf;Lamy2001;??
+118;118;Chile_paleocean_17_727_d18O.dat;0;8;Chile;$\delta^{18}$O;??;-41;-74.45;-1;paleoce_17_727.pdf;Lamy2002;??
+119;119;SAtlant_quatres_56_191_lithics.dat;0;10;S Atlantic;LG;??;-53.2;5.1;-1;quatres_56_191.pdf;Hodell2001c;??
+120;120;epscilet_181_429_Inclination.dat;1;9;W Antarctic;Inclination;??;-64.51;-64.12;-1;epsl_181_429.pdf;Brachfeld2000;??
+121;121;vostok_deut.dat;0;11;Vostok, Antarctica;$\delta^2$H;??;-72.47;106.8;11;nature_399_429.pdf;Petit1999;??
+122;122;Komsomolskaia_quatres_54_348_deut.dat;0;11;Komsomolskaia;$\delta^2$H;??;-74.08;97.45;-1;quatres_54_348.pdf;Masson2000;??
+123;123;taylordome_d18O.dat;0;11;Taylor dome;$\delta^{18}$O;??;-77.78;158.72;-1;?eos_75_225.pdf;Grootes1994;??
+124;124;taylordome_top_deut.dat;0;11;Taylor dome;$\delta^2$H;??;-77.78;158.72;-1;science_282_92.pdf;Steig1998;??
+125;501;d18O_pyramid_lake2.dat;0;3;Pyramid Lk, NV;$\delta^{18}$O;??;40;-120;-1;qsr_21_659.pdf;Benson2002;Record too short
+126;502;d18O_science_274_1504_GRuber1.dat;0;3;Bermuda Rise;$\delta^{18}$O (B);??;33.42;-57.37;-1;science_274_1503.html;Keigwin1996;too short
+127;503;Chichancanab_d18O_Cyprinotus.dat;0;2;??;??;??;NaN;NaN;NaN;??;??;too short
+128;504;data/paleo/Greenland/naujg1-1.tsv;---;---;Naujagdlup Lk, Greenland;ROI;T;66.67;51.97;NaN;??;??;Record too short
+129;505;geophysrl_30_1617_stalagmite2.dat;0;3;E Arabian Sea;$\Delta$T;??;39.8;115.9;-1;?geophysreslet_30_1617.pdf;Tan2003;Record too short, no pdf yet
+130;601;d13C_CostaRica_Venado.dat;5;9;??;??;??;NaN;NaN;NaN;??;??;d18O record at same site preferred
+131;666;radiolaria_quatres_56_191.dat;0;10;S Atlantic;??;??;-52.2;6.1;-1;quatres_56_191.pdf;Hodell2001c;There areno radiolaria in this publication
+132;666;pollen_aust_myriophyllum.dat;0;11;Australia;Pollen (My);??;-36.52;149.5;-1;?ClimateChange_Australia.pdf;???;no pdf yet
+133;777;data/paleo/America/USA/Benson2002ngdc_pyramid.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+134;777;data/paleo/America/USA/Laird1998ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+135;777;d18O_pyramid_lake3.dat;0;2;Pyramid Lk, Nevada;$\delta^{18}$O;??;40;-120;-1;qsr_21_659.pdf;Benson2002;??
+136;777;data/paleo/Pacific/Eastern/Benway2006ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+137;777;data/paleo/Africa/Bonnefille2000ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+138;777;data/paleo/America/Curtis2001ngdc_pyrgophorus.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+139;777;data/paleo/Pacific/California/Barron2005ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+140;777;data/paleo/Africa/Powers2005ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+141;777;data/paleo/Antarctica/Steig1999ngdc_be.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+142;777;data/paleo/Atlantic/North/Castaneda2004ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+143;777;data/paleo/Africa/Johnson2003ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+144;777;data/paleo/Africa/Morocco/Hodell1995ngdc_b.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+145;777;data/paleo/America/Canada/Yu1998ngdc_twiss.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+146;777;data/paleo/Pacific/Northwest/Oba2004ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+147;777;data/paleo/Atlantic/Caribbean/Lea2003ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+148;777;data/paleo/Mediterranean/Lamy2006ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+149;777;Ecuador_grayscale3.dat;0;11;Ecuador;GSD;??;-2.4;-79;-1;science_283_516.pdf;Rodbell1999;??
+150;777;data/paleo/America/Curtis2001ngdc_a.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+151;777;data/paleo/Atlantic/Benguela/Farmer2005ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+152;777;data/paleo/Antarctica/Mayewski1999ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+153;777;data/paleo/Atlantic/Lund2006ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+154;777;data/paleo/America/Peru/Fritz2004ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+155;777;data/paleo/Africa/Uganda/Stager2005ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+156;777;data/paleo/Pacific/South/Samson2006ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+157;777;data/paleo/America/Curtis2001ngdc_b.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+158;777;data/paleo/America/Canada/Anderson2005ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+159;777;data/paleo/America/Bolivia/Fritz2004ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+160;777;data/paleo/Antarctica/Steig1999ngdc_d.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+161;777;data/paleo/America/Curtis2001ngdc_pseudocandona.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+162;777;data/paleo/Atlantic/Tropical/Hughen1996ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+163;777;data/paleo/Indian/Arabian/Sirocko1995ngdc.csv;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+164;777;data/paleo/Asia/Mongolia/Peck2003ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+165;777;data/paleo/Pacific/Northwest/Sun2005ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+166;777;data/paleo/Atlantic/North/Came2007ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+167;777;data/paleo/Atlantic/Tropical/Hughen2000ngdc;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+168;777;data/paleo/America/Hodell2001ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+169;777;yamal_siberia3.dat;0;4;NW Siberia;T7;??;69.85;67.75;-1;?holocene_12_717.pdf;Hantemirov2002;no pdf yet, site?
+170;777;data/paleo/Pacific/SouthChina/Kienast2002ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+171;777;data/paleo/Indian/Arabian/Staubwasser2003ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+172;777;data/paleo/Pacific/Stott2004ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+173;777;data/paleo/America/USA/Benson2002ngdc_owens.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+174;777;data/paleo/Africa/Morocco/Hodell1995ngdc_s.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+175;777;data/paleo/America/Venezuela/Curtis2002ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+176;777;data/paleo/Pacific/Sulu/Rosenthal2004ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+177;777;data/paleo/Atlantic/North/Girardeau2007ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+178;777;data/paleo/Africa/Congo/edward2003.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+179;777;data/paleo/Atlantic/Moros2007ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+180;777;climdyn_16_79_temp3.dat;0;4;S Australia;T;??;-41.83;145.53;-1;climdyn_16_79.pdf;Cook2000;??
+181;777;data/paleo/Pacific/PeruChile/Lamy2002ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+182;777;data/paleo/Antarctica/Grootes1999_o.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+183;777;cariaco_gray3.dat;0;11;Cariaco Basin;GSD;??;10.3;-63.3;9.5;???;???;??
+184;777;data/paleo/America/USA/Noren2002ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+185;777;data/paleo/America/Canada/Yu1998ngdc_crawford.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+186;777;data/paleo/Pacific/California/Barron2004ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+187;777;data/paleo/Asia/Tibet/Morrill2006ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+188;777;Solignac2007ngdc_NAtlantic_SST-8.dat;---;---;N Iceland Shelf;SST8;??;66.63;-23.85;NaN;??;Solignac2007;data/paleo/Atlantic/North/Solignac2007ngdc.txt
+189;777;data/paleo/Indian/Arabian/Gupta2003ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+190;777;data/paleo/Atlantic/Caribbean/Haug2001ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+191;777;data/paleo/America/Curtis1996ngdc.txt;---;---;??;??;??;NaN;NaN;NaN;??;??;??
+192;777;Solignac2007ngdc_NAtlantic_SST-2.dat;---;---;N Iceland Shelf;SST2;??;66.63;-23.85;NaN;??;Solignac2007;data/paleo/Atlantic/North/Solignac2007ngdc.txt
+193;888;ammersee_d18O.dat;0;11;??;??;??;NaN;NaN;NaN;??;??;??
+194;888;Guatemala_jpaleolim_19_139_Co_d18O.dat;0;9;??;??;??;NaN;NaN;NaN;??;??;??
+195;888;holo_d18O_ice_0.dat;0;10;??;??;??;NaN;NaN;NaN;??;??;??
+196;888;GRIP_d18O.dat;0;11;??;??;??;NaN;NaN;NaN;??;??;??
+197;888;Yellowstone_geology_28_211_CHAR.dat;0;11;??;??;??;NaN;NaN;NaN;??;??;??
+198;888;Italy_BiogenSil.dat;0;12;Italy;Bsi;??;40.8;15.35;NaN;nature_400_740.pdf;Allen1999;??
+199;888;jpaleolim_19_139_d13C.dat;0;9;??;??;??;NaN;NaN;NaN;??;??;??
+200;888;Doose-Rolinski2001_NE_ArabianSea.dat;0;5;??;??;??;NaN;NaN;NaN;??;??;??
+201;888;Holo_d18O_LakeVan.dat;0;11;Lk Van, Turkey;$\delta^{18}$O;??;38;43;NaN;holocene_13_665.pdf;Wick2003;??
+202;888;geophysrl_30_1617_stalagmite.dat;0;3;E China;$\Delta$T (stalagmites);??;39.8;115.9;-1;?geophysreslet_30_1617.pdf;Tan2003;Record too short, no pdf yet
+203;888;sajama_ice_bolivia.dat;0;11;Sajama, Bolivia;??;??;-18.1;-68.9;-1;climchange_59_137.pdf;Thompson2003;??
+204;888;Ethiopia_qsr_23_881_TOC.dat;0;9;??;??;??;NaN;NaN;NaN;??;??;??
+205;888;Vos_O2-N2_isotope_data_all.dat;---;---;Vostok, Antarctica;??;??;NaN;NaN;NaN;??;??;??
+206;888;Italy_mag-sus.dat;0;11;Italy;??;??;NaN;NaN;NaN;??;??;??
+207;888;yamal_siberia2.dat;0;4;NW Siberia;T7;??;69.85;67.75;-1;?holocene_12_717.pdf;Hantemirov2002;no pdf yet, site? Too short
+208;888;geophysrl_30_1617_stalagmite3.dat;0;3;E China;$\Delta$T (stalagmites);??;39.8;115.9;-1;?geophysreslet_30_1617.pdf;Tan2003;Record too short, no pdf yet
+209;888;climdyn_16_79_temp.dat;0;4;S Australia;T (trees);??;-41.83;145.53;-1;climdyn_16_79.pdf;Cook2000;??
+210;888;Titanium_BlackSea.dat;1;11;Black Sea;Ti;??;43.49;30.2;-1;margeol_214_309.pdf;Bahr2005;Redfit spectrum mostly not calculated
+211;888;cariaco_gray.dat;0;11;??;??;??;NaN;NaN;NaN;??;??;??
+212;888;climdyn_16_79_temp2.dat;0;4;S Australia;T;??;-41.83;145.53;-1;climdyn_16_79.pdf;Cook2000;too short
+213;888;holo_d18O_mediter2.dat;0;4;SE Mediterranean;$\delta^{18}$O;??;32;34.33;-1;paleoce_18_1064.pdf;Schilman2003;too short
+214;888;Tasmania_Temp.dat;0;4;Tasmania;T (Pollen);??;-43;147;-1;climdyn_16_79.pdf;Cook2000;??
+215;888;Morroco_d18O.dat;5;9;NW Morocco;$\delta^{18}$O;??;37;-7;-1;?paleoce_16_164.pdf;Hodell2001b;too short
+216;888;yamal_siberia.dat;0;4;NW Siberia;T7;??;69.85;67.75;-1;?holocene_12_717.pdf;Hantemirov2002;no pdf yet, site?
+217;888;holo_d18O_mediter1.dat;0;4;SE Mediterranean;$\delta^{18}$O;??;32;34.33;-1;paleoce_18_1064.pdf;Schilman2003;too short
+218;888;Tasmania_Temp2.dat;0;4;Tasmania;T;??;-43;147;-1;climdyn_16_79.pdf;Cook2000;too short
+219;888;EthiopiaTilo_qsr_23_811_d18O.dat;0;9;Ethiopia;$\delta^{18}$O;??;7.05;38.08;NaN;??;Lamb2000;??
+220;888;Guatemala_jpaleolim_19_139_Py_d18O.dat;0;9;??;??;??;NaN;NaN;NaN;??;??;??
+221;888;holo_LakeAbhe_level.dat;0;10;Lk Abhe, Ethiopia;Level;??;12;43;-1;quatscirev_19_189.pdf;Gasse2000;LL raus
+222;888;d18O_CostaRica_Venado.dat;5;9;Costa Rica;$\delta^{18}$O;??;10.6;-84.8;-1;?geology_32_957.pdf;Lachniet2004;too short
+223;888;climdyn_21_337_uk37.dat;0;12;Angola Basin;U$^{k'}_{37}$;??;-16.17;12;12;climdyn_21_337.pdf;Kim2003;??
+224;888;sajama_ic2_bolivia.dat;0;12;Sajama, Bolivia;??;??;-18.1;-68.9;-1;climchange_59_137.pdf;Thompson2003;??
+225;888;pixdata_0.dat;1;11;??;??;??;NaN;NaN;NaN;??;??;Too few data points, not sorted
+226;888;Titicaca_climchang_52_175_TOC_xpm.dat;0;11;??;??;??;NaN;NaN;NaN;??;??;??
+227;888;Tasmania_Temp3.dat;0;4;Tasmania;T;??;-43;147;-1;climdyn_16_79.pdf;Cook2000;too short
+228;888;d13C_nature_422_277_2.dat;1;10;??;??;??;NaN;NaN;NaN;??;??;??
+229;888;HOLO2_0.dat;0;12;??;??;??;NaN;NaN;NaN;??;??;??
+230;888;d13C_pyramid_lake.dat;0;3;??;??;??;NaN;NaN;NaN;??;??;??
+231;888;Arz2001_WestBrasil.dat;0;11;??;??;??;NaN;NaN;NaN;??;??;??
+232;888;Holo_LakeLevel_Titikaka.dat;0;4;Lk Titikaka;Level;E-P Balance;-15;-69;-1;quatres_47_169.pdf;Abbott1997;Abbott1997_etal_qres, LOI and 14C from aquatic gastropods, LL raus
+233;888;Italy_BiogenSil2.dat;0;12;Italy;Bsi;??;40.8;15.35;NaN;nature_400_740.pdf;Allen1999;??
+234;999;Mongolia_TOC.dat;0;7;Lk Telmen, Mongolia;TOC;??;48.5;97.1;-1;paleo3_183_135.pdf;Peck2002;??
+235;999;MexicoCalif_PACLIM2001_Carbonate.dat;0;8;Mexico;Carbonate;??;24.63;-110.55;-1;?paclim_2001_7.pdf;Douglas2001;??
+236;999;d18O_epsl_185_369.dat;0;7;Chilean Coast;$\delta^{18}$O;??;-41;-74.4;-1;epsl_185_369.pdf;Lamy2001;??
+237;999;NEAmerica_GSAbull_114_1326_d18O.dat;3;12;NE America;$\delta^{18}$O;??;43.03;-75.97;11;GSAbull_114_1326.pdf ;Kirby2002;No redfit
+238;999;Sun2005_Okinawa_d18O.dat;1;12;E China Sea;$\delta^{18}$O;??;28.01;127.02;NaN;??;Sun2005;G. Ruber, rather take SST record
+239;999;Partin2007_NorthernBorneoStalagmite_Borneo_d18O_2.dat;---;---;Borneo;$\delta^{18}$O;MOC;4.03;114.8;NaN;??;Partin2007;Stalagmite 2, redfit spectrum weird
+240;999;ArabianSea_SST_S.dat;0;12;Arabian Sea;SST (S);??;14.32;57.35;-1;??;Schulz1995;??
+241;999;Benguela_SST_paleocean2005.dat;0;11;Eq Atlantic;Mg/Ca T;??;-23;12;-1;TropAtlantic_Farmer.pdf;Farmer2005;Palocean.submitted, ODP1084b
+242;999;Ecuador_grayscale.dat;0;12;??;??;??;NaN;NaN;NaN;??;??;No redfit
+243;999;Partin2007_NorthernBorneoStalagmite_Borneo_d18O_3.dat;---;---;Borneo;$\delta^{18}$O;MOC;4.03;114.8;NaN;??;Partin2007;Stalagmite 3, redfit spectrum weird
+244;999;sajama_no3.dat;0;12;Sajama, Bolivia;Nitrate;??;-18.1;-68.9;-1;climchange_59_137.pdf;Thompson2003;??
+245;999;Atlantic_d18O_Cwueller.dat;0;11;Trop Atlantic;$\delta^{18}$O (Cwue);??;20.75;-18.58;-1;??;Knaack1997;ODP108-658C
+246;999;Laskar2004_summer_insolation_65N_tot.dat;0;11;N Hemisphere;Insolation;??;65;NaN;NaN;??;Laskar2004;No redfit
+247;999;SChina_d18O.dat;0;12;??;??;??;NaN;NaN;NaN;??;??;No redfit
+248;999;Atlantic_d18O_Ginf.dat;0;11;Trop Atlantic;$\delta^{18}$O (Ginf);??;20.75;-18.58;-1;??;Knaack1997;ODP108-658C
+249;999;GRIP_d18O2.dat;0;12;Greenland Ice;$\delta^{18}$O;??;72.6;-38.5;-1;?nature_364_203.pdf;GRIP1993;??
+250;999;ArabianSea_Gbull_climdyn_12_213.dat;0;12;Arabian Sea;\%Gbull;??;18;57.6;-1;climdyn_12_213.pdf;Overpeck1996;??
+251;999;Stoner2007_IcelandShelf_NorthAtlantic_Quartz.dat;0;11;N Iceland Shelf;Quartz;??;66.63;-23.85;NaN;??;Stoner2007;Redfit spectrum weird
+252;999;Sun2005_Okinawa_MgCa.dat;1;12;E China Sea;MgCa;SST;28.01;127.02;NaN;??;Sun2005;G. Ruber MgCa thermometry, obliviated by SST record
+253;999;Partin2007_NorthernBorneoStalagmite_Borneo_d18O_1.dat;---;---;Borneo;$\delta^{18}$O;MOC;4.03;114.8;NaN;??;Partin2007;Stalagmite 1, redfit spectrum weird
+254;999;Partin2007_NorthernBorneoStalagmite_Borneo_d18O.dat;---;---;Borneo;$\delta^{18}$O;MOC;4.03;114.8;NaN;??;Partin2007;Stalagmites combined
+255;999;ricketts2001_d13C.dat;3;9;Lk Issyk-Kul, Kyrgyzstan;\delta^{13}C;??;42.42;77.33;-1;palaeo3_176_207.pdf;Ricketts2001;??
+256;999;Hu2008_Heshang_China_d18O.dat;0;9;Heshang Cv, China;$\delta^{18}$O;P;30.45;110.42;NaN;??;Hu2008;Stalagmite, redfit spectrum weird
+257;999;pixdata_1.dat;0;10;??;??;??;NaN;NaN;NaN;??;??;No redfit
