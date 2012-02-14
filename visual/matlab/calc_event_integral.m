@@ -7,20 +7,20 @@ cd '../../'
 eventmodel;
 cd 'visual/matlab';
 
-eventregind=ones(685,1);
 eventregtime=load('../../eventregtime.tsv','-ascii');
 
-tmax=10500;
-tmin=0;
-siminit=11500;
+eventregind=ones(size(eventregtime,1),1);
+
+tmax=timeend;
+tmin=siminit;
+
 
 nr=685;
-nt=floor((tmax-tmin*1.0)/timestep+1);
+nt=floor(abs(tmax-tmin*1.0)/timestep+1);
 regionfluc=zeros(nt,nr);
-time=siminit-([0:nt-1]*timestep+tmin);
+time=1950-(tmax-[0:nt-1]*timestep);
 
 for it=1:nt
-    % fprintf('%f\n',time); continue;
     
     for i=1:nr
     

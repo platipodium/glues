@@ -11,19 +11,25 @@ arguments = {...
   {'no_xticks',0},...
   {'no_legend',0},...
   {'highpass',0.1},...
-  {'lowpass',2.0}
+  {'lowpass',2.0},...
+  {'file','~/projects/glues/m/holocene/redfit/data/eleven/holodata.mat'},...
 };
 
 [a,rargs]=clp_arguments(varargin,arguments);
 for i=1:a.length eval([a.name{i} '=' clp_valuestring(a.value{i}) ';']); end
 
+dirs.total='~/projects/glues/m/holocene/redfit/data/eleven';
+
 % Default values
 if ~exist('timeseries','var') timeseries=1; end
 
-[dirs,files]=get_files;
-dirs.total='~/projects/glues/m/holocene/redfit/data/eleven';
+if ~exist(file,'file')
+    warning('File %s does not exist',file);
+   return
+end
 
-load('holodata.mat');
+load(file);
+if ~exist('holodata','var') holodata=evinfo; end
 
 if isstr(timeseries)
     file=timeseries;
