@@ -23,15 +23,27 @@ end
 regevents=load('../../eventregtime.tsv','-ascii');
 regevents(regevents<0)=NaN;
 
-holodir='/h/lemmen/projects/glues/m/holocene';
-datafile=fullfile(holodir,'proxysites.csv');
-evinfo = read_textcsv(datafile, ';','"');
 
-evseries=load(fullfile(basedir,'EvSeries.dat'),'-ascii');
-evseries(evseries<0)=NaN;
-evradius=load(fullfile(basedir,'EventInRad.dat'),'-ascii');
-evregion=load(fullfile(basedir,'EventInReg.dat'),'-ascii');
+if(1==2)
+  holodir='/h/lemmen/projects/glues/m/holocene';
+  datafile=fullfile(holodir,'proxysites.csv');
+  evinfo = read_textcsv(datafile, ';','"');
+  evseries=load(fullfile(basedir,'EvSeries.dat'),'-ascii');
+  evseries(evseries<0)=NaN;
+  evradius=load(fullfile(basedir,'EventInRad.dat'),'-ascii');
+  evregion=load(fullfile(basedir,'EventInReg.dat'),'-ascii');
+else
+  holodir='';
+  datafile=fullfile(holodir,'proxydescription.csv');
+  evinfo = read_textcsv(datafile, ';','"');
+  evseries=load(fullfile(basedir,'EventSeries_124.tsv'),'-ascii');
+  evseries(evseries<0)=NaN;
+  evradius=load(fullfile(basedir,'EventInRad_124_685.tsv'),'-ascii');
+  evregion=load(fullfile(basedir,'EventInReg_124_685.tsv'),'-ascii');
+end  
+  
 evcolors=jet(8);
+evseries=evseries(:,1:end-2);
 
 reg='lbk'; [ireg,nreg,loli,lali]=find_region_numbers(reg);
 lonlim=loli; latlim=lali;
@@ -70,17 +82,25 @@ for ir=20:5:length(ireg)
   end  
   set(gca,'Xlim',[3 12],'XDir','reverse','YLim',[0 1],'color','none','box','off','YTick',[]);
 
-  thresh=2;%1.5.^[-1 0 1 2];
+  %thresh=2;%1.5.^[-1 0 1 2];
   
   for ie=1:1:nevids
     figure(2); clf;
-    data=clp_single_timeseries_trend(evids(ie),'timelim',[0 12],'highpass',0.050,'lowpass',2.0);
+    if size(evseries,1)==124
+      data=clp_single_timeseries_trend(evids(ie),'timelim',[3 12],'highpass',0.050,'lowpass',2.0,'file','proxydescription.mat');
+    elseif size(evseries,1)==139
+      data=clp_single_timeseries_trend(evids(ie),'timelim',[3 12],'highpass',0.050,'lowpass',2.0);
+    end
+    
+    % Adaptive threshold needed? 
+    thresh=norminv(1-3/length(data.ut));
+    
     clf; hold on;
     data.norm=cl_normalize(data.m50-data.m2000);
     plot(data.ut,data.norm,'b-');
     peakindex=cl_findpeaks(data.norm,thresh);
     peakindex=peakindex(isfinite(peakindex));
-    plot(data.ut(peakindex),data.norm(peakindex),'rv');;
+    plot(data.ut(peakindex),data.norm(peakindex),'rv');
     figure(1);
 
     ax(ie)=axes('Position',[0.5 pos0(2)+0.1+height*(ie-1.0) width height],...

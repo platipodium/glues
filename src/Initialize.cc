@@ -169,83 +169,96 @@ int set_events()
 	/*----------------------------------------------------------------------------*/
 	/*      initialize newly synthesized event series with first proxy record     */
 	/*----------------------------------------------------------------------------*/
-	for (n = RegSiteInd[0][i],j=0;*(EventTime+j+(n-1)*MaxEvent)>0 && j<MaxEvent;j++ )
-	{
-	    *(EventSeries+j)=*(EventTime+j+(n-1)*MaxEvent);
-	    EventWeight[j]=RecWeight[0];
+	for (n = RegSiteInd[0][i],j=0;*(EventTime+j+(n-1)*MaxEvent)>0 && j<MaxEvent;j++ ) {
+	  *(EventSeries+j)=*(EventTime+j+(n-1)*MaxEvent);
+      EventWeight[j]=RecWeight[0];
 	}
-     
-	EventSeriesLen=j; 
+    EventSeriesLen=j; 
 	
-	if(num_prox>1)
-	{
-	    // temporal order of all events 
-	    for (j=1; j<MaxProxyReg; j++)
-		if((n = RegSiteInd[j][i]) >=0)      
-		    for(pe=0; *(EventTime+pe+(n-1)*MaxEvent)>0 && pe<MaxEvent;pe++)
-		    {
-			for(jj =0; *(EventTime+pe+(n-1)*MaxEvent)> *(EventSeries+jj)&&jj<EventSeriesLen;jj++);
-			EventSeriesLen++;
-			if(jj<EventSeriesLen-1)
-			{
-			    for(pj =EventSeriesLen; pj>jj; pj--)
-			    {
-				*(EventSeries+pj)=*(EventSeries+pj-1);
-				EventWeight[pj]=EventWeight[pj-1];
-			    }
-			    *(EventSeries+jj)=*(EventTime+pe+(n-1)*MaxEvent);
-			    EventWeight[jj]=RecWeight[j];
-			}
-			else
-			    *(EventSeries+EventSeriesLen-1)=*(EventTime+pe+(n-1)*MaxEvent),
-				EventWeight[EventSeriesLen-1]=RecWeight[j];
+	/* Now add all other proxies */
+	if (num_prox>1)	{
+	  // Establish temporal order of all events 
+	  for (j=1; j<MaxProxyReg; j++) 
+	  if ((n = RegSiteInd[j][i]) >=0 )       
+	  for(pe=0; *(EventTime+pe+(n-1)*MaxEvent)>0 && pe<MaxEvent;pe++) {
+	    for(jj =0; *(EventTime+pe+(n-1)*MaxEvent)> *(EventSeries+jj)&&jj<EventSeriesLen;jj++);
+		EventSeriesLen++;
+		if(jj<EventSeriesLen-1) {
+		  for(pj =EventSeriesLen; pj>jj; pj--) {
+		    *(EventSeries+pj)=*(EventSeries+pj-1);
+			EventWeight[pj]=EventWeight[pj-1];
+		  }
+		  *(EventSeries+jj)=*(EventTime+pe+(n-1)*MaxEvent);
+		  EventWeight[jj]=RecWeight[j];
+	    }
+		else {
+		  *(EventSeries+EventSeriesLen-1)=*(EventTime+pe+(n-1)*MaxEvent),
+		  EventWeight[EventSeriesLen-1]=RecWeight[j];
+		}
+	  }
+	   
+	  /* Diagnostic output 
+	  if (i==158) {
+	    std::cout << i << " " << EventSeriesLen;  
+	    for (j=0; j<EventSeriesLen ;j++ ) {
+          cout << " " << *(EventSeries+j);
+	    }
+	    std::cout << std::endl;
+	    std::cout << i << " " << EventSeriesLen;  
+	    for (j=0; j<EventSeriesLen; j++ ) {
+          cout << " " << EventWeight[j];
+	    }
+	    std::cout << std::endl;
+	  }*/
+
+	  //  merge two close events within 1.5*flucperiod 
+ 	  for(pe=0;pe<2;pe++)   
+	  for (j=0,mintime=SimInit;j< EventSeriesLen-1;j++ )
+	  if (*(EventSeries+j+1)-*(EventSeries+j)<1.5*flucperiod*1E-3) {
+	    jj=j;
+	    //if (i==158) cout <<jj<<" merge "<< *(EventSeries+j+1)<<":"<<*(EventSeries+j)<< "\t"<<EventSeriesLen<< endl; 
 			
-		    }
+		// new event time in the weighted mean
+		*(EventSeries+jj)=(*(EventSeries+jj+1)*EventWeight[jj+1]+*(EventSeries+jj)*EventWeight[jj]);
+		// update weighting coefficient	
+		wsum =  (EventWeight[jj+1]+EventWeight[jj]);   
+		EventWeight[jj]=(EventWeight[jj+1]*EventWeight[jj+1]+EventWeight[jj]*EventWeight[jj]);
+			
+		*(EventSeries+jj)/= wsum;
+		EventWeight[jj]/= wsum;	      
+			
+	    // shift all higher entries down in order to preserve continous and ranked series
+		for(pj =jj+1; pj<EventSeriesLen; pj++) *(EventSeries+pj)=*(EventSeries+pj+1),EventWeight[pj]=EventWeight[pj+1];
+		EventSeriesLen--;  	     
+	  }
+     
+      /* Diagnostic output 
+      if (i==158) {
+	    std::cout << i << " " << EventSeriesLen;  
+	    for (j=0; j<EventSeriesLen ;j++ ) {
+          cout << " " << *(EventSeries+j);
+	    }
+	    std::cout << std::endl;
+	    std::cout << i << " " << EventSeriesLen;  
+	    for (j=0; j<EventSeriesLen; j++ ) {
+          cout << " " << EventWeight[j];
+	    }
+	    std::cout << std::endl;
+	  }*/
+
+      // calculate integral number of events (II) 
+	  pe =floor(evfreq_avg*1.0*(sermax-sermin)); 
+	  if (pe < 0 || sermax<0 || sermin<0)  {
+	  	cerr << "ERROR. Number of events must be integral (" 
+	  	     << pe << "/" << evfreq_avg << "/" << sermax << "/" 
+	  	     << sermin << ")" << endl;
+	  	return 0;
+	  }     
+	  //std::cout << i << " " << EventSeriesLen << " f=" << evfreq_avg << " [" 
+	  //<< sermax << ":" << sermin << "] pe=" << pe << std::endl;
 	    
-/*	   cout << endl<< endl; 
-	   for (j=0;j< EventSeriesLen;j++ ) cout << *(EventSeries+j)<<"\t";
-	   cout << endl; 
-	   for (j=0;j< EventSeriesLen;j++ ) cout << EventWeight[j]<<"\t";
-	   cout << endl<< endl; 	       */  
-	    /*---------------------------------------------------*/
-	    /*       merge two close events 1.5*flucperiod       */
-   /*---------------------------------------------------*/ 
-	    for(pe=0;pe<2;pe++)   
-		for (j=0,mintime=SimInit;j< EventSeriesLen-1;j++ )
-		    if(*(EventSeries+j+1)-*(EventSeries+j)<1.5*flucperiod*1E-3) 
-		    {
-			jj=j;   
-//            cout <<jj<<" merge "<< *(EventSeries+j+1)<<":"<<*(EventSeries+j)<< "\t"<<EventSeriesLen<< endl; 
-			
-			// new event time in the weighted mean
-			*(EventSeries+jj)=(*(EventSeries+jj+1)*EventWeight[jj+1]+*(EventSeries+jj)*EventWeight[jj]);
-			// update weighting coefficient	
-			wsum =  (EventWeight[jj+1]+EventWeight[jj]);   
-			EventWeight[jj]=(EventWeight[jj+1]*EventWeight[jj+1]+EventWeight[jj]*EventWeight[jj]);
-			
-			*(EventSeries+jj)/= wsum;
-			EventWeight[jj]/= wsum;	      
-			
-	   // shift all higher entries down in order to preserve continous and ranked series
-			for(pj =jj+1; pj<EventSeriesLen; pj++) *(EventSeries+pj)=*(EventSeries+pj+1),EventWeight[pj]=EventWeight[pj+1];
-			EventSeriesLen--;  	     
-		    }
-    /*--------------------------------------------------*/
-    /*      calculate integral number of events (II)    */
-    /*--------------------------------------------------*/
-	    pe =floor(evfreq_avg*1.0*(sermax-sermin)); 
-	    if (pe < 0 || sermax<0 || sermin<0) 
-	    {
-		cerr << "ERROR. Number of events must be integral (" 
-		     << pe << "/" << evfreq_avg << "/" << sermax << "/" 
-		     << sermin << ")" << endl;
-		return 0;
-	    }     
-	    
-	    /*-----------------------------------------------------------------*/
-	    /*     merge closest events until averaged event freq is reached   */
-	    /*-----------------------------------------------------------------*/   
-	    while(EventSeriesLen>pe)
+	  //     merge closest events until averaged event freq is reached
+	  while(EventSeriesLen>pe)
 // TODO: this is an infiinite loop on grpsrv07 ll 200-216
 	    {	
 	  
@@ -282,6 +295,16 @@ int set_events()
 		    EventSeriesLen--;    
 		}       
       
+	/* Diagnostic output 
+	if (i==158) {
+	  std::cout << i << " " << EventSeriesLen;  
+	  for (j=0; j< EventSeriesLen ;j++ ) {
+        cout << " " << *(EventSeries+j);
+	  }
+	  std::cout << std::endl;
+	}*/
+
+
    
 	if (0 && (i==0 || i==211 || i==271 || i== 156))  
 	{ for (j=0;j< EventSeriesLen;j++ ) cout << *(EventSeries+j)<<"\t";
