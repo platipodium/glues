@@ -1,8 +1,8 @@
-/* GLUES io; this file is part of
+/* GLUES IO; this file is part of
    the Global Land Use and technological Evolution Simulator
 
-   Copyright (C) 2009,2010
-   Carsten Lemmen <carsten.lemmen@gkss.de>
+   Copyright (C) 2009,2010,2011,2012
+   Carsten Lemmen <carsten.lemmen@hzg.de>
 
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the
@@ -19,8 +19,8 @@
    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 /**
-   @author Carsten Lemmen <carsten.lemmen@gkss.de>
-   @author Caleb K Taylor <calebt@users.sourceforge.org>
+   @author Carsten Lemmen <carsten.lemmen@hzg.de>
+   @author Caleb K Taylor <calebt@users.sourceforge.org>, contributions released for public domain
    @date   2010-10-26
    @file   IO.h
 */

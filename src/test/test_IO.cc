@@ -28,6 +28,7 @@ int main (int argc, char* argv[])
     std::string filename("../../examples/setup/685/region_iiasaclimber_kai_npp_685.tsv");
 #else
 	std::string filename("C:\\SourceForge Projects\\GLUES_driver\\test_IO.tsv");
+	//std::string filename("../../../examples/setup/685/EvSeries.dat");
 #endif
     
     std::ifstream ifs1,ifs2,ifs;

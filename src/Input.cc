@@ -20,7 +20,7 @@
 
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
    @author Kai W Wirtz <kai.wirtz@hzg.de
-   @date   2011-02-10
+   @date   2012-02-14
    @file Input.cc 
    @brief Input/output routines 
 */
@@ -47,9 +47,7 @@ std::string regionstring;
 
 double hyper(double,double,int);
 
-unsigned int read_ascii_table(std::istream& is, int** table_int); 
-unsigned int count_ascii_rows(std::istream& is);
-unsigned int count_ascii_columns(std::istream& is);
+//unsigned int read_ascii_table(std::istream& is, int** table_int); 
 
 /**
    @brief Output of constant region properties 
@@ -284,11 +282,12 @@ unsigned int read_SiteRegfile()
     ifstream ifs;
     unsigned int n,j;
 
-    cout << "Read " << filename ;
+    std::cout << "Read " << filename;
 
     ifs.open(filename.c_str(),ios::in);
-    MaxProxyReg=count_ascii_columns(ifs);
-    ifs.close();
+    assert( ifs.is_open() );
+    
+    MaxProxyReg=glues::IO<void>::count_ascii_columns(ifs);
     
     if (MaxProxyReg >= MAXPROXY) {
       std::cerr<< "\nERROR\t Number of proxies greater than MAXPROXY constant.\n";
@@ -304,16 +303,21 @@ unsigned int read_SiteRegfile()
       //RegSiteInd[j]=new int[numberOfRegions];
     }
 
-    ifs.open(filename.c_str(),ios::in);
-    n=read_ascii_table(ifs,RegSiteInd);
+    std::vector< std::vector<int> > data;
+	n=glues::IO<int>::read_ascii_table(ifs,data);
     ifs.close();
 
-    if (n<numberOfRegions)  { 
-	cout << "\nERROR\t NumberOfRegions != rows\t" <<  n << endl;
-	return 0;  
-    }
+    assert(data.size() == numberOfRegions);
+    assert(data.at(1).size() == MaxProxyReg);
 
-    cout << "SUCCESS" << endl;
+    std::cout << " " << data.size() << " regions x " << data.at(1).size() << " sites"; 
+
+    for (j=0; j<(unsigned int)MaxProxyReg; j++) {
+      for (unsigned int i=0; i<numberOfRegions; i++) {
+        RegSiteInd[j][i]=data.at(i).at(j);
+    }}
+
+    cout << " OK" << endl;
     return MaxProxyReg;
 }
 
@@ -328,165 +332,29 @@ unsigned int read_region_eventradius(const std::string & filename, int** matrix_
   std::ifstream ifs;
   unsigned int n;
   
-  cout << "Reading file " << filename << " ... ";
+  std::cout << "Read  " << filename;
 
+  std::vector< std::vector<int> > data;
   ifs.open(filename.c_str(),ios::in);
-  n=read_ascii_table(ifs,matrix_int);
+  assert(ifs.is_open());
+  n=glues::IO<int>::read_ascii_table(ifs,data);
   ifs.close(); 
+  
+  assert(data.size() == numberOfRegions);
+  assert(data.at(1).size() == MaxProxyReg);
+  
+  //n=read_ascii_table(ifs,matrix_int);
 
-  cout << "SUCCESS" << endl;
+  for (unsigned int j=0; j<(unsigned int)MaxProxyReg; j++) {
+      for (unsigned int i=0; i<numberOfRegions; i++) {
+        matrix_int[j][i]=data.at(i).at(j);
+    }}
+
+  std::cout << " " << data.size() << " regions x " << data.at(1).size() << " sites"; 
+  cout << " OK" << endl;
   
   return n;
 }
-
-
-/**
-   @param is: input stream to read from
-   @param table_double: pointer to integer matrix
-   @return: number of lines read
-*/
-
-unsigned int read_ascii_table(std::istream& is, double** table_double) 
-{
-
-  double dummy;
-  std::string line;
-  unsigned int i=0,j=0;
-   
-  if ( is.bad() ) {
-	  cout << "ERROR in read_ascii_table. Input stream not ready\n";
-      }
-
-
-  if (table_double==NULL) {
-      cout << "ERROR in read_ascii_table.  Matrix not allocated\n" ;
-      return 0;
-  }
-  
-  while( is.good() && getline(is,line) ) {
-    if ( (line[0] < '0' || line[0] > '9') ) {
-      // Skip non-number lines
-      continue;
-    }
-    
-    std::istringstream ss(line);
-    
-    while ( ss >> dummy ) table_double[j++][i]=dummy;
-    i++;
-    j=0;
-
-  }
-  
-  return i;
-}
-
-/**
-   @param is: input stream to read from
-   @param table_int: pointer to integer matrix
-   @return: number of lines read
-*/
-
-unsigned int read_ascii_table(std::istream& is, int** table_int) 
-{
-
-  int dummy;
-  std::string line;
-  unsigned int i=0,j=0;
-   
-  if ( is.bad() ) {
-	  cout << "ERROR in read_ascii_table. Input stream not ready\n";
-      }
-
-
-  if (table_int==NULL || (*table_int)==NULL) {
-      cout << "ERROR in read_ascii_table.  Matrix not allocated\n" ;
-      return 0;
-  }
-  
-  while( is.good() && getline(is,line) ) {
-    if ( (line[0] < '0' || line[0] > '9') && (line[0]!='-') && line [0]!='.' && line[0]!='+'  ) {
-      // Skip non-number lines
-      continue;
-    }
-    
-    std::istringstream ss(line);
-    
-    cout << dummy;
-    while ( ss >> dummy ) table_int[j++][i]=dummy;
-    i++;
-    j=0;
-
-  }
-  
-  return i;
-}
-
-/**
-   @param is: input stream to read from
-   @return: number of lines read
-   @deprecated: a new function exists in IO.h, but this one is still used by read_proxyevents
-   
-*/
-unsigned int count_ascii_rows(std::istream& is) 
-{
-    
-  std::string line;
-  unsigned int n=0;
-   
-  if ( is.bad() ) {
-    cout << "ERROR in count_ascii_rows. Input stream not ready\n";
-  }
-  
-  is.seekg(0);
-
-  while( is.good() && getline(is,line) ) {
-    if ( (line[0] < '0' || line[0] > '9') ) {
-      // Skip non-number lines
-	continue;
-    }
-    n++;
-  }
-  
-  return n;
-}
-
-/**
-   @param is: input stream to read from
-   @return: number of columns in first numeric line read
-*/
-
-unsigned int count_ascii_columns(std::istream& is) 
-{
-    
-    std::string line,word;
-    unsigned int n=0;
-  
-    if ( is.bad() ) {
-	  cout << "ERROR in count_ascii_columns. Input stream not ready\n";
-    }
-  
-   // is.seekg(0);
-  
-    while( is.good() && getline(is,line) ) {
-	
-  if ( (line[0] < '0' || line[0] > '9') && (line[0]!='-') && line [0]!='.' && line[0]!='+'  ) {	    // Skip non-number lines
-	    // Skip non-number lines
-	    continue;
-	  }
-	
-	  std::istringstream iss(line);
-
-	  while ( iss.good() && getline(iss,word,' ') ) {
-	    //cout << n << " '"  << word << "'\n" ;
-	      if (word.length()>0) n++;
-	  }
-// TODO: why n-2? The last two columns give lat lon info (or similar)
-	return n;
-    }
-    
-  return 0;
-}
-
 
 
 /**
@@ -506,32 +374,39 @@ unsigned int read_proxyevents()
     std::cout << "Read " << filename << " ";
     
     ifs.open(filename.c_str(),ios::in);
+    assert(ifs.is_open());
     
-    MaxEvent=count_ascii_columns(ifs)-2;
-    numberOfSites=count_ascii_rows(ifs);
+    MaxEvent=glues::IO<void>::count_ascii_columns(ifs)-2;
+    numberOfSites=glues::IO<void>::count_ascii_rows(ifs);
+    std::cout << numberOfSites << " sites x " << MaxEvent << " events";
 
-    ifs.close();
-
-    std::cout << numberOfSites << " sites x " << MaxEvent << " events\n";
+	std::vector< std::vector<double> > data;
+	glues::IO<double>::read_ascii_table(ifs,data);
+	
+    assert(data.size()==numberOfSites);
+    assert(data.at(1).size()==MaxEvent+2);
+    //std::cout << data.size() << " sites x " << data.at(1).size()-2 << " events";
 
     EventTime= (double *)(malloc(numberOfSites*MaxEvent*sizeof(double)));
     EventSerMax = (double *)(malloc(numberOfSites*sizeof(double)));
     EventSerMin = (double *)(malloc(numberOfSites*sizeof(double)));
     
-    ifstream ifs2;
-    ifs2.open(filename.c_str(),ios::in);
+    //ifstream ifs2;
+    //ifs2.open(filename.c_str(),ios::in);
    // Read to the end to see how many regions there are
     for (unsigned int i=0;  i<(unsigned int)numberOfSites; i++) {
-	for (unsigned int j=0; j<(unsigned int)MaxEvent; j++) {
-	    ifs2 >> fdummy;
-	    *(EventTime+j+i*MaxEvent)=fdummy;
-	    //cout <<i<<": "<< fdummy << "->" << *(EventTime+j+i*MaxEvent) <<endl;
-	}
-	ifs2 >> fdummy; EventSerMin[i]=fdummy;
-	ifs2 >> fdummy; EventSerMax[i]=fdummy;
+	  for (unsigned int j=0; j<(unsigned int)MaxEvent; j++) {
+	    //ifs >> fdummy;
+	    //*(EventTime+j+i*MaxEvent)=fdummy;
+	    *(EventTime+j+i*MaxEvent)=data.at(i).at(j);
+	  }
+	  EventSerMin[i]=data.at(i).at(MaxEvent);
+	  EventSerMax[i]=data.at(i).at(MaxEvent+1);
+	  //ifs >> fdummy; EventSerMin[i]=fdummy;
+	  //ifs >> fdummy; EventSerMax[i]=fdummy;
     }
     
-    ifs2.close();
+    ifs.close();
     cout << " OK" << endl;
     return numberOfSites;
 }
