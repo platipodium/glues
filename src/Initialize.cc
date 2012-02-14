@@ -1,7 +1,8 @@
 /* GLUES initialization; this file is part of
    the Global Land Use and technological Evolution Simulator
    
-   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011
+   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008,2009,2010
+   				 2011,2012
    Carsten Lemmen <carsten.lemmen@hzg.de>, Kai Wirtz <kai.wirtz@hzg.de>
 
    This program is free software; you can redistribute it and/or modify it
@@ -21,7 +22,7 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
    @author Kai W Wirtz <kai.wirtz@hzg.de
-   @date   2011-02-10
+   @date   2012-02-14
    @file Initialization.cc
    @brief Initialize all data
 */
@@ -51,7 +52,8 @@ int set_events()
     signed int loop=1,num_ev,num_prox,i,j,pe,iall=0,jj,n,pj,EventSeriesLen;
     double evfreq_avg,evfreq_avg_all=0;
 	//double omt;
-	double TotDist,HalfDist=100.,SimInit=12,RecWeight[22];
+	double TotDist,HalfDist=100.,RecWeight[22];
+	double SimInit=(1950-TimeStart)/1000.0;
     double mintime,wsum,sermax,sermin,*EventSeries,*EventWeight ;
     
 /*----------------------------------------------------------------------*/
@@ -71,46 +73,55 @@ int set_events()
     
     /** Test correctness of EventInReg file */
     if (1) {
-	ofs.open("test_EventInReg.dat",ios::out);
-	for (i=0; i<numberOfRegions; i++) {
-	    for (j=0; j<MaxProxyReg-1; j++) 
-		ofs << RegSiteInd[j][i] << " " ;
-	    ofs << RegSiteInd[j][i] << endl; 
-	}
+	  ofs.open("test_EventInReg.dat",ios::out);
+	  for (i=0; i<numberOfRegions; i++) {
+	     for (j=0; j<MaxProxyReg-1; j++) 
+		 ofs << RegSiteInd[j][i] << " " ;
+	     ofs << RegSiteInd[j][i] << endl; 
+	  }
+	  ofs.close();
+    }
+
+    /** Test correctness of EventInRad file */
+    if (1) {
+	  ofs.open("test_EventInRad.dat",ios::out);
+	  for (i=0; i<numberOfRegions; i++) {
+	     for (j=0; j<MaxProxyReg-1; j++) 
+		 ofs << RegSiteRad[j][i] << " " ;
+	     ofs << RegSiteRad[j][i] << endl; 
+	  }
+	  ofs.close();
     }
     
-    
+ 
 /** loop over regions to integrate all event series  
     notice the loop switch (default set to 1)
 */
-    for (i=0;  loop &&  i<numberOfRegions; i++) 
-    {
-	if(RegSiteInd[0][i]<0) {
+    for (i=0;  loop &&  i<numberOfRegions; i++) {
+	  if(RegSiteInd[0][i]<0) {
 	    EventRegInd[i]=0,EventRegNum[i]=-1;
 	    continue; // prefer continue to avoid deep else structure
-	}
+	  }
            
-	/*--------------------------------------------------------*/
-	/*   loop over all indexed time series for each region    */
-	/*--------------------------------------------------------*/
-	for (j=0,num_ev=num_prox=0,TotDist=evfreq_avg=sermax=sermin=0; j<MaxProxyReg; j++)  
-	{
+	  /*--------------------------------------------------------*/
+	  /*   loop over all indexed time series for each region    */
+	  /*--------------------------------------------------------*/
+	  for (j=0,num_ev=num_prox=0,TotDist=evfreq_avg=sermax=sermin=0; j<MaxProxyReg; j++) {
 	    n=RegSiteInd[j][i];
 	    if (n<0) break; 
 	    if (n==0) {
-		cerr << "ERROR. Proxy index [" << i << "][" << j 
-		     << "] cannot be zero." << endl;
-		return 0;
+		  cerr << "ERROR. Proxy index [" << i << "][" << j 
+		       << "] cannot be zero." << endl;
+		  return 0;
 	    }
 
 	    /* count events for each regional series */
 	    for (pe=0; *(EventTime+pe+(n-1)*MaxEvent)>0 && pe<MaxEvent;pe++);  
 		
-	    if (pe<=0) 
-	    {
-		cerr << "ERROR. Number of events is zero. Check events file (" 
-		     << n << "/" << i << "/" << j <<  ")" << endl;
-		return 0;
+	    if (0 & pe<=0) {
+		  std::cout << "WARNING. Number of events is zero. Check events file (E" 
+		            << n << "/R" << i << "/I" << j <<  ")" << endl;
+		  continue;
 	    }
 		    
 	    num_ev+=pe;
