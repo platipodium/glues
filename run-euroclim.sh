@@ -38,9 +38,12 @@ $SED -i '/deltan/s/deltan.*$/deltan 1.0/' $OPAR
 $SED -i '/deltaq/s/deltaq.*$/deltaq 1.0/' $OPAR
 $SED -i '/deltat/s/deltat.*$/deltat 0.15/' $OPAR
 $SED -i '/gammab/s/gammab.*$/gammab 0.0040/' $PAR
+$SED -i '/SiteRegfile/s/SiteRegfile.*$/SiteRegfile "EventInReg_124_685.tsv"/' $SCE
+$SED -i '/eventfile/s/eventfile.*$/eventfile "EventSeries_124.tsv"/' $SCE
 
 # Loop over parameters for this scenario
-for (( i=0 ; i<10; i=i+1 )) ; do
+#for (( i=0 ; i<10; i=i+1 )) ; do
+for (( i=4 ; i<5; i=i+1 )) ; do
   SCE=0.$i
   $SED -i '/flucampl/s/flucampl.*$/flucampl '$SCE'/' $DAT
   LOG=${B}_${SCE}.log 
