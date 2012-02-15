@@ -1,10 +1,10 @@
-function cl_events(varargin)
+function cl_eventdensity(varargin)
 
 arguments = {...
-  {'reg','all'},... 
-  {'threshold',1.5},... 
-  {'timelim',[0 12]},...
+  {'nreg',685},... 
+  {'np',124},... 
   {'flucperiod',175},...
+  {'timelim',[0 12]},... % in ka BP
 };
 
 cl_register_function;
@@ -21,6 +21,63 @@ for i=1:a.length
   end
 end
 
+evseriesfile=sprintf('EventSeries_%03d.tsv',np);
+evregionfile=sprintf('EventInReg_%03d_%03d.tsv',np,nreg);
+evradiusfile=sprintf('EventInRad_%03d_%03d.tsv',np,nreg);
+
+eventinreg=load(evregionfile,'-ascii');
+eventinrad=load(evradiusfile,'-ascii');
+evseries=load(evseriesfile,'-ascii');
+
+wmax=max(max(eventinrad));
+emax=size(evseries,2)-2;
+
+for ir=1:nreg
+  time=min(timelim):0.01:max(timelim);
+  wtime=zeros(size(time));
+  value=zeros(size(time));
+  figure(1); clf;
+  set(gca,'Xlim',timelim); hold on;
+  p=eventinreg(ir,:);
+  p=p(p>0);
+  np=length(p);
+  wp=wmax+1-squeeze(eventinrad(ir,1:np));
+  for ip=1:np
+    plot(evseries(p(ip),1:emax),wp(ip),'kd');
+    it=find(time>=evseries(p(ip),emax+1) & time<=evseries(p(ip),emax+2));
+    wtime(it)=wtime(it)+1;
+  end
+  plot(time,wtime,'k-');
+  
+  valid=find(wtime>0);
+  
+  for ip=1:np
+    e=find(evseries(p(ip),1:emax)>0);
+    e=e(find(e>=evseries(p(ip),emax+1)+flucperiod/500.0 & e<=evseries(p(ip),emax+2)-flucperiod/500.0));
+    ne=length(e)
+    for ie=1:ne
+      ev=evseries(p(ip),e(ie));
+      %[mt,it]=min(abs(ev-time));
+      %evalue=time;
+      %evalue(it)=wp(ip)/wtime(it);
+      evalue=exp(-0.5*(ev-time).^2/(flucperiod/1000).^2)*wp(ip);
+      value=value+evalue;
+      plot(time,evalue);
+    end
+  end
+  figure(2); clf;
+  value(valid)=value(valid)./wtime(valid);
+  plot(time,value);
+    
+
+end
+
+
+
+
+
+
+return
 
 %% 1. Read raw proxy datafile if .mat file does not exist
 evfile='proxydescription.tsv';
