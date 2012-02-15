@@ -23,14 +23,14 @@ No;No_sort;Datafile;t_min;t_max;Plotname;Proxy;Interpret;Latitude;Longitude;Cuto
 22;22;holo_Ammersee_d18O.dat;0;11;S Germany;$\delta^{18}$O;??;47.1;11.02;11;climdyn_14_73.pdf;VonGrafenstein1998;??
 23;23;moonlake_sal.dat;0;11;Moon Lk, ND;Salinity;??;46.86;-98.16;-1;clivar_poster.pdf;Laird1996;??
 24;24;SwissAlp_jpaleolim_30_261_JulTemp.dat;0;9;Swiss Alpes;T7;??;46.67;7.97;-1;jpaleolim_30_261.pdf;Wick2003;??
-25;25;Precip_jpaleolimn_30_261.dat;0;8;Swiss Alpes;P;??;46.67;7.97;-1;jpaleolimn_30_261;Wick2003;??
+25;555;Precip_jpaleolimn_30_261.dat;0;8;Swiss Alpes;P;??;46.67;7.97;-1;jpaleolimn_30_261;Wick2003;??
 26;26;SwissAlp_jpaleolim_30_261_Prec.dat;0;9;Swiss Alpes;P  ;??;46.67;7.97;-1;jpaleolim_30_261.pdf;Wick2003;??
 27;27;Drysdale2007BucadellaRenella_Italy_d18O.dat;1;7;C Italy;$\delta^{18}$O;??;45;11;NaN;??;Drysdale2006;Calcite flowstone, alos d13C
 28;28;Minnesota_Sharkey_joe_91_822_CHAR.dat;0;11;Sharkey, MN;Charcoal;??;44.58;-93.4;7.5;joe_91_822.pdf;Camill2003;??
 29;29;NWPacific_ThaNitz_holocene_14_641.dat;0;7;NW Pacific;\%Nitzschia;??;44.5;145;-1;holocene_14_641.pdf;Shimada2004;??
 30;30;NWPacific_ozeanica_holocene_14_641.dat;0;7;NW Pacific;\%Ozeanica;??;44.5;145;-1;holocene_14_641.pdf;Shimada2004;??
 31;31;Minnesota_Kimble_joe_91_822_CHAR.dat;0;11;Kimble, MN;Charcoal;??;44.22;-93.83;-1;joe_91_822.pdf;Camill2003;??
-32;32;Drysdale2007BucadellaRenella_Italy_MgCa.dat;1;7;C Italy;Mg/Ca T;??;44;10;NaN;??;Drysdale2006;Calcite flowstone, alos d13C
+32;32;Drysdale2007BucadellaRenella_Italy_MgCa.dat;1;7;C Italy;Mg/Ca T;??;44.7;10.7;NaN;??;Drysdale2006;Calcite flowstone, alos d13C
 33;33;NewEngland_StormFreq.dat;0;11;New England;Storms;??;44;-73;-1;nature_419_821.pdf;Noren2002;Terrigenous input layers, work based on Brown2000_etal_geol, SSA on composite measure, identify local anomalies.
 34;34;holocene_9_671_d18O.dat;0;9;NC America;$\delta^{18}$O;??;43.73;-92.4;-1;?holocene_9_671.pdf;Denniston1999;no pdf yet
 35;35;science_258_1626_d18O.dat;0;8;Cold Water Cv, IA;$\delta^{18}$O;??;43.47;-91.97;-1;?science_258_1626.pdf;Dorale1992;??

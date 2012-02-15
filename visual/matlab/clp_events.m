@@ -24,7 +24,7 @@ regevents=load('../../eventregtime.tsv','-ascii');
 regevents(regevents<0)=NaN;
 
 
-if(1==2)
+if(1==1)
   holodir='/h/lemmen/projects/glues/m/holocene';
   datafile=fullfile(holodir,'proxysites.csv');
   evinfo = read_textcsv(datafile, ';','"');
@@ -80,16 +80,17 @@ for ir=20:5:length(ireg)
   for ie=1:sum(isfinite(regevents(ireg(ir),:)))
     plot(repmat(regevents(ireg(ir),ie)/1000,2,1),[0 1],'r-');
   end  
-  set(gca,'Xlim',[3 12],'XDir','reverse','YLim',[0 1],'color','none','box','off','YTick',[]);
+  set(gca,'Xlim',[1 12],'XDir','reverse','YLim',[0 1],'color','none','box','off','YTick',[]);
+  cl_xticktitle('ka BP');
 
   %thresh=2;%1.5.^[-1 0 1 2];
   
   for ie=1:1:nevids
     figure(2); clf;
     if size(evseries,1)==124
-      data=clp_single_timeseries_trend(evids(ie),'timelim',[3 12],'highpass',0.050,'lowpass',2.0,'file','proxydescription.mat');
+      data=clp_single_timeseries_trend(evids(ie),'timelim',[1 12],'highpass',0.050,'lowpass',2.0,'file','proxydescription.mat');
     elseif size(evseries,1)==139
-      data=clp_single_timeseries_trend(evids(ie),'timelim',[3 12],'highpass',0.050,'lowpass',2.0);
+      data=clp_single_timeseries_trend(evids(ie),'timelim',[1 12],'highpass',0.050,'lowpass',2.0,'file','/h/lemmen/projects/glues/glues/glues-1.1.1/visual/matlab/holodata.mat');
     end
     
     % Adaptive threshold needed? 

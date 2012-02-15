@@ -733,7 +733,7 @@ int read_neighbours1() {
 
     ifs >> charbuffer;
     //sscanf(charbuffer,"%d:%f:%f",&neighid,&neigh_dist,&neigh_boundary);
-sscanf(charbuffer,"%d:%f:%f",&neighid,&neigh_boundary);
+sscanf(charbuffer,"%d:%f",&neighid,&neigh_boundary);
       if (neighid>=0) {
 	  regions[i++].AddNeighbour(&regions[neighid],
 				  neigh_boundary,1);
@@ -849,10 +849,10 @@ int writeresultheader(FILE* resultfile, unsigned int inspectid) {
     strcpy(comsym,"%%");
 
   fprintf(resultfile,"%s Tab-separated result file for Population %3d\n",comsym,inspectid);
-  fprintf(resultfile,"%s LocalSpread=%d RemoteSpread=%d\t",comsym,LocalSpread,RemoteSpread);
+  fprintf(resultfile,"%s LocalSpread=%ld RemoteSpread=%ld\t",comsym,LocalSpread,RemoteSpread);
   fprintf(resultfile,"%s Model run from %2.0f to %6.0f at stepsize %2.0f\n",
 	  comsym,TimeStart,TimeEnd,TimeStep);
-  fprintf(resultfile,"%s CultIndex=%3.1f Space2Time=%3.1f RelChange=%3.f NumMethod=%d\n",
+  fprintf(resultfile,"%s CultIndex=%3.1f Space2Time=%3.1f RelChange=%3.f NumMethod=%ld\n",
 	  comsym,CultIndex,Space2Time,RelChange,NumMethod);
   fprintf(resultfile,"%s flucampl=%3.1f flucperiod=%4.0f\n",comsym,flucampl,flucperiod);
   fprintf(resultfile,"%s regenerate=%4.2f spreadm=%3.1f gammad=%7e\n",comsym,
@@ -861,7 +861,7 @@ int writeresultheader(FILE* resultfile, unsigned int inspectid) {
 	  comsym,NPPCROP,deltat,overexp);
   fprintf(resultfile,"%s gdd_opt=%6.1f LiterateTechnology=%4.1f KnowledgeLoss=%3.1f\n",
 	  comsym,gdd_opt,LiterateTechnology,KnowledgeLoss);
-  fprintf(resultfile,"%s SaharaDesert=%d LGMHoloTrans=%d\n",
+  fprintf(resultfile,"%s SaharaDesert=%ld LGMHoloTrans=%ld\n",
 	  comsym,SaharaDesert,LGMHoloTrans);
   fprintf(resultfile,"%s\\kappa=%1.0f\t\\omega=%1.2f\t\\gamma_b=%1.4f\n",
 	  comsym,kappa,omega,gammab);
@@ -916,7 +916,7 @@ int open_watchfiles() {
   for(i=0; i<LengthOfins; i++) {
     watchfilename.assign(datapath);
  
-    sprintf(watchreg,"pop_%04d.tsv\0",ins[i]);
+    sprintf(watchreg,"pop_%04ld.tsv",ins[i]);
     watchfilename.append(watchreg);
 
     cout<<" writing population "<<ins[i]<<" to "<<watchreg<<endl;
@@ -951,6 +951,42 @@ int ReadLines(char* filename){
  //   printf("\n read from file %d lines\n\n",num);
 return num;
 }
+
+
+int read_EventRegTime() {
+  
+  /** EventRegTime.tsv is an ascii tsv file 
+      with dimensions MaxProxyReg x numberOfRegions 
+      This method reads only the columns of the first line */
+  
+  std::string fname="RegionEventTimes.tsv";
+  std::ifstream ifs;
+
+  std::cout << "Read " << fname ;
+  
+  ifs.open(fname.c_str(),ios::in);
+  assert(ifs.is_open());
+  
+  std::vector< std::vector<double> > data;
+  unsigned int n=glues::IO<double>::read_ascii_table(ifs,data);
+  ifs.close();
+
+  assert(data.size() == numberOfRegions);
+  assert(data.at(1).size() == MaxEvent);
+
+  std::cout << " " << data.size() << " regions x " << data.at(1).size() << " events"; 
+
+  for (unsigned int i=0; i<numberOfRegions; i++) {
+    for (unsigned int j=0; j<(unsigned int)MaxEvent; j++) {
+        //EventRegTime[i][j]=data.at(i).at(j);
+        *(EventRegTime+i*MaxEvent+j)=data.at(i).at(j);
+  }}
+  std::cout << " OK" << std::endl;
+
+  return 0;
+}  
+
+
  
 //namespace glues {
   
@@ -1040,3 +1076,8 @@ unsigned int Input::RegionNumber()
   }
 */
 //}
+
+
+
+
+

@@ -22,7 +22,7 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
    @author Kai Wirtz <kai.wirtz@hzg.de>
-   @date   2012-02-14
+   @date   2012-02-15
    @file   Glues.cc
    @brief  Main driver for GLUES simulations
 */
@@ -37,6 +37,7 @@
 #include "Globals.h"
 #include "callSiSi.hh"
 #include "IO.h"
+#include "Input.h"
 #include "Data.h"
 #include "GNetcdf.h"
 #include <vector>
@@ -248,6 +249,10 @@ struct ParStringElem parSlist[14]={{"SimulationName",&SimulationName},{"ModelNam
       return 1;
   }
 
+  /** This is a hack: fill EventRegTime[nreg x MaxEvent] from matlab calculation*/
+  read_EventRegTime();
+
+
   /**
      opens array of ascii & binary result files
   */
@@ -351,9 +356,10 @@ double simulation() {
 
   //  Exchange ex(100);
 
+  // Reverse timing if Time is counted in BC/AD
   if (TimeStart<0) {
       for (i=0; i<12; i++) event_time[i]=1950-event_time[i];
-      t_glac_end=2000-t_glac_end;
+      t_glac_end=1950-t_glac_end;
   }
 
   //  ex = new Exchange(numberOfRegions);
@@ -834,4 +840,8 @@ unsigned long int calc_deviation(unsigned long int CivNum)
 
      return;
  }
+ 
+
+ 
+ 
 /** EOF Glues.cc */

@@ -36,6 +36,8 @@
 #include "variables.h"
 #include "IO.h"
 
+int read_EventRegTime();
+
 //namespace glues {
 /* class Input
     {

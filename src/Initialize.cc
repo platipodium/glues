@@ -47,8 +47,35 @@ std::ofstream ofs;
 /*------------------------------------------------------------------*/
 /*    Add climate event according to proxy data for each region     */
 /*------------------------------------------------------------------*/
-int set_events()
-{
+int set_events() {
+  // Global variables used:
+  //   int RegSiteInd[MaxProxyReg][numberofRegions]
+  //   int RegSiteRad[MaxProxyReg][numberofRegions]
+  //   unsigned int numberOfRegions
+
+  // Loop over all regions
+  /*std::vector< std::vector<double> > vvEventRegTime; // numberOfRegions x MaxEvent  
+  std::vector<unsigned int> vEventRegNumber; // numberOfRegions  
+  //std::vector< std::vector<unsigned int> > vEventRadIndex; // numberOfRegions  
+  for (unsigned int i=0; i<numberOfRegions; i++) {
+    vEventRegNumber.push_back(0);
+    unsigned int j=0;
+    while (j<MaxProxyReg) if (RegSiteInd[j][i]>0) j++; else break; 
+    vEventRegNumber.at(i)=j;
+    //cout << MaxProxyReg << i << " " << vEventRegNumber.at(i) << endl; 
+
+    // create time series
+    unsigned int ntime=floor(abs(TimeEnd-TimeStart+1));
+    unsigned int* time=new unsigned int[ntime];
+    // Loop over all associated events of this region
+    // to find weights for events (number of time series x their weight)
+    for (j=0; j<vEventRegNumber.at(i); j++) {
+        //cout << EventTime[j][k] << endl;
+    }
+    
+  }*/
+
+  
     signed int loop=1,num_ev,num_prox,i,j,pe,iall=0,jj,n,pj,EventSeriesLen;
     double evfreq_avg,evfreq_avg_all=0;
 	//double omt;
