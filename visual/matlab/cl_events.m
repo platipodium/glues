@@ -4,6 +4,7 @@ arguments = {...
   {'reg','all'},... 
   {'threshold',1.5},... 
   {'timelim',[0 12]},...
+  {'flucperiod',175},...
 };
 
 cl_register_function;
@@ -64,9 +65,10 @@ else
     itime=find(ut>=timelim(1) & ut<=timelim(2));
     if isempty(itime) continue; end
     % Adaptive threshold needed? 
-    threshold=norminv(1-3/length(itime));
+    threshold=norminv(1-1/length(itime));
     p=cl_findpeaks(v(itime),threshold);
     p=p(isfinite(p));
+    p=p(find(itime(p)>min(ts)+flucperiod/2 & itime(p)<max(ts)-flucperiod/2));
     np=length(p);
     if np>maxevent
       warning('%d events detected, increase maxevent',p);
@@ -83,6 +85,7 @@ else
     evinfo.peakindex{ie}=p;
   end
   events=events(:,1:maxnp);
+  evinfo.flucperiod=flucperiod;
   save('-v6',strrep(evfile,'.tsv','.mat'),'evinfo');
 end
 

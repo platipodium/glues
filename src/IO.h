@@ -21,7 +21,7 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
    @author Caleb K Taylor <calebt@users.sourceforge.org>, contributions released for public domain
-   @date   2010-10-26
+   @date   2012-02-14
    @file   IO.h
 */
 
