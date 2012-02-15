@@ -26,6 +26,15 @@ basename='euroclim';
 sces=0.0:0.1:1.0;
 
 
+if (1==2)
+   er=load('EventInReg_123_685.tsv','-ascii');
+   er=unique(er(ireg,:));
+   er(er>26)=er(er>26)+1;
+    
+    
+end
+
+
 %% First chapter: 
 % Plot maps of timing and trajectories of farming and population
 if (any(doplots==1))
