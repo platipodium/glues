@@ -20,8 +20,8 @@ for i=1:a.length
 end
 
 
-regevents=load('../../eventregtime.tsv','-ascii');
-regevents(regevents<0)=NaN;
+%regevents=load('../../eventregtime.tsv','-ascii');
+%regevents(regevents<0)=NaN;
 
 
 if(1==2)
@@ -111,6 +111,9 @@ for ir=1:1:length(ireg)
   width=pos0(3)/2.2;
   height=0.8*pos0(4)/nevids;
   ax1=axes('Position',[0.5 pos0(2)+0.1 width height*nevids],'YAxisLocation','right');
+  if rlon>(lonlim(2)-lonlim(1))/2
+    set(ax1,'Position',[0.15 pos0(2)+0.1 width height*nevids],'YAxisLocation','left');
+  end
   hold on;
   %for ie=1:sum(isfinite(regevents(ireg(ir),:)))
     %plot(repmat(regevents(ireg(ir),ie)/1000,2,1),[0 1],'r-');
@@ -145,6 +148,10 @@ for ir=1:1:length(ireg)
 
     ax(ie)=axes('Position',[0.5 pos0(2)+0.1+height*(ie-1.0) width height],...
         'XDir','reverse','Xlim',[1 11]);
+    if rlon>(lonlim(2)-lonlim(1))/2
+      set(ax(ie),'Position',[0.15 pos0(2)+0.1+height*(ie-1.0) width height],'YAxisLocation','left');
+    end
+ 
     hold on;
     %plot(data.ut,cl_normalize(data.m50-data.m2000),'k-');
     plot(data.ut,data.norm,'k-');
@@ -164,15 +171,12 @@ for ir=1:1:length(ireg)
   
   cl_print('name',sprintf('events_map_%03d',ireg(ir)),'ext','pdf');
   
-  try
-      delete(pr);
-  delete(ph(ir),pt(ir));
-  delete(pm(ir));
-  delete(ax1,ax);
-  delete(ps,pl);
-  catch
-  end
-  
+  try delete(pr{:}); catch; end
+  try delete(ph(ir),pt(ir)); catch; end
+  try delete(pm(ir)); catch; end
+  try delete(ax1,ax(:)); catch; end
+  try delete(ps,pl); catch; end
+   
 end
 return
 end
