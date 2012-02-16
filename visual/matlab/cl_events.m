@@ -97,7 +97,7 @@ evregmatfile=strrep(evfile,'.tsv','_regionevents.mat');
 lonlim=loli; latlim=lali;
 maxradius=2500;
 
-if ~exist(evregmatfile,'file')
+if exist(evregmatfile,'file')
   load(evregmatfile);
 else
    
@@ -115,10 +115,13 @@ for ir=1:nreg
     [lon,lat,rlon,rlat]=cl_regionpath('reg',ireg(ir));
   end
   esd=cl_esd(lon,lat);
-  dist=cl_distance(evinfo.Longitude,evinfo.Latitude,rlon,rlat)-esd;  
-  if (dist<0) dist=0; end
+  dist=cl_distance(evinfo.Longitude,evinfo.Latitude,rlon,rlat)-esd/2;  
+  dist(dist<0)=0;
   events.dists(ireg(ir),:)=dist;
-  weight=floor(dist/esd);
+  weight=floor(dist/(esd/2));
+  if any(weight<0)
+      fprintf(' %d',dist(weight<0));
+  end
   %weight=exp(-dist/maxradius);
   %sw=sum(weight);
   events.weights(ireg(ir),:)=weight';%'/sw;
