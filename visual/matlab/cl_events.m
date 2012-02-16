@@ -23,29 +23,26 @@ end
 
 
 %% 1. Read raw proxy datafile if .mat file does not exist
-evfile='proxydescription.tsv';
-evmatfile=strrep(evfile,'.tsv','.mat');
+evfile='proxydescription_258_128.csv';
+evmatfile=strrep(evfile,'.csv','.mat');
 if exist(evmatfile,'file')
   load(evmatfile);
 else
   %"No";"No_sort";"Datafile";"t_min";"t_max";"Plotname";"Proxy";"Interpret";"Latitude";"Longitude";"CutoffFreq";"SourcePDF";"Source ";"Comment"
   proxydir='/h/lemmen/projects/glues/m/holocene/redfit/data/eleven';
-  fid=fopen(evfile,'r');
-  e=textscan(fid,'%f%f%s%f%f%s%s%s%f%f%f%s%s%s','headerlines',1,'Delimiter',';');
-  fclose(fid);
-  valid=find(e{2}<500);
-
-  evinfo.No=e{1}(valid);
-  evinfo.No_sort=e{2}(valid);
-  evinfo.Datafile=e{3}(valid);
-  evinfo.Plotname=e{6}(valid);
-  evinfo.Proxy=e{7}(valid);
-  evinfo.Interpret=e{8}(valid);
-  evinfo.Latitude=e{9}(valid);
-  evinfo.Longitude=e{10}(valid);
-  evinfo.SourcePDF=e{12}(valid);
-  evinfo.Source=e{13}(valid);
+  %fid=fopen(evfile,'r');
+  evinfo=read_textcsv(evfile,';','"');
   
+  valid=find(evinfo.No_sort<500);
+  f=fieldnames(evinfo);
+  nf=length(f);
+  
+  for jf=1:nf
+    a=evinfo.(f{jf});
+    if length(a)<length(valid);continue; end
+    evinfo.(f{jf})=a(valid);
+  end
+       
   %% 2.  Analyse events in all time series
   maxevent=30; % to preallocate array
   ne=length(valid);
@@ -84,15 +81,17 @@ else
     evinfo.time{ie}=ut(itime);
     evinfo.value{ie}=v(itime);
     evinfo.peakindex{ie}=p;
+    if mod(ie,10)==0 fprintf('.'); end
+
   end
   events=events(:,1:maxnp);
   evinfo.flucperiod=flucperiod;
-  save('-v6',strrep(evfile,'.tsv','.mat'),'evinfo');
+  save('-v6',strrep(evfile,'.csv','.mat'),'evinfo');
 end
 
 %% 3. Relate this to regions
 
-evregmatfile=strrep(evfile,'.tsv','_regionevents.mat');
+evregmatfile=strrep(evfile,'.csv','_regionevents.mat');
 [ireg,nreg,loli,lali]=find_region_numbers(reg);
 lonlim=loli; latlim=lali;
 maxradius=2500;
@@ -102,7 +101,7 @@ if exist(evregmatfile,'file')
 else
    
 ne=length(evinfo.No);
-events.innregion=zeros(nreg,ne)-NaN;
+events.inregion=zeros(nreg,ne)-NaN;
 events.dists=zeros(nreg,ne)+Inf;
 events.weights=zeros(nreg,ne);
 
@@ -125,6 +124,7 @@ for ir=1:nreg
   %weight=exp(-dist/maxradius);
   %sw=sum(weight);
   events.weights(ireg(ir),:)=weight';%'/sw;
+  if mod(ir,10)==0; fprintf('.'); end
   
   continue;
   ie=find(dist<=maxradius);
