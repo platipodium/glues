@@ -2,7 +2,7 @@ function cl_eventdensity(varargin)
 
 arguments = {...
   {'nreg',685},... 
-  {'np',123},... 
+  {'np',128},... 
   {'flucperiod',175},...
   {'timelim',[0 11]},... % in ka BP
 };
@@ -32,7 +32,12 @@ evseries=load(evseriesfile,'-ascii');
 emax=size(evseries,2)-2;
 regionevents=zeros(nreg,emax)-1;
 
-for ir=229:nreg
+reg='lbk'; [ireg,nreg,loli,lali]=find_region_numbers(reg);
+lonlim=loli; latlim=lali;
+
+
+for j=1:nreg
+  ir=ireg(j);
   he=[];
   time=min(timelim):0.01:max(timelim);
   wtime=zeros(size(time));
@@ -56,11 +61,12 @@ for ir=229:nreg
   mwtime=max(wtime);
  
   mevalue=0;
-  for ip=1:nip
+  [p ipsort]=sort(p);
+  for ip=nip:-1:1
     evs=evseries(p(ip),1:emax);
     evmin=evseries(p(ip),emax+1);
     evmax=evseries(p(ip),emax+2);
-    e=find(evs>=evmin+flucperiod/500.0 & evs<=evmax-flucperiod/500.0);
+    e=find(evs>=evmin+flucperiod/2000.0 & evs<=evmax-flucperiod/2000.0);
     ne=length(e);
     freq(ip)=ne/(evmax-evmin-flucperiod/1000);
     for ie=1:ne
@@ -68,14 +74,14 @@ for ir=229:nreg
       %[mt,it]=min(abs(ev-time));
       %evalue=time;
       %evalue(it)=wp(ip)/wtime(it);
-      evalue=exp(-0.5*(ev-time).^2/(flucperiod/1000).^2)*wp(ip)*mwtime/max(wp);
+      evalue=exp(-0.5*(ev-time).^2/(flucperiod/1000).^2)*wp(ipsort(ip))*mwtime/max(wp);
       mevalue=max([mevalue evalue]);
       value=value+evalue;
       %plot(time,evalue,'k-');
       he(ip)=patch([time,fliplr(time)],[-evalue,0*evalue],'w','FaceColor',c(ip,:),'FaceAlpha',0.5);
      end
     if ne==0
-      he(ip)=patch([time,fliplr(time)],[-evalue,0*evalue],'w','FaceColor',c(ip,:),'FaceAlpha',0.5);
+      he(ip)=patch([time,fliplr(time)],[-evalue,0*evalue],'w','FaceColor',c(ip,:),'FaceAlpha',0.5,'visible','off');
     end
   end
   
@@ -93,7 +99,7 @@ for ir=229:nreg
   ipeak=ipeak(isfinite(ipeak));
   value=(value-min(value));
   value=value*0.6*mwtime/max(value);
-  hs=patch([time,fliplr(time)],[value,0*value],'w','FaceColor',repmat(0.7,1,3),'FaceAlpha',0.5);
+  hs=patch([time,fliplr(time)],[value,0*value],'w','FaceColor',repmat(0.7,1,3),'FaceAlpha',0.9);
   %npeak=min(ceil(mean(freq)),emax);
   
   %plot(time(ipeak),value(ipeak),'kv','MarkerSize',10,'MarkerFaceColor','k');
@@ -109,7 +115,7 @@ for ir=229:nreg
     evalue=evalue+exp(-0.5*(peaktime(ie)-time).^2/(flucperiod/1000).^2);
   end
   evalue=evalue*max(value)/max(evalue)*1.1;
-  hp=patch([time,fliplr(time)],[evalue,0*evalue],'w','FaceColor',repmat(0.4,3,1),'FaceAlpha',0.5);
+  hp=patch([time,fliplr(time)],[evalue,0*evalue],'w','FaceColor',repmat(0.4,3,1),'FaceAlpha',0.9);
   uistack(hp,'down');
   
   ylimit=get(gca,'ylim');
@@ -131,18 +137,17 @@ for ir=229:nreg
   ylabel('Relative intensity / number of series');
   set(gca,'XMinorTick','on');
   
-  valid=find(he>0);
-  [psort ipsort]=sort(p(valid));
+  %valid=find(he>0);
   
   legends{1}='No. of series';
-  for i=1:length(valid)
-    legends{i+3}=sprintf('Proxy %d',p(valid(ipsort(i))));
+  for i=1:nip
+    legends{i+3}=sprintf('Proxy %d',p(i));
   end
   legends{3}='Weighted sum';
   legends{2}='Identified peaks';  
   
   
-  pl=legend([hk hp hs he(valid(ipsort))],legends);
+  pl=legend([hk hp hs he(:)'],legends);
   set(pl,'color','w','box','on','location','Northeastoutside','fontSize',12);
   pos=get(ax0,'pos');
   %set(ax0,'pos',[pos(1:2) pos(3)*1.2 pos(4)]);

@@ -35,12 +35,12 @@ if(1==2)
 else
   holodir='';
   basedir=holodir;
-  datafile=fullfile(holodir,'proxydescription.csv');
-  evinfo = read_textcsv(datafile, ';','"');
-  evseries=load(fullfile(basedir,'EventSeries_123.tsv'),'-ascii');
+  datafile=fullfile(holodir,'proxydescription_258_128.mat');
+  load(datafile);
+  evseries=load(fullfile(basedir,'EventSeries_128.tsv'),'-ascii');
   evseries(evseries<0)=NaN;
-  evradius=load(fullfile(basedir,'EventInRad_123_685.tsv'),'-ascii');
-  evregion=load(fullfile(basedir,'EventInReg_123_685.tsv'),'-ascii');
+  evradius=load(fullfile(basedir,'EventInRad_128_685.tsv'),'-ascii');
+  evregion=load(fullfile(basedir,'EventInReg_128_685.tsv'),'-ascii');
 end  
   
 evcolors=jet(8);
@@ -58,7 +58,7 @@ pos0=get(gca,'Position');
 
 dg=repmat(0.4,1,3);
 
-for ir=38:5:length(ireg)
+for ir=1:1:length(ireg)
   [h,llimit,llimit,rlon,rlat]=clp_regionpath('reg',ireg(ir));
   [lon lat rlon rlat]=cl_regionpath('reg',ireg(ir));
   set(gca,'FontName','Times');
@@ -80,7 +80,7 @@ for ir=38:5:length(ireg)
     set(pr{ie},'Color',dg,'Linestyle',':','linewidth',2);
   end
   
-  evids(evids>25)=evids(evids>25)+1;
+  %evids(evids>25)=evids(evids>25)+1;
   evids=sort(evids);
   for ie=1:length(evids)
     ps(ie)=m_plot([evinfo.Longitude(evids(ie)) rlon],[evinfo.Latitude(evids(ie)) rlat],...
@@ -126,6 +126,8 @@ for ir=38:5:length(ireg)
       data=clp_single_timeseries_trend(evids(ie),'timelim',[1 12],'highpass',0.050,'lowpass',2.0,'file','proxydescription.mat');
     elseif size(evseries,1)==123
       data=clp_single_timeseries_trend(evids(ie),'timelim',[1 12],'highpass',0.050,'lowpass',2.0,'file','proxydescription.mat');
+    elseif size(evseries,1)==128
+      data=clp_single_timeseries_trend(evids(ie),'timelim',[1 12],'highpass',0.050,'lowpass',2.0,'file','proxydescription_258_128.mat');
     elseif size(evseries,1)==139
       data=clp_single_timeseries_trend(evids(ie),'timelim',[1 12],'highpass',0.050,'lowpass',2.0,'file','/h/lemmen/projects/glues/glues/glues-1.1.1/visual/matlab/holodata.mat');
     end
