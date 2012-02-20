@@ -2,11 +2,12 @@
 
 
 %% Define region to lbk
-%datastring='Pinhasi';
+datastring='Pinhasi';
 %datastring='Turney';
 %datastring='Vanderlinden';
-datastring='Fepre';
+%datastring='Fepre';
 
+proxyfile='proxydescription_258_128.csv';
 reg='lbk'; [ireg,nreg,loli,lali]=find_region_numbers(reg);
 lonlim=loli; latlim=lali;
 timelim=[-7000 -3000];
@@ -15,7 +16,6 @@ nhreg=length(hreg);
 letters='ABCDEFGHIJKLMNOPQRSTUVW';
 letters=letters(1:nhreg);
 
-doplots=[7];
 
 
 %-------------------------
@@ -26,19 +26,91 @@ basename='euroclim';
 sces=0.0:0.1:1.0;
 
 
-if (1==2)
-   er=load('EventInReg_123_685.tsv','-ascii');
-   er=unique(er(ireg,:));
-   er(er>26)=er(er>26)+1;
-    
-    
+sites=cl_read_neolithic(datastring,[-12000 0],lonlim,latlim);
+matfile=strrep(proxyfile,'.csv','.mat');
+if ~exist('matfile','file');
+  evinfo=read_textcsv(proxyfile);
+else
+  load(matfile); % into struct evinfo
+end
+
+% Load events in region
+evregionfile=sprintf('EventInReg_128_685.tsv');
+evinreg=load(evregionfile,'-ascii');
+
+evinreg=evinreg(ireg,:);
+[ev,ievs]=unique(evinreg);
+nev=length(ev);
+
+
+% Decide which plots to make
+% 1: proxy location, region, and sites map
+doplots=[2 8];
+lg=repmat(0.8,1,3);
+mg=repmat(0.55,1,3);
+dg=repmat(0.3,1,3);
+
+%% Figure 1: map of regions and Proxy locations and Neolithic sites
+if any(doplots==1)
+%
+  clf
+  lali=cl_minmax(evinfo.Latitude(ev))+[-1 1];
+  loli=cl_minmax(evinfo.Longitude(ev))+[-1 1];
+
+  [data,basename]=clp_nc_variable('lat',lali,'lon',loli,'var','region','marble',2,'transparency',1,'nocolor',0,...
+      'showstat',0,'showtime',0,'fontsize',15,'showregion',0,...
+      'file',fullfile(predir,sprintf('%s_%.1f.nc',basename,sces(1))),'figoffset',0,'noprint',1,'notitle',1);
+
+  valid=find(data.handle>0);
+  set(data.handle(valid),'FaceColor',lg,'EdgeColor',mg,'EdgeAlpha',1,'FaceAlpha',0.3);
+
+  hold on;
+  pl=m_plot(lonlim([1 2 2 1 1]),latlim([1 1 2 2 1]),'k--');
+  set(pl,'LineWidth',4,'Color',mg);
+  
+  ps=m_plot(sites.longitude,sites.latitude,'ko','MarkerFaceColor',mg,'MarkerEdgeColor','none');
+  set(ps,'MarkerSize',2);
+
+  for i=1:nev
+    plon=evinfo.Longitude(ev(i));
+    plat=evinfo.Latitude(ev(i));
+    [plon plat]=distribute_around(plon,plat,2,1.2);
+    switch(ev(i))
+        case {57,69,79}, plon=plon-2.5;
+        case {89,49,81,61}, plon=plon+2.5;
+      otherwise;
+    end
+    pp(i)=m_plot(plon(1),plat(1),'k^','MarkerSize',7,'MarkerFacecolor',dg);
+    pt(i)=m_text(plon(2),plat(2),num2str(evinfo.No(ev(i))),'Vertical','middle',...
+        'horizontal','center');
+  end
+  cb=findobj(gcf,'-property','Location');
+  delete(cb);
+  uistack(ps,'top');
+  uistack(pt,'top');
+  cl=legend([pl pp ps],'Focus area','Proxy locations','Neolithic sites');
+  set(cl,'Location','East');
+  clpos=get(cl,'Position');
+  [x y]=m_ll2xy(lonlim,latlim);
+  set(cl,'Position',clpos + [0.31+x(2)-clpos(1) 0 0 0]);
+  
+  
+  
+  cl_print('name','region_map_sites_proxies','ext','pdf');%,'res',[150 300 ]);
 end
 
 
-%% First chapter: 
+%% Figure 2 from clP_event and cl_eventdensity.m
+
+%% Figure 3
+% maps of farming at different times for scenario X (todo) , also movie
+
+%% Figure 4 
 % Plot maps of timing and trajectories of farming and population
-if (any(doplots==1))
+if (any(doplots==8))
 for isce=1:length(sces)
+     
+    
     file=fullfile(predir,[basename sprintf('_%.1f.nc',sces(isce))]);
     if ~exist(file,'file'); continue; end
     
@@ -52,12 +124,12 @@ for isce=1:length(sces)
     [d,b]=clp_nc_variable('var','farming','threshold',0.5,'reg','lbk','file',file,'noprint',1,'timelim',timelim,'showvalue',1);
     title(['Timing ' basename ' ' num2str(sces(isce))]);
     cl_print(gcf,'name',pfile,'ext','png');
-    clp_nc_trajectory('var','farming','timelim',[-7000 -1000],'file',file,'noprint',1,'reg','lbk','ylim',[0 1],'nosum',1)
-    title(['Farming ' basename ' ' num2str(sces(isce)) ]);
-    cl_print(gcf,'name',strrep(pfile,'_map','_farming'),'ext','png');
-    clp_nc_trajectory('var','population_density','timelim',[-7000 -1000],'file',file,'noprint',1,'reg','lbk','ylim',[0 5],'nosum',1)
-    title(['Population ' prefixes{ipre} '_' postfix]);
-    cl_print(gcf,'name',strrep(pfile,'_map','_population_density'),'ext','png');
+    %clp_nc_trajectory('var','farming','timelim',[-7000 -1000],'file',file,'noprint',1,'reg','lbk','ylim',[0 1],'nosum',1)
+    %title(['Farming ' basename ' ' num2str(sces(isce)) ]);
+    %cl_print(gcf,'name',strrep(pfile,'_map','_farming'),'ext','png');
+    %clp_nc_trajectory('var','population_density','timelim',[-7000 -1000],'file',file,'noprint',1,'reg','lbk','ylim',[0 5],'nosum',1)
+    %title(['Population ' prefixes{ipre} '_' postfix]);
+    %cl_print(gcf,'name',strrep(pfile,'_map','_population_density'),'ext','png');
       
   end
 
@@ -73,8 +145,6 @@ for isce=1:length(sces)
   fprintf('\\end{tabular}\n');  
 end % if doplots
   
-
-sites=cl_read_neolithic(datastring,[-12000 0],lonlim,latlim);
 
 % Read default scenario
 file=fullfile(predir,[basename '_0.4.nc']);
