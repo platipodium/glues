@@ -31,7 +31,7 @@ psize=get(fig,'PaperSize');
 if ~noshrink
   set(fig,'PaperPositionMode','Manual','PaperOrientation','portrait');
   set(fig,'PaperPosition',ppos.*[0 0 psize(1)/ppos(3) psize(1)/ppos(3)]+[-20 -0 -40 -40]);
-  ppos=get(fig,'PaperPosition')
+  ppos=get(fig,'PaperPosition');
   set(fig,'PaperSize',psize.*[1 0]+ppos(3:4).*[0 1])
 end
 
