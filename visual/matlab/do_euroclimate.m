@@ -52,7 +52,7 @@ dg=repmat(0.3,1,3);
 %---------------------------------------------------------------------
 % Decide which plots to make
 % 1: proxy location, region, and sites map
-doplots=[2];
+doplots=[8];
 
 %---------------------------------------------------------------------
 %% Figure 1: map of regions and Proxy locations and Neolithic sites

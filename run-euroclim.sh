@@ -44,7 +44,7 @@ $SED -i '/eventfile/s/eventfile.*$/eventfile "EventSeries_128.tsv"/' $SCE
 #$SED -i '/eventfile/s/eventfile.*$/eventfile "EvSeries.dat"/' $SCE
 
 # Loop over parameters for this scenario
-for (( i=0 ; i<10; i=i+1 )) ; do
+for (( i=0 ; i<-10; i=i+1 )) ; do
 #for (( i=4 ; i<5; i=i+1 )) ; do
   SCE=0.$i
   $SED -i '/flucampl/s/flucampl.*$/flucampl '$SCE'/' $DAT
