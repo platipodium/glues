@@ -1,30 +1,33 @@
-% Run script for euroclim papers about climate triggering in Europe
+%% User section, please adjust
+% Run script for euroclim papers about sensitivity of transition to climate events in Europe
+% Carsten Lemmen 2012-02-20
 
+% What Neolithic site dataset to use
+datastrings={'Pinhasi','Turney','Vanderlinden','Fepre'};
+datastring=datastrings{1}
 
-%% Define region to lbk
-datastring='Pinhasi';
-%datastring='Turney';
-%datastring='Vanderlinden';
-%datastring='Fepre';
-
+% What proxy file to use
 proxyfile='proxydescription_258_128.csv';
+
+% Define regional and temporal limitation
 reg='lbk'; [ireg,nreg,loli,lali]=find_region_numbers(reg);
 lonlim=loli; latlim=lali;
 timelim=[-7000 -3000];
+
+% Highlight certain regions
 hreg=[271 255  211 183 178 170 146 142 123 122];
 nhreg=length(hreg);
-letters='ABCDEFGHIJKLMNOPQRSTUVW';
-letters=letters(1:nhreg);
 
-
-
-%-------------------------
-% 1) Make plots of Timing (as map) and Farming and Population (as
-% trajectories) for all scenarios (differing fluctuation intensity)
+% Define base directory and scenarios
 predir='/Users/lemmen/devel/glues';
 basename='euroclim';
 sces=0.0:0.1:1.0;
 
+%--------------------------------------------------------------------------------
+%% preparatory color, symbol and file handling 
+
+letters='ABCDEFGHIJKLMNOPQRSTUVW';
+letters=letters(1:nhreg);
 
 sites=cl_read_neolithic(datastring,[-12000 0],lonlim,latlim);
 matfile=strrep(proxyfile,'.csv','.mat');
@@ -42,18 +45,19 @@ evinreg=evinreg(ireg,:);
 [ev,ievs]=unique(evinreg);
 nev=length(ev);
 
-
-% Decide which plots to make
-% 1: proxy location, region, and sites map
-doplots=[2 8];
 lg=repmat(0.8,1,3);
 mg=repmat(0.55,1,3);
 dg=repmat(0.3,1,3);
 
+%---------------------------------------------------------------------
+% Decide which plots to make
+% 1: proxy location, region, and sites map
+doplots=[2];
+
+%---------------------------------------------------------------------
 %% Figure 1: map of regions and Proxy locations and Neolithic sites
 if any(doplots==1)
-%
-  clf
+
   lali=cl_minmax(evinfo.Latitude(ev))+[-1 1];
   loli=cl_minmax(evinfo.Longitude(ev))+[-1 1];
 
@@ -94,23 +98,22 @@ if any(doplots==1)
   [x y]=m_ll2xy(lonlim,latlim);
   set(cl,'Position',clpos + [0.31+x(2)-clpos(1) 0 0 0]);
   
-  
-  
   cl_print('name','region_map_sites_proxies','ext','pdf');%,'res',[150 300 ]);
 end
 
-
+%--------------------------------------------------------------------------
 %% Figure 2 from clP_event and cl_eventdensity.m
 
+%--------------------------------------------------------------------------
 %% Figure 3
 % maps of farming at different times for scenario X (todo) , also movie
 
+%-----------------------------------------------------------------------
 %% Figure 4 
 % Plot maps of timing and trajectories of farming and population
 if (any(doplots==8))
 for isce=1:length(sces)
      
-    
     file=fullfile(predir,[basename sprintf('_%.1f.nc',sces(isce))]);
     if ~exist(file,'file'); continue; end
     
@@ -135,17 +138,17 @@ for isce=1:length(sces)
 
   fprintf('\\begin{tabular}{c c}\n');
   for isce=1:length(sces)
-    pfile=fullfile(predir,[basename strrep(sprintf('_%.1f_map',sces(isce)),'.','-')]);
-    if ~exist([pfile '.png'],'file'); end
-
-    fprintf('\\includegraphics[viewport=70 75 465 370,clip=,width=0.5\\hsize]{%s}',pfile);
-    if (mod(isce,2)==1) fprintf(' & '); else fprintf('\\\\\n'); end
-
+   pfile=fullfile(predir,[basename strrep(sprintf('_%.1f_map',sces(isce)),'.','-')]);
+   if ~exist([pfile '.png'],'file'); end
+  
+   fprintf('\\includegraphics[viewport=70 75 465 370,clip=,width=0.5\\hsize]{%s}',pfile);
+   if (mod(isce,2)==1) fprintf(' & '); else fprintf('\\\\\n'); end
+  
   end
   fprintf('\\end{tabular}\n');  
 end % if doplots
   
-
+%---------------------------------------------------------------------------------
 % Read default scenario
 file=fullfile(predir,[basename '_0.4.nc']);
 if ~exist(file,'file'); error('File does not exist'); end

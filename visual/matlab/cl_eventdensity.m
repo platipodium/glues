@@ -48,8 +48,12 @@ for j=1:nreg
   p=p(p>0);
   nip=length(p);
   c=jet(nip);
+  
+  eventinrad=exp(-eventinrad);
+  
   wmax=max(max(eventinrad(ir,1:nip)));
-  wp=wmax+1-squeeze(eventinrad(ir,1:nip));
+  %wp=wmax+1-squeeze(eventinrad(ir,1:nip));
+  wp=eventinrad(ir,1:nip);
   for ip=1:nip
     %plot(evseries(p(ip),1:emax),wp(ip),'kd');
     it=find(time>=evseries(p(ip),emax+1) & time<=evseries(p(ip),emax+2));
@@ -89,26 +93,32 @@ for j=1:nreg
   %figure(2); clf; hold on;
   value(valid)=value(valid)./wtime(valid);
   %plot(time,value,'k-');
+  [ut value]=movavg(time,value,flucperiod/1000);
   value=cl_normalize(value);
-  %plot(time,value,'k-'); hold on;
+  %plot(time,value,'k-','linewidth',2);
+  plot(time,value,'b-'); hold on;
   %value(value<0.7)=-0.1;
   %plot(time,value,'r-');
   pvalue=value;
-  pvalue(value<0)=-0.1;
-  ipeak=cl_findpeaks(pvalue);   
+  %pvalue(value<0)=-0.1;
+  ipeak=cl_findpeaks(value,0);   
   ipeak=ipeak(isfinite(ipeak));
-  value=(value-min(value));
+  ipos=find(value(ipeak)>0);
+  ipeak=ipeak(ipos);
+  
+  value=(value-min(value))';
   value=value*0.6*mwtime/max(value);
-  hs=patch([time,fliplr(time)],[value,0*value],'w','FaceColor',repmat(0.7,1,3),'FaceAlpha',0.9);
+  hs=patch([time,fliplr(time)],[value 0*value],'w','FaceColor',repmat(0.7,1,3),'FaceAlpha',0.9);
+  pvalue=value(ipeak);
+  
   %npeak=min(ceil(mean(freq)),emax);
   
   %plot(time(ipeak),value(ipeak),'kv','MarkerSize',10,'MarkerFaceColor','k');
   
   npeak=min([length(ipeak),emax]);
-  pvalue=value(ipeak);
   [speak ispeak]=sort(pvalue);
   peaktime=sort(time(ipeak(ispeak(1:npeak))));
-  %plot(time(ipeak(ispeak(1:npeak))),value(ipeak(ispeak(1:npeak))),'kv','MarkerSize',10,'MarkerFaceColor','k');
+  plot(time(ipeak(ispeak(1:npeak))),value(ipeak(ispeak(1:npeak))),'kv','MarkerSize',10,'MarkerFaceColor','k');
 
   evalue=time*0;
   for ie=1:npeak;
@@ -158,8 +168,10 @@ for j=1:nreg
 
 end
 
+npeak=ceil(sum(sum(regionevents>0))/nreg);
+
 format=repmat('%.2f ',1,emax);
-file=sprintf('RegionEventTimes_%03d_%03d.tsv',np,nreg);
+file=sprintf('RegionEventTimes_%03d_%03d_%02d.tsv',np,nreg,npeak);
 fid=fopen(file,'w');
 fprintf(fid,sprintf('%s\n',format),regionevents');
 fclose(fid);

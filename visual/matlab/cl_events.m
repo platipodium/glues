@@ -81,6 +81,7 @@ else
     evinfo.time{ie}=ut(itime);
     evinfo.value{ie}=v(itime);
     evinfo.peakindex{ie}=p;
+    evinfo.threshold(ie)=threshold;
     if mod(ie,10)==0 fprintf('.'); end
 
   end
