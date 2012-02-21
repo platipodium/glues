@@ -52,7 +52,7 @@ dg=repmat(0.3,1,3);
 %---------------------------------------------------------------------
 % Decide which plots to make
 % 1: proxy location, region, and sites map
-doplots=[8];
+doplots=[3];
 
 %---------------------------------------------------------------------
 %% Figure 1: map of regions and Proxy locations and Neolithic sites
@@ -107,6 +107,36 @@ end
 %--------------------------------------------------------------------------
 %% Figure 3
 % maps of farming at different times for scenario X (todo) , also movie
+if any(doplots==3) 
+  movtime=-7500:50:-3000;
+  nmovtime=length(movtime);
+  sce='0.4';
+  for it=1:nmovtime
+    [d,b]=clp_nc_variable('var','farming','reg',reg,'marble',2,'transparency',1,'nocolor',0,...
+      'showstat',0,'lim',[0 1],'timelim',movtime(it),...
+      'file',['../../euroclim_' sce '.nc'],'figoffset',0,'sce',[sce '_' sprintf('%03d_%05d',it,movtime(it))],'noprint',1);
+    m_coast('color','k');
+    m_grid('box','fancy','linestyle','none');
+    title('GLUES agropastoral activity');
+    cb=findobj(gcf,'tag','colorbar')
+    ytl=get(cb,'YTickLabel');
+    ytl=num2str(round(100*str2num(ytl)));
+    set(cb,'YTickLabel',ytl);
+    title(cb,'%');
+    cm=get(cb,'Children');
+    cmap=get(cm,'CData');
+  
+    cl_print('name',b,'ext','png','res',100);
+  end
+  % Command line postprocessing
+  %mencoder mf://farming_lbk_66_base_???_*_150.png  -mf w=800:h=600:fps=5:type=png -ovc lavc -lavcopts vcodec=mpeg4:mbd=2:trell -oac copy -o output.avi
+end
+
+
+
+
+
+
 
 %-----------------------------------------------------------------------
 %% Figure 4 
@@ -1042,32 +1072,6 @@ if (2==0) for it=1:nmovtime
   title(cb,'%');
   cl_print('name',b,'ext','png','res',[300,600]);
  end,end
-
-%% plot farming advance (as Figure 2, movie)
-movtime=-7500:50:-3500;
-nmovtime=length(movtime);
-if (2==0) for it=1:nmovtime
-  [d,b]=clp_nc_variable('var','farming','reg',reg,'marble',2,'transparency',1,'nocolor',0,...
-      'showstat',0,'lim',[0 1],'timelim',movtime(it),...
-      'file',['../../euroclim_' sce '.nc'],'figoffset',0,'sce',[sce '_' sprintf('%03d_%05d',it,movtime(it))],'noprint',1);
-  m_coast('color','k');
-  m_grid('box','fancy','linestyle','none');
-  title('GLUES agropastoral activity');
-  cb=findobj(gcf,'tag','colorbar')
-  ytl=get(cb,'YTickLabel');
-  ytl=num2str(round(100*str2num(ytl)));
-  set(cb,'YTickLabel',ytl);
-  title(cb,'%');
-  cm=get(cb,'Children');
-  cmap=get(cm,'CData');
-  
-  cl_print('name',b,'ext','png','res',100);
- end,end
-
-
-% Command line postprocessing
-%mencoder mf://farming_lbk_66_base_???_*_150.png  -mf w=800:h=600:fps=5:type=png -ovc lavc -lavcopts vcodec=mpeg4:mbd=2:trell -oac copy -o output.avi
-
 
 % Contour plot
 if (0==9)
