@@ -23,10 +23,12 @@ end
 
 evseriesfile=sprintf('EventSeries_%03d.tsv',np);
 evregionfile=sprintf('EventInReg_%03d_%03d.tsv',np,nreg);
-evradiusfile=sprintf('EventInRad_%03d_%03d.tsv',np,nreg);
+%evradiusfile=sprintf('EventInRad_%03d_%03d.tsv',np,nreg);
+evdistfile=sprintf('EventInRad_%03d_%03d.tsv',np,nreg);
 
 eventinreg=load(evregionfile,'-ascii');
-eventinrad=load(evradiusfile,'-ascii');
+%eventinrad=load(evradiusfile,'-ascii');
+eventindist=load(evdistfile,'-ascii');
 evseries=load(evseriesfile,'-ascii');
 
 emax=size(evseries,2)-2;
@@ -49,11 +51,11 @@ for j=1:nreg
   nip=length(p);
   c=jet(nip);
   
-  eventinrad=exp(-eventinrad);
+  eventinrad=exp(-eventindist);
   
-  wmax=max(max(eventinrad(ir,1:nip)));
+  wmax=max(max(eventindist(ir,1:nip)));
   %wp=wmax+1-squeeze(eventinrad(ir,1:nip));
-  wp=eventinrad(ir,1:nip);
+  wp=eventindist(ir,1:nip);
   for ip=1:nip
     %plot(evseries(p(ip),1:emax),wp(ip),'kd');
     it=find(time>=evseries(p(ip),emax+1) & time<=evseries(p(ip),emax+2));

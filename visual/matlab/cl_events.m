@@ -173,6 +173,7 @@ fclose(fid);
 ne=8;
 eventinreg=zeros(nreg,ne)-1;
 eventinrad=zeros(nreg,ne)-1;
+eventindist=zeros(nreg,ne)-1;
 for ir=1:nreg
   [sdists idists]=sort(events.dists(ireg(ir),:));
   ie=idists(1:ne);
@@ -180,6 +181,7 @@ for ir=1:nreg
   
   de=sdists(1:ne);
   eventinrad(ireg(ir),1:ne)=events.weights(ireg(ir),ie);
+  eventindist(ireg(ir),1:ne)=events.dists(ireg(ir),ie);
 end
 
 format=repmat('%d ',1,8);
@@ -193,6 +195,15 @@ file=sprintf('EventInRad_%03d_%03d.tsv',np,nreg);
 fid=fopen(file,'w');
 fprintf(fid,sprintf('%s\n',format),eventinrad');
 fclose(fid);
+
+eventindist(eventindist>9999)=9999;
+eventindist=round(eventindist);
+format=repmat('%04d ',1,8);
+file=sprintf('EventInDist_%03d_%03d.tsv',np,nreg);
+fid=fopen(file,'w');
+fprintf(fid,sprintf('%s\n',format),eventindist');
+fclose(fid);
+
 
 
 return
