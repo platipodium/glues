@@ -5,6 +5,8 @@ arguments = {...
   {'np',128},... 
   {'flucperiod',175},...
   {'timelim',[0 11]},... % in ka BP
+  {'nofig',0},...
+  {'noprint',0},...
 };
 
 cl_register_function;
@@ -39,13 +41,18 @@ lonlim=loli; latlim=lali;
 
 
 for j=1:nreg
+
   ir=ireg(j);
   he=[];
   time=min(timelim):0.01:max(timelim);
   wtime=zeros(size(time));
   value=zeros(size(time));
-  figure(1); clf;
-  set(gca,'Xlim',timelim,'FontName','Times'); hold on;
+  
+  if ~nofig
+    figure(1); clf;
+    set(gca,'Xlim',timelim,'FontName','Times'); hold on;
+  end
+  
   p=eventinreg(ir,:);
   p=p(p>0);
   nip=length(p);
@@ -62,7 +69,7 @@ for j=1:nreg
     it=find(time>=evseries(p(ip),emax+1) & time<=evseries(p(ip),emax+2));
     wtime(it)=wtime(it)+1;
   end
-  hk=plot(time,wtime,'k--','linewidth',3);
+  if ~nofig hk=plot(time,wtime,'k--','linewidth',3); end
   
   valid=find(wtime>0);
   mwtime=max(wtime);
@@ -85,10 +92,12 @@ for j=1:nreg
       mevalue=max([mevalue evalue]);
       value=value+evalue;
       %plot(time,evalue,'k-');
-      he(ip)=patch([time,fliplr(time)],[-evalue,0*evalue],'w','FaceColor',c(ip,:),'FaceAlpha',0.5);
+      if ~nofig
+        he(ip)=patch([time,fliplr(time)],[-evalue,0*evalue],'w','FaceColor',c(ip,:),'FaceAlpha',0.5);
+      end
      end
-    if ne==0
-      he(ip)=patch([time,fliplr(time)],[-evalue,0*evalue],'w','FaceColor',c(ip,:),'FaceAlpha',0.5,'visible','off');
+    if ne==0 & ~nofig
+      he(ip)=patch([time,fliplr(time)],[-value,0*value],'w','FaceColor',c(ip,:),'FaceAlpha',0.5,'visible','off');
     end
   end
   
@@ -97,22 +106,35 @@ for j=1:nreg
   value(valid)=value(valid)./wtime(valid);
   %plot(time,value,'k-');
   [ut value]=movavg(time,value,flucperiod/1000);
+  %
+  
   value=cl_normalize(value);
+  [pvalue,ipeak]=findpeaks(value);
+  ipos=find(pvalue>0);
+  ipeak=ipeak(ipos);
+  pvalue=pvalue(ipos);
+  
   %plot(time,value,'k-','linewidth',2);
   %plot(time,value,'b-'); hold on;
   %value(value<0.7)=-0.1;
   %plot(time,value,'r-');
-  pvalue=value;
+  %pvalue=value;
   %pvalue(value<0)=-0.1;
-  ipeak=cl_findpeaks(value,0);   
-  ipeak=ipeak(isfinite(ipeak));
-  ipos=find(value(ipeak)>0);
-  ipeak=ipeak(ipos);
   
-  value=(value-min(value))';
+  %ipeak=cl_findpeaks(value,0);   
+  %ipeak=ipeak(isfinite(ipeak));
+  %ipos=find(value(ipeak)>0);
+  %ipeak=ipeak(ipos);
+  minval=min(value);
+  value=(value-minval)';
   value=value*0.6*mwtime/max(value);
-  hs=patch([time,fliplr(time)],[value 0*value],'w','FaceColor',repmat(0.7,1,3),'FaceAlpha',0.9);
-  pvalue=value(ipeak);
+  mg=repmat(0.5,1,3);
+  
+  if ~nofig
+    hs=patch([time,fliplr(time)],[value 0*value],'w','FaceColor',repmat(0.7,1,3),'FaceAlpha',0.9);
+  end
+  
+  %pvalue=value(ipeak);
   
   %npeak=min(ceil(mean(freq)),emax);
   
@@ -121,6 +143,9 @@ for j=1:nreg
   npeak=min([length(ipeak),emax]);
   [speak ispeak]=sort(pvalue);
   peaktime=sort(time(ipeak(ispeak(1:npeak))));
+  regionevents(ir,1:npeak)=peaktime;
+
+  if nofig continue; end
   %plot(time(ipeak(ispeak(1:npeak))),value(ipeak(ispeak(1:npeak))),'kv','MarkerSize',10,'MarkerFaceColor','k');
 
   evalue=time*0;
@@ -128,8 +153,11 @@ for j=1:nreg
     evalue=evalue+exp(-0.5*(peaktime(ie)-time).^2/(flucperiod/1000).^2);
   end
   evalue=evalue*max(value)/max(evalue)*1.1;
+  
   hp=patch([time,fliplr(time)],[evalue,0*evalue],'w','FaceColor',repmat(0.4,3,1),'FaceAlpha',0.9);
   uistack(hp,'down');
+  hst=plot(time,value*0-minval,'k:','color','w','LineWidth',2);
+ 
   
   ylimit=get(gca,'ylim');
   set(gca,'ylim',[ -mevalue*1.1 max([evalue wtime])*1.1]);
@@ -159,16 +187,15 @@ for j=1:nreg
   legends{3}='Weighted sum';
   legends{2}='Identified peaks';  
   
-  
   pl=legend([hk hp hs he(:)'],legends);
   set(pl,'color','w','box','on','location','Northeastoutside','fontSize',12);
   pos=get(ax0,'pos');
-  %set(ax0,'pos',[pos(1:2) pos(3)*1.2 pos(4)]);
+
   cl_xticktitle('ka BP');
+  
+  if noprint continue; end
   cl_print(1,'name',sprintf('eventdensity_%03d',ir),'ext','eps');
   
-  regionevents(ir,1:npeak)=peaktime;
-
 end
 
 npeak=ceil(sum(sum(regionevents>0))/nreg);
