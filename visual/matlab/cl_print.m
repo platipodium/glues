@@ -84,7 +84,7 @@ for ir=1:length(resolution)
     try
       switch (f)
         case {'eps'}
-          print(['-tiff -d' extension{ie} 'c2'],'-painters',fullname);
+          print('-tiff','-depsc2','-painters',fullname);
         case {'pdf','svg'}
           print(['-d' extension{ie}],'-painters',fullname); 
         case {'tiff','jpeg','ppm','png'}

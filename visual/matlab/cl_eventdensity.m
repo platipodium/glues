@@ -43,7 +43,7 @@ for j=1:nreg
   wtime=zeros(size(time));
   value=zeros(size(time));
   figure(1); clf;
-  set(gca,'Xlim',timelim); hold on;
+  set(gca,'Xlim',timelim,'FontName','Times'); hold on;
   p=eventinreg(ir,:);
   p=p(p>0);
   nip=length(p);
@@ -96,7 +96,7 @@ for j=1:nreg
   [ut value]=movavg(time,value,flucperiod/1000);
   value=cl_normalize(value);
   %plot(time,value,'k-','linewidth',2);
-  plot(time,value,'b-'); hold on;
+  %plot(time,value,'b-'); hold on;
   %value(value<0.7)=-0.1;
   %plot(time,value,'r-');
   pvalue=value;
@@ -118,7 +118,7 @@ for j=1:nreg
   npeak=min([length(ipeak),emax]);
   [speak ispeak]=sort(pvalue);
   peaktime=sort(time(ipeak(ispeak(1:npeak))));
-  plot(time(ipeak(ispeak(1:npeak))),value(ipeak(ispeak(1:npeak))),'kv','MarkerSize',10,'MarkerFaceColor','k');
+  %plot(time(ipeak(ispeak(1:npeak))),value(ipeak(ispeak(1:npeak))),'kv','MarkerSize',10,'MarkerFaceColor','k');
 
   evalue=time*0;
   for ie=1:npeak;
@@ -145,7 +145,7 @@ for j=1:nreg
   ytl(ineg,:)=' ';
   set(gca,'YTickLabel',ytl);
   ylabel('Relative intensity / number of series');
-  set(gca,'XMinorTick','on');
+  set(gca,'XMinorTick','on'); set(gca,'yMinorTick','on');
   
   %valid=find(he>0);
   
@@ -162,7 +162,7 @@ for j=1:nreg
   pos=get(ax0,'pos');
   %set(ax0,'pos',[pos(1:2) pos(3)*1.2 pos(4)]);
   cl_xticktitle('ka BP');
-  cl_print(1,'name',sprintf('eventdensity_%03d',ir),'ext','pdf');
+  cl_print(1,'name',sprintf('eventdensity_%03d',ir),'ext','eps');
   
   regionevents(ir,1:npeak)=peaktime;
 
