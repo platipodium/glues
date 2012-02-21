@@ -112,7 +112,7 @@ end
 %% Figure 4 
 % Plot maps of timing and trajectories of farming and population
 if (any(doplots==8))
-for isce=1:length(sces)
+for isce=length(sces):-1:1
      
     file=fullfile(predir,[basename sprintf('_%.1f.nc',sces(isce))]);
     if ~exist(file,'file'); continue; end
@@ -227,7 +227,7 @@ if (any(doplots==2))
   figure(3); clf reset;
 
   
-  for isce=1:length(sces)
+  for isce=length(sces):-1:1
     file=fullfile(predir,[basename sprintf('_%.1f.nc',sces(isce))]);
     if ~exist(file,'file'); continue; end
     

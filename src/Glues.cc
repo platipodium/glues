@@ -22,7 +22,7 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
    @author Kai Wirtz <kai.wirtz@hzg.de>
-   @date   2012-02-15
+   @date   2012-02-21
    @file   Glues.cc
    @brief  Main driver for GLUES simulations
 */
@@ -551,23 +551,23 @@ double simulation() {
      */
       //cout << "No proxy events. TODO: Initialize.cc ll.312 " << endl;
      if (!sync) fluc=1;
-     if (!sync && flucampl>0) {
+
+ 
+      if (1 &!sync && flucampl>0) {
+     // For old Events implementation (backward)
 	   
+	   double t_old = 1950-(*(EventRegTime+i*MaxEvent+EventRegInd[i])) * 1;
+	   double t_new = 1950-(*(EventRegTime+i*MaxEvent+EventRegInd[i]+1)) * 1;
 	   
-	   double t_old = 1950-(*(EventRegTime+i*MaxEvent+EventRegInd[i])) * 1000.0;
-	   double t_new = t_old;
-	   if (EventRegInd[i]>0) {
-	     t_new = 1950-(*(EventRegTime+i*MaxEvent+EventRegInd[i]-1)) * 1000.0;
-	   }
 	   
 	   /** 
 	     Advance event pointer if next event closer 
 	     Then calculate time difference to event (as variable omt) and
 	     relax this with exp function and breadth flucperiod 
 	   */
-	   if (((t_old + t_new) < (TimeStart+t*ts)*2) & EventRegInd[i]>0) EventRegInd[i]--;
+	   if (((t_old + t_new) < (TimeStart+t*ts)*2) ) EventRegInd[i]++;
     
-	   omt=(1950-(*(EventRegTime+i*MaxEvent+EventRegInd[i]))*1000.0-(TimeStart+t*ts))/flucperiod;
+	   omt=(1950-(*(EventRegTime+i*MaxEvent+EventRegInd[i]))-(TimeStart+t*ts))/flucperiod;
 	   fluc=1-flucampl*exp(-omt*omt);
 	   
 	   if (0&i==124)  cout << i << " "<< t*ts << " " << TimeStart+t*ts << " " << EventRegInd[i]

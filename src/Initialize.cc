@@ -351,8 +351,8 @@ int set_events() {
 	/*---------------------------------------------*/
 	/*     store final event sequence into array   */
 	/*---------------------------------------------*/   
-	//EventRegInd[i]=0;
-	EventRegInd[i]=EventSeriesLen-1;
+	EventRegInd[i]=0; // old
+	//EventRegInd[i]=EventSeriesLen-1; // new
 	EventRegNum[i]=EventSeriesLen;
 	for (j=0;j< EventSeriesLen;j++ )
 	    *(EventRegTime+i*MaxEvent+j)= *(EventSeries+EventSeriesLen-1-j)*1E3;
