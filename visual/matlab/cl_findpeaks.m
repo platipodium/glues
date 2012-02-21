@@ -33,6 +33,7 @@ for it=1:nt
   signchange=find(values(2:end)>0 & values(1:end-1)<0 ...
       | values(2:end)<0 & values(1:end-1)>0);
 
+  if numel(signchange)<1 continue; end
   np=0;
   ip=find(peakind<=signchange(1));
   if ~isempty(ip)
