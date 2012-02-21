@@ -32,7 +32,7 @@ evseries=load(evseriesfile,'-ascii');
 emax=size(evseries,2)-2;
 regionevents=zeros(nreg,emax)-1;
 
-reg='lbk'; [ireg,nreg,loli,lali]=find_region_numbers(reg);
+reg='all'; [ireg,nreg,loli,lali]=find_region_numbers(reg);
 lonlim=loli; latlim=lali;
 
 
