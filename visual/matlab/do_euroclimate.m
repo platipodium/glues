@@ -104,10 +104,58 @@ end
 %--------------------------------------------------------------------------
 %% Figure 2 from clP_event and cl_eventdensity.m
 
+% Get all peaks from events
+np=length(evinfo.No);
+peakinfo=zeros(np*8,4);
+off=0;
+for ip=1:np
+  peakt=1950-1000*evinfo.time{ip}(evinfo.peakindex{ip});
+  peakn=length(peakt);
+  peakr=1+off:peakn+off;
+  peakinfo(peakr,1)=peakt;
+  peakinfo(peakr,2)=ip;
+  peakinfo(peakr,3)=evinfo.Longitude(ip);
+  peakinfo(peakr,4)=evinfo.Latitude(ip);
+  off=off+peakn;
+end
+peakinfo=peakinfo(1:off,:);
+
+
+
+
 %--------------------------------------------------------------------------
 %% Figure 3
 % maps of farming at different times for scenario X (todo) , also movie
 if any(doplots==3) 
+  movtime=-3000:-500:-7500;
+  nmovtime=length(movtime);
+  sce='0.4';
+  for it=1:nmovtime
+    [d,b]=clp_nc_variable('var','farming','reg',reg,'marble',2,'transparency',1,'nocolor',0,...
+      'showstat',0,'lim',[0 1],'timelim',movtime(it),...
+      'file',['../../euroclim_' sce '.nc'],'figoffset',0,'sce',[sce '_' sprintf('%05d',movtime(it))],'noprint',1);
+    m_coast('color','k');
+    %m_grid('box','off','linestyle','none');
+    peaki=find(abs(peakinfo(:,1)-movtime(it))<=175);
+    for j=1:length(peaki)
+      clp_pulse(peakinfo(peaki(j),3),peakinfo(peaki(j),4)); 
+    end
+    
+    title('GLUES agropastoral activity');
+    cb=findobj(gcf,'tag','colorbar')
+    ytl=get(cb,'YTickLabel');
+    ytl=num2str(round(100*str2num(ytl)));
+    set(cb,'YTickLabel',ytl);
+    title(cb,'%');
+    cm=get(cb,'Children');
+    cmap=get(cm,'CData');
+    ct=findobj(gcf,'-property','FontName');
+    set(ct,'Fontname','Times');
+  
+    cl_print('name',b,'ext','png','res',300);
+  end
+end
+if any(doplots==33) 
   movtime=-7500:50:-3000;
   nmovtime=length(movtime);
   sce='0.4';
@@ -117,6 +165,11 @@ if any(doplots==3)
       'file',['../../euroclim_' sce '.nc'],'figoffset',0,'sce',[sce '_' sprintf('%03d_%05d',it,movtime(it))],'noprint',1);
     m_coast('color','k');
     m_grid('box','fancy','linestyle','none');
+    peaki=find(abs(peakinfo(:,1)-movtime(it))<=25);
+    for j=1:length(peaki)
+      clp_pulse(peakinfo(peaki(j),3),peakinfo(peaki(j),4)); 
+    end
+
     title('GLUES agropastoral activity');
     cb=findobj(gcf,'tag','colorbar')
     ytl=get(cb,'YTickLabel');
@@ -129,13 +182,8 @@ if any(doplots==3)
     cl_print('name',b,'ext','png','res',100);
   end
   % Command line postprocessing
-  %mencoder mf://farming_lbk_66_base_???_*_150.png  -mf w=800:h=600:fps=5:type=png -ovc lavc -lavcopts vcodec=mpeg4:mbd=2:trell -oac copy -o output.avi
+  %mencoder mf://farming_lbk_66_0.4_*.png  -mf w=800:h=600:fps=5:type=png -ovc lavc -lavcopts vcodec=mpeg4:mbd=2:trell -oac copy -o output.avi
 end
-
-
-
-
-
 
 
 %-----------------------------------------------------------------------

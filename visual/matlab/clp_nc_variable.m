@@ -221,6 +221,8 @@ if isnan(cmap)
   if transparency && isnan(threshold)
   %colmap=[linspace(0,0,n)' linspace(0.1,0.6,n)' linspace(1,0.5,n)']
     colmap=hsv2rgb([linspace(0,0,ncol)' linspace(0.1,0.5,ncol)' linspace(1,0.8,ncol)']);
+    colmap(:,3)=colmap(:,1);
+    colmap(:,1)=colmap(:,2);
   else
     colmap=jet(ncol);
   end
