@@ -56,7 +56,7 @@ for j=1:nreg
   wmax=max(max(eventindist(ir,1:nip)));
   %wp=wmax+1-squeeze(eventinrad(ir,1:nip));
   wp=eventindist(ir,1:nip);
-  if all(wp==0) wp(1:nip)=1;
+  if all(wp==0) wp(1:nip)=1; end
   for ip=1:nip
     %plot(evseries(p(ip),1:emax),wp(ip),'kd');
     it=find(time>=evseries(p(ip),emax+1) & time<=evseries(p(ip),emax+2));
