@@ -1,7 +1,7 @@
 /* GLUES regional population class; this file is part of
    the Global Land Use and technological Evolution Simulator
    
-   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008,2009,2010
+   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012
    Carsten Lemmen <carsten.lemmen@hzg.de>, Kai Wirtz <kai.wirtz@hzg.de>
 
    This program is free software; you can redistribute it and/or modify it
@@ -23,6 +23,7 @@
    @author Kai Wirtz <kai.wirtz@hzg.de>
    @file  RegionalPopulation.cc
    @brief  Definition of regional population
+   @date 2012-02-29
    
 */
 
@@ -47,7 +48,7 @@ RegionalPopulation::RegionalPopulation() {
   ndommax = 0;
   biondommax = 1;
   region = 0;
-  actualfertility=tlim=0;
+  actualfertility=0;
   germs=1;
   resist=0;
   size=0;
@@ -74,7 +75,6 @@ RegionalPopulation::RegionalPopulation(double s, double f,
   actualfertility=0;
   germs=ge;
   resist=re;
-  tlim0=tlim=tl;
   naturalfertility=nf;
   size=region->Area()*density;
 }
@@ -230,6 +230,7 @@ double RegionalPopulation::RelativeGrowthrate() {
 
   double literacy;
   double expo;
+  double tlim = region->Tlim();
   
   nrat = ndomesticated/(ndomesticated+1);
   art  = max(EPS,1-omega*technology);
@@ -239,7 +240,7 @@ double RegionalPopulation::RelativeGrowthrate() {
      Effect of Holocene climate fluctuations on fertility
   */
   
-  expo=(gdd_opt-tlim0)/(0.5*gdd_opt);
+  expo=(gdd_opt-tlim)/(0.5*gdd_opt);
   tlim= fluc*exp(-expo*expo);
   
   /**
@@ -247,7 +248,7 @@ double RegionalPopulation::RelativeGrowthrate() {
      exploitation history
   */
   ///naturalfertility  = region->NatFertility(fluc);
- naturalfertility  = region->NatFertility(1);
+ naturalfertility  = region->NatFertility(fluc);
   cropfertility = region->NatFertility(fluc*kappa/(1+region->Npp()));
   farmfert      = naturalfertility+0*(cropfertility-naturalfertility)*qfarming*tlim*nrat;
   
@@ -305,7 +306,7 @@ double RegionalPopulation::drdT() {
   double dydT,dpdT,dmdT; 
   
   dydT=-0.5*actexploit/technology;
-  dpdT=art*((1-qfarming)*0.5/sqrt(teff)+tlim*qfarming*ndomesticated);
+  dpdT=art*((1-qfarming)*0.5/sqrt(teff)+region->Tlim()*qfarming*ndomesticated);
   dpdT-=omega*product/art;
  // dmdT=1.0*disease/teff;
   //  dmdT=disease*1./(LiterateTechnology);
@@ -321,18 +322,18 @@ double RegionalPopulation::drdT() {
 
 inline double RegionalPopulation::drdQ() {
     double dydQ=0,dpdQ,dmdQ=0;
-  //dydQ=0.5*(cropfertility-naturalfertility)*tlim*nrat;//
+  //dydQ=0.5*(cropfertility-naturalfertility)*region->Tlim()*nrat;//
   dydQ=0;
   
-  dpdQ=-sqrt(teff)+(tlim*technology)*ndomesticated;
+  dpdQ=-sqrt(teff)+(region->Tlim()*technology)*ndomesticated;
   return gammab*(dydQ*product+actualfertility*art*dpdQ)+dmdQ;
 }
 
 inline double RegionalPopulation::drdN() {
     double dydN=0,dpdN,dmdN=0;
   /*double nratd=ndomesticated+1;
-    dydN=0.5*(cropfertility-naturalfertility)*tlim*qfarming/(nratd*nratd); */
-    dpdN=(tlim*technology)*qfarming*art;
+    dydN=0.5*(cropfertility-naturalfertility)*region->Tlim()*qfarming/(nratd*nratd); */
+    dpdN=(region->Tlim()*technology)*qfarming*art;
     return gammab*(dydN*product+actualfertility*dpdN)+dmdN;
 }
 

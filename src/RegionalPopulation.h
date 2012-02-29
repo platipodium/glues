@@ -49,7 +49,7 @@ class RegionalPopulation {
   double ndommax;       /** PAE, number of domesticable species */
   double biondommax;    /** parameter not used */
   double actualfertility;   /** FEP food extraction potential */
-  double tlim,tlim0;
+  //double tlim,tlim0;
   double naturalfertility,farmfert;
   double actexploit,newexploit;
   double germs;

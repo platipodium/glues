@@ -73,7 +73,7 @@ $SED -i '/spreadv/s/spreadv.*$/spreadv 0.002/' $PAR
 #$SED -i '/gammab/s/gammab.*$/gammab 0.00372/' $PAR
 
 # Loop over parameters for this scenario
-for (( i=0 ; i<0; i=i+1 )) ; do
+for (( i=0 ; i<1; i=i+1 )) ; do
 #for (( i=4 ; i<5; i=i+1 )) ; do
 #for (( i=4 ; i<5; i=i+4 )) ; do
   SCE=0.$i
