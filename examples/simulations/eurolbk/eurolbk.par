@@ -23,8 +23,8 @@ float	gdd_opt	0.7
 float	omega	0.04
 	\d Specific decrease in food productivity due to artisans
 	\v 
-comment gammab 0.0040
-float	gammab 0.0040
+comment gammab 0.00400
+float	gammab 0.00400
 	\u 1/y
 	\d Specific population growth rate, This should be corrected with the 0.929875 fluc factor
 	\v 
@@ -48,6 +48,6 @@ comment knowledge loss under stress
 float	LiterateTechnology	12.0
 	\v 
 	\d technology corresponding to literacy and decreased knowledge loss in crises
-float	KnowledgeLoss	0.3
+float	KnowledgeLoss 0.8
 	\d knowledge loss in tech and ndom relative to RGR (RGR<0: crises)
 	\v 

@@ -53,7 +53,7 @@ dg=repmat(0.3,1,3);
 %---------------------------------------------------------------------
 % Decide which plots to make
 % 1: proxy location, region, and sites map
-doplots=[8];
+doplots=[4 8];
 
 %---------------------------------------------------------------------
 %% Figure 1: map of regions and Proxy locations and Neolithic sites
@@ -205,7 +205,7 @@ if any(doplots==4)
   iscol(iscol<1)=1;
   viscol=find(iscol<=ncol);
 
-  for s=0.4:0.4:0.4
+  for s=0.0:0.4:0.4
     figure(2); clf;
     sce=sprintf('%3.1f',s);
     file=['../../euroclim_' sce '.nc'];
@@ -724,7 +724,7 @@ population=clp_nc_trajectory('file','../../test.nc','var','population_density','
 natfert=clp_nc_trajectory('file','../../test.nc','var','natural_fertility','reg',ireg(ivalid),'timelim',[-inf inf]);
 actfert=clp_nc_trajectory('file','../../test.nc','var','actual_fertility','reg',ireg(ivalid),'timelim',[-inf inf]);
 si=clp_nc_trajectory('file','../../test.nc','var','subsistence_intensity','reg',ireg(ivalid),'timelim',[-inf inf]);
-npp=clp_nc_trajectory('file','../../test.nc','var','npp','reg',ireg(ivalid),'timelim',[-inf inf]);
+%npp=clp_nc_trajectory('file','../../test.nc','var','npp','reg',ireg(ivalid),'timelim',[-inf inf]);
 
 
 
