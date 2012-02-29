@@ -81,15 +81,13 @@ class RegionalPopulation {
   void   Ndommax(double dm) { ndommax = ( dm > 0.01 ? dm:0.01 ); }
   double Germs() 	        const   {return germs;}
   double Resist() 	const   {return resist;}
-  double Tlim() 	        const   {return tlim;}
+  double Tlim() ;	
   double ActFert()	const   {return actualfertility;}
   double CivStart()	const   {return civstart;}
   double NatFert()	const   {return naturalfertility;}
   double CultIndex() 	const   {return ndomesticated*qfarming;}
   double Biondommax()     const   {return biondommax;}
-  double SubsistenceIntensity() const {return sqrt(technology)*(1-qfarming)+
-    (tlim*technology)*ndomesticated*qfarming; }
-  PopulatedRegion* Region() const	{return region;}
+  double SubsistenceIntensity();  PopulatedRegion* Region() const	{return region;}
   Tracer* Origin() {return origin;}
   double Size() const;
 

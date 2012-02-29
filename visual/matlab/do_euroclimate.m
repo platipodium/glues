@@ -4,13 +4,14 @@
 
 % What Neolithic site dataset to use
 datastrings={'Pinhasi','Turney','Vanderlinden','Fepre'};
-datastring=datastrings{1}
+datastring=datastrings{1};
 
 % What proxy file to use
 proxyfile='proxydescription_258_128.csv';
 
 % Define regional and temporal limitation
-reg='lbk'; [ireg,nreg,loli,lali]=find_region_numbers(reg);
+reg='ecl'; [ireg,nreg,loli,lali]=find_region_numbers(reg);
+
 lonlim=loli; latlim=lali;
 timelim=[-7000 -3000];
 
@@ -52,15 +53,17 @@ dg=repmat(0.3,1,3);
 %---------------------------------------------------------------------
 % Decide which plots to make
 % 1: proxy location, region, and sites map
-doplots=[3];
+doplots=[8];
 
 %---------------------------------------------------------------------
 %% Figure 1: map of regions and Proxy locations and Neolithic sites
 if any(doplots==1)
 
-  lali=cl_minmax(evinfo.Latitude(ev))+[-1 1];
-  loli=cl_minmax(evinfo.Longitude(ev))+[-1 1];
-
+ % lali=cl_minmax(evinfo.Latitude(ev))+[-1 1];
+ % loli=cl_minmax(evinfo.Longitude(ev))+[-1 1];
+  loli=loli+5*[-1 1];
+  lali=lali+5*[-1 1];
+ 
   [data,basename]=clp_nc_variable('lat',lali,'lon',loli,'var','region','marble',2,'transparency',1,'nocolor',0,...
       'showstat',0,'showtime',0,'fontsize',15,'showregion',0,...
       'file',fullfile(predir,sprintf('%s_%.1f.nc',basename,sces(1))),'figoffset',0,'noprint',1,'notitle',1);
@@ -121,12 +124,10 @@ end
 peakinfo=peakinfo(1:off,:);
 
 
-
-
 %--------------------------------------------------------------------------
 %% Figure 3
 % maps of farming at different times for scenario X (todo) , also movie
-if any(doplots==3) 
+if any(doplots==-3) 
   movtime=-3000:-500:-7500;
   nmovtime=length(movtime);
   sce='0.4';
@@ -141,6 +142,11 @@ if any(doplots==3)
       clp_pulse(peakinfo(peaki(j),3),peakinfo(peaki(j),4)); 
     end
     
+    sitei=find(sites.time<movtime(it));
+    if ~isempty(sitei) 
+      m_plot(sites.longitude(sitei),sites.latitude(sitei),'k^');
+    end
+    
     title('GLUES agropastoral activity');
     cb=findobj(gcf,'tag','colorbar')
     ytl=get(cb,'YTickLabel');
@@ -152,7 +158,7 @@ if any(doplots==3)
     ct=findobj(gcf,'-property','FontName');
     set(ct,'Fontname','Times');
   
-    cl_print('name',b,'ext','png','res',300);
+    cl_print('name',b,'ext',{'png','eps'},'res',300);
   end
 end
 if any(doplots==33) 
@@ -170,6 +176,11 @@ if any(doplots==33)
       clp_pulse(peakinfo(peaki(j),3),peakinfo(peaki(j),4)); 
     end
 
+    sitei=find(sites.time<movtime(it));
+    if ~isempty(sitei) 
+      m_plot(sites.longitude(sitei),sites.latitude(sitei),'k^');
+    end
+
     title('GLUES agropastoral activity');
     cb=findobj(gcf,'tag','colorbar')
     ytl=get(cb,'YTickLabel');
@@ -185,50 +196,103 @@ if any(doplots==33)
   %mencoder mf://farming_lbk_66_0.4_*.png  -mf w=800:h=600:fps=5:type=png -ovc lavc -lavcopts vcodec=mpeg4:mbd=2:trell -oac copy -o output.avi
 end
 
+% Nice pastel maps of farming timing
+if any(doplots==4)
+  %% plot farming timing for all scenarios 
+  ncol=8;
+  cmap=flipud(vivid(ncol));
+  iscol=floor((sites.time-min(timelim))./(timelim(2)-timelim(1))*ncol)+1;
+  iscol(iscol<1)=1;
+  viscol=find(iscol<=ncol);
 
-%-----------------------------------------------------------------------
-%% Figure 4 
-% Plot maps of timing and trajectories of farming and population
-if (any(doplots==8))
-for isce=length(sces):-1:1
-     
-    file=fullfile(predir,[basename sprintf('_%.1f.nc',sces(isce))]);
-    if ~exist(file,'file'); continue; end
-    
-    pfile=fullfile(predir,[basename strrep(sprintf('_%.1f_map',sces(isce)),'.','-')]);
-    if exist([pfile '.png'],'file');
-      fdir=dir(file);
-      pdir=dir([pfile '.png']);
-      if datenum(fdir.date)<datenum(pdir.date) continue; end;
+  for s=0.4:0.4:0.4
+    figure(2); clf;
+    sce=sprintf('%3.1f',s);
+    file=['../../euroclim_' sce '.nc'];
+    [data,basename]=clp_nc_variable('var','farming','threshold',0.5,'reg','lbk','marble',2,'transparency',1,'nocolor',0,...
+      'showstat',0,'timelim',[-7500 -3500],'showtime',0,'flip',1,'showvalue',0,...
+      'file',file,'figoffset',0,'sce',sce,...
+      'noprint',1,'notitle',1,'ncol',ncol,'cmap','vivid');
+%'noprint',1,'notitle',1,'ncol',ncol,'cmap','clc_eurolbk');
+
+    hdf=findobj(gcf,'-property','EdgeColor','-and','-property','FaceColor');
+    nh=length(hdf);
+    fcc=get(hdf,'FaceColor');
+    fc=zeros(nh,3)*1.0;
+
+    for ih=1:nh
+      fc(ih,:)=double(fcc{ih});
     end
-      
-    [d,b]=clp_nc_variable('var','farming','threshold',0.5,'reg','lbk','file',file,'noprint',1,'timelim',timelim,'showvalue',1);
-    title(['Timing ' basename ' ' num2str(sces(isce))]);
-    cl_print(gcf,'name',pfile,'ext','png');
-    %clp_nc_trajectory('var','farming','timelim',[-7000 -1000],'file',file,'noprint',1,'reg','lbk','ylim',[0 1],'nosum',1)
-    %title(['Farming ' basename ' ' num2str(sces(isce)) ]);
-    %cl_print(gcf,'name',strrep(pfile,'_map','_farming'),'ext','png');
-    %clp_nc_trajectory('var','population_density','timelim',[-7000 -1000],'file',file,'noprint',1,'reg','lbk','ylim',[0 5],'nosum',1)
-    %title(['Population ' prefixes{ipre} '_' postfix]);
-    %cl_print(gcf,'name',strrep(pfile,'_map','_population_density'),'ext','png');
-      
-  end
+    hdf=hdf(find(sum(fc)>0));
+    
+    set(hdf,'Edgecolor','none')
+    cm=get(gcf,'colormap');
+    
+    cb=findobj('tag','colorbar');
+    cbc=get(cb,'Children');
+    if iscell(cbc)
+      set(cbc{1},'AlphaData',0.5);
+      set(cbc{2},'AlphaData',0.5);
+    else
+      set(cbc,'AlphaData',0.5);
+    end
+    set(cb,'Ticklength',[0 0],'box','off');
+    pos=get(cb,'Position');
+    %set(cb,'Position',pos.*[1+pos(3) 1 2.0 1]
+    ytl=get(cb,'YTickLabel');
+    if iscell(ytl) ytl=char(ytl{1}); end
+    ytl(:,1)=' ';
+    set(cb,'YTickLabel',ytl);
+    ytt=get(cb,'Title');
+    if iscell(ytt) ytt=ytt{1}; end
+    set(ytt,'String','Year BC','FontSize',14,'FontName','Times','FontWeight','normal');
+    
+    cb2=copyobj(cb,gcf);
+    cc=get(cb2,'Children');
+    if iscell(cc) 
+      for ic=1:length(cc) 
+        set(cc{ic},'AlphaData',1); 
+    
+      end 
+    else    set(cc,'AlphaData',1); end
+    ytt=get(cb2,'Title');
+    if iscell(ytt) ytt=ytt{1}; end
+    set(ytt,'String','');
+    pos=get(cb,'Position');
+    
+    if iscell(pos)
+        for ic=1:length(pos) set(cb2,'Position',pos{ic}.*[1 1 0.5 1],'YTick',[],'box','off'); end
+    else
+       set(cb2,'Position',pos.*[1 1 0.5 1],'YTick',[],'box','off');
+    end
+    
+    ps=0;
+    for i=1:length(viscol)
+        mcolor=cmap(iscol(viscol(i)),:);
+        ps(i)=m_plot(sites.longitude(viscol(i)),sites.latitude(viscol(i)),'k^','MarkerFaceColor',mcolor,...
+            'MarkerEdgeColor',cmap(iscol(viscol(i)),:),'MarkerSize',4);
+    end
+    
+    ct=findobj(gcf,'-property','FontName');
+    set(ct,'FontSize',14,'FontName','Times','FontWeight','normal');
+    
+    
+    for ir=1:-nhreg
+        m_text(lon(hreg(ir)+1),lat(hreg(ir)+1),letters(ir),'background','w',...
+            'Horizontal','center','Vertical','middle');
+    end
+    m_coast('color','k');
+    m_grid('box','on','linestyle','none');
+    %title(['EuroClim experiment with fluc=' sce ]);
+    cl_print('name',strrep(basename,'farming_','timing_'),'ext','png','res',[150,600]);
+  end % of for loop
+end
 
-  fprintf('\\begin{tabular}{c c}\n');
-  for isce=1:length(sces)
-   pfile=fullfile(predir,[basename strrep(sprintf('_%.1f_map',sces(isce)),'.','-')]);
-   if ~exist([pfile '.png'],'file'); end
-  
-   fprintf('\\includegraphics[viewport=70 75 465 370,clip=,width=0.5\\hsize]{%s}',pfile);
-   if (mod(isce,2)==1) fprintf(' & '); else fprintf('\\\\\n'); end
-  
-  end
-  fprintf('\\end{tabular}\n');  
-end % if doplots
-  
-%---------------------------------------------------------------------------------
+
+
+
 % Read default scenario
-file=fullfile(predir,[basename '_0.4.nc']);
+file=fullfile(predir,['euroclim' '_0.4.nc']);
 if ~exist(file,'file'); error('File does not exist'); end
 ncid=netcdf.open(file,'NOWRITE');
   varid=netcdf.inqVarID(ncid,'region');
@@ -246,83 +310,98 @@ lon=double(netcdf.getVar(ncid,varid)); % need to be corrected
   area=double(netcdf.getVar(ncid,varid));
   netcdf.close(ncid);
   
+ timing=cl_nc_timing('file',file,'threshold',0.5,'timelim',timelim);
+ 
+  
 oldnreg=nreg;
 load('regionpath_685');
 lat=regionlat;
 lon=regionlon;
 nreg=oldnreg;
 
-%% Chapter 2: calculate correlation and plot scatter between data and model
-if (any(doplots==2))
 
-  % get lat/lon from regionpath, since they are wrong in the above file
-  if ~exist('lonlat_685.mat','file')
-    load('regionpath_685');
-    regionpath(:,:,1)=regionpath(:,:,1)+0.5;
-    regionpath(:,:,2)=regionpath(:,:,2)+1;
-    lats=squeeze(regionpath(:,:,2));
-    lons=squeeze(regionpath(:,:,1));
 
-    for ir=1:nreg
-      lat(ir)=calc_geo_mean(lats(ir,:),lats(ir,:));
-      lon(ir)=calc_geo_mean(lats(ir,:),lons(ir,:));
-    end
-    save('lonlat_685','lon','lat');
-  else load('lonlat_685');
+
+
+% difference plot
+if any(doplots==5)
+  timelim=[-8500,-3500];
+  
+    nsce=length(sces);
+
+  fluctiming=zeros(685,nsce);
+  for isce=1:nsce
+    file=fullfile(predir,sprintf('%s_%.1f.nc',basename,sces(isce)));
+    if ~exist(file,'file') continue; end
+    fluctiming(:,isce)=cl_nc_timing('file',file,'threshold',0.5,'timelim',timelim);
   end
-
-  radius=250;
-  farming_threshold=0.5;
-  nsites=length(sites.lat);
-  nn=zeros(nreg,nsites);
-  nd=nn;
-   
+  
+  t4=fluctiming(:,5);
+  t0=fluctiming(:,1);
+  
+  load('regionpath_685');
+  lat=regionlat;
+  lon=regionlon;
+  nreg=length(ireg);
+  
+  rlat=lat(272); rlon=lon(272);
+  sdists=cl_distance(sites.longitude,sites.latitude,rlon,rlat);  
+  rdists=cl_distance(lon(ireg),lat(ireg),rlon,rlat);
+  
+  [r0 p0]=corrcoef(rdists,t0(ireg))
+  [r4 p4]=corrcoef(rdists,t4(ireg))
+  l0=polyfit(t0(ireg),rdists,1)
+  l4=polyfit(t4(ireg),rdists,1)
+  
+  figure(1); clf; hold on;
+  
+  cmap=jet(nreg);
+  ilat=ceil(nreg*(lat(ireg)-latlim(1))/(latlim(2)-latlim(1)));
+  ilat(ilat<1)=1;
+  ilat(ilat>nreg)=nreg;
+  
+  idist=ceil(nreg*(rdists-min(rdists))/range(rdists));
+  idist(idist<1)=1; idists(idist>nreg)=nreg;
+  
+  
+  plot(t0(ireg),t4(ireg),'k.');
+  limits=[ min([t0(ireg) t4(ireg)]) ,max([t0(ireg) t4(ireg)])];
+  plot(limits,limits,'k-');
   for ir=1:nreg
-      dlat=[sites.lat repmat(lat(ireg(ir)),nsites,1)];
-      dlat=reshape(dlat',2*nsites,1);
-      dlon=[sites.lon repmat(lon(ireg(ir)),nsites,1)];
-      dlon=reshape(dlon',2*nsites,1);
-      dists=m_lldist(dlon,dlat);
-      dists=dists(1:2:end);
-      [sdists,isort]=sort(dists);
-      nn(ir,:)=isort;
-      nd(ir,:)=sdists;
+    plot(t0(ireg(ir)),t4(ireg(ir)),'r.','color',cmap(idist(ir),:));      
+  end
+  xlabel('Timing without events');
+  ylabel('Timing with events');
+  
+  
+  figure(2); clf; hold on;
+  
+  cmap=jet(nsce);
+  for isce=1:nsce
+    %plot(rdists,fluctiming(ireg,isce)-fluctiming(ireg,1),'k.','color',cmap(isce,:));
+  end
+  
+  
+  dtiming=fluctiming(ireg,5)-fluctiming(ireg,1);
+  plot(rdists,fluctiming(ireg,5)-fluctiming(ireg,1),'k.');
+
+  
+  
+  nn=zeros(nreg,length(sites.latitude));
+  nd=nn;
+  for ir=1:nreg
+    dists=cl_distance(sites.longitude,sites.latitude,lon(ireg(ir)),lat(ireg(ir)));
+    [sdists,isort]=sort(dists);
+    nn(ir,:)=isort;
+    nd(ir,:)=sdists;
   end
  
-    % Calculate neighbour weight
+  % Calculate neighbour weight
+  radius=250;
   nw = exp(-nd/radius);
+  nw(nd>2*radius)=0;
   
-  figure(1); clf reset;
-  clp_basemap('latlim',latlim,'lonlim',lonlim);
-  m_plot(lon(ireg),lat(ireg),'kd');
-  hold on;
-  m_plot(sites.lon,sites.lat,'k.','color',[0.8 0.8 0.8]);
-  m_plot(sites.lon(nn(find(nd<radius))),sites.lat(nn(find(nd<radius))),'ko');
-  
-  rpmatrix=zeros(length(sces),2)+NaN;
-  
-  figure(2); clf reset;
-  figure(3); clf reset;
-
-  
-  for isce=length(sces):-1:1
-    file=fullfile(predir,[basename sprintf('_%.1f.nc',sces(isce))]);
-    if ~exist(file,'file'); continue; end
-    
-    ncid=netcdf.open(file,'NOWRITE');
-    varid=netcdf.inqVarID(ncid,'farming');
-    farming=netcdf.getVar(ncid,varid);
-    netcdf.close(ncid);
-    
-    
-    farming=farming(ireg,:);
-    timing=farming;
-    timing(farming<farming_threshold)=inf;
-    [timing,itiming]=min(timing,[],2);
-    timing=time(itiming);
-    timing(itiming==1)=inf;
-    
-    stiming=timing+inf;
+  stiming=fluctiming(ireg,5)+inf;
     for ir=1:nreg
       ivalid=find(isfinite(sites.time(nn(ir,:))));
       sw(ir) = sum(nw(ir,ivalid),2);
@@ -330,22 +409,290 @@ if (any(doplots==2))
       sdist(ir)=sum(nw(ir,ivalid).*nd(ir,ivalid));
     end
     
-    figure(2); clf;
+    dt=2*radius;
+  figure(3); clf; hold on;
+   p1=plot(stiming,stiming,'k-');
+   p2=plot(stiming,fluctiming(ireg,1),'ks');
+   p3=plot(stiming,fluctiming(ireg,5),'rs');
+   ivalid=find(isfinite(fluctiming(ireg,5)) & isfinite(fluctiming(ireg,1)) ...
+       & isfinite(stiming) & stiming<timelim(2)+dt & stiming>timelim(1)-dt...
+       & fluctiming(ireg,5) < timelim(2)+dt & fluctiming(ireg,5) >timelim(1)-dt ...
+       & fluctiming(ireg,1) < timelim(2)+dt & fluctiming(ireg,1) >timelim(1)-dt ...       
+       & (lon(ireg)'<32 | lat(ireg)'>38) );
+ 
+    clf;    hold on;
+    t4d=abs(stiming(ivalid)-fluctiming(ireg(ivalid),5));
+    t0d=abs(stiming(ivalid)-fluctiming(ireg(ivalid),1));
+    edges=[0 200 400 600 800 1000 1333 1666 2000 inf]
+    [h4,hd4]=hist(t4d,edges);
+    [h1,hd0]=hist(t0d,edges);
+    ph4=bar(hd4,h4);
+    ph1=bar(hd0,h1,'FAcecolor','none','edgecolor','r','linewidth',4);
+    median(t4d);
+     
+     
+    m4=median(stiming(ivalid)-fluctiming(ireg(ivalid),5))
+    m0=median(stiming(ivalid)-fluctiming(ireg(ivalid),1))
+     
+    figure(2); clf; hold on
+    plot(fluctiming(ireg(ivalid),5),stiming(ivalid),'r.');
+    plot(fluctiming(ireg(ivalid),1),stiming(ivalid),'k.');
+    limit=timelim+dt*[-1 1];
+    set(gca,'xlim',limit,'ylim',limit);
+    plot(limit,limit,'k--');
+     
+    
+   [r4,p4]=corrcoef(fluctiming(ireg(ivalid),5),stiming(ivalid))
+   [r0,p0]=corrcoef(fluctiming(ireg(ivalid),1),stiming(ivalid))
+ 
+   
+   fprintf('Ref %.0f %.0f %.2f\n',m0,median(t0d),r0(2,1));
+   fprintf('Sce %.0f %.0f %.2f\n',m4,median(t4d),r4(2,1));
+   
+   
+   system('/opt/local/bin/ncdiff -O -v farming_timing ../../euroclim_0.4.nc ../../euroclim_0.0.nc ../../euroclim_diff.nc && /opt/local/bin/ncks -A -v latitude,longitude ../../euroclim_0.4.nc ../../euroclim_diff.nc');
+   
+   [data,basename]=clp_nc_variable('var','farming_timing','reg',reg,'marble',0,'transparency',0,'nocolor',0,...
+      'showstat',0,'lim',[-500 500],'showtime',0,'flip',1,'showvalue',0,...
+      'file',strrep(file,'1.0','diff'),'figoffset',0,'sce',sce,...
+      'noprint',1,'notitle',1,'ncol',11,'cmap','hotcold');
+  cl_print('name','euroclim_diff','ext','pdf');
+   
+end
+
+eventregtime=load('../../eventregtime.tsv','-ascii');
+eventregtime(eventregtime<0)=NaN;
+
+
+if any(doplots==6) 
+    
+    hreg=243;
+    ir=find(ireg==hreg);
+    
+    isce=5;
+    file=fullfile(predir,sprintf('%s_%.1f.nc','euroclim',sces(isce)));
+ 
+    clp_nc_trajectory('var','farming','file',file,'timelim',timelim,'reg',ireg(ir),...
+        'nosum',1,'noprint',1);
+    ylimit=get(gca,'YLim');
+    plot(1950-eventregtime(ireg(ir),:),0.9*ylimit(2),'kv','MarkerSize',10,'MarkerFaceColor','r');
+    
+    
+    set(gca,'YScale','log');
+    
+    figure(6); clf; hold on;
+   n=0;
+   for ir=1:nreg
+      itrans=find(farming(ireg(ir),:)>0.041 & farming(ireg(ir),:)<0.9);
+      if isempty(itrans) continue; end
+      ttrans=time(itrans);
+      ert=1950-eventregtime(ireg(ir),:);
+      iin=find(ert>min(ttrans) & ert<max(ttrans));
+      if ~isempty(iin)
+        clf; hold on;
+        set(gca,'YScale','log');
+        plot(time,farming(ireg(ir),:),'k:');
+        plot(ttrans,farming(ireg(ir),itrans),'r-');
+        title(num2str(ireg(ir)));
+        plot(ert,0.5,'kv','MarkerSize',10,'MarkerFaceColor','r');
+        pause(-1);
+        n=n+1;
+        transreg(n)=ireg(ir);
+        itransreg(n)=ir;
+        cl_print('name',sprintf('transition_with_event_%03d',ireg(ir)),'ext','pdf');
+      end
+    end
+      
+    % in 26 regions this occurs
+    [data,basename]=clp_nc_variable('var','farming_timing','reg',reg,'marble',0,'transparency',0,'nocolor',0,...
+      'showstat',0,'lim',[0 1000],'showtime',0,'flip',1,'showvalue',0,...
+      'file',strrep(file,'0.4','diff'),'figoffset',0,'sce',sce,...
+      'noprint',1,'notitle',1,'ncol',11,'cmap','hotcold');
+  
+  
+  
+  
+    hdl=data.handle;
+    hdl=hdl(hdl>0);
+    mg=repmat(0.5,1,3);
+    %set(hdl,'EdgeColor',mg,'EdgeAlpha',1);
+  
+    hdl=data.handle(itransreg);
+    hdl=hdl(hdl>0);
+    set(hdl,'EdgeColor','k','EdgeAlpha',1,'LineWidth',6);
+
+    
+end
+
+
+
+if any(doplots==7)
+   
+
+    plotvars={'farming','population_density','migration_density','technology'};
+    plotsces=[1 5];
+    
+    for isce=plotsces
+      for ivar=1:length(plotvars)
+      file=fullfile(predir,sprintf('%s_%.1f.nc','euroclim',sces(isce)));
+     
+      [d b]=clp_nc_trajectory('var',plotvars{ivar},'file',file,'timelim',timelim,'reg',ireg,...
+        'nosum',1,'noprint',0,'timelim',timelim,...
+        'sce',sprintf('%.1f',sces(isce)));
+  
+    end 
+    [d b]=clp_nc_trajectory('var','migration_density','file',file,'timelim',timelim,'reg',ireg,...
+        'nosum',1,'noprint',0,'timelim',timelim,'div','population_density',...
+        'sce',sprintf('%.1f',sces(isce)));
+   [d b]=clp_nc_trajectory('var','migration_density','file',file,'timelim',timelim,'reg',ireg,...
+        'nosum',1,'noprint',0,'timelim',timelim,'mult','area',...
+        'sce',sprintf('%.1f',sces(isce)));
+end
+   
+
+ 
+end
+
+
+
+%---------------------------------------------------------------------------------
+
+%% Chapter 2: calculate correlation and plot scatter between data and model
+if any(doplots==8)
+
+  load('regionpath_685');
+  lat=regionlat;
+  lon=regionlon;
+  nreg=length(ireg);
+    
+  radius=250;
+  nsites=length(sites.lat);
+  nn=zeros(nreg,nsites);
+  nd=nn;
+
+  if ~exist('distance_matrix.mat','file') 
+  for ir=1:nreg
+    rlat=lat(ireg(ir)); rlon=lon(ireg(ir));
+    esd=cl_esd(regionpath(ireg(ir),:,1),regionpath(ireg(ir),:,2));
+    dists=cl_distance(sites.longitude,sites.latitude,rlon,rlat)-esd/2;  
+    %dists(dists<0)=0;
+    %dists(dists>250)=inf;
+    [sdists,isort]=sort(dists);
+    nn(ir,:)=isort;
+    nd(ir,:)=sdists;
+  end
+    save('-v6','distance_matrix','nn','nd');
+  else
+      load('distance_matrix');
+  end
+  
+  % Calculate neighbour weight
+  nd(nd<0)=0;
+  nd(nd>0)=inf;
+  nw = exp(-nd/radius);
+  ns=sum(nd<=radius,2);
+  
+%   figure(1); clf reset;
+%   clp_basemap('latlim',latlim,'lonlim',lonlim);
+%   m_plot(lon(ireg),lat(ireg),'kd');
+%   m_plot(lon(ireg(ns>2)),lat(ireg(ns>2)),'kd','MarkerFaceColor','k');
+%   
+%   
+%   hold on;
+%   m_plot(sites.lon,sites.lat,'k.','color',[0.8 0.8 0.8]);
+%   m_plot(sites.lon(nn(find(nd<radius))),sites.lat(nn(find(nd<radius))),'ko');
+  
+  rpmatrix=zeros(length(sces),2)+NaN;
+  
+  figure(2); clf reset;
+  figure(3); clf reset;
+
+  scecolors=jet(11);
+  
+  for isce=[1 5] %length(sces):-1:1
+    file=fullfile(predir,[basename sprintf('_%.1f.nc',sces(isce))]);
+    if ~exist(file,'file'); continue; end
+    
+    ncid=netcdf.open(file,'NOWRITE');
+    varid=netcdf.inqVarID(ncid,'farming');
+    farming=netcdf.getVar(ncid,varid);
+    varid=netcdf.inqVarID(ncid,'farming_timing');
+    timing=netcdf.getVar(ncid,varid);
+    netcdf.close(ncid);
+   
+    sdist=[];
+    timing=timing(ireg);
+    stiming=timing+inf;
+    transtime=zeros(nreg,11);
+    stranstime=transtime;
+    for ir=1:nreg
+      sw(ir) = sum(nw(ir,1:ns(ir)),2);
+      stiming(ir)=sum(nw(ir,1:ns(ir)).*sites.time(nn(ir,1:ns(ir)))')./sw(ir);
+      sdist(ir)=sum(nw(ir,1:ns(ir)).*nd(ir,1:ns(ir)));
+      itrans=min(find(farming(ireg(ir),:)>0.041)):min(find(farming(ireg(ir),:)>=0.95));
+      
+      
+      if max(farming(ireg(ir),:))<0.5 | isempty(itrans)
+          transtime(ir,isce)=inf;  
+      else
+           transtime(ir,isce)=range(cl_minmax(time(itrans)));
+      end
+      if ns(ir)<9
+        stranstime(ir,isce)=inf;
+      else
+      stranstime(ir,isce)=std(sites.time(nn(ir,1:ns(ir))));
+      end
+    end
+  
+    
+      figure(2); hold on;
+      plot(transtime(:,isce),stranstime(:,isce)+isce,'k.','color',scecolors(isce,:));
+    xlabel('Simulated transition time');
+    ylabel('Observed transition time');
+    set(gca,'Xlim',[0 1500],'Ylim',[0 1500]);
+    valid=find(transtime(:,isce)<1500 & stranstime(:,isce)<1500);
+    b=polyfit(transtime(valid,isce),stranstime(valid,isce),1);
+    plot(transtime(valid,isce),transtime(valid,isce)*b(1)+b(2),'m-','color',scecolors(isce,:));
+    [r,p]=corrcoef(transtime(valid,isce),stranstime(valid,isce))
+    axis square;
+    
+    
+    
+    
+    timelim=[-8000 3500]
+       dt=2*radius;
+   %ivalid=find(isfinite(stiming) & stiming<timelim(2)+dt & stiming>timelim(1)-dt...
+   %    & timing < timelim(2)+dt & timing >timelim(1)-dt   ... %;%...       
+   %    & (lon(ireg)<32 | lat(ireg)>38 ) );
+    ivalid=find(isfinite(stiming) & isfinite(timing) & timing<timelim(2)+dt ...
+         &  (lon(ireg)'<30 | lat(ireg)'>38 ) );
+    
+    
+    timing=timing;
+    stiming=stiming;
+    
+    
+    [b]=polyfit(timing(ivalid),stiming(ivalid),1);
+    
+    figure(2+isce); clf;
     hold on;
-    p1=plot(timing,timing,'k-');
-    p2=plot(timing,stiming,'ks');
-    ivalid=isfinite(timing) & isfinite(stiming);
+    p1=plot(timing(ivalid),timing(ivalid),'k-');
+    p1a=plot(timing(ivalid),timing(ivalid)*b(1)+b(2),'r-');
+    p2=plot(timing(ivalid),stiming(ivalid),'ks');
+    %ivalid=isfinite(timing) & isfinite(stiming);
     
     [r,p]=corrcoef(timing(ivalid),stiming(ivalid));
     rpmatrix(isce,1:2)=[r(2,1) p(2,1)];
     
     for ir=1:nreg
+       if isempty(find(ir==ivalid)) continue; end
        p3(ir)=plot(repmat(timing(ir),1,2),repmat(stiming(ir),1,2)+0.1*[-1 1].*repmat(sdist(ir),1,2),'k-','color',repmat(0.8,1,3));
     end
     
-    legend([p2 p3],sprintf('R=%.2f',rpmatrix(isce,1)),'indicative distance uncertainty','location','best')
+    ltext={sprintf('R=%.2f',rpmatrix(isce,1)),'indicative distance uncertainty'};
+    legend(ltext)
     
-    xlabel(sprintf('Simulated timing of farming>%.1f',farming_threshold));
+    xlabel(sprintf('Simulated timing of farming>%.1f',0.5));
     ylabel(sprintf('Radiocarbon dates from %s (cal AD)',datastring));
     title(sprintf('Model-data comparison for fluctuation intensity %.1f',sces(isce)));
     
@@ -356,7 +703,7 @@ if (any(doplots==2))
       if exist([pfile '.png'],'file');
         fdir=dir(file);
         pdir=dir([pfile '.png']);
-        if datenum(fdir.date)<datenum(pdir.date) continue; end;
+       % if datenum(fdir.date)<datenum(pdir.date) continue; end;
       end
       
       
@@ -366,8 +713,23 @@ if (any(doplots==2))
 end
 end
 
-%% Chapter 3: plot European time series and map with locations
+dtranstime=transtime(:,5)-transtime(:,1);
+ivalid=find(isfinite(dtranstime));
 
+
+
+
+tlim=clp_nc_trajectory('file','../../test.nc','var','temperature_limitation','reg',ireg(ivalid),'timelim',[-inf inf]);
+population=clp_nc_trajectory('file','../../test.nc','var','population_density','reg',ireg(ivalid),'timelim',[-inf inf]);
+natfert=clp_nc_trajectory('file','../../test.nc','var','natural_fertility','reg',ireg(ivalid),'timelim',[-inf inf]);
+actfert=clp_nc_trajectory('file','../../test.nc','var','actual_fertility','reg',ireg(ivalid),'timelim',[-inf inf]);
+si=clp_nc_trajectory('file','../../test.nc','var','subsistence_intensity','reg',ireg(ivalid),'timelim',[-inf inf]);
+npp=clp_nc_trajectory('file','../../test.nc','var','npp','reg',ireg(ivalid),'timelim',[-inf inf]);
+
+
+
+%% Chapter 3: plot European time series and map with locations
+print a
 if any(doplots==3)
   load('holodata.mat');
   dirs.total='~/projects/glues/m/holocene/redfit/data/eleven';
@@ -519,112 +881,6 @@ if any(doplots==3)
 end
 
 
-%% Chapter 4
-
-if any(doplots==4)
-% Look at event time series
-
-  run('../../eventmodel.m');
-  eventregtime=load('../../eventregtime.tsv','-ascii');
-  eventregtime=eventregtime(ireg,:);
-  eventregtime(eventregtime<0)=NaN;
-  ntime=length(time);
-  regionfluc=zeros(nreg,ntime);
-  eventregtime=1950-eventregtime;
-
-  for ir=1:nreg 
-    for ie=1:maxevent
-      if isnan(eventregtime(ir,ie)) break; end
-      omt=(time-eventregtime(ir,ie))/flucperiod;
-      fluc=1-flucampl*exp(-omt.*omt);
-      if ie==1 regionfluc(ir,:)=fluc';
-      else regionfluc(ir,:)=regionfluc(ir,:).*fluc';
-      end
-    end
-  end
-      
-end % of doplots (4)
-    
-
-if any(doplots==5)
-  %% plot farming timing for all scenarios 
-  cmap=flipud(jet(ncol));
-  iscol=floor((sites.time-min(timelim))./(timelim(2)-timelim(1))*ncol)+1;
-  iscol(iscol<1)=1;
-  viscol=find(iscol<=ncol);
-
-  ncol=8;
-  for s=0.0:0.1:1.0
-    sce=sprintf('%3.1f',s);
-    file=['../../euroclim_' sce '.nc'];
-    [data,basename]=clp_nc_variable('var','farming','threshold',0.5,'reg',reg,'marble',2,'transparency',1,'nocolor',0,...
-      'showstat',0,'timelim',[-7500 -3500],'showtime',0,'flip',1,'showvalue',0,...
-      'file',file,'figoffset',0,'sce',sce,...
-      'noprint',1,'notitle',1,'ncol',ncol,'cmap','clc_eurolbk');
-  
-    %set(gcf,'Units','centimeters','Position',[0 0 18 18]);
-
-    hdf=findobj(gcf,'-property','EdgeColor','-and','-property','FaceColor');
-    nh=length(hdf);
-    fcc=get(hdf,'FaceColor');
-    fc=zeros(nh,3)*1.0;
-
-    for ih=1:nh
-      fc(ih,:)=double(fcc{ih});
-    end
-    hdf=hdf(find(sum(fc)>0));
-    
-    set(hdf,'Edgecolor','none')
-    cm=get(gcf,'colormap');
-    
-    cb=findobj('tag','colorbar');
-    cbc=get(cb,'Children');
-    if iscell(cbc)
-      set(cbc{1},'AlphaData',0.5);
-      set(cbc{2},'AlphaData',0.5);
-    else
-      set(cbc,'AlphaData',0.5);
-    end
-    set(cb,'Ticklength',[0 0],'box','off');
-    pos=get(cb,'Position');
-    %set(cb,'Position',pos.*[1+pos(3) 1 2.0 1]
-    ytl=get(cb,'YTickLabel');
-    if iscell(ytl) ytl=char(ytl{1}); end
-    ytl(:,1)=' ';
-    set(cb,'YTickLabel',ytl);
-    ytt=get(cb,'Title');
-    if iscell(ytt) ytt=ytt{1}; end
-    set(ytt,'String','Year BC','FontSize',14,'FontName','Times','FontWeight','normal');
-    
-    cb2=copyobj(cb,gcf);
-    set(get(cb2,'Children'),'AlphaData',1);
-    ytt=get(cb2,'Title');
-    if iscell(ytt) ytt=ytt{1}; end
-    set(ytt,'String','');
-    pos=get(cb,'Position');
-    set(cb2,'Position',pos.*[1 1 0.5 1],'YTick',[],'box','off');
-    
-    ps=0;
-    for i=1:length(viscol)
-        mcolor=cmap(iscol(viscol(i)),:);
-        ps(i)=m_plot(sites.longitude(viscol(i)),sites.latitude(viscol(i)),'k^','MarkerFaceColor',mcolor,...
-            'MarkerEdgeColor',cmap(iscol(viscol(i)),:),'MarkerSize',4);
-    end
-    
-    ct=findobj(gcf,'-property','FontName');
-    set(ct,'FontSize',14,'FontName','Times','FontWeight','normal');
-    
-    
-    for ir=1:-nhreg
-        m_text(lon(hreg(ir)+1),lat(hreg(ir)+1),letters(ir),'background','w',...
-            'Horizontal','center','Vertical','middle');
-    end
-    m_coast('color','k');
-    m_grid('box','fancy','linestyle','none');
-    title(['EuroClim experiment with fluc=' sce ]);
-    cl_print('name',strrep(basename,'farming_','timing_'),'ext','png','res',[150,600]);
-  end % of for loop
-end
 
 
 %% Part 6: do pdf plot for highlighted regions
@@ -691,10 +947,6 @@ if any(doplots==6);
     dists=cl_distance(sites.longitude,sites.latitude,rlon,rlat);  
     ir=find(dists<=r);
     if isempty(ir) continue; end
-%   [hir,hirt]=hist(sites.time(ir),length(ir)/4.0);
-%   [whir,whirt]=hist([sites.time(ir) sites.time_upper(ir) sites.time_lower(ir)],length(3*ir)/4.0);
-%   bar(whirt,whir/sum(whir)*length(whir),.7,'r','edgecolor','none');
-%   bar(hirt,hir/sum(hir)*length(hir),0.4,'c','edgecolor','none');
  
   
   a1=normpdf(0,0,1);
@@ -720,15 +972,7 @@ if any(doplots==6);
   set(pp(i),'FaceColor',lightgray,'edgeColor','none');
   plot(xdata,cdata,'k-','LineWidth',2.5);
  
-  
-  %pp=patch([xdata fliplr(xdata)]',[ydata ydata+1]',[cdata fliplr(cdata)]');
-  
-  %cmap=1-0.3*((repmat(cdata',1,3)));
-  %colormap(cmap);
-  %caxis([0 1]);
- 
-  %
-     
+       
   irp=strmatch('PPN',sites.culture(ir)); pir=ir(irp);
   phir=(a1*histc(sites.time(pir),edges)+a2*histc(sites.time_upper(pir),edges)+a2*histc(sites.time_lower(pir),edges))/a3;  
   if (size(phir,1)<size(phir,2)) phir=phir'; end
@@ -872,8 +1116,6 @@ if any(doplots==7)
   
   
   run('../../eventmodel.m');
-  eventregtime=load('../../eventregtime.tsv','-ascii');
-  eventregtime(eventregtime<0)=NaN;
   ntime=length(time);
   regionfluc=zeros(size(eventregtime,1),ntime);
   eventregtime=1950-eventregtime;
@@ -935,13 +1177,9 @@ if any(doplots==7)
   
   % Look at event time series
 
-
-  
-  
   
   cl_print('name','euroclim_fluctimeseries_on_map','ext','pdf');
 end
-
 
 
 
@@ -950,46 +1188,7 @@ return
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ifound=ireg;nfound=nreg;lonlim=loli; latlim=lali;
-
-%ncol=19;
 
 
 if (9==0)
@@ -1010,152 +1209,6 @@ if (9==0)
 
 end
 
-
-if (9==0)
-%% Plot small maps with region highlighted (part of figures 4/6)
-    figure(40); clf reset; 
-    clp_basemap('lon',lonlim,'lat',latlim,'nocoast',1);
-    hdl=findobj('EdgeColor','k');
-    set(hdl,'EdgeColor','none');
-    m_coast('patch',0.9*[1 1 1]);
-    
-    hdl=clp_regionpath('reg',hreg+1);
-    
-    set(hdl,'FaceColor',0.7*[1 1 1],'EdgeColor',0.3*[1 1 1]);
-
-    % Remove connecting lines
-    hdl=findobj(gcf,'LineStyle',':');
-    delete(hdl);
-    m_grid('box','on','linestyle','none');
-    pname=sprintf('region_map_highlight');
-    cl_print('name',pname,'ext','pdf');
-end
-
-
-
-
-
-if (1==0)
-%% Plot region network (figure 1)
-[data,basename]=clp_nc_neighbour('reg',reg,'marble',2,'transparency',1,'nocolor',0,...
-      'showstat',0,'showtime',0,'fontsize',15,'showregion',0,...
-      'file','../../euroclim_1.0.nc','figoffset',0,'sce',sce,'noprint',1,'notitle',1);
-
-% Remove connecting lines
-hdl=findobj(gcf,'LineStyle',':');
-delete(hdl);
- 
-% increase visibility of region borders
-hdl=findobj('-property','edgecolor','-and','LineStyle','-','-and','edgecolor','k');
-set(hdl,'edgecolor','k','LineWidth',2,'EdgeAlpha',0.6);
- 
-hold on;
-sp=m_plot(slon,slat,'k^');
-set(sp,'MarkerFacecolor','k','MarkerSize',2);
-
-for ir=1:-nhreg  
-  t(ir)=m_text(lon(hreg(ir)+1),lat(hreg(ir)+1),letters(ir),'background','k','color','w',...
-      'Horizontal','center','Vertical','middle','visible','on','fontsize',16,'fontweight','bold','Margin',2);
-  %e=get(t(ir),'Extent');
-  %pt(ir)=patch(e(1)+[0 e(3) e(3) 0 0],e(2)+[0 0 e(4) e(4) 0],'w','EdgeColor','none','FaceAlpha',0.5);
-end
-gray=repmat(0.4,1,3);
-%m_coast('color',gray);
-m_grid('box','fancy','linestyle','none');
-%,'XTick',[],'YTick',[]);
-
-cl_print('name','region_map','ext','png','res',[150,600]);
-end
-
-%------------------------------------------------------------------------------
-movtime=-7500:500:-3500;
-nmovtime=length(movtime);
-
-
-
-
-i272=find(ifound==272);
-for i=1:nhreg
-  ihreg(i)=find(ifound==hreg(i)+1);
-end
-
-dlat=[lat repmat(lat(272),nreg,1)];
-dlat=reshape(dlat',2*nreg,1);
-dlon=[lon repmat(lon(272),nreg,1)];
-dlon=reshape(dlon',2*nreg,1);
-dists=m_lldist(dlon,dlat);
-dists=dists(1:2:end);
-dists=dists(ifound);
-
-dlat=[slat repmat(lat(272),ns,1)];
-dlat=reshape(dlat',2*ns,1);
-dlon=[slon repmat(lon(272),ns,1)];
-dlon=reshape(dlon',2*ns,1);
-sdists=m_lldist(dlon,dlat);
-sdists=sdists(1:2:end);
-
-
-threshold=0.5;
-nfound=length(ifound);
-it=(farming(ifound,itime)>=threshold).*repmat(1:length(itime),nfound,1);
-it(it==0)=inf;
-it=min(it,[],2);
-itv=isfinite(it);
-onset=zeros(nfound,1)+inf;
-onset(itv)=time(min(it(itv),[],2));
-
-
-%% plot farming advance (Figure 2)
-if (2==0) for it=1:nmovtime
-  [d,b]=clp_nc_variable('var','farming','reg',reg,'marble',2,'transparency',1,'nocolor',0,...
-      'showstat',0,'lim',[0 1],'timelim',movtime(it),'showtime',0,...
-      'file',['../../euroclim_' sce '.nc'],'figoffset',0,'sce',[sce '_' sprintf('%05d',movtime(it))],'noprint',1);
-  m_coast('color','k');
-  m_grid('box','fancy','linestyle','none');
-  title('GLUES agropastoral activity');
-  cb=findobj(gcf,'tag','colorbar')
-  ytl=get(cb,'YTickLabel');
-  ytl=num2str(round(100*str2num(ytl)));
-  set(cb,'YTickLabel',ytl);
-  title(cb,'%');
-  cl_print('name',b,'ext','png','res',[300,600]);
- end,end
-
-% Contour plot
-if (0==9)
-    dl=0.5;
-glat=floor(latlim(1)):dl:ceil(latlim(2));
-glon=floor(lonlim(1)):dl:ceil(lonlim(2));
-nglat=length(glat);
-nglon=length(glon);
-islat=floor((slat-glat(1))/dl)+1;
-islon=floor((slon-glon(1))/dl)+1;
-gsites.time=zeros(nglon,nglat)+NaN;
-for igla=1:nglat
-   iv=find(islat==igla);
-   [uislon,ai,bi]=unique(islon(iv));
-   for iglo=1:length(uislon)
-     ivv=find(bi==iglo);
-     gsites.time(uislon(iglo),igla)=mean(sites.time(iv(ivv)));
-   end
-end
-end
-
-%ct=findobj(gcf,'type','text'); set(ct,'visible','off');
-%ct=findobj(gcf,'-property','YTickLabel'); set(ct,'YTickLabel',[]);
-%ct=findobj(gcf,'-property','XTickLabel'); set(ct,'XTickLabel',[]);
-%set(ytt,'visible','off');
-
-%plot_multi_format(gcf,strrep(basename,'farming_','timing_'),'png');
-
-    
-    
-%end
-
-
-
-
-
 %% Calculate distance matrix
 nfound=length(ifound);
 distfile=['distmatrix_' num2str(nfound) '_' num2str(ns) '.mat'];
@@ -1175,6 +1228,13 @@ if ~exist(distfile,'file')
 else
   load('distfile');    
 end
+
+
+
+
+
+
+
 
 if (0==5)
 %% Do Ammerman plot (figure 5)
@@ -1207,11 +1267,6 @@ collbk=[1 1 0.9]; % 'y'
   colppn=[.95 1 .95]; %'g';
   colkor=[.9 1 1]; %'c';
 
-%plbk=cl_ellipse(mulbkt,mulbkd,2*siglbkt,2*siglbkd,'k-','edgecolor','none','FaceColor',collbk,'FaceAlpha',1);
-%ptrb=cl_ellipse(mutrbt,mutrbd,2*sigtrbt,2*sigtrbd,'k-','edgecolor','none','FaceColor',coltrb,'FaceAlpha',1);
-%pkor=cl_ellipse(mukort,mukord,2*sigkort,2*sigkord,'k-','edgecolor','none','FaceColor',colkor,'FaceAlpha',1);
-%pppn=cl_ellipse(muppnt,muppnd,2*sigppnt,2*sigppnd,'k-','edgecolor','none','FaceColor',colppn,'FaceAlpha',1);
-
 simfcolor=[1 .9 .8];
 simecolor=[1 .65 .4];
 for ir=1:nfound
@@ -1239,12 +1294,6 @@ ikor=find(any(distmatrix(:,irkor)-repmat(radius(ifound),1,length(irkor))<=0,2));
 ilbk=find(any(distmatrix(:,irlbk)-repmat(radius(ifound),1,length(irlbk))<=0,2));
 itrb=find(any(distmatrix(:,irtrb)-repmat(radius(ifound),1,length(irtrb))<=0,2));
 ippn=find(any(distmatrix(:,irppn)-repmat(radius(ifound),1,length(irppn))<=0,2));
-%pippn=plot(-onset(ippn),dists(ippn),'rd','MarkerFaceColor',colppn,'MarkerSize',10);
-%pilbk=plot(-onset(ilbk),dists(ilbk),'ro','MarkerFaceColor',collbk,'MarkerSize',10);
-%pikor=plot(-onset(ikor),dists(ikor),'rd','MarkerFaceColor',colkor,'MarkerSize',6);
-%pitrb=plot(-onset(itrb),dists(itrb),'rs','MarkerFaceColor',coltrb,'MarkerSize',4);
-
-
 
 diffedge=500;
 edge=0:diffedge:4500;
@@ -1285,39 +1334,6 @@ end
 
 set([pc1([2,3]),pc3([2,3])],'visible','off');
 
-% 
-% mhsites.time=zeros(nedge,1)-NaN;
-% mhsdist=mhsites.time;
-% [shistc,shistb]=histc(sites.time,edge);
-% for i=1:nedge
-%    mhsites.time(i)=mean(sites.time(shistb==i));
-%    mhsdist(i)=mean(sdists(shistb==i));
-% end
-
-
-%if isnan(mhsites.time(nedge)) mhsites.time(nedge)=timelim(2); end
-%if isnan(mhsdist(nedge)) mhsdist(nedge)=mhsdist(nedge-1); end
-
-% pstairs=stairs(-mhsites.time+diffedge/2.0,mhsdist+diffedge/2.0,'b-','LineWidth',4);
-% 
-% mhtime=zeros(nedge,1)-NaN;
-% mhdist=mhtime;
-% [rhistc,rhistb]=histc(onset,edge);
-% for i=1:nedge
-%    if rhistc(i)==0; continue; end
-%    mhtime(i)=mean(onset(rhistb==i));
-%    mhdist(i)=mean(dists(rhistb==i));
-% end
-% pstairr=stairs(-mhtime+diffedge/2.0,mhdist+diffedge/2.0,'r-','LineWidth',4);
-
-
-%pirppn=plot(-sites.time(irppn),sdists(irppn),'bs','MarkerFaceColor',colppn,'MarkerSize',4);
-%pirkor=plot(-sites.time(irkor),sdists(irkor),'bs','MarkerFaceColor',colkor,'MarkerSize',4);
-%pirtrb=plot(-sites.time(irtrb),sdists(irtrb),'bs','MarkerFaceColor',coltrb,'MarkerSize',4);
-%pirlbk=plot(-sites.time(irlbk),sdists(irlbk),'bs','MarkerFaceColor',collbk,'MarkerSize',4);
- 
-%    'LBK sites','TRB sites','LBK regions','Site regression','Simulation regression',...
-%    'Site histogram','Simulation histogram');
 l=legend([p1,p3,p4,p5,pc1,pc3],'Radiocarbon sites','Simulation regions','Site regression','Simulation regression',...
     'Site staircase fit','Simulation staircase fit');
 set(l,'location','Northwest','visible','off');
@@ -1329,12 +1345,6 @@ set(gca,'YLim',[0 4000]);
 ytl=get(gca,'YTickLabel');
 ytl(1,:)=' ';
 set(gca,'YTickLabel',ytl);
-
-%l=legend([p1,p2],sprintf('Site data (n=%d, r^2=%.2f, v=%.2f km a^{-1})',length(viscol),cr2(2).^2,-pf2(1)),...
-%    sprintf('Simulation (n=%d, r^2=%.2f, v=%.2f km a^{-1})',length(itv),cr1(2).^2,-pf1(1)),...
-%    'location','NorthWest','FontSize',7);
-%l=legend([p1,p2,p3],'Radiocarbon dated sites','Simulation regions','Focus regions');
-%set(l,'location','NorthWest','FontSize',13);
 
 
 fprintf('Site data (n=%d, r^2=%.2f, v=%.2f km a^{-1})',length(sites.time),cr2(2).^2,-pf2(1));
@@ -1351,163 +1361,28 @@ cl_print('name','ammerman_rgb','ext','png','res',[300,600]);
 cl_print('name','ammerman_rgb','ext','pdf');
 
 
-%% Do black and white version
-%set(p3,'MarkerFaceColor',repmat(0.5,3,1),'Color',repmat(0.5,3,1));
-%set([p2,p1,p4],'Color',repmat(0,3,1));
-%set(p2,'MarkerFaceColor',repmat(0,3,1));
-%plot_multi_format(1,'ammerman_bw','pdf');
-
-
-return
-
-%% Do non-uniform spread
-%movdists=movavg(onset(itv),dists(itv),500,1);
-%[sorton,isorton]=sort(onset(itv));
-%figure(2); clf reset;
-%plot(sorton,movdists(isorton),'r-');
-%pf3=polyfit(-onset(itv),dists(itv),3);
-%p5=plot(-gtime,(-gtime).^3*pf3(1)+(-gtime).^2*pf3(2)+-gtime*pf3(3)+pf3(4),'r-','LineWidth',2);
-
-
-
-
-
-
-% Only for informational purpose, not in paper (which is without climate)
-%clp_nc_variable('var','farming','threshold',0.5,'reg',reg,'marble',2,'transparency',1,'nocolor',0,...
-%      'showstat',0,'timelim',timelim,'showtime',0,'flip',1,'showvalue',1,...
-%      'file','../../eurolbk_events.nc','figoffset',1,'sce','events')
-
-%  return
-%% Plot wave of advance for selected regions
-hreg=[271 255  211 183 178 170 146 142 122 123];
-lc='mkcrbmkcrb';
-ls='--------------------';
-nhreg=length(hreg);
-timelim=[-8000 -2000];
-
-[d,b]=clp_nc_trajectory('reg',hreg+1,'var','farming','timelim',timelim,...
-      'file',['../../eurolbk_' sce '.nc'],'figoffset',0,'sce',sce);
-%%
-dd=diff(d');
-ntime=size(dd,1);
-dtime=(timelim(2)-timelim(1))/(ntime-1);
-time=timelim(1):dtime:timelim(2);
-clf reset;
-for i=1:nhreg
-  p(i)=plot(dd(:,i),time,'k-','color',lc(i),'LineStyle',ls(i));
-  hold on;
-end
-set(gca,'YAxisLocation','right','Ylim',[timelim(1),-3000],'XTick',[]);
-%legend(num2str(hreg'));
-plot_multi_format(gcf,[b '_diff']);
-
-  
-%return  
-
-%return
 %% Create lbk_background.png
-reg='lbk';
-[r,nreg,lonlim,latlim]=find_region_numbers(reg);
-figure(1); clf reset;
-axes('color','w','box','off');
-m_proj('equidistant','lat',latlim,'lon',lonlim);
+if any(doplots==0)
+  reg='lbk';
+  [r,nreg,lonlim,latlim]=find_region_numbers(reg);
+  figure(1); clf reset;
+  axes('color','w','box','off');
+  m_proj('equidistant','lat',latlim,'lon',lonlim);
 
-c0=100;
-c1=230;
-m_grid('XTick',[],'Ytick',[],'box','off');
-cmap=gray(256);
-hold on;
-%set(gca,'XTick',[],'Ytick',[],'box','off');
+  c0=100;
+  c1=230;
+  m_grid('XTick',[],'Ytick',[],'box','off');
+  cmap=gray(256);
+  hold on;
 
-%m_gshhs('ib','color',cmap(230,:));
-
-[elev,lon,lat]=M_TBASE([lonlim(1) lonlim(2) latlim(1) latlim(2)]);
-elev(elev<0)=NaN;
-glat=latlim(2)+0.5/12-[1:size(elev,1)]/12.0;
-glon=lonlim(1)-0.5/12+[1:size(elev,2)]/12.0;
-m_pcolor(glon,glat,double(elev));
-shading interp;
-cmap=colormap(gray(256));
-colormap(flipud(cmap(100:230,:)));
-%m_gshhs('fc','color',cmap(c1,:));
-%print('-dpng','-r600','lbk_background');
-
-
-
-r=clp_nc_variable('var','region','showvalue',1,'reg',reg,'marble',2,...
-      'file','../../eurolbk_base.nc','figoffset',0,'sce','base');
-
-ti=clp_nc_trajectory('var','technology_spread_by_information','reg',reg,...
-      'file','../../eurolbk_base.nc','figoffset',0,'sce','base');
-tp=clp_nc_trajectory('var','technology_spread_by_people','reg',reg,...
-      'file','../../eurolbk_base.nc','figoffset',0,'sce','base');
-ei=clp_nc_trajectory('var','economies_spread_by_information','reg',reg,...
-      'file','../../eurolbk_base.nc','figoffset',0,'sce','base');
-ep=clp_nc_trajectory('var','economies_spread_by_people','reg',reg,...
-      'file','../../eurolbk_base.nc','figoffset',0,'sce','base');
-qi=clp_nc_trajectory('var','farming_spread_by_people','reg',reg,...
-      'file','../../eurolbk_base.nc','figoffset',0,'sce','base');
-pp=clp_nc_trajectory('var','migration_density','reg',reg,...
-      'file','../../eurolbk_base.nc','figoffset',0,'sce','base');
-t=clp_nc_trajectory('var','technology','reg',reg,...
-      'file','../../eurolbk_base.nc','figoffset',0,'sce','base');
-f=clp_nc_trajectory('var','farming','reg',reg,...
-      'file','../../eurolbk_base.nc','figoffset',0,'sce','base');
-e=clp_nc_trajectory('var','economies','reg',reg,...
-      'file','../../eurolbk_base.nc','figoffset',0,'sce','base');
-p=clp_nc_trajectory('var','population_density','reg',reg,...
-      'file','../../eurolbk_base.nc','figoffset',0,'sce','base');
-
-reg=[271 278 255 242 253 211 216 235 252 183 184 210 198 178 170 147 146 142 177 156 123 122];
-
-% Show trajectories for special regions, show "wave" of advance
-for i=1:length(reg)
-  j=find(r.value==reg(i));
-  figure(reg(i)); 
-  clf reset; 
-  plot(ti(j,:),'r-'); 
-  hold on; 
-  plot(tp(j,:),'b-'); 
-  plot(t(j,:)/1000,'g--'); 
-  plot(q(j,:)/100,'m--'); 
-  plot(qp(j,:),'m-');  
-end
-
-
-
-if ~exist('ex','var') ex=load('eurolbk_base'); end
-tex=ex.d(:,1)-2*ex.d(1,1);
-ti=ex.d(:,2);
-te=ex.d(:,3);
-
-
-for ir=1:10
-figure(ir); clf reset;
-r=hreg(ir);
-ii=find(ti==r & tex<-4000);
-ie=find(te==r & tex<-4000);
-
-plot(tex(ii),ex.d(ii,5),'r.');
-hold on;
-plot(tex(ie),-ex.d(ie,5),'b.');
-
-xlabel('Calendar year');
-ylabel('Technology exchange by people');
-title(['Region ' num2str(hreg(ir))]);
-
-figure(ir+10); clf reset;
-plot(tex(ii),ex.d(ii,4),'r.');
-hold on;
-plot(tex(ie),-ex.d(ie,4),'b.');
-
-xlabel('Calendar year');
-ylabel('Technology exchange by information');
-title(['Region ' num2str(hreg(ir))]);
-
-fprintf('Sum in region %d: %f by people, %f by info\n',...
-    r,sum(ex.d(ii,5))-sum(ex.d(ie,5)),sum(ex.d(ii,4))-sum(ex.d(ie,4)));
-%    r,sum(ex.d(ii,5)),sum(ex.d(ii,4)));
+  [elev,lon,lat]=M_TBASE([lonlim(1) lonlim(2) latlim(1) latlim(2)]);
+  elev(elev<0)=NaN;
+  glat=latlim(2)+0.5/12-[1:size(elev,1)]/12.0;
+  glon=lonlim(1)-0.5/12+[1:size(elev,2)]/12.0;
+  m_pcolor(glon,glat,double(elev));
+  shading interp;
+  cmap=colormap(gray(256));
+  colormap(flipud(cmap(100:230,:)));
 end
 
 return

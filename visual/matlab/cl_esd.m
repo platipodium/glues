@@ -7,6 +7,9 @@ if nargin<2 error('At least two arguments are required'); end
 if numel(lon)<2 error('At least two longitudes are required'); end
 if numel(lat)<2 error('At least two latitudes are required'); end
 
+lon=lon(isfinite(lon));
+lat=lat(isfinite(lat));
+
 mlon=mean(lon);
 mlat=mean(lat);
 dx=m_lldist([max(lon),min(lon)],[mlat mlat]);
