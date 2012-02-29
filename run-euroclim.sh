@@ -43,19 +43,52 @@ $SED -i '/gammab/s/gammab.*$/gammab 0.0040/' $PAR
 $SED -i '/SiteRegfile/s/SiteRegfile.*$/SiteRegfile "EventInReg.dat"/' $SCE
 $SED -i '/eventfile/s/eventfile.*$/eventfile "EvSeries.dat"/' $SCE
 
+
+# changed from eurolbk
+$SED -i '/spreadv/s/spreadv.*$/spreadv 0.002/' $PAR
+#$SED -i '/gammab/s/gammab.*$/gammab 0.00418/' $PAR
+
+$SED -i '/KnowledgeLoss/s/KnowledgeLoss.*$/KnowledgeLoss 0.8/' $PAR
+
 # Loop over parameters for this scenario
-for (( i=0 ; i<10; i=i+1 )) ; do
+#for (( i=0 ; i<10; i=i+1 )) ; do
 #for (( i=4 ; i<5; i=i+1 )) ; do
+for (( i=4 ; i<5; i=i+1 )) ; do
   SCE=0.$i
+
   $SED -i '/flucampl/s/flucampl.*$/flucampl '$SCE'/' $DAT
+  $SED -i '/gammab/s/gammab.*$/gammab 0.00403/' $PAR
   LOG=${B}_${SCE}.log 
   NC=${LOG%%.log}.nc
   echo Running: $X $SIM 
   echo File output: $NC >> $L
   $X $SIM 2> ${LOG} && \
-  ncks -O -v time,region_neighbour,natural_fertility,temperature_limitation,population_size,population_density,technology,economies,farming,region,latitude,longitude,area,farming_spread_by_people test.nc ${NC}
+  ncks -O -v time,region_neighbour,natural_fertility,temperature_limitation,population_size,population_density,technology,economies,farming,region,latitude,longitude,area,migration_density test.nc ${NC}
   test -f ${LOG} && $SED -i '/[A-d]/d' ${LOG}
 done
+
+
+# changed from eurolbk
+$SED -i '/spreadv/s/spreadv.*$/spreadv 0.002/' $PAR
+#$SED -i '/gammab/s/gammab.*$/gammab 0.00372/' $PAR
+
+# Loop over parameters for this scenario
+for (( i=0 ; i<0; i=i+1 )) ; do
+#for (( i=4 ; i<5; i=i+1 )) ; do
+#for (( i=4 ; i<5; i=i+4 )) ; do
+  SCE=0.$i
+  $SED -i '/flucampl/s/flucampl.*$/flucampl '$SCE'/' $DAT
+  $SED -i '/gammab/s/gammab.*$/gammab 0.00400/' $PAR
+   LOG=${B}_${SCE}.log 
+  NC=${LOG%%.log}.nc
+  echo Running: $X $SIM 
+  echo File output: $NC >> $L
+  $X $SIM 2> ${LOG} && \
+  ncks -O -v time,region_neighbour,natural_fertility,temperature_limitation,population_size,population_density,technology,economies,farming,region,latitude,longitude,area,migration_density test.nc ${NC}
+  test -f ${LOG} && $SED -i '/[A-d]/d' ${LOG}
+done
+
+
 
 # Last scenario with most complete information
 SCE=1.0
@@ -64,7 +97,7 @@ LOG=${B}_${SCE}.log
 NC=${LOG%%.log}.nc
   echo Running: $X $SIM 
   echo File output: $NC >> $L
-$X $SIM 2> ${LOG} && mv test.nc $NC
+#$X $SIM 2> ${LOG} && mv test.nc $NC
 test -f ${LOG} && $SED -i '/[A-d]/d' ${LOG}
 
 # Return to base setup

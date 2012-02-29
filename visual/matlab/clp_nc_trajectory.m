@@ -287,7 +287,7 @@ if ~exist('fdir','dir') system(['mkdir -p ' fdir]); end
 bname=['trajectory_' varname '_' num2str(nreg)];
 if length(sce)>0 bname=[bname '_' sce]; end
 if ~noprint
-  plot_multi_format(gcf,fullfile(fdir,bname));
+  cl_print('name',fullfile(fdir,bname),'ext','pdf');
 end
   
 fprintf('Total %d million at %d on area of %d million sqkm.\n',...

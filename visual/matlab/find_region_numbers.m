@@ -93,6 +93,11 @@ while iarg<=nargin
       
     case 'ind'
       lonlim=[65,91];latlim=[6,32];
+    case 'ecl'
+        % Euroclimate simulation
+      lonlim=[-10,42];
+      %lonlim=[6,42];
+      latlim=[31,57];
 
     case 'all'
     case 'wor'
@@ -172,9 +177,18 @@ elseif ~isempty(neighlim)
 end
 end
 
+
 for i=1:length(nofind)
     ifound=ifound(find(ifound ~= nofind(i))); 
 end;
+
+
+  switch arg(1:3)
+    case 'ecl'
+      ifound=ifound(ifound>108);
+      ifound=ifound(ifound<317);
+  end
+
 
 nfound=length(ifound);
 

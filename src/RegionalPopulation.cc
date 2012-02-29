@@ -54,6 +54,12 @@ RegionalPopulation::RegionalPopulation() {
 }
 
 
+double RegionalPopulation::Tlim() {return region->Tlim();}
+
+double RegionalPopulation::SubsistenceIntensity() {return sqrt(technology)*(1-qfarming)+
+    (region->Tlim()*technology)*ndomesticated*qfarming; }
+
+
 RegionalPopulation::RegionalPopulation(double s, double f,
      double t,double nd,double ge, double re,
      double bnm,double nf,double tl, PopulatedRegion* r)
@@ -240,7 +246,8 @@ double RegionalPopulation::RelativeGrowthrate() {
      actual fertility accounts for cropland conversion
      exploitation history
   */
-  naturalfertility  = region->NatFertility(fluc);
+  ///naturalfertility  = region->NatFertility(fluc);
+ naturalfertility  = region->NatFertility(1);
   cropfertility = region->NatFertility(fluc*kappa/(1+region->Npp()));
   farmfert      = naturalfertility+0*(cropfertility-naturalfertility)*qfarming*tlim*nrat;
   

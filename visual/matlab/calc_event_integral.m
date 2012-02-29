@@ -20,6 +20,7 @@ nt=floor(abs(tmax-tmin*1.0)/timestep+1);
 regionfluc=zeros(nt,nr);
 time=1950-(tmax-[0:nt-1]*timestep);
 
+for flucampl=0.0:0.1:1.0
 for it=1:nt
     
     for i=1:nr
@@ -38,8 +39,9 @@ for it=1:nt
     end
 end
     
-save('regionfluc','-v6','regionfluc','time');
-fprintf('Total fluctuation integral %f\n',sum(sum(regionfluc))/nt/nr);
+%save('regionfluc','-v6','regionfluc','time');
+fprintf('Total fluctuation integral at flucampl %.1f %f\n',flucampl,sum(sum(regionfluc))/nt/nr);
+end
 
 return
 end
