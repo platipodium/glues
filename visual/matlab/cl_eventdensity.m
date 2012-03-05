@@ -36,8 +36,10 @@ evseries=load(evseriesfile,'-ascii');
 emax=size(evseries,2)-2;
 regionevents=zeros(nreg,emax)-1;
 
-reg='all'; [ireg,nreg,loli,lali]=find_region_numbers(reg);
+reg='lbk'; [ireg,nreg,loli,lali]=find_region_numbers(reg);
 lonlim=loli; latlim=lali;
+
+ireg=236; nreg=1;
 
 
 for j=1:nreg
@@ -56,7 +58,7 @@ for j=1:nreg
   p=eventinreg(ir,:);
   p=p(p>0);
   nip=length(p);
-  c=jet(nip);
+  c=0.5*jet(nip);
   
   eventinrad=exp(-eventindist);
   
@@ -160,13 +162,13 @@ for j=1:nreg
  
   
   ylimit=get(gca,'ylim');
-  set(gca,'ylim',[ -mevalue*1.1 max([evalue wtime])*1.1]);
+  set(gca,'ylim',[ -mevalue*1.1 max([evalue wtime])*1.1],'FontSize',15,'FontName','Times');
   ax0=gca;
   
   itime=find(wtime==mwtime);
   
-  text(time(itime(end))-0.2,0.97*mwtime,sprintf('Region %d',ir),...
-      'FontSize',20,'Vertical','top','horizontal','left','FontName','Times');
+ % text(time(itime(end))-0.2,0.97*mwtime,sprintf('Region %d',ir),...
+ %     'FontSize',20,'Vertical','top','horizontal','left','FontName','Times');
   
   pos=get(gcf,'pos');
   set(gcf,'pos',[pos(1:2) 700 340]);
@@ -181,14 +183,14 @@ for j=1:nreg
   %valid=find(he>0);
   
   legends{1}='No. of series';
-  for i=1:nip
-    legends{i+3}=sprintf('Proxy %d',p(i));
-  end
+  %for i=1:nip
+  %  legends{i+3}=sprintf('Proxy %d',p(i));
+  %end
   legends{3}='Weighted sum';
   legends{2}='Identified peaks';  
   
-  pl=legend([hk hp hs he(:)'],legends);
-  set(pl,'color','w','box','on','location','Northeastoutside','fontSize',12);
+  pl=legend([hk hp hs],legends);
+  set(pl,'color','w','box','on','location','westoutside','fontSize',12);
   pos=get(ax0,'pos');
 
   cl_xticktitle('ka BP');

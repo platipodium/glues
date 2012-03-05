@@ -1,9 +1,9 @@
 function nc_pangaea
 
  
-input_filename='../../src/test/pangaea_reg.nc';
-region_filename='../../src/test/glues_map_dim.nc';
-output_filename='pangaea.nc';
+input_filename='../../euroclim_0.4.nc';
+region_filename='../../test_0.5x0.5.nc';
+output_filename='euroclim_0.4_pangaea.nc';
   
 ncin =netcdf.open(input_filename,'NC_NOWRITE');
 ncmap=netcdf.open(region_filename,'NC_NOWRITE');
@@ -12,11 +12,11 @@ ncfile=netcdf.create(output_filename,'NC_SHARE');
 timestring=datestr(now);
 
 %Create dimensions, CF-conventions desires T,Z,Y,X (time,altitude,latitude,longitude)
-dimid=netcdf.inqDimId(ncmap,'lon');
+dimid=netcdf.inqDimID(ncmap,'lon');
 [dummy,nlon]=netcdf.inqDim(ncmap,dimid);
 londim=netcdf.defDim(ncfile,'lon',nlon);
 
-dimid=netcdf.inqDimId(ncmap,'lat');
+dimid=netcdf.inqDimID(ncmap,'lat');
 [dummy,nlat]=netcdf.inqDim(ncmap,dimid);
 latdim=netcdf.defDim(ncfile,'lat',nlat);
 
@@ -70,7 +70,7 @@ lonid=varid;
 nlon=length(lon);
 
 %% Copy id from ncmap, make all sea NaN
-ivarid=netcdf.inqVarID(ncmap,'id');
+ivarid=netcdf.inqVarID(ncmap,'region');
 map=netcdf.getVar(ncmap,ivarid);
 map(map<0)=NaN;
 
@@ -82,6 +82,17 @@ for i=0:numatts-1
   netcdf.copyAtt(ncin,ivarid,attname,ncfile,varid);
 end
 mapid=varid;
+
+
+%% Copy timing from ncmap, make all sea NaN
+ivarid=netcdf.inqVarID(ncin,'farming_timing');
+[varname, xtype, dimids, numatts]=netcdf.inqVar(ncin,ivarid);
+varid=netcdf.defVar(ncfile,varname,xtype,[londim,latdim]);
+for i=0:numatts-1
+  attname=netcdf.inqAttName(ncin,ivarid,i);
+  netcdf.copyAtt(ncin,ivarid,attname,ncfile,varid);
+end
+ftid=varid;
 
 
 %% Copy pop/tech/farm from ncin
@@ -99,7 +110,7 @@ end
 
 ivarid=netcdf.inqVarID(ncin,'technology');
 tid=ivarid;
-if(1)
+if(0)
 [varname, xtype, dimids, numatts]=netcdf.inqVar(ncin,ivarid);
 varid=netcdf.defVar(ncfile,varname,xtype,[londim,latdim,timedim]);
 for i=0:numatts-1
@@ -132,12 +143,14 @@ end
 netcdf.putAtt(ncfile,varid,'modification_date',timestring);
 fid=ivarid;
 
+
+
 %% Get Region ids, make all ids < 0 equal to -1
 varid=netcdf.inqVarID(ncin,'region');
 region=netcdf.getVar(ncin,varid);
 nreg=length(region);
 
-
+if (0)
 load('hyde_glues_cropfraction');
 htime=-9500:20:2000;
 for i=1:ntime
@@ -172,15 +185,19 @@ netcdf.putAtt(ncfile,varid,'units','kg C m^{-2}');
 netcdf.putAtt(ncfile,varid,'reference_year',time(1)-22.5);
 netcdf.putAtt(ncfile,varid,'description','Accumulated deforestation since reference year');
 netcdf.putAtt(ncfile,varid,'coordinates','time lon lat');
-
+netcdf.putVar(ncfile,fid,[0,0,itime-1],[nlon,nlat,1],fmap);
+end
+  
 % End define mode and put variables
 netcdf.endDef(ncfile);
 
-pop =netcdf.getVar(ncin,pid);
-tech=netcdf.getVar(ncin,tid);
+
+%pop =netcdf.getVar(ncin,pid);
+%tech=netcdf.getVar(ncin,tid);
+timing=netcdf.getVar(ncin,ftid);
 farm=netcdf.getVar(ncin,fid);
 farm=farm*100; % Convert to % 
-econ=netcdf.getVar(ncin,eid);
+%econ=netcdf.getVar(ncin,eid);
 
 netcdf.putVar(ncfile,latid,lat);
 netcdf.putVar(ncfile,lonid,lon);
@@ -189,39 +206,47 @@ netcdf.putVar(ncfile,mapid,map);
 
 % Empty arrays.
 fmap=zeros(nlon,nlat)-NaN;
-tmap=fmap;
-pmap=fmap;
-emap=fmap;
-cmap=fmap;
-dmap=fmap;
+ftmap=fmap;
+%tmap=fmap;
+%pmap=fmap;
+%emap=fmap;
+%cmap=fmap;
+%dmap=fmap;
 %pid=netcdf.inqVarID(ncfile,'population_density');
-tid=netcdf.inqVarID(ncfile,'technology');
+%tid=netcdf.inqVarID(ncfile,'technology');
 %eid=netcdf.inqVarID(ncfile,'economies');
 fid=netcdf.inqVarID(ncfile,'farming');
-cid=netcdf.inqVarID(ncfile,'crop_fraction');
-did=netcdf.inqVarID(ncfile,'deforestation');
+ftid=netcdf.inqVarID(ncfile,'farming_timing');
+%cid=netcdf.inqVarID(ncfile,'crop_fraction');
+%did=netcdf.inqVarID(ncfile,'deforestation');
 
 
 time=time+2.5; % Offset the non-centered averaging in pangaea.sh
 
+
+for ireg=0:nreg-1
+  imap=find(map==ireg);
+  ftmap(imap)=timing(ireg+1,1);
+end
+netcdf.putVar(ncfile,ftid,[0,0],[nlon,nlat],ftmap);
+
 for itime=1:ntime
   fprintf('Time %d (%.0f) ..\n',itime, time(itime));
   for ireg=0:nreg-1
-    imap=find(map==ireg);
     fmap(imap)=farm(ireg+1,itime);
-    tmap(imap)=tech(ireg+1,itime);
-    pmap(imap)=pop(ireg+1,itime);
-    emap(imap)=econ(ireg+1,itime);
-    cmap(imap)=crop(ireg+1,itime);
-    dmap(imap)=deforest(ireg+1,itime);
+    %tmap(imap)=tech(ireg+1,itime);
+    %pmap(imap)=pop(ireg+1,itime);
+    %emap(imap)=econ(ireg+1,itime);
+    %cmap(imap)=crop(ireg+1,itime);
+    %dmap(imap)=deforest(ireg+1,itime);
   end
   netcdf.putVar(ncfile,fid,[0,0,itime-1],[nlon,nlat,1],fmap);
-  netcdf.putVar(ncfile,tid,[0,0,itime-1],[nlon,nlat,1],tmap);
+  %netcdf.putVar(ncfile,tid,[0,0,itime-1],[nlon,nlat,1],tmap);
   %netcdf.putVar(ncfile,eid,[0,0,itime-1],[nlon,nlat,1],emap);
   %netcdf.putVar(ncfile,pid,[0,0,itime-1],[nlon,nlat,1],pmap);
-  netcdf.putVar(ncfile,cid,[0,0,itime-1],[nlon,nlat,1],cmap);
-  netcdf.putVar(ncfile,did,[0,0,itime-1],[nlon,nlat,1],dmap);
-  netcdf.putVar(ncfile,timeid,[itime-1],time(itime));
+  %netcdf.putVar(ncfile,cid,[0,0,itime-1],[nlon,nlat,1],cmap);
+  %netcdf.putVar(ncfile,did,[0,0,itime-1],[nlon,nlat,1],dmap);
+  %netcdf.putVar(ncfile,timeid,[itime-1],time(itime));
 end
 
 

@@ -194,6 +194,7 @@ end
 minmax=double([min(min(min(data(ireg,itime)))),max(max(max(data(ireg,itime))))]);
 ilim=find(isfinite(lim));
 minmax(ilim)=lim(ilim);
+if numel(minmax)==1  minmax=minmax.*[0.99,1.01]; end;
 if minmax(1)==minmax(2) minmax=minmax.*[0.99,1.01]; end
 
 rlon=lon;

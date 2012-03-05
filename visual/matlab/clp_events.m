@@ -44,12 +44,19 @@ else
 end  
   
 evcolors=jet(8);
+evcolors=0.5*evcolors;
 evseries=evseries(:,1:end-2);
 
 reg='lbk'; [ireg,nreg,loli,lali]=find_region_numbers(reg);
 lonlim=loli; latlim=lali;
 
+try close(2); catch; end
+figure(2); clf reset;
+pos=get(gcf,'Position');
+set(gcf,'position',pos+[0 -pos(2) 0 pos(4)]);
+
 figure(1); clf reset;
+pos=get(gcf,'Position');
 clp_basemap('latlim',latlim,'lonlim',lonlim);
 clp_relief;
 %m_grid('color','y');
@@ -58,13 +65,15 @@ pos0=get(gca,'Position');
 
 dg=repmat(0.4,1,3);
 
-for ir=1:1:length(ireg)
+
+for ir=39:1:39%length(ireg)
+  figure(1);
   [h,llimit,llimit,rlon,rlat]=clp_regionpath('reg',ireg(ir));
   [lon lat rlon rlat]=cl_regionpath('reg',ireg(ir));
   set(gca,'FontName','Times');
-  set(h,'FaceColor',dg+0.2);
+  set(h,'FaceColor',dg);
   pt(ir)=m_text(rlon,rlat,num2str(ireg(ir)),'FontSize',16,...
-      'FontWeight','bold','Color','w','Vertical','middle','Horizontal','center');
+      'FontWeight','bold','Color','w','Vertical','middle','Horizontal','center','visible','off');
   
   ph(ir)=h; 
   pm(ir)=m_plot(rlon,rlat,'k*','visible','off');
@@ -85,7 +94,7 @@ for ir=1:1:length(ireg)
   for ie=1:length(evids)
     ps(ie)=m_plot([evinfo.Longitude(evids(ie)) rlon],[evinfo.Latitude(evids(ie)) rlat],...
         'k--','Color',dg,'LineWidth',2);
-    pl(ie)=m_plot([evinfo.Longitude(evids(ie))],[evinfo.Latitude(evids(ie))],'ro','MarkerSize',...
+    pl(ie)=m_plot([evinfo.Longitude(evids(ie))],[evinfo.Latitude(evids(ie))],'rv','MarkerSize',...
         9,'MarkerFaceColor',evcolors(ie,:),'MarkerEdgeColor',evcolors(ie,:));
     xpos(ie)=get(pl(ie),'XData');
     ypos(ie)=get(pl(ie),'YData');
@@ -107,24 +116,29 @@ for ir=1:1:length(ireg)
   uistack(pt(ir),'top');
   uistack(pl,'top');
   
+  figure(2); 
+  
   nevids=length(evids);
-  width=pos0(3)/2.2;
-  height=0.8*pos0(4)/nevids;
-  ax1=axes('Position',[0.5 pos0(2)+0.1 width height*nevids],'YAxisLocation','right');
-  if rlon>(lonlim(2)-lonlim(1))/2
-    set(ax1,'Position',[0.15 pos0(2)+0.1 width height*nevids],'YAxisLocation','left');
-  end
+  %if rlon>(lonlim(2)-lonlim(1))/2
+    %set(ax1,'Position',[0.15 pos0(2)+0.1 width height*nevids],'YAxisLocation','left');
+  %end
   hold on;
   %for ie=1:sum(isfinite(regevents(ireg(ir),:)))
     %plot(repmat(regevents(ireg(ir),ie)/1000,2,1),[0 1],'r-');
   %end  
   set(gca,'Xlim',[1 11],'XDir','reverse','YLim',[0 1],'color','none','box','off','YTick',[]);
+  ax1=gca;
+  pos0=get(ax1,'Position');
+  width=pos0(3)/2.2;
+  height=0.8*pos0(4)/(nevids-1);
+  %ax1=axes('Position',[0.5 pos0(2)+0.1 width height*nevids],'YAxisLocation','right');
+  
   cl_xticktitle('ka BP');
 
   %thresh=2;%1.5.^[-1 0 1 2];
   
   for ie=1:nevids
-    figure(2); clf;
+    figure(3); clf;
     if size(evseries,1)==124
       data=clp_single_timeseries_trend(evids(ie),'timelim',[1 12],'highpass',0.050,'lowpass',2.0,'file','proxydescription.mat');
     elseif size(evseries,1)==123
@@ -144,32 +158,45 @@ for ir=1:1:length(ireg)
     peakindex=cl_findpeaks(data.norm,thresh);
     peakindex=peakindex(isfinite(peakindex));
     plot(data.ut(peakindex),data.norm(peakindex),'rv');
-    figure(1);
+    figure(2); 
 
-    ax(ie)=axes('Position',[0.5 pos0(2)+0.1+height*(ie-1.0) width height],...
-        'XDir','reverse','Xlim',[1 11]);
-    if rlon>(lonlim(2)-lonlim(1))/2
-      set(ax(ie),'Position',[0.15 pos0(2)+0.1+height*(ie-1.0) width height],'YAxisLocation','left');
-    end
- 
+    ax(ie)=axes('Position',[pos0(1) 0.03+pos0(2)+height*(ie-1.0) pos0(3) height],...
+        'XDir','reverse','Xlim',[1 11.5]);
     hold on;
+  
+    data.norm=2*data.norm;
     %plot(data.ut,cl_normalize(data.m50-data.m2000),'k-');
-    plot(data.ut,data.norm,'k-');
+    plot(data.ut,data.norm,'k-','Color',evcolors(ie,:),'LineWidth',1.5);
     %plot(data.ut(peakindex),data.norm(peakindex),'r.');
-    plot(evseries(evids(ie),:),max(data.norm),'kv','MarkerFaceColor',evcolors(ie,:),'MarkerSize',9);
+    %plot(evseries(evids(ie),:),max(data.norm),'ko','MarkerFaceColor',evcolors(ie,:),'MarkerSize',5);
+    nie=sum(isfinite(evseries(evids(ie),:)));
+    for iie=1:nie
+      %iut=find(data.ut<evseries(evids(ie),iie)+0.175 & data.ut>evseries(evids(ie),iie)-0.175); 
+      %patch([data.ut(iut) fliplr(data.ut(iut))],[data.norm(iut)' 0*data.norm(iut)'],'r-',...
+      %    'FaceColor',evcolors(ie,:),'EdgeColor','none');
+      %patch([data.ut(iut) fliplr(data.ut(iut))],[0*data.norm(iut)' data.norm(iut)' ],'r-',...
+      %    'FaceColor',evcolors(ie,:),'EdgeColor','none');
+      [mut iut]=min(abs(data.ut-evseries(evids(ie),iie)));
+      plot(data.ut(iut),data.norm(iut),'ko','MarkerFaceColor','y','MarkerSize',8,...
+          'Color',evcolors(ie,:));
+    end
     
-    set(gca,'color','none','box','off','YTick',[],'YAxisLocation','right');
+    set(gca,'color','none','box','off','YTick',[],'YAxisLocation','right','Ylim',1.01*cl_minmax(data.norm));
     if ie>0 axis off; end  
     
     
     %evtext=sprintf('%s (%s %s)',evinfo.Plotname{evids(ie)},evinfo.Datafile{evids(ie)},evinfo.Proxy{evids(ie)});
     evtext=sprintf('%s (%s)',evinfo.Plotname{evids(ie)},evinfo.Proxy{evids(ie)});
     xlimit=get(gca,'Xlim');
-    text(xlimit(1)+1,max(data.norm)*1.2,evtext,'vertical','bottom','Horizontal','right','FontSize',7,'Interpreter','latex');
-    text(xlimit(1)-0.5,0,num2str(evinfo.No(evids(ie))),'Horizontal','left','FontSize',9,'Interpreter','none');
+    ptt(ie)=text(xlimit(1)+1,max(data.norm)*1.2,evtext,'vertical','bottom','Horizontal','right','FontSize',12,'Interpreter','latex','color',evcolors(ie,:));
+    %text(xlimit(1)-0.5,0,num2str(evinfo.No(evids(ie))),'Horizontal','left','FontSize',9,'Interpreter','none');
   end
   
+  figure(1);
   cl_print('name',sprintf('events_map_%03d',ireg(ir)),'ext','pdf');
+  
+  figure(2);
+  cl_print('name',sprintf('events_series_%03d',ireg(ir)),'ext','pdf');
   
   try delete(pr{:}); catch; end
   try delete(ph(ir),pt(ir)); catch; end

@@ -27,9 +27,12 @@ for i=1:a.length
   eval([a.name{i} '=' clp_valuestring(a.value{i}) ';']); 
 end
 
+nlon=numel(d.lon);
+nlat=numel(d.lat);
+
 fid=fopen(file,'w');
-fprintf(fid,'ncols\t%d\r\n',length(d.lon));
-fprintf(fid,'nrows\t%d\r\n',length(d.lat));
+fprintf(fid,'ncols\t%d\r\n',nlon);
+fprintf(fid,'nrows\t%d\r\n',nlat);
 if center
   fprintf(fid,'xllcenter\t%f\r\n',min(d.lon));
   fprintf(fid,'yllcenter\t%f\r\n',min(d.lat));
@@ -43,12 +46,12 @@ fprintf(fid,'NODATA_value\t%d\r\n',nodata);
 d.data(isnan(d.data))=nodata;
 
 if strcmp(xtype,'int')
-  for i=1:size(d.lat,2)
+  for i=1:nlat
     fprintf(fid,'%2d ',d.data(i,1:end-1));
     fprintf(fid,'%2d\r\n',d.data(i,end));
   end
 elseif strcmp(xtype,'float')
-  for i=1:size(d.lat,2)
+  for i=1:nlat
     fprintf(fid,'%f ',d.data(i,1:end-1));
     fprintf(fid,'%f\r\n',d.data(i,end));
   end
