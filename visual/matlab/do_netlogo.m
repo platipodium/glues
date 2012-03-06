@@ -27,7 +27,7 @@ for ivar=1:nvar
   else xtype='int';
   end
   
-  d.data=netcdf.getVar(ncid,varid);
+  d.data=netcdf.getVar(ncid,varid)';
   ofile=strrep(gridfile,'.nc',sprintf('_%s_%05d.asc',varname,timelim(1)));
   
   cl_write_arcgis_asc(d,'file',ofile,'xtype',xtype);
