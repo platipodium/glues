@@ -3,13 +3,14 @@ function cl_glues2grid(varargin)
 % grid of specified resolution
 
 arguments = {...
-  {'timelim',[-9500,-9000]},...
-  {'variables',{'population_density','technology'}},...
-  {'timestep',100},...
-  {'file','../../test.nc'},...
+  {'timelim',[-8500,-3000]},...
+  {'variables',{'farming','farming_timing'}},...
+  {'timestep',50},...
+  {'file','../../euroclim_0.4.nc'},...
   {'resolution',0.5},...
-  {'latlim',[-90 90]},...
-  {'lonlim',[-180 180]},...
+  {'latlim',[-inf inf]},...
+  {'lonlim',[-inf inf]},...
+  {'reg','lbk'}
 };
 
 cl_register_function;
@@ -27,6 +28,11 @@ for i=1:a.length
 end
 
 
+[ireg,nreg,loli,lali]=find_region_numbers(reg);
+lonlim(isinf(lonlim))=loli(isinf(lonlim));
+latlim(isinf(latlim))=lali(isinf(latlim));
+
+
 %% Read results file
 if ~exist(file,'file') error('File does not exist'); end
 ncid=netcdf.open(file,'NC_NOWRITE');
@@ -35,7 +41,8 @@ varname='region'; varid=netcdf.inqVarID(ncid,varname);
 [varname,xtype,dimids,natts]=netcdf.inqVar(ncid,varid);
 rdim=dimids;
 id=netcdf.getVar(ncid,varid);
-nreg=length(id);
+nid=length(id);
+
 varname='time'; varid=netcdf.inqVarID(ncid,varname);
 time=netcdf.getVar(ncid,varid);
 
@@ -180,8 +187,6 @@ end
 netcdf.endDef(ncout);
 
 
-
-
 %% Read GLUES raster
 % map.latgrid is 89 . -89
 % map.longrid is -179.. 179
@@ -195,37 +200,19 @@ map.region=zeros(720,360);
 for i=1:length(land.region)
     map.region(land.ilon(i),land.ilat(i))=land.region(i);
 end
-  
-% find ncell for each glues region
-%for i=1:length(id)
-%  ncell(i,1)=sum(land.region==i);
-%end
-%mapping=ones(nreg,max(ncell));
-%for i=1:nreg
-%  mapping(i,1:ncell(i))=find(map.region==i);
-%end
 
-% find ncell for each glues region
-%for i=1:length(id)
-%  ncell(i,1)=sum(land.region==i);
-%end
-%mapping=ones(nreg,max(ncell));
-
-%%% begin new version
 
 map.smallregion=map.region(iglon,iglat);
 ncell=zeros(nreg,1);
 for i=1:nreg
-  ncell(i)=length(find(map.smallregion==id(i)));
+  ncell(i)=length(find(map.smallregion==ireg(i)));
 end
-mapping=ones(nreg,max(ncell));
+mapping=ones(nreg,max(ncell))-NaN;
 
 for i=1:nreg
-  mapping(i,1:ncell(i))=find(map.smallregion==id(i));
+  mapping(i,1:ncell(i))=find(map.smallregion==ireg(i));
 end
 
-
-%%%%%%%%% end new version
 
 % Put new time records and lat/lon grid
 for i=1:length(time)
@@ -249,12 +236,12 @@ for ovarid=0:nvar-1
   varid=netcdf.inqVarID(ncid,varname);
   
   if length(dimids)==3 & (dimids==[londimid latdimid timedimid])
-    data=netcdf.getVar(ncid,varid,[0 itime(1)-1],[nreg ntime],[1 tstride]);
+    data=netcdf.getVar(ncid,varid,[0 itime(1)-1],[nid ntime],[1 tstride]);
     mdata=zeros(nglon,nglat)-NaN;
     rdata=zeros(nglon,nglat,ntime);
     for j=1:ntime 
       for i=1:nreg
-        mdata(mapping(i,:))=data(i,j);
+        mdata(mapping(i,1:ncell(i)))=data(ireg(i),j);
       end
       mdata(1)=NaN;
       rdata(:,:,j)=mdata;
@@ -263,9 +250,9 @@ for ovarid=0:nvar-1
     data=netcdf.getVar(ncid,varid);
     rdata=zeros(nglon,nglat)-NaN;
     for i=1:nreg
-      rdata(mapping(i,:))=data(i);
+      rdata(mapping(i,1:ncell(i)))=data(ireg(i));
     end
-    rdata(1)=NaN;
+    %rdata(1)=NaN;
   else
     warning('Writing of %s with this dimension not implemented. Skipped',varname);
     continue;
