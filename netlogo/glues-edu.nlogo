@@ -1,3 +1,5 @@
+;; Declaration section of extensions, breeds, and globals
+
 extensions [gis]
 
 breed [regions region]
@@ -38,28 +40,34 @@ regions-own [
   economies
   timing
   density
+  area
   temperature-limitation
   natural-fertility
   neighbor-regions
+  migration-rate
   
   ; tendencies
   dfarming
   dtechnology
   deconomies
-  ddensity  ; relative growth rate
+  ddensity
 ]
+
+;; Implementation section ------------------------------------
 
 to setup
   clear-all
   setup-init
   setup-gis
   set-default-shape regions "circle"
+  read-events
   update-view
+  reset-ticks
 end
 
 to go
   calc-adaptation-tendencies
-  ;calc-exchange-tendencies
+  calc-exchange-tendencies
   update-tendencies
   tick
   update-view
@@ -69,10 +77,10 @@ end
 
 to calc-adaptation-tendencies
   ask regions [
-    set dfarming farming * (1 - farming) * drdfarming 
-    set dtechnology technology-flexibility * drdtechnology
-    set deconomies economies-flexibility * drdeconomies
-    set ddensity rgr * density 
+    set dfarming farming * (1 - farming) * drdfarming          ; dQ/dt = Q (1-Q) * drdQ
+    set dtechnology technology-flexibility * drdtechnology     ; dT/dt = deltaT * drdT
+    set deconomies economies-flexibility * drdeconomies        ; dN/dt = deltaN * drdN
+    set ddensity rgr * density                                 ; dP/dt = rgr * P
   ]
 end
 
@@ -81,7 +89,8 @@ to update-tendencies
     set farming farming + dfarming
     set technology technology + dtechnology
     set economies economies + deconomies
-    set density density + ddensity
+    set density density + ddensity + migration-rate
+    if ( timing > .1 / eps ) and ( farming >= 0.5 ) [ set timing ticks ]
   ]
 end
 
@@ -95,49 +104,86 @@ to update-plot
   plotxy ticks ( mean [density] of regions )
   set-current-plot-pen "Economies"
   plotxy ticks ( mean [economies] of regions )
+  
+  set-current-plot "Histograms"
+  set-current-plot-pen "Farming"
+  set-plot-pen-mode 1
+  set-histogram-num-bars 21
+  histogram [farming] of regions
+
+  set-current-plot-pen "Density"
+  set-plot-pen-mode 1
+  set-histogram-num-bars 21
+  histogram [density] of regions
+ 
+  set-current-plot-pen "Technology"
+  set-plot-pen-mode 1
+  set-histogram-num-bars 21
+  histogram [technology] of regions
+  
 end
 
 to-report drdfarming
-  let dpdQ ( - sqrt technology + temperature-limitation * technology * economies )
-  if dpdQ < eps [ set dpdQ eps ]
-  report birth-rate * actual-fertility * artisans * dpdQ;
+  ; rgr =  mu * FEP * overexp * exp(-wT) * SI - rho P exp T/Tlit
+  ; SI = (1-Q) sqrt T + Q T N tlim
+  let dSIdQ  ( - sqrt technology + technology * economies * temperature-limitation )
+  report ( birth-rate * actual-fertility * artisans * dSIdQ )
 end
 
+
 to-report drdtechnology
-  let dydT ( -0.5 * exploitation-factor * density / sqrt technology )
-  let dpdT ( ( 1 - farming ) * 0.5 / sqrt technology + temperature-limitation * farming * economies )
-  let dmdT ( death-rate / literate-technology * exp ( - technology / literate-technology )  )
-  report birth-rate * ( - artisan-factor * actual-fertility * subsistence-intensity + artisans * dydT * subsistence-intensity  + artisans * actual-fertility * dpdT ) - dmdT
+  ; rgr =  mu * FEP overexp * exp(-wT) * SI - rho P exp T/Tlit
+  ; SI = (1-Q) sqrt T + Q T N tlim
+
+  let dSIdT ( ( 1 - farming ) * 0.5 / sqrt technology + temperature-limitation * farming * economies )
+  let dartdT ( - artisan-factor ) * artisans
+  ;let dexpdT ( - 0.5 * exploitation-factor * density / sqrt technology )
+  let dexpdT ( - 0.5 * exploitation-factor * density / sqrt technology  * exploitation )
+  let dmdT ( density * death-rate / literate-technology * exp ( - technology / literate-technology )  )
+
+  report birth-rate * ( - dartdT * actual-fertility * subsistence-intensity + artisans * dexpdT * subsistence-intensity  + artisans * actual-fertility * dSIdT ) - dmdT
 end
 
 to-report drdeconomies
-  let dpdN ( temperature-limitation * technology * farming * artisans )
-  report birth-rate * ( actual-fertility * dpdN )
+  let dSIdN ( temperature-limitation * technology * farming )
+  report  ( birth-rate * actual-fertility * artisans * dSIdN )
 end
 
 to-report subsistence-intensity
-  report sqrt technology * ( 1 - farming ) + temperature-limitation * technology * economies * farming
+    report sqrt technology * ( 1 - farming ) + temperature-limitation * technology * economies * farming
 end
 
 to-report rgr
   let literacy technology / literate-technology
-  report birth-rate * actual-fertility * artisans * subsistence-intensity - death-rate * exp ( - literacy)
+  report birth-rate * actual-fertility * artisans * subsistence-intensity - death-rate * density * exp ( - literacy)
+end
+
+
+to-report artisans
+  report exp ( - artisan-factor * technology ) 
+end
+
+to-report exploitation
+  report exp ( - exploitation-factor * density * sqrt technology )
 end
 
 to-report actual-fertility
-  let actfert ( natural-fertility - exploitation-factor * sqrt technology * density )
-  if actfert < eps [ set actfert eps ]
+  ;let actfert ( natural-fertility - exploitation-factor * sqrt technology * density )
+  let actfert ( natural-fertility * exploitation )
+  if actfert < 0 [ set actfert 0 ]
   report actfert
 end
 
-to-report artisans
-  let art ( 1 - artisan-factor * technology )
-  if art < eps  [ set art eps ]
-  report art 
+
+to default-values
+  set exploitation-factor 0.01
+  set artisan-factor 0.04
+  set spread-factor 0.03
+
 end
 
 to update-view
-  if View =  "FEP" [ ask land-patches [ set pcolor scale-color green pfep 1 0 ]] 
+  if View =  "Natural fertility" [ ask land-patches [ set pcolor scale-color green pfep 1 0 ]] 
   if View =  "Region" [ ask land-patches [ set pcolor pregion ]] 
   if View = "Farming" [ ask regions [
     let pvalue farming 
@@ -157,12 +203,22 @@ to update-view
   if View = "Timing" [ ask regions [
     let pvalue timing 
     if any? rpatches [ ask rpatches [
-    set pcolor scale-color orange pvalue -3000 -8000
+    set pcolor scale-color orange pvalue ticks 0
   ]]]]
   if View = "Density" [ ask regions [
     let pvalue density 
     if any? rpatches [ ask rpatches [
     set pcolor scale-color cyan pvalue 10 0
+  ]]]]
+  if View = "Actual fertility" [ ask regions [
+    let pvalue actual-fertility 
+    if any? rpatches [ ask rpatches [
+    set pcolor scale-color green pvalue 1 0
+  ]]]]
+  if View = "Migration rate" [ ask regions [
+    let pvalue migration-rate 
+    if any? rpatches [ ask rpatches [
+    set pcolor scale-color magenta pvalue 1E-3 -1E-3
   ]]]]
 end
 
@@ -170,14 +226,14 @@ end
 to setup-init
   set farming-init 0.04
   set technology-init 1.0
-  set economies-init 1.0
-  set density-init 0.01
-  set exploitation-factor 0.04
-  set artisan-factor 0.04
-  set birth-rate 0.002
-  set death-rate birth-rate / 10
+  set economies-init 2 ; 0.25
+  set density-init 0.03
+  ;set exploitation-factor 0.01 ; via GUI
+  ;set artisan-factor 0.04; via GUI
+  set birth-rate 0.0040
+  set death-rate 0.05; birth-rate / 10 (init-germs)
   set literate-technology 12
-  set economies-flexibility 0.15
+  set economies-flexibility 1.0
   set technology-flexibility 0.15
   set farming-flexibility 1.0
   set eps 1E-12
@@ -231,29 +287,102 @@ to setup-gis
       set economies economies-init
       set density density-init
       set temperature-limitation 1
+      set timing 1 / eps
+      set area npatches * 10000 ; TODO refine calculation
     ]
   ]  
   
- ; ask regions [
- ;   let pid id
- ;   ask rpatches [
- ;     let myneigh [pregion] of neighbors
- ;     foreach myneigh [
- ;       let mytregion first ( regions with [ id = ?]   )
- ;       let mysregion first ( regions with [ id = pid] )
- ;       ask mysregion [ create-link-with mytregion ]
- ;     ]      
- ;   ]
- ; ]  
-  
-   
+  ask regions [
+    let pid id
+    let mylist []
+    ask rpatches [
+      let neighpatches neighbors with [ pregion != pid  and pregion > 0]
+      let pnlist ( [pregion] of neighpatches )
+      foreach pnlist [
+         ifelse ( member? ? mylist ) [] [
+           set mylist lput ? mylist
+         ]
+      ]
+    ]   
+    set neighbor-regions regions with [ member? id mylist ]  
+    create-links-with neighbor-regions
+  ]   
 end
+
+
+to calc-exchange-tendencies
+  ask regions [
+    let iid id
+    let iinfl ( technology * density )
+    let irgr rgr
+    let iarea area
+    let idensity density
+    let dp0 0
+    let itechnology technology
+    let ieconomies economies
+    
+    let technology-migration 0
+    let technology-trade 0
+    let economies-migration 0
+    let economies-trade 0
+    let force 0
+    
+    ask link-neighbors with [id > iid] [
+      let jinfl ( technology * density )
+      let exch ( spread-factor / sqrt ( area * iarea ) ) ; * boundary-length
+      let ijpop ( iinfl * iarea + jinfl * area ) / (iarea + area)
+      set force ( exch * ( ijpop - iinfl ) )
+      set dp0  force
+      let dp1  ( - iarea * dp0 / area )
+      set migration-rate (migration-rate + dp1 * density)   
+      
+      ifelse ( force < 0 ) [
+        ; outward pressure (from i to j), i exports to j
+        set technology-migration ( dp1 * itechnology * idensity / density )          ; spread with people 
+        set technology-trade     ( trade-factor * (itechnology - technology) * dp1 ) ; information spread
+        set economies-migration  ( dp1 * ieconomies  * idensity / density ) 
+        set economies-trade      ( trade-factor * (ieconomies  - economies) * dp1 )  
+        
+        set dtechnology ( dtechnology +  technology-migration + technology-trade ) 
+        set deconomies  ( deconomies  +  economies-migration   + economies-trade  )
+      ] [
+        ; inward pressure (from j to i)
+        set technology-migration ( dp0 * technology * density / idensity )          ; spread with people 
+        set technology-trade     ( trade-factor * (technology - itechnology) * dp0 ) ; information spread
+        set economies-migration  ( dp0 * economies  * density / idensity ) 
+        set economies-trade      ( trade-factor * (economies  - ieconomies) * dp0 )  
+      ]
+      
+    ]
+    
+    set migration-rate (ddensity + dp0 * density )
+    if ( force > 0 ) [
+      set dtechnology ( dtechnology +  technology-migration + technology-trade ) 
+      set deconomies  ( deconomies  +  economies-migration   + economies-trade  )    
+    ]
+  ]
+end
+
+to read-events
+  let filename "../RegionEventTimes.tsv"
+  ifelse file-exists? filename [ 
+    file-open filename
+    file-close
+  ][
+    print "Could not read file"
+  ]
+end
+
+
+
+
+
 @#$#@#$#@
 GRAPHICS-WINDOW
-153
-18
-929
-435
+199
+10
+975
+427
 52
 26
 7.3
@@ -276,10 +405,10 @@ GRAPHICS-WINDOW
 ticks
 
 BUTTON
-12
-17
-78
-50
+7
+80
+73
+113
 NIL
 setup
 NIL
@@ -292,20 +421,20 @@ NIL
 NIL
 
 CHOOSER
-10
-58
-148
-103
+6
+117
+147
+162
 View
 View
-"FEP" "Region" "Farming" "Technology" "Economies" "Timing" "Density"
-3
+"Region" "Natural fertility" "Actual fertility" "Farming" "Technology" "Economies" "Timing" "Density" "Migration rate"
+6
 
 BUTTON
-83
-17
-146
-50
+81
+80
+144
+113
 NIL
 go
 T
@@ -318,10 +447,10 @@ NIL
 NIL
 
 PLOT
-26
-443
-569
-675
+17
+437
+503
+686
 Trajectories
 Tick
 NIL
@@ -338,30 +467,106 @@ PENS
 "Economies" 1.0 0 -1184463 true
 
 SLIDER
-583
-445
-755
-478
+16
+273
+188
+306
 exploitation-factor
 exploitation-factor
 0
 0.99
-0.04
+0.33
 0.01
 1
 NIL
 HORIZONTAL
 
 SLIDER
-583
-483
-755
-516
+16
+311
+188
+344
 artisan-factor
 artisan-factor
 0
 0.99
-0.04
+0.11
+0.01
+1
+NIL
+HORIZONTAL
+
+CHOOSER
+7
+18
+145
+63
+Scenario
+Scenario
+"Europe"
+0
+
+SLIDER
+18
+352
+190
+385
+spread-factor
+spread-factor
+0
+1
+0.01
+0.01
+1
+NIL
+HORIZONTAL
+
+BUTTON
+15
+235
+187
+268
+Default values
+default-values
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+
+PLOT
+538
+454
+738
+604
+Histograms
+NIL
+NIL
+0.0
+1.0
+0.0
+10.0
+true
+false
+PENS
+"Farming" 1.0 0 -2674135 true
+"Technology" 1.0 0 -2064490 true
+"Density" 1.0 0 -11221820 true
+"Economies" 1.0 0 -1184463 true
+
+SLIDER
+17
+391
+189
+424
+trade-factor
+trade-factor
+0
+1
+0.68
 0.01
 1
 NIL
