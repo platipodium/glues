@@ -1,3 +1,6 @@
+;; Include other source code
+__includes []
+
 ;; Declaration section of extensions, breeds, and globals
 
 extensions [gis]
@@ -12,7 +15,7 @@ globals [
   economies-init
   farming-init
   technology-init
-  region-list
+  ;region-list
   density-init
   birth-rate ; gammab in original code
   death-rate
@@ -22,7 +25,11 @@ globals [
   technology-flexibility
   farming-flexibility
   economies-flexibility
+  time-start
+  time-end
+  time
   eps
+  plot-region-set
 ]
 
 patches-own [
@@ -51,27 +58,49 @@ regions-own [
   dtechnology
   deconomies
   ddensity
+  event-list
 ]
 
 ;; Implementation section ------------------------------------
 
 to setup
-  clear-all
+  ;; (for this model to work with NetLogo's new plotting features,
+  ;; __clear-all-and-reset-ticks should be replaced with clear-all at
+  ;; the beginning of your setup procedure and reset-ticks at the end
+  ;; of the procedure.)
+  __clear-all-and-reset-ticks
   setup-init
   setup-gis
   set-default-shape regions "circle"
   read-events
   update-view
   reset-ticks
+  set time time-start
 end
 
 to go
   calc-adaptation-tendencies
   calc-exchange-tendencies
   update-tendencies
+  
+  if mouse-down? [ handle-mouse ]
+  
   tick
+  set time time + 1
   update-view
   update-plot
+end
+
+to handle-mouse
+  let mypatch patch mouse-xcor mouse-ycor
+  ask mypatch [ set pcolor red ]
+  let pid [pregion] of mypatch 
+  ifelse  pid > 0 [
+    set plot-region-set regions with [id = pid]  
+  ][
+    set plot-region-set regions 
+  ]
+  
 end
 
 
@@ -97,14 +126,18 @@ end
 to update-plot
   set-current-plot "Trajectories"
   set-current-plot-pen "Farming"
-  plotxy ticks ( mean [farming] of regions )
+  plotxy ticks ( mean [farming] of plot-region-set )
   set-current-plot-pen "Technology"
-  plotxy ticks ( mean [technology] of regions )
+  plotxy ticks ( mean [technology] of plot-region-set )
   set-current-plot-pen "Density"
-  plotxy ticks ( mean [density] of regions )
+  plotxy ticks ( mean [density] of plot-region-set )
   set-current-plot-pen "Economies"
-  plotxy ticks ( mean [economies] of regions )
+  plotxy ticks ( mean [economies] of plot-region-set )
   
+  set-current-plot-pen "Actual fertility"
+  plotxy ticks ( mean [actual-fertility] of plot-region-set )
+
+
   set-current-plot "Histograms"
   set-current-plot-pen "Farming"
   set-plot-pen-mode 1
@@ -169,9 +202,26 @@ end
 
 to-report actual-fertility
   ;let actfert ( natural-fertility - exploitation-factor * sqrt technology * density )
-  let actfert ( natural-fertility * exploitation )
+  let actfert ( natural-fertility * exploitation * fluctuation)
   if actfert < 0 [ set actfert 0 ]
   report actfert
+end
+
+to-report fluctuation
+  let fluc 0
+  let maxfluc 0
+  if fluctuation-factor > 0 [
+    foreach event-list [ 
+      set fluc exp ( - ((( time - ?1 ) / 175 ) ^ 2)) 
+      if fluc > maxfluc [ set maxfluc fluc ]
+      ifelse fluc > 0.9 [ 
+        print (word "Event in " id " at " time " (Event " ?1 ")" ) 
+        set color yellow 
+      ] [set color red]
+    ]
+  ]
+  ;print (word id maxfluc )
+  report 1 - maxfluc * fluctuation-factor
 end
 
 
@@ -179,7 +229,8 @@ to default-values
   set exploitation-factor 0.01
   set artisan-factor 0.04
   set spread-factor 0.03
-
+  set trade-factor 1.0
+  set fluctuation-factor 0.4
 end
 
 to update-view
@@ -226,7 +277,7 @@ end
 to setup-init
   set farming-init 0.04
   set technology-init 1.0
-  set economies-init 2 ; 0.25
+  set economies-init 0.25
   set density-init 0.03
   ;set exploitation-factor 0.01 ; via GUI
   ;set artisan-factor 0.04; via GUI
@@ -237,6 +288,8 @@ to setup-init
   set technology-flexibility 0.15
   set farming-flexibility 1.0
   set eps 1E-12
+  set time-start -9500
+  set time-end -1000
 end
 
 to setup-gis
@@ -257,7 +310,7 @@ to setup-gis
   ask water-patches [ set pcolor blue ]
   
   ;; Loop over all patches to find unique list of region ids
-  set region-list []  
+  let region-list []  
   let remaining-patches land-patches
 
   while [ count remaining-patches > 0 ] [
@@ -289,6 +342,7 @@ to setup-gis
       set temperature-limitation 1
       set timing 1 / eps
       set area npatches * 10000 ; TODO refine calculation
+      set event-list []
     ]
   ]  
   
@@ -307,6 +361,8 @@ to setup-gis
     set neighbor-regions regions with [ member? id mylist ]  
     create-links-with neighbor-regions
   ]   
+  
+  set plot-region-set regions
 end
 
 
@@ -365,14 +421,35 @@ end
 
 to read-events
   let filename "../RegionEventTimes.tsv"
+  let linecounter 0
+  let itemcounter 0
+  let event 0
   ifelse file-exists? filename [ 
     file-open filename
+    while [not file-at-end?] [
+      set linecounter ( linecounter + 1 )
+      let myregion regions with [ id = linecounter ]
+      ifelse any? myregion [
+        set itemcounter 0
+        while [itemcounter < 16 ] [
+          set event file-read
+          set itemcounter ( itemcounter + 1 )
+          ifelse ( event > 0 ) [
+            ask myregion [set event-list lput ( 1950 - event ) event-list]
+          ][
+            ; 
+          ] 
+        ]
+      ][
+        set event file-read-line
+      ]
+    ]
+    print (word "Read " linecounter " lines with events from " filename )
     file-close
   ][
     print "Could not read file"
   ]
 end
-
 
 
 
@@ -403,6 +480,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 7
@@ -419,6 +497,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 CHOOSER
 6
@@ -445,6 +524,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 PLOT
 17
@@ -460,37 +540,39 @@ NIL
 0.1
 true
 true
+"" ""
 PENS
-"Farming" 1.0 0 -2674135 true
-"Technology" 1.0 0 -2064490 true
-"Density" 1.0 0 -11221820 true
-"Economies" 1.0 0 -1184463 true
+"Farming" 1.0 0 -2674135 true "" ""
+"Technology" 1.0 0 -2064490 true "" ""
+"Density" 1.0 0 -11221820 true "" ""
+"Economies" 1.0 0 -1184463 true "" ""
+"Actual fertility" 1.0 0 -10899396 true "" ""
 
 SLIDER
-16
-273
-188
-306
+10
+213
+182
+246
 exploitation-factor
 exploitation-factor
 0
 0.99
-0.33
+0.01
 0.01
 1
 NIL
 HORIZONTAL
 
 SLIDER
-16
-311
-188
-344
+10
+250
+182
+283
 artisan-factor
 artisan-factor
 0
 0.99
-0.11
+0.04
 0.01
 1
 NIL
@@ -507,25 +589,25 @@ Scenario
 0
 
 SLIDER
-18
-352
-190
-385
+13
+292
+185
+325
 spread-factor
 spread-factor
 0
 1
-0.01
+0.93
 0.01
 1
 NIL
 HORIZONTAL
 
 BUTTON
-15
-235
-187
-268
+9
+175
+181
+208
 Default values
 default-values
 NIL
@@ -536,12 +618,13 @@ NIL
 NIL
 NIL
 NIL
+1
 
 PLOT
-538
-454
-738
-604
+516
+439
+810
+686
 Histograms
 NIL
 NIL
@@ -551,70 +634,79 @@ NIL
 10.0
 true
 false
+"" ""
 PENS
-"Farming" 1.0 0 -2674135 true
-"Technology" 1.0 0 -2064490 true
-"Density" 1.0 0 -11221820 true
-"Economies" 1.0 0 -1184463 true
+"Farming" 1.0 0 -2674135 true "" ""
+"Technology" 1.0 0 -2064490 true "" ""
+"Density" 1.0 0 -11221820 true "" ""
+"Economies" 1.0 0 -1184463 true "" ""
+"Actual fertility" 1.0 0 -10899396 true "" "histogram [actual-fertility] of regions"
 
 SLIDER
-17
-391
-189
-424
+12
+330
+184
+363
 trade-factor
 trade-factor
 0
+2
 1
-0.68
+0.1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+13
+369
+186
+403
+fluctuation-factor
+fluctuation-factor
+0
+1
+0.4
 0.01
 1
 NIL
 HORIZONTAL
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This section could give a general understanding of what the model is trying to show or explain.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 This section could explain what rules the agents use to create the overall behavior of the model.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 This section could explain how to use the model, including a description of each of the items in the interface tab.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 This section could give some ideas of things for the user to notice while running the model.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 This section could give some ideas of things for the user to try to do (move sliders, switches, etc.) with the model.
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 This section could give some ideas of things to add or change in the procedures tab to make the model more complicated, detailed, accurate, etc.
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
 This section could point out any especially interesting or unusual features of NetLogo that the model makes use of, particularly in the Procedures tab.  It might also point out places where workarounds were needed because of missing features.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
 This section could give the names of models in the NetLogo Models Library or elsewhere which are of related interest.
 
+## CREDITS AND REFERENCES
 
-CREDITS AND REFERENCES
-----------------------
 This section could contain a reference to the model's URL on the web if it has one, as well as any other necessary credits or references.
 @#$#@#$#@
 default
@@ -909,10 +1001,44 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 4.1.3
+NetLogo 5.0
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
+<experiments>
+  <experiment name="vary spread" repetitions="1" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <exitCondition>mean [farming]  of regions &gt; 0.9</exitCondition>
+    <metric>count regions with [farming &gt; 0.5]</metric>
+    <enumeratedValueSet variable="Scenario">
+      <value value="&quot;Europe&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="exploitation-factor">
+      <value value="0.01"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="artisan-factor">
+      <value value="0.04"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="View">
+      <value value="&quot;Farming&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="trade-factor">
+      <value value="0.68"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="spread-factor">
+      <value value="0"/>
+      <value value="0.01"/>
+      <value value="0.03"/>
+      <value value="0.08"/>
+      <value value="0.15"/>
+      <value value="0.4"/>
+      <value value="1"/>
+      <value value="4"/>
+      <value value="40"/>
+    </enumeratedValueSet>
+  </experiment>
+</experiments>
 @#$#@#$#@
 @#$#@#$#@
 default
