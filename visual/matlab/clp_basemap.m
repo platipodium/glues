@@ -34,14 +34,16 @@ figure(gcf);
 if ~ishold(gcf) clf reset; end
 
 set(gcf,'userdata',cl_get_version);
+set(gca,'color','none');
 
 %if (nogrid==0) m_grid; end%('backcolor',color_sea);
 if (nogrid==0)
     m_grid;
 else
-    m_grid('XTick',[],'Ytick',[],'box','off');
+    m_grid('XTick',[],'Ytick',[],'box','off','color','none');
 end
-set(gca,'Tag','m_grid');
+
+set(gca,'Tag','m_grid','color','none');
 
 if ~nocoast
     m_coast;

@@ -66,6 +66,7 @@ tid=netcdf.inqVarID(ncid,netcdf.inqDim(ncid,udimid));
 tdim=udimid;
 time=netcdf.getVar(ncid,tid);
 ntime=length(time);
+if numel(timelim)==1 timelim(1:2) = timelim(1); end
 if ntime>1
   dtime=abs(time(2)-time(1));
   itime=find(time>=timelim(1) & time<=timelim(2));

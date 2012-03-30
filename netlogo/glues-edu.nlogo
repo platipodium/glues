@@ -15,12 +15,9 @@ globals [
   economies-init
   farming-init
   technology-init
-  ;region-list
   density-init
   birth-rate ; gammab in original code
   death-rate
-  ;exploitation-factor ; overexp in original code
-  ;artisan-factor ; omega in original code
   literate-technology
   technology-flexibility
   farming-flexibility
@@ -76,6 +73,15 @@ to setup
   update-view
   reset-ticks
   set time time-start
+  movie-start "glues-edu.mov" 
+end
+
+to make-movie
+  setup 
+  movie-start "glues-edu.mov" repeat 5000 [
+    movie-grab-view go
+  ]
+  movie-close
 end
 
 to go
@@ -84,6 +90,21 @@ to go
   update-tendencies
   
   if mouse-down? [ handle-mouse ]
+  
+  if ( random 1000 ) < 2 [
+    ask regions [set economies 2]
+    print "ask regions [set economies 2]; economic downturn"  
+  ]; economic downturn
+  if ( random 1000 ) < 2 [
+    ask regions [set technology .9]; government overthrow
+    print "ask regions [set technology .9]]; government overthrow"  
+  ]
+  if ( random 1000 ) < 2 [
+    ask regions with [id > 270] [set farming .1]; partial immigration
+    print "ask regions with [id > 270] [set farming .1]]; partial immigration"
+  ]
+  
+  if (ticks mod 10 = 0 ) [movie-grab-interface]
   
   tick
   set time time + 1
@@ -215,7 +236,7 @@ to-report fluctuation
       set fluc exp ( - ((( time - ?1 ) / 175 ) ^ 2)) 
       if fluc > maxfluc [ set maxfluc fluc ]
       ifelse fluc > 0.9 [ 
-        print (word "Event in " id " at " time " (Event " ?1 ")" ) 
+        ;print (word "Event in " id " at " time " (Event " ?1 ")" ) 
         set color yellow 
       ] [set color red]
     ]
@@ -293,8 +314,8 @@ to setup-init
 end
 
 to setup-gis
-  set region-dataset gis:load-dataset "../data/euroclim_0.0_0.5x0.5_region_-5000.asc"
-  set fep-dataset gis:load-dataset "../data/euroclim_0.0_0.5x0.5_natural_fertility_-5000.asc"
+  set region-dataset gis:load-dataset "euroclim_0.0_0.5x0.5_region_-5000.asc"
+  set fep-dataset gis:load-dataset "euroclim_0.0_0.5x0.5_natural_fertility_-5000.asc"
   
   gis:set-world-envelope (gis:envelope-union-of
     (gis:envelope-of region-dataset)
@@ -420,7 +441,7 @@ to calc-exchange-tendencies
 end
 
 to read-events
-  let filename "../RegionEventTimes.tsv"
+  let filename "RegionEventTimes.tsv"
   let linecounter 0
   let itemcounter 0
   let event 0
@@ -444,15 +465,12 @@ to read-events
         set event file-read-line
       ]
     ]
-    print (word "Read " linecounter " lines with events from " filename )
+    ;print (word "Read " linecounter " lines with events from " filename )
     file-close
   ][
     print "Could not read file"
   ]
 end
-
-
-
 
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -507,7 +525,7 @@ CHOOSER
 View
 View
 "Region" "Natural fertility" "Actual fertility" "Farming" "Technology" "Economies" "Timing" "Density" "Migration rate"
-6
+7
 
 BUTTON
 81
@@ -597,7 +615,7 @@ spread-factor
 spread-factor
 0
 1
-0.93
+0.03
 0.01
 1
 NIL
@@ -651,7 +669,7 @@ trade-factor
 trade-factor
 0
 2
-1
+2
 0.1
 1
 NIL
@@ -661,7 +679,7 @@ SLIDER
 13
 369
 186
-403
+402
 fluctuation-factor
 fluctuation-factor
 0
@@ -682,6 +700,8 @@ This section could give a general understanding of what the model is trying to s
 This section could explain what rules the agents use to create the overall behavior of the model.
 
 ## HOW TO USE IT
+
+1. Press the button "setup" to load the map and initalize the simulation
 
 This section could explain how to use the model, including a description of each of the items in the interface tab.
 
