@@ -25,18 +25,24 @@ $SED -i '/spreadv/s/spreadv.*$/spreadv 0.002/' $PAR
 $SED -i '/spreadm/s/spreadm.*$/spreadm 100/' $OPAR
 #$SED -i '/climatefile/s/string.*$/string climatefile "regions_npp_11k_685.dat"/' $SCE
 $SED -i '/climatefile/s/string.*$/string climatefile  "..\/..\/..\/data\/plasim_11k_vecode_685_npp.tsv"/' $SCE
-$X $SIM && cp $T.nc plasim_550.nc
 
-exit
-# simulation without lower nppstar
-$SED -i '/kappa/s/kappa.*$/kappa 500.0/' $PAR
-$X $SIM && cp $T.nc plasim_k500.nc
-
-# simulation without higher nppstar
-$SED -i '/kappa/s/kappa.*$/kappa 600.0/' $PAR
-$X $SIM && cp $T.nc plasim_k600.nc
-
-
+# Loop over parameters for this scenario
+for (( i=400 ; i<801; i=i+50 )) ; do
+  SCE=$i
+  $SED -i '/kappa/s/kappa.*$/kappa '$SCE'.0/' $PAR
+  
+  NC=plasim_${SCE}.nc
+  LOG=plasim_${SCE}.log
+    
+  $X $SIM 2> ${LOG} && \
+  ncks -O -v time,subsistence_intensity,area,population_density,technology,farming,region,latitude,longitude test.nc ${NC}  
+  
+  ncap2 -A -s 'landuse[time,region]=population_density[time,region]*sqrt(technology)/subsistence_intensity;
+               cropfraction[time,region]=landuse/0.1*0.02*farming;
+               cropfraction_static[time,region]=0.02*population_density*farming' ${NC} ${NC} &
+  
+  
+done
 
 
 exit

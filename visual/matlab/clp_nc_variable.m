@@ -34,6 +34,7 @@ arguments = {...
   {'nocolor',0},...
   {'ncol',19},...
   {'nogrid',0},...
+  {'nocoast',0},...
   {'noaxes',0},...
   {'notitle',0},...
   {'threshold',NaN},...
@@ -214,8 +215,8 @@ else
 end
 
 
-seacolor=0.7*ones(1,3);
-landcolor=0.8*ones(1,3);  
+%seacolor=0.7*ones(1,3);
+%landcolor=0.8*ones(1,3);  
 
 if isnan(cmap)
   if transparency && isnan(threshold)
@@ -262,7 +263,7 @@ if isinf(latlim(2)) latlim(2)=80; end
   set(figid,'DoubleBuffer','on');    
   set(figid,'PaperType','A4');
   hold on;
-  if (marble<2) pb=clp_basemap('lon',lonlim,'lat',latlim,'nogrid',nogrid); end
+  if (marble<2) pb=clp_basemap('lon',lonlim,'lat',latlim,'nogrid',nogrid,'nocoast',nocoast); end
   if (marble==1)
     pm=clp_marble('lon',lonlim,'lat',latlim);
     if pm>0 alpha(pm,marble); end
@@ -270,19 +271,23 @@ if isinf(latlim(2)) latlim(2)=80; end
     pb=clp_basemap('lon',lonlim,'lat',latlim,'nogrid',nogrid,'nocoast',1,'noaxes',noaxes);
     pm=clp_relief;
   else
-    m_coast('patch',landcolor);
-    set(gca,'Tag','m_coast');
-    % only needed for empty (non-marble background) to get rid of lakes
-    c=get(gca,'Children');
-    ipatch=find(strcmp(get(c(:),'Type'),'patch'));
-    npatch=length(ipatch);
-    if npatch>1
-      iwhite=find(sum(cell2mat(get(c(ipatch),'FaceColor')),2)==3);
-      if ~isempty(iwhite) 
-        set(c(ipatch(iwhite)),'FaceColor',seacolor);
-        set(c(ipatch(iwhite)),'Tag','Lake');
+    if ~nocoast 
+      m_coast('patch',landcolor);
+      set(gca,'Tag','m_coast'); end
+      % only needed for empty (non-marble background) to get rid of lakes
+      c=get(gca,'Children');
+      ipatch=find(strcmp(get(c(:),'Type'),'patch'));
+      npatch=length(ipatch);
+      if npatch>0
+        if npatch==1  iwhite=find(sum(get(c(ipatch),'FaceColor'),2)==3); 
+        else iwhite=find(sum(cell2mat(get(c(ipatch),'FaceColor')),2)==3);
+        end
+        if ~isempty(iwhite) 
+          set(c(ipatch(iwhite)),'FaceColor',seacolor);
+          set(c(ipatch(iwhite)),'Tag','Lake');
+        end
       end
-    end    
+    
   
   end
 
