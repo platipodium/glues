@@ -76,6 +76,7 @@ int main(int argc, char* argv[])
       string denoting the file name of the configuration file. 
       Also check whether the file can be openened */
   if (argc!=2) {
+    std::cerr << "Exactly one argument (.nc or .sim file name) required." << std::endl;
     glues::Messages::Error(); 
     return 1;
   }
@@ -88,6 +89,7 @@ int main(int argc, char* argv[])
   std::ifstream ifs;
   ifs.open(configfilename.c_str(),ios::in);
   if (ifs.bad()) {
+    std::cerr << "The input file " << configfilename << " cannot be read." << std::endl;
     glues::Messages::Error();
     return 1;
   }
@@ -115,7 +117,13 @@ int main(int argc, char* argv[])
   to Namelist and vice versa, or with a parallel development */
   
   if (!ext.compare("sim")) {
-    if ( SiSi::parseSimulation(argc, argv) ) {
+    if (!SiSi::parseSimulation(argc, argv) ) {
+      std::cerr << "Could not parse SiSi simulation file " << configfilename << "." << std::endl;
+	  glues::Messages::Error();
+      SiSi::finalize();
+      return 1;
+    }   
+    else {
       
 #ifdef HAVE_NETCDF_H
       ncfilename=configfilename.substr(0,pos).append(".nc");
@@ -190,24 +198,29 @@ int main(int argc, char* argv[])
       ncout.close();
 #endif
     }
-    else {
-#ifdef HAVE_MPI_H
-      if (mpi_rank==0)
-#endif
-	glues::Messages::Error();
-      
-      SiSi::finalize();
-      return 1;
-    }
   }
-  /*  else if (ext.compare("nc")) {
-    // not implemented yet 
-    }*/
+  else if (!ext.compare("nc")) {
+/*#ifndef HAVE_NETCDF_H
+  	  glues::Messages::Error();
+#endif*/
+      ncfilename=configfilename;
+      configfilename=ncfilename.substr(0,pos).append(".sim");
+            
+      if (!SiSi::parseSimulation(configfilename.c_str(), argv[0])) {
+        std::cerr << "Could not parse SiSi simulation file " << configfilename << "." << std::endl;
+	    glues::Messages::Error();
+        SiSi::finalize();
+        return 1;
+      }   
+      
+      //NcFile ncout(ncfilename.c_str(),NcFile::Replace);
+      //ncout.close();
+  }
   else { 
 #ifdef HAVE_MPI_H
     if (mpi_rank==0)
 #endif
-      glues::Messages::Error();
+      std::cerr << "Extensions .sim or .nc required." << std::endl, glues::Messages::Error();
     return 1;
   }
 
