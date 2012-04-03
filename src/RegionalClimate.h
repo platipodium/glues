@@ -1,7 +1,7 @@
 /* GLUES regional climate implementation; this file is part of
    the Global Land Use and technological Evolution Simulator
    
-   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008,2009,2010
+   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012
    Carsten Lemmen <carsten.lemmen@hzg.de>, Kai Wirtz <kai.wirtz@hzg.de>
 
    This program is free software; you can redistribute it and/or modify it
@@ -21,7 +21,7 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
    @author Kai W Wirtz <kai.wirtz@hzg.de
-   @date   2010-02-24
+   @date   2012-03-30
    @file RegionalClimate.h
    @brief Reginonal climate
 */
@@ -40,9 +40,11 @@ namespace glues
     protected:
 	  double lai,npp,tlim,time;
 	  double gdd,gdd0,gdd5;
+	  double forestfraction;
 	  double hyper(double,double,int) const;
 	  
     public:
+	  RegionalClimate(double,double,double,double,double,double);
 	  RegionalClimate(double,double,double,double,double);
 	  RegionalClimate(double,double,double,double);
 	  RegionalClimate(double,double,double);
@@ -64,6 +66,8 @@ namespace glues
 	inline double Tlim() const   {return tlim;}
 	inline double Time(double t) {time = t; return time; }
 	inline double Time() const   {return time;}
+	inline double Forestfraction(double ff) {forestfraction=ff; return ff; }
+	inline double Forestfraction() const   {return forestfraction;}
 
 	double NatFertility(double) const;
 	double SuitableSpecies() const;

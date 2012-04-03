@@ -120,6 +120,8 @@ int main(int argc, char* argv[])
       std::string configncfilename=configfilename.substr(0,pos).append(".nc");
       NcFile ncparam(configncfilename.c_str(),NcFile::Replace);
 
+      std::cerr << "Writing to " << configncfilename << std::endl;
+
       time_t today;
       time(&today);
       string s1(asctime(gmtime(&today)));

@@ -392,6 +392,7 @@ AC_CONFIG_FILES([Makefile
   src/Makefile src/region/Makefile 
   src/test/Makefile config/Makefile
   src/variation/Makefile
+  src/vecode/Makefile
   src/patch/Makefile
   src/Messages.cc
   examples/Makefile examples/setup/Makefile 

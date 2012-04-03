@@ -20,7 +20,7 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
-   @date   2012-02-25
+   @date   2012-04-03
    @file   GNetcdf.cc
 */
 
@@ -48,12 +48,12 @@ int gnc_write_header(NcFile& ncfile, int nreg, int nneigh, int ncont) {
   ncfile.add_att("principal_investigator","Carsten Lemmen");
   ncfile.add_att("email","carsten.lemmen@hzg.de");
   ncfile.add_att("institution","Helmholtz-Zentrum Geesthacht GmbH");
-  ncfile.add_att("funding_source","Deutsche Forschungsgemeinschaft");
-  ncfile.add_att("funding_scheme","Priority program SPP 1266");
-  ncfile.add_att("funding_scheme_name","Interdynamik");
-  ncfile.add_att("funding_project","GLUES-QUICC");
+  ncfile.add_att("funding_source","Helmholtz Gemeinschaft");
+  ncfile.add_att("funding_scheme","Institutional");
+  //ncfile.add_att("funding_scheme_name","Interdynamik");
+  ncfile.add_att("funding_project","PACES");
   ncfile.add_att("source","model");
-  ncfile.add_att("references","Wirtz & Lemmen (2003), Lemmen (2009)");
+  ncfile.add_att("references","Wirtz & Lemmen (2003), Lemmen (2009), Lemmen et al. (2011)");
   ncfile.add_att("model_name","GLUES");
   ncfile.add_att("model_version",VERSION);
   ncfile.add_att("date_of_creation",timestring.c_str());
@@ -63,6 +63,7 @@ int gnc_write_header(NcFile& ncfile, int nreg, int nneigh, int ncont) {
   if (!(neighdim = ncfile.add_dim("neighbour", nneigh))) return 1;
   if (!(contdim = ncfile.add_dim("continent", ncont))) return 1;
   if (!(timedim  = ncfile.add_dim("time"))) return 1;
+  
   
 /** Create coordinate variables */  
   
