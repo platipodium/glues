@@ -36,7 +36,8 @@
 #ifdef HAVE_NETCDF_H
 #include "netcdfcpp.h"
 
-int gnc_write_header(NcFile& ncfile, int nreg, int nneigh=1, int ncont=1);
+int gnc_write_header(NcFile& ncfile);
+int gnc_write_definitions(NcFile& ncfile, int nreg, int nneigh=1, int ncont=1);
 
 bool gnc_is_var(const NcFile&, const std::string&);
 bool gnc_is_dim(const NcFile&, const std::string&);

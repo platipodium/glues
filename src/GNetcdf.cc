@@ -30,12 +30,14 @@
 
 #ifdef HAVE_NETCDF_H
 
-int gnc_write_header(NcFile& ncfile, int nreg, int nneigh, int ncont) {
+
+int gnc_write_header(NcFile& ncfile) {
+
   if (!ncfile.is_valid()) {
     std::cerr << "Could not open NetCDF file for writing " << std::endl;
     return 1;
   }
-  
+
   time_t today;
   std::time(&today);
   std::string s1(asctime(gmtime(&today)));
@@ -57,7 +59,24 @@ int gnc_write_header(NcFile& ncfile, int nreg, int nneigh, int ncont) {
   ncfile.add_att("model_name","GLUES");
   ncfile.add_att("model_version",VERSION);
   ncfile.add_att("date_of_creation",timestring.c_str());
-   
+
+  return 0;
+}
+
+
+int gnc_write_definitions(NcFile& ncfile, int nreg, int nneigh, int ncont) {
+
+  if (!ncfile.is_valid()) {
+    std::cerr << "Could not open NetCDF file for writing " << std::endl;
+    return 1;
+  }
+
+  time_t today;
+  std::time(&today);
+  std::string s1(asctime(gmtime(&today)));
+  std::string timestring=s1.substr(0,s1.find_first_of("\n"));
+
+  
   NcDim *regdim, *timedim, *neighdim, *contdim;
   if (!(regdim   = ncfile.add_dim("region", nreg))) return 1;
   if (!(neighdim = ncfile.add_dim("neighbour", nneigh))) return 1;
