@@ -63,6 +63,7 @@ double simulation();
 long unsigned int calc_deviation(unsigned long int);
 extern double spread_all(double t);
 void dump_events();
+std::string ncfilename;
 
 /**
   Main program incl. pre- & postprocessing
@@ -117,75 +118,76 @@ int main(int argc, char* argv[])
     if ( SiSi::parseSimulation(argc, argv) ) {
       
 #ifdef HAVE_NETCDF_H
-      std::string configncfilename=configfilename.substr(0,pos).append(".nc");
-      NcFile ncparam(configncfilename.c_str(),NcFile::Replace);
+      ncfilename=configfilename.substr(0,pos).append(".nc");
+      NcFile ncout(ncfilename.c_str(),NcFile::Replace);
 
-      std::cerr << "Writing to " << configncfilename << std::endl;
+      std::cout << "Writing results and configuration to new file " << ncfilename << std::endl;
 
-      time_t today;
-      time(&today);
-      string s1(asctime(gmtime(&today)));
-      string timestring=s1.substr(0,s1.find_first_of("\n"));
-      ncparam.add_att("Conventions","CF-1.4");
-      ncparam.add_att("title","GLUES parameter/restart file");
-      ncparam.add_att("history","File created");
-      ncparam.add_att("address","Max-Planck-Str 1, 21502 Geesthacht, Germany");
-      ncparam.add_att("principal_investigator","Carsten Lemmen");
-      ncparam.add_att("email","carsten.lemmen@hzg.de");
-      ncparam.add_att("institution","Helmholtz-Zentrum Geesthacht GmbH");
-      ncparam.add_att("funding_source","Deutsche Forschungsgemeinschaft");
-      ncparam.add_att("funding_scheme","Priority program SPP 1266");
-      ncparam.add_att("funding_scheme_name","Interdynamik");
-      ncparam.add_att("funding_project","GLUES-QUICC");
-      ncparam.add_att("source","model");
-      ncparam.add_att("references","Wirtz & Lemmen (2003), Lemmen (2009)");
-      ncparam.add_att("model_name","GLUES");
-      ncparam.add_att("model_version",VERSION);
-      ncparam.add_att("date_of_creation",timestring.c_str());
+      int status=gnc_write_header(ncout);
       
-      ncparam.add_att("param_Time",Time);
-      ncparam.add_att("param_TimeStart",TimeStart);
-      ncparam.add_att("param_TimeEnd",TimeEnd);
-      ncparam.add_att("param_TimeStep",TimeStep);      
-      ncparam.add_att("param_OutputStep",OutputStep);
-      ncparam.add_att("param_CultIndex",CultIndex);
-      ncparam.add_att("param_Space2Time",Space2Time);
-      ncparam.add_att("param_storetime",storetim);
-      ncparam.add_att("param_RelChange",RelChange);
-      ncparam.add_att("param_InitTechnology",InitTechnology);
-      ncparam.add_att("param_InitNdomast",InitNdomast);
-      ncparam.add_att("param_InitQfarm",InitQfarm);
-      ncparam.add_att("param_InitDensity",InitDensity);
-      ncparam.add_att("param_deltan",deltan);
-      ncparam.add_att("param_deltaq",deltaq);
-      ncparam.add_att("param_regenerate",regenerate);
-      ncparam.add_att("param_spreadm",spreadm);
-      ncparam.add_att("param_ndommaxvar",ndommaxvar);
-      ncparam.add_att("param_gammad",gammad);
-      ncparam.add_att("param_gammam",gammam);
-      ncparam.add_att("param_NPPCROP",NPPCROP);
-      ncparam.add_att("param_deltat",deltat);
-      ncparam.add_att("param_spreadv",spreadv);
-      ncparam.add_att("param_overexp",overexp);
-      ncparam.add_att("param_kappa",kappa);
-      ncparam.add_att("param_gdd_opt",gdd_opt);
-      ncparam.add_att("param_omega",omega);
-      ncparam.add_att("param_gammab",gammab);
-      ncparam.add_att("param_ndommaxmean",ndommaxmean);
-      ncparam.add_att("param_LiterateTechnology",LiterateTechnology);
-      ncparam.add_att("param_KnowledgeLoss",KnowledgeLoss);
-      ncparam.add_att("param_flucampl",flucampl);
-      ncparam.add_att("param_flucperiod",flucperiod);
-
-      /*
-struct ParLongElem parLlist[15]={{"RandomInit",&RandomInit},{"LocalSpread",&LocalSpread},{"RemoteSpread",&RemoteSpread},{"MaxCivNum",&MaxCivNum},{"DataActive",&DataActive},{"RunVarInd",&RunVarInd},{"VarActive",&VarActive},{"NumDice",&NumDice},{"MonteCarlo",&MonteCarlo},{"VarOutputStep",&VarOutputStep},{"NumMethod",&NumMethod},{"CoastRegNo",&CoastRegNo},{"SaharaDesert",&SaharaDesert},{"LGMHoloTrans",&LGMHoloTrans},{"END"}};
-struct ParStringElem parSlist[14]={{"SimulationName",&SimulationName},{"ModelName",&ModelName},{"ModelPath",&ModelPath},{"varresfile",&varresfile},{"datapath",&datapath},{"regiondata",&regiondata},{"mappingdata",&mappingdata},{"resultfilename",&resultfilename},{"watchstring",&watchstring},{"spreadfile",&spreadfile},{"climatefile",&climatefile},{"eventfile",&eventfile},{"SiteRegfile",&SiteRegfile},{"END"}};
-      */
-
-
-
+      ncout.add_att("param_Time",Time);
+      ncout.add_att("param_TimeStart",TimeStart);
+      ncout.add_att("param_TimeEnd",TimeEnd);
+      ncout.add_att("param_TimeStep",TimeStep);      
+      ncout.add_att("param_OutputStep",OutputStep);
+      ncout.add_att("param_CultIndex",CultIndex);
+      ncout.add_att("param_Space2Time",Space2Time);
+      ncout.add_att("param_storetime",storetim);
+      ncout.add_att("param_RelChange",RelChange);
+      ncout.add_att("param_InitTechnology",InitTechnology);
+      ncout.add_att("param_InitNdomast",InitNdomast);
+      ncout.add_att("param_InitQfarm",InitQfarm);
+      ncout.add_att("param_InitDensity",InitDensity);
+      ncout.add_att("param_deltan",deltan);
+      ncout.add_att("param_deltaq",deltaq);
+      ncout.add_att("param_regenerate",regenerate);
+      ncout.add_att("param_spreadm",spreadm);
+      ncout.add_att("param_ndommaxvar",ndommaxvar);
+      ncout.add_att("param_gammad",gammad);
+      ncout.add_att("param_gammam",gammam);
+      ncout.add_att("param_NPPCROP",NPPCROP);
+      ncout.add_att("param_deltat",deltat);
+      ncout.add_att("param_spreadv",spreadv);
+      ncout.add_att("param_overexp",overexp);
+      ncout.add_att("param_kappa",kappa);
+      ncout.add_att("param_gdd_opt",gdd_opt);
+      ncout.add_att("param_omega",omega);
+      ncout.add_att("param_gammab",gammab);
+      ncout.add_att("param_ndommaxmean",ndommaxmean);
+      ncout.add_att("param_LiterateTechnology",LiterateTechnology);
+      ncout.add_att("param_KnowledgeLoss",KnowledgeLoss);
+      ncout.add_att("param_flucampl",flucampl);
+      ncout.add_att("param_flucperiod",flucperiod);
+      ncout.add_att("param_RandomInit",RandomInit);
+      ncout.add_att("param_LocalSpread",LocalSpread);
+      ncout.add_att("param_RemoteSpread",RemoteSpread);
+      ncout.add_att("param_MaxCivNum",MaxCivNum);
+      ncout.add_att("param_DataActive",DataActive);
+      ncout.add_att("param_RunVarInd",RunVarInd);
+      ncout.add_att("param_VarActive",VarActive);
+      ncout.add_att("param_NumDice",NumDice);
+      ncout.add_att("param_MonteCarlo",MonteCarlo);
+      ncout.add_att("param_VarOutputStep",VarOutputStep);
+      ncout.add_att("param_NumMethod",NumMethod);
+      ncout.add_att("param_CoastRegNo",CoastRegNo);
+      ncout.add_att("param_SaharaDesert",SaharaDesert);
+      ncout.add_att("param_LGMHoloTrans",LGMHoloTrans);
+      //ncout.add_att("param_SimulationName",SimulationName);
+      //ncout.add_att("param_ModelName",ModelName);
+      //ncout.add_att("param_ModelPath",ModelPath);
+      ncout.add_att("param_varresfile",varresfile);
+      ncout.add_att("param_datapath",datapath);
+      ncout.add_att("param_regiondata",regiondata);
+      ncout.add_att("param_mappingdata",mappingdata);
+      ncout.add_att("param_resultfilename",resultfilename);
+      ncout.add_att("param_watchstring",watchstring);
+      ncout.add_att("param_spreadfile",spreadfile);
+      ncout.add_att("param_climatefile",climatefile);
+      ncout.add_att("param_eventfile",eventfile);
+      ncout.add_att("param_SiteRegfile",SiteRegfile);
+      
       // Write simulation paramters to netcdf restart file (TODO)
-      ncparam.close();
+      ncout.close();
 #endif
     }
     else {
@@ -341,7 +343,6 @@ struct ParStringElem parSlist[14]={{"SimulationName",&SimulationName},{"ModelNam
 */
 double simulation() {
 
-  int status=0;
   int retval;
   int CivNum,tu=0,i,ii,sync=0;
   long t,t_desert,event_i=0;
@@ -351,8 +352,8 @@ double simulation() {
   FILE *spr=0,*sprt=0;
 
 #ifdef HAVE_NETCDF_H
-  NcFile ncout("test.nc",NcFile::Replace);
-  status=gnc_write_header(ncout,numberOfRegions,maxneighbours);
+  NcFile ncout(ncfilename.c_str(),NcFile::Write);
+  int status=gnc_write_definitions(ncout,numberOfRegions,maxneighbours);
   if (status) return -1;
 #endif
 
