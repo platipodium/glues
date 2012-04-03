@@ -64,6 +64,7 @@ long unsigned int calc_deviation(unsigned long int);
 extern double spread_all(double t);
 void dump_events();
 std::string ncfilename;
+bool is_restart=false;
 
 /**
   Main program incl. pre- & postprocessing
@@ -212,9 +213,8 @@ int main(int argc, char* argv[])
         SiSi::finalize();
         return 1;
       }   
+      is_restart=true;
       
-      //NcFile ncout(ncfilename.c_str(),NcFile::Replace);
-      //ncout.close();
   }
   else { 
 #ifdef HAVE_MPI_H
@@ -366,7 +366,32 @@ double simulation() {
 
 #ifdef HAVE_NETCDF_H
   NcFile ncout(ncfilename.c_str(),NcFile::Write);
-  int status=gnc_write_definitions(ncout,numberOfRegions,maxneighbours);
+  int status = 0;
+  float * float_record = new float[numberOfRegions];
+  int   *   int_record = new   int[numberOfRegions];
+
+  if (is_restart) {
+  // todo: replace 500 by actual time
+    gnc_read_record(ncout,"technology",&float_record,500);
+    for (unsigned int i=0; i< numberOfRegions; i++) {//populations[i].Technology(float_record[i]);
+	//for (unsigned int i=0; i< numberOfRegions; i++) 
+	cerr << float_record[i] << " " ; }
+	  /*gnc_write_record(ncout,"technology",&float_record,t);
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Qfarming();
+	  gnc_write_record(ncout,"farming",&float_record,t);
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Size();
+	  gnc_write_record(ncout,"population_density",&float_record,t);
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Ndomesticated();
+	  gnc_write_record(ncout,"economies",&float_record,t);
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Ndommax();
+	  gnc_write_record(ncout,"economies_potential",&float_record,t);
+
+ */
+      //status=gnc_write_definitions(ncout,numberOfRegions,maxneighbours);
+ 
+  }  
+  else
+    status=gnc_write_definitions(ncout,numberOfRegions,maxneighbours);
   if (status) return -1;
 #endif
 
@@ -437,8 +462,6 @@ double simulation() {
   
 #ifdef HAVE_NETCDF_H  
   /** Write the record for all non time-dependent variables */
-  float * float_record = new float[numberOfRegions];
-  int   *   int_record = new   int[numberOfRegions];
   for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=populations[i].Region()->Longitude();
   gnc_write_record(ncout,"longitude",&float_record);
   for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=populations[i].Region()->Latitude();
