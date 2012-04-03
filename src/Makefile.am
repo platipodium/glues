@@ -1,6 +1,6 @@
 # Makefile for GLUES sources.
 
-# Copyright (C) 2007,2008,2009,2010
+# Copyright (C) 2007,2008,2009,2010,2011,2012
 # Carsten Lemmen, Helmholtz-Zentrum Geesthacht
 
 ## This program is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
 ## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 ## 02110-1301, USA.
 
-SUBDIRS=sisi test variation patch region
+SUBDIRS=sisi test variation patch region vecode
 
 bin_PROGRAMS = glues
 

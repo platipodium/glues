@@ -1,7 +1,7 @@
 /* GLUES regional climate implementation; this file is part of
    the Global Land Use and technological Evolution Simulator
    
-   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008,2009,2010
+   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012
    Carsten Lemmen <carsten.lemmen@hzg.de>, Kai Wirtz <kai.wirtz@hzg.de>
 
    This program is free software; you can redistribute it and/or modify it
@@ -21,7 +21,7 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
    @author Kai W Wirtz <kai.wirtz@hzg.de
-   @date   2010-02-24
+   @date   2012-03-30
    @file RegionalClimate.cc
    @brief Reginonal climate
 */
@@ -34,26 +34,32 @@
 
 /** Implementation section, Constructors and  Destructor */
 
-glues::RegionalClimate::RegionalClimate(double l,double np,double tl,double g, double t) {
+glues::RegionalClimate::RegionalClimate(double l,double np,double tl,double g, double t, double ff) {
   lai = (l  > 0 ? l :0);
   npp = (np > 0 ? np:0);
   tlim =(tl > 0 ? tl:0);
   tlim =(tlim< 1 ? tl:1);
   gdd = (g  > 0 ? g:0);
+  forestfraction = (ff>0 ? ff:0);
+  forestfraction = (forestfraction<1? forestfraction:0);
   time = t;
 }
 
+glues::RegionalClimate::RegionalClimate(double l,double np,double tl,double g, double t) {
+  RegionalClimate(l,np,tl,g,0,1);
+}
+
 glues::RegionalClimate::RegionalClimate(double l,double np,double tl,double g) {
-    RegionalClimate(l,np,tl,g,0);
+    RegionalClimate(l,np,tl,g,0,1);
 }
 
 glues::RegionalClimate::RegionalClimate(double l,double np,double tl) {
-    RegionalClimate(l,np,tl,0,0);
+    RegionalClimate(l,np,tl,0,0,1);
 
 }
 
 glues::RegionalClimate::RegionalClimate()  {
-    RegionalClimate(0,0,1,0,0);
+    RegionalClimate(0,0,1,0,0,1);
 }
 
 glues::RegionalClimate::~RegionalClimate() {
