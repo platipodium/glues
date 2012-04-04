@@ -20,6 +20,7 @@ You should (but you can) not install GLUES in your system, rather use the provid
     create this with the ./bootstrap shell script. 
 
 > ./bootstrap
+> libtoolize
 
  2. Run ./configure, you can find generic help on configure options in the file INSTALL.
 
