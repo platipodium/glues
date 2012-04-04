@@ -2,7 +2,7 @@
 ## Bootstrap shell script to initialize the build
 ## This script produces the configure script
 ##
-## Copyright (C) 2009,2010
+## Copyright (C) 2009,2010,201,2012
 ## Carsten Lemmen <carsten.lemmen@hzg.de>
 ## GKSS-Forschungszentrum Geesthacht GmbH
 ##
@@ -24,7 +24,7 @@
 AUTORECONF=`which autoreconf`
 
 if test -x $AUTORECONF  ; then 
-  aclocal -I ./config && autoheader \
+  aclocal -I ../../config && autoheader \
   && automake --foreign --add-missing --copy\
   && autoconf
 else
