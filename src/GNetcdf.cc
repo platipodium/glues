@@ -598,15 +598,13 @@ int gnc_read_record(NcFile& ncfile, const std::string& varname, float** data, co
     std::cerr << "Record beyond length of time variable requested." << std::endl;
     return 1;
   }
-  if ((udimid>-1) && (irecord<0) {
-    irecord=ndims[udimid]-1;
-  }
  
   long *cur   = new long[ndim];
   long *edges = new long[ndim];
   for (int i=0; i<ndim; i++) {
     if (udimid == i) {
-      cur[i]=irecord;
+      if (irecord>-1) cur[i]=irecord;
+      else cur[i]=ndims[i]-1;
       edges[i]=1;
     }
     else {
