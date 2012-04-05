@@ -20,7 +20,7 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
-   @date   2012-03-03
+   @date   2012-04-03
    @file   GNetcdf.h
 */
 

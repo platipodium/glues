@@ -372,7 +372,7 @@ double simulation() {
 
   if (is_restart) {
   // todo: replace 500 by actual time
-    gnc_read_record(ncout,"technology",&float_record,500);
+    gnc_read_record(ncout,"technology",&float_record,1800);
     for (unsigned int i=0; i< numberOfRegions; i++) {//populations[i].Technology(float_record[i]);
 	//for (unsigned int i=0; i< numberOfRegions; i++) 
 	cerr << float_record[i] << " " ; }
