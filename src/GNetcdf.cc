@@ -624,6 +624,55 @@ int gnc_read_record(NcFile& ncfile, const std::string& varname, float** data, co
 }
 
 
+int gnc_read_record(NcFile& ncfile, const std::string& varname, int** data, const long irecord) {
+
+  if (!ncfile.is_valid()) {
+    std::cerr << "Could not open NetCDF file for reading." << std::endl;
+    return 1;
+  }
+  
+  if (!gnc_is_var(ncfile,varname)) return 1;
+  
+  NcVar* var;
+  NcDim* dim;
+  var=ncfile.get_var(varname.c_str());
+  int ndim=var->num_dims();
+  int *ndims = new int[ndim];
+  int udimid = -1;
+  for (int i=0; i<ndim; i++) {
+    dim=var->get_dim(i);
+    if (dim->is_unlimited()) udimid=i;
+    ndims[i]=dim->size();
+  }
+ 
+  if ((udimid>-1) && (irecord>ndims[udimid])) {
+    std::cerr << "Record beyond length of time variable requested." << std::endl;
+    return 1;
+  }
+ 
+  long *cur   = new long[ndim];
+  long *edges = new long[ndim];
+  for (int i=0; i<ndim; i++) {
+    if (udimid == i) {
+      if (irecord>-1) cur[i]=irecord;
+      else cur[i]=ndims[i]-1;
+      edges[i]=1;
+    }
+    else {
+      cur[i]=0;
+      edges[i]=ndims[i];
+    }
+    //std::cerr << i << " " << ndims[i] << " " << cur[i] << std::endl;
+  }
+
+  var->set_cur(cur);
+  switch(ndim) {
+    case (1): var->get(*data,edges[0]); break;
+    case (2): var->get(*data,edges[0],edges[1]); break;
+  }
+ 
+  return 0;
+}
 
 
 
