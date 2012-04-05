@@ -363,36 +363,15 @@ double simulation() {
   double c_i,ts,nd,omt,fer,tarea,actualfertility,t_glac;
   double tot_spr_t=0;
   FILE *spr=0,*sprt=0;
+  int status;
 
 #ifdef HAVE_NETCDF_H
-  NcFile ncout(ncfilename.c_str(),NcFile::Write);
-  int status = 0;
-  float * float_record = new float[numberOfRegions];
-  int   *   int_record = new   int[numberOfRegions];
-
-  if (is_restart) {
-  // todo: replace 500 by actual time
-    gnc_read_record(ncout,"technology",&float_record,1800);
-    for (unsigned int i=0; i< numberOfRegions; i++) {//populations[i].Technology(float_record[i]);
-	//for (unsigned int i=0; i< numberOfRegions; i++) 
-	cerr << float_record[i] << " " ; }
-	  /*gnc_write_record(ncout,"technology",&float_record,t);
-	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Qfarming();
-	  gnc_write_record(ncout,"farming",&float_record,t);
-	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Size();
-	  gnc_write_record(ncout,"population_density",&float_record,t);
-	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Ndomesticated();
-	  gnc_write_record(ncout,"economies",&float_record,t);
-	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Ndommax();
-	  gnc_write_record(ncout,"economies_potential",&float_record,t);
-
- */
-      //status=gnc_write_definitions(ncout,numberOfRegions,maxneighbours);
- 
-  }  
-  else
-    status=gnc_write_definitions(ncout,numberOfRegions,maxneighbours);
-  if (status) return -1;
+  if (! is_restart) {
+     NcFile ncout(ncfilename.c_str(),NcFile::Write);
+     status=gnc_write_definitions(ncout,numberOfRegions,maxneighbours);
+     ncout.close();
+     if (status) return -1;
+  }
 #endif
 
   //  Exchange ex(100);
@@ -423,6 +402,7 @@ double simulation() {
   //  nd=1*(ndommaxmean+ndommaxvar+spreadm*spreadv)*ndommaxcont[0]*gammab;
   nd=0.25*fabs(ndommaxmean)*(1+ndommaxvar+spreadm*spreadv)*gammab;
 
+
   if(nd*TimeStep>RelChange) {
     ts=RelChange/nd;
     if(ts<EPS) ts =EPS;
@@ -437,6 +417,34 @@ double simulation() {
   /** Desert occurs at 5500 BP */
   t_desert=(long)((-5500-TimeStart)/ts); // new time
   if (t_desert<0) t_desert=0;
+
+#ifdef HAVE_NETCDF_H
+  float * float_record = new float[numberOfRegions];
+  int   *   int_record = new   int[numberOfRegions];
+  if (0 & is_restart) {
+    NcFile ncout(ncfilename.c_str(),NcFile::ReadOnly);
+    gnc_read_record(ncout,"technology",&float_record,500);
+    for (unsigned int i=0; i< numberOfRegions; i++) {
+      populations[i].Technology(float_record[i]);
+	  //for (unsigned int i=0; i< numberOfRegions; i++) 
+	  cerr << float_record[i] << " " ;
+    }
+	  /*gnc_write_record(ncout,"technology",&float_record,t);
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Qfarming();
+	  gnc_write_record(ncout,"farming",&float_record,t);
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Size();
+	  gnc_write_record(ncout,"population_density",&float_record,t);
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Ndomesticated();
+	  gnc_write_record(ncout,"economies",&float_record,t);
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Ndommax();
+	  gnc_write_record(ncout,"economies_potential",&float_record,t);
+
+ */
+      //status=gnc_write_definitions(ncout,numberOfRegions,maxneighbours);
+    ncout.close();
+  }  
+
+#endif
 
   /**
      Open  files analysis of spread
@@ -461,6 +469,8 @@ double simulation() {
   double mean_futureclimate_npp=0, mean_sahara_npp=0;
   
 #ifdef HAVE_NETCDF_H  
+  NcFile ncout(ncfilename.c_str(),NcFile::Write);
+
   /** Write the record for all non time-dependent variables */
   for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=populations[i].Region()->Longitude();
   gnc_write_record(ncout,"longitude",&float_record);
