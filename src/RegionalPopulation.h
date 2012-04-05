@@ -75,7 +75,7 @@ class RegionalPopulation {
   void   Size(double);
   double Growthrate()     const	{return rgr;}
   double Technology()     const	{return technology;}
-  void   Technology(double te) {technology=te;};
+  double Technology(double);
   double Qfarming()	const	{return qfarming;}
   void   Qfarming(double q) {qfarming=q;}
   double Ndomesticated() 	const   {return ndomesticated;}

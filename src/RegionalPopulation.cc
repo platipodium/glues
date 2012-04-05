@@ -94,6 +94,13 @@ RegionalPopulation::Density(double pop)
   else size=0;
 }
 
+double
+RegionalPopulation::Technology(double tech) 
+{ 
+  technology = (tech>EPS?tech:EPS);
+  return technology;
+}
+
 void
 RegionalPopulation::Size(double s) 
 { 
