@@ -357,7 +357,7 @@ int main(int argc, char* argv[])
 double simulation() {
 
   int retval;
-  int CivNum,tu=0,i,ii,sync=0;
+  int CivNum,tu=0,sync=0;
   long t,t_desert,event_i=0;
   double event_time[12]={10500,8200,7100,5500,3500,2400,600,-999},t_glac_end=8000;
   double c_i,ts,nd,omt,fer,tarea,actualfertility,t_glac;
@@ -366,11 +366,31 @@ double simulation() {
   int status;
 
 #ifdef HAVE_NETCDF_H
+  unsigned long nc_time_len = 0;
+  double* nc_time = NULL;
   if (! is_restart) {
      NcFile ncout(ncfilename.c_str(),NcFile::Write);
      status=gnc_write_definitions(ncout,numberOfRegions,maxneighbours);
      ncout.close();
      if (status) return -1;
+  } else {
+     NcFile ncout(ncfilename.c_str(),NcFile::ReadOnly);
+     NcVar * var = ncout.get_var("time");
+     NcDim * dim = ncout.get_dim("time");
+     nc_time_len = dim->size();
+     nc_time = new double[nc_time_len];
+     var->get(nc_time,nc_time_len);
+     
+     /** @todo: correct to n-1 (currently there are missing values at this position, fix elsewhere) */
+     //cerr << " " << nc_time_len << " " <<  nc_time[0] << " " << nc_time[nc_time_len-2] << endl;
+     //cerr << " " << TimeStart << " " <<  TimeStep << " " << TimeEnd << endl;
+     ncout.close();
+     
+     // Sanity checks for restart times
+     if ((TimeStart > nc_time[nc_time_len-2]) | (TimeEnd < nc_time[0]) | (TimeStart < nc_time[0])) {
+       std::cerr << "TimeStart/End information outside of range in netcdf restart file" << std::endl;
+       return 1;
+     }
   }
 #endif
 
@@ -378,13 +398,16 @@ double simulation() {
 
   // Reverse timing if Time is counted in BC/AD
   if (TimeStart<0) {
-      for (i=0; i<12; i++) event_time[i]=1950-event_time[i];
+      for (unsigned int i=0; i<12; i++) event_time[i]=1950-event_time[i];
       t_glac_end=1950-t_glac_end;
   }
 
   //  ex = new Exchange(numberOfRegions);
 
-  cout << _("Starting simulation for ") << numberOfRegions << endl;
+  if (is_restart) 
+    std::cout << _("Restarting simulation for ") << numberOfRegions << endl;
+  else
+    std::cout << _("Starting simulation for ") << numberOfRegions << endl;    
   cout << _("Simulation from ") << TimeStart << " to " << TimeEnd << " with step " << TimeStep << endl;
   cout << _("Climate updates every ") << ClimUpdateTimes[0] << " years  ("
        << ClimUpdateTimes[1]  << ")" << endl;
@@ -418,29 +441,30 @@ double simulation() {
   t_desert=(long)((-5500-TimeStart)/ts); // new time
   if (t_desert<0) t_desert=0;
 
+  unsigned long restart_index=0;
 #ifdef HAVE_NETCDF_H
-  float * float_record = new float[numberOfRegions];
-  int   *   int_record = new   int[numberOfRegions];
-  if (0 & is_restart) {
-    NcFile ncout(ncfilename.c_str(),NcFile::ReadOnly);
-    gnc_read_record(ncout,"technology",&float_record,500);
-    for (unsigned int i=0; i< numberOfRegions; i++) {
-      populations[i].Technology(float_record[i]);
-	  //for (unsigned int i=0; i< numberOfRegions; i++) 
-	  cerr << float_record[i] << " " ;
+  double * double_record = new double[numberOfRegions];
+  float  *  float_record = new  float[numberOfRegions];
+  int    *    int_record = new    int[numberOfRegions];
+  
+  if (is_restart) {
+    double time_diff=1E9;
+    for (unsigned int i=0; i<nc_time_len; i++) if (abs(TimeStart - nc_time[i]) < time_diff) {
+      time_diff=abs(TimeStart - nc_time[i]);
+      restart_index=i;
     }
-	  /*gnc_write_record(ncout,"technology",&float_record,t);
-	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Qfarming();
-	  gnc_write_record(ncout,"farming",&float_record,t);
-	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Size();
-	  gnc_write_record(ncout,"population_density",&float_record,t);
-	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Ndomesticated();
-	  gnc_write_record(ncout,"economies",&float_record,t);
-	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Ndommax();
-	  gnc_write_record(ncout,"economies_potential",&float_record,t);
-
- */
-      //status=gnc_write_definitions(ncout,numberOfRegions,maxneighbours);
+    std::cerr << " Restarting from index " << restart_index << endl;
+    NcFile ncout(ncfilename.c_str(),NcFile::ReadOnly);
+    gnc_read_record(ncout,"technology",&float_record,restart_index);
+    for (unsigned int i=0; i< numberOfRegions; i++) populations[i].Technology(float_record[i]);
+    gnc_read_record(ncout,"farming",&float_record,restart_index);
+    for (unsigned int i=0; i< numberOfRegions; i++) populations[i].Qfarming(float_record[i]);
+    gnc_read_record(ncout,"economies_potential",&float_record,restart_index);
+    for (unsigned int i=0; i< numberOfRegions; i++) populations[i].Ndommax(float_record[i]);
+    gnc_read_record(ncout,"economies",&float_record,restart_index);
+    for (unsigned int i=0; i< numberOfRegions; i++) populations[i].Ndomesticated(float_record[i]);
+    gnc_read_record(ncout,"population_density",&float_record,restart_index);
+    for (unsigned int i=0; i< numberOfRegions; i++) populations[i].Density(float_record[i]);
     ncout.close();
   }  
 
@@ -471,6 +495,8 @@ double simulation() {
 #ifdef HAVE_NETCDF_H  
   NcFile ncout(ncfilename.c_str(),NcFile::Write);
 
+  if (! is_restart) {
+
   /** Write the record for all non time-dependent variables */
   for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=populations[i].Region()->Longitude();
   gnc_write_record(ncout,"longitude",&float_record);
@@ -486,11 +512,7 @@ double simulation() {
   gnc_write_record(ncout,"economies_init",&float_record);
   for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=0;
   gnc_write_record(ncout,"population_density_init",&float_record);
-  for (unsigned int i=0; i<numberOfRegions; i++) 
-  {float_record[i]=populations[i].Region()->Area();
-  //std::cout << float_record[i] << std::endl;
-  }
-  
+  for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=populations[i].Region()->Area();
   gnc_write_record(ncout,"area",&float_record);
   for (unsigned int i=0; i<numberOfRegions; i++) int_record[i]=populations[i].Region()->Sahara();
   gnc_write_record(ncout,"region_is_in_sahara",&int_record);
@@ -510,10 +532,10 @@ double simulation() {
   }
   NcVar* var=ncout.get_var("region_neighbour");
   var->put(int_neigh_record,maxneighbours,numberOfRegions);
-  
+  }
 #endif
 
-  for (t=0; t<tmax; t++) {
+  for (t=restart_index; t<tmax; t++) {
 
       mean_pastclimate_npp=0; mean_region_npp=0; mean_futureclimate_npp=0;
       mean_sahara_npp=0;
@@ -564,7 +586,7 @@ double simulation() {
    /**
        Iterate over all regions
     */
-    for (i=0; i<numberOfRegions; i++) {
+    for (unsigned int i=0; i<numberOfRegions; i++) {
 
 
 	mean_region_npp += regions[i].Npp();
@@ -686,8 +708,8 @@ double simulation() {
     //      if(fabs(t*TimeStep-9400)<TimeStep)
     //	double tdiff=populations[KeyCMexico].Technology()-populations[KeyFCrescent].Technology();
 
-    if(t%200==0 &0) for(ii=0;ii<4;ii++) {
-      i=ins[ii];
+    if(t%200==0 &0) for(unsigned int ii=0;ii<4;ii++) {
+      unsigned int i=ins[ii];
       printf("%ld %d:\t",t,i);
       printf("afert=%1.2f npp=%1.2f\t",populations[i].ActFert(),regions[i].Npp());//regions[183].NatFertility()
       printf("tech=%1.2f nd=%1.2f\t",populations[i].Technology(),populations[i].Ndomesticated());//regions[183].NatFertility()
@@ -774,7 +796,7 @@ double simulation() {
 #endif
 
  /* Clear spread matrix */
-   for (int i=0; i<numberOfRegions; i++) sprdm[i]=0;
+   for (unsigned int i=0; i<numberOfRegions; i++) sprdm[i]=0;
  
 
     //if (t%10==0) fprintf(stdout,"t= %f past= %f cur= %f fut= %f sah= %f\n",t*ts,mean_pastclimate_npp/numberOfRegions,mean_region_npp/numberOfRegions,mean_futureclimate_npp/numberOfRegions,mean_sahara_npp/numberOfSaharanRegions);
