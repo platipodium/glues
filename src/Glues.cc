@@ -542,7 +542,7 @@ double simulation() {
 
     t_glac = (t_glac_end-TimeStart-t*ts)/ (t_glac_end-TimeStart);
 
-  /** TODO make this reappear based on TimeStart not SimInit, synchronous global fluctuations
+  /** @todo make this reappear based on TimeStart not SimInit, synchronous global fluctuations
     for all regions*/
 
 /*    if(sync) {
