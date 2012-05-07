@@ -1,6 +1,6 @@
 # Makefile for GLUES sources.
 
-# Copyright (C) 2008,2009,2010
+# Copyright (C) 2008,2009,2010,2011,2012
 # Carsten Lemmen <carsten.lemmen@hzg.de>, Helmholtz-Zentrum Geesthacht
 
 ## This program is free software; you can redistribute it and/or modify

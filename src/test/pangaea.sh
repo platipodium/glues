@@ -34,7 +34,7 @@ IN=${BASE}_dim.nc
 BASE=${IN%%.nc}
 NTIME=`ncdump -h $IN | grep currently | cut -d'(' -f2 | cut -d" " -f1`
 
-#echo $IN $BASE $NTIME
+echo $IN $BASE $NTIME
 
 for (( i=0; i<NTIME; i=i+10 )) ; do 
 #for (( i=0; i<1; i=i+10 )) ; do 
