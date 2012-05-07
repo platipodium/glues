@@ -152,7 +152,7 @@ end
 % + Late Sorath 
 % Post-Urban: Post-Urban + Late harappan + Cemetery H
 
-timelim=[[-9000 p_Helvetica]' , [p_Helvetica -1000]'];
+timelim=[[-9000 p_times]' , [p_times -1000]'];
 timelim=cell2mat(timelim);
 tlim=[min(min(timelim)) max(max(timelim))];
 
@@ -279,7 +279,7 @@ timing(isinf(timing))=NaN;
     [-3200,inf,inf]]';
 
   plim=[1 4];
-  nplim=range(plim)+1;
+  nplim=cl_range(plim)+1;
   nsub=size(ctimelim,1);
   %hue=(([1:nplim]+1)/(nplim+3.0));
   hue=[0.6 0.45 0.25 0.1];
@@ -522,7 +522,7 @@ if any(plots==7)
       radius=250;
       idist=find(dist<=radius);
       if isempty(idist) continue; end
-      plot((p_Helvetica{i+1}-p_Helvetica{i})/2.0+p_Helvetica{i},unique(gti2(idist)),'ko')
+      plot((p_times{i+1}-p_times{i})/2.0+p_times{i},unique(gti2(idist)),'ko')
     end
   end
 
@@ -791,8 +791,8 @@ title('Sindh rainfall from CRU TS3.0');
 plot_multi_format(gcf,'precipitation_sindh');
 
 
-clp_ncep_Helveticaeries('latlim',[24,30],'lonlim',[67,72],'lim',[0 200]);
-clp_ncep_Helveticaeries('latlim',[30,33],'lonlim',[70,77],'lim',[0 200]);
-clp_ncep_Helveticaeries('latlim',[33,37],'lonlim',[70,76],'lim',[0 200]);
+clp_ncep_timeseries('latlim',[24,30],'lonlim',[67,72],'lim',[0 200]);
+clp_ncep_timeseries('latlim',[30,33],'lonlim',[70,77],'lim',[0 200]);
+clp_ncep_timeseries('latlim',[33,37],'lonlim',[70,76],'lim',[0 200]);
 
 end
