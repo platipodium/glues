@@ -158,7 +158,8 @@ tlim=[min(min(timelim)) max(max(timelim))];
 
 
 %% Load simulation data
-file='../../eurolbk_events.nc';
+%file='../../eurolbk_events.nc';
+file='../../euroclim_0.4.nc';
 ncid=netcdf.open(file,'NOWRITE');
 varid=netcdf.inqVarID(ncid,'region'); region=netcdf.getVar(ncid,varid);
 varid=netcdf.inqVarID(ncid,'longitude'); longitude=netcdf.getVar(ncid,varid);
@@ -204,11 +205,18 @@ fprintf('For Kili period, there are %d sites\n',length([ikili;imehr]));
 % Figure 1 d
 delete([pkili,pc]);
 pburj=m_plot(rlon(iburj),rlat(iburj),'k^','MarkerFaceColor','k','MarkerSize',7,'MarkerEdgeColor','k'); 
+cities = {'Mehrgarh','Kili Ghul Mohammad'}
+for i=1:length(cities)
+  icity=strmatch(cities{i},data.sitename);
+  if isempty(icity) continue; end
+  pc(i)=m_plot(data.longitude(icity(1)),data.latitude(icity(1)),'k^',...
+  'MarkerFaceColor','w','MarkerSize',7,'markerEdgeColor','k','tag',[cities{i} '/' data.period{icity(1)}]);
+end
 cl_print('name','../plots/map/ivc_period_burj','ext','pdf');
 fprintf('For Burj period, there are %d sites\n',length([iburj]));
 
 % Figure 1 e
-delete([pburj]);
+delete([pburj,pc]);
 ptogau=m_plot(rlon([itogau;iskt]),rlat([itogau;iskt]),'k^','MarkerFaceColor','k','MarkerSize',7,'MarkerEdgeColor','k'); 
 cities = {'Togau','Sheri Khan Tarakai'}
 for i=1:length(cities)
@@ -234,22 +242,6 @@ for i=1:length(cities)
 end
 cl_print('name','../plots/map/ivc_period_hakra','ext','pdf');
 fprintf('For Hakra period, there are %d sites\n',length([itogau;iskt]));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 [ifound,nfound,lonlim,latlim]=find_region_numbers('lat',latlim,'lon',lonlim);    
 rarea=repmat(area,1,length(time));
@@ -300,7 +292,14 @@ timing(isinf(timing))=NaN;
 
 if any(plots==3)
  
+  clf;
+    
+  [hp,loli,lali,lon,lat]=clp_regionpath('lat',latlim,'lon',lonlim,'draw','patch','col','w');  
+  ival=find(hp>0);
+  %alpha(hp(ival),0.);
+  %set(hp(ival),'EdgeColor','none');
   cbar=colorbar;
+  m_coast('color','k');
   
   ax=gca;
   cbar=cl_colorbar('cbar',cbar,'val',ctimelim(1:nplim*size(ctimelim,1)+1),'cmap',cmap);
@@ -309,7 +308,7 @@ if any(plots==3)
   for i=nplim*nsub:-1:1
     iperiod=find(timing(ifound)<=ctimelim(i+1) & timing(ifound)>=ctimelim(i) & hp'>0);
     if ~isempty(iperiod)   
-       set(hp(iperiod),'FaceColor',cmap(i,:),'FaceAlpha',.5);
+       set(hp(iperiod),'FaceColor',cmap(i,:),'FaceAlpha',1);
        fprintf('%2d (%5d-%5d)',i,ctimelim(i),ctimelim(i+1));
        fprintf(' %5d',timing(ifound(iperiod)));
        fprintf('\n');
@@ -325,29 +324,35 @@ if any(plots==3)
     set(hdlp{i},'EdgeColor','r','LineWidth',4);
   end
   
+  m_plot(plon,plat,'k--','color','k');
+  
   
   for i=max(plim)+1:-1:min(plim)+1    
      if (i>1 && i<7)
        ps(i)=m_plot(data.longitude(p_index{i-1}),data.latitude(p_index{i-1}),...
-         'ko','MarkerFaceColor',cmap((i-1)*nsub-1,:),'MarkerSize',18-2*i);
+         'k^','MarkerFaceColor',cmap((i-1)*nsub-1,:),'MarkerSize',9);
        uistack(ps(i),'top');
      end
    end
   
   ct=get(cbar,'title');
   ytl=get(cbar,'YTickLabel');
-  set(cbar,'YTickLabel',num2str(abs(str2num(ytl))));
+  ytl_s=num2str(abs(str2num(ytl)));
+  ytl_s(10,:)=' ';
+  set(cbar,'YTickLabel',ytl_s,'FontSize',15);
+ 
   
-  set(ct,'string','cal BC');
+  set(ct,'string','cal BC','FontSize',15);
   tt=title(' Indus valley neolithization and site chronology');
   hdlt=findobj(gcf,'-property','FontName');
   set([hdlt;ct],'FontSize',15,'FontName','Helvetica');
-  cl_print('name','../plots/map/pakistan_farming_threshold_fine','ext','png');
+  cl_print('name','../plots/map/pakistan_farming_threshold_fine','ext','pdf');
 
   ax=gca;
-  cbar=cl_colorbar('cbar',cbar,'val',ctimelim(1,:),'cmap',cmap(2:nsub:end,:));
+%  delete(cbar);
+  cbar=cl_colorbar('val',ctimelim(1,:),'cmap',cmap(2:nsub:end,:));
   axes(ax);
-  cl_print('name','../plots/map/pakistan_farming_threshold_coarse','ext','png');
+  cl_print('name','../plots/map/pakistan_farming_threshold_coarse','ext','pdf');
 
   %% do only transparent map
   %set(cbar,'visible','off');
@@ -408,6 +413,32 @@ end
       igrid=vertcat(igrid,idist);
   end
  
+  % Find numeric agreement
+  figure(2); clf; hold on;
+  for i=1:4
+    isite=p_index{i};
+    lon1=rlon(isite);
+    lat1=rlat(isite);
+    n1=length(lat1);
+    igsite=[];
+    for j=1:n1
+      la1=repmat(lat1(j),n2,1); 
+      lo1=repmat(lon1(j),n2,1); 
+      dist=m_lldist(reshape([lo1,lon2]',2*n2,1),reshape([la1,lat2]',2*n2,1));
+      dist=dist(1:2:end);
+      radius=100;
+      idist=find(dist<=radius);
+      if isempty(idist) continue; end
+      igsite=vertcat(igsite,idist);
+    end
+    gti2=reshape(gtiming,n2,1);
+    [hy,hx]=hist(gti2(igsite));
+    gcols=cmap(2:nsub:end,:); 
+    %b(i)=bar(hx,hy,'r','facecolor',gcols(i,:));
+    plot(p_times{i},gti2(igsite),'r.');
+  end   
+  
+  
   
   
 if any(plots==6)
@@ -425,7 +456,9 @@ if any(plots==6)
   sas=min(sum(sa)); % should be near 796095 km2
   
   s=sum(pdensity(gri2(igrid),:).*sa,1);
-  
+  md=mean(pdensity(gri2(igrid),:),1);
+  s=s/1E6;
+ 
   %pa=m_plot(lon2(igrid),lat2(igrid),'ks','MarkerSize',5);
   % Surovell (2009) taphonomic correction based
   % on volcanic ash deposits
@@ -446,18 +479,22 @@ if any(plots==6)
   figure(6); clf reset;
   hold on; 
 
-  for i=2:5
+   for i=2:5
     ppnt(i)=patch([timelim(i,:),fliplr(timelim(i,:))],...
       [0 0 nts(i-1) nts(i-1)],'b','FaceColor',repmat(0.82,1,3));
     ppn(i)=patch([timelim(i,:),fliplr(timelim(i,:))],...
       [0 0 ns(i-1) ns(i-1)],'b','FaceColor',repmat(0.7,1,3));
     xt(i)=mean(timelim(i,:));
-    yt(i)=1.1*nts(i-1);
+    yt(i)=nts(i-1)+0.1;
+    if (i>2 & i<5) yt(i)=2.5*nts(i-1); end
+    if (i==4) xt(i)=xt(i)-50; end
     ppt(i)=text(xt(i),yt(i),sprintf('%d x %d',n(i-1),round(nt(i-1))),...
         'Vert','bottom','horiz','center','FontSize',fs,'FontName','Helvetica');
   end
-  set(gca,'Xlim',[tlim],'Ylim',[0 1.2*max(s(itime))]);
-
+  set(gca,'Xlim',[tlim],'Ylim',[0 1.2*max(s(itime))],'YAxisLocation','right');
+  xtl=get(gca,'XTickLabel');
+  set(gca,'XTicklabel',num2str(abs(str2num(xtl))),'FontSize',15);
+  
   ppnth=plot(time(itime),s(itime),'k-','LineWidth',10,'Color',repmat(0.82,1,3),'visible','off');
   ppnh=plot(time(itime),s(itime),'k-','LineWidth',10,'Color',repmat(0.7,1,3),'visible','off');
   pg=plot(time(itime),s(itime),'k-','LineWidth',4)
@@ -465,20 +502,28 @@ if any(plots==6)
   cl=legend([ppnth,ppnh,pg],' Number of artifacts',' Artifacts (uncorrected)',' Simulated population size','location','NorthWest')
   set(cl,'FontSize',fs);
   ylabel('Population size','FontSize',fs,'FontName','Helvetica');
-  xlabel('Time (cal BC)','FontSize',fs,'FontName','Helvetica');
+  xlabel('Time (cal/sim BC)','FontSize',fs,'FontName','Helvetica');
   hdlt=findobj(gcf,'-property','FontName');
   set(hdlt,'FontSize',15,'FontName','Helvetica');
   cl_print('name','../plots/map/pakistan_population_size','ext','pdf');
 
  
+  it=find(time>=timelim(2,1) & time<=timelim(5,2));
+  gtime=time(it);
+  gpop=s(it);
+  gart=s(it)*0;
   for i=2:5
-    it=find(time>=timelim(i,1) & time<=timelim(i,2));     
-    ys(i)=mean(s(it));
+    it=find(gtime>=timelim(i,1) & gtime<=timelim(i,2));     
+    gart(it)=nts(i-1); %nt(i-1)'.*n(i-1);
     %plot(timelim(i,:),repmat(ys(i),1,2),'r-');
     %plot(timelim(i,:),2*repmat(nssites(i-1),1,2),'m-','LineWidth',3);
   end
   
-  c=polyfit(log(0.9*yt(2:5)),log(ys(2:5)),1);
+  c=polyfit(gart,gpop,2);
+  plot(gtime,c(1)*gart.*gart+c(2)*gart+c(3),'c-');
+  
+  %gpop=c(2)*gart.^c(1);
+  
   
 end
 

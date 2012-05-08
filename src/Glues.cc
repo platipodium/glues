@@ -408,6 +408,7 @@ double simulation() {
     std::cout << _("Restarting simulation for ") << numberOfRegions << endl;
   else
     std::cout << _("Starting simulation for ") << numberOfRegions << endl;    
+  
   cout << _("Simulation from ") << TimeStart << " to " << TimeEnd << " with step " << TimeStep << endl;
   cout << _("Climate updates every ") << ClimUpdateTimes[0] << " years  ("
        << ClimUpdateTimes[1]  << ")" << endl;
@@ -430,10 +431,10 @@ double simulation() {
     ts=RelChange/nd;
     if(ts<EPS) ts =EPS;
     if(!VarActive) cout << _("resetting time step to ") << ts << endl;
-  }
-  else ts=TimeStep;
+  } else ts=TimeStep;
   
   unsigned long restart_index=0;
+
 #ifdef HAVE_NETCDF_H
   double * double_record = new double[numberOfRegions];
   float  *  float_record = new  float[numberOfRegions];
@@ -507,64 +508,61 @@ double simulation() {
 #ifdef HAVE_NETCDF_H  
   NcFile ncout(ncfilename.c_str(),NcFile::Write);
 
-  if (! is_restart) {
+  if (!is_restart) {
 
-  // Write the records for 
-  // all non time-dependent variables
-  for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=populations[i].Region()->Longitude();
-  gnc_write_record(ncout,"longitude",&float_record);
-  for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=populations[i].Region()->Latitude();
-  gnc_write_record(ncout,"latitude",&float_record);
-  for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=populations[i].Region()->Id();
-  gnc_write_record(ncout,"region",&float_record);
-  for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=0;
-  gnc_write_record(ncout,"technology_init",&float_record);
-  for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=0;
-  gnc_write_record(ncout,"farming_init",&float_record);
-  for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=0;
-  gnc_write_record(ncout,"economies_init",&float_record);
-  for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=0;
-  gnc_write_record(ncout,"population_density_init",&float_record);
-  for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=populations[i].Region()->Area();
-  gnc_write_record(ncout,"area",&float_record);
-  for (unsigned int i=0; i<numberOfRegions; i++) int_record[i]=populations[i].Region()->Sahara();
-  gnc_write_record(ncout,"region_is_in_sahara",&int_record);
-  for (unsigned int i=0; i<numberOfRegions; i++) int_record[i]=populations[i].Region()->ContId();
-  gnc_write_record(ncout,"region_continent",&int_record);
+    // Write the records for 
+    // all non time-dependent variables
+    for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=populations[i].Region()->Longitude();
+    gnc_write_record(ncout,"longitude",&float_record);
+  	for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=populations[i].Region()->Latitude();
+    gnc_write_record(ncout,"latitude",&float_record);
+    for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=populations[i].Region()->Id();
+    gnc_write_record(ncout,"region",&float_record);
+    for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=0;
+    gnc_write_record(ncout,"technology_init",&float_record);
+    for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=0;
+    gnc_write_record(ncout,"farming_init",&float_record);
+    for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=0;
+    gnc_write_record(ncout,"economies_init",&float_record);
+    for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=0;
+    gnc_write_record(ncout,"population_density_init",&float_record);
+    for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=populations[i].Region()->Area();
+    gnc_write_record(ncout,"area",&float_record);
+    for (unsigned int i=0; i<numberOfRegions; i++) int_record[i]=populations[i].Region()->Sahara();
+    gnc_write_record(ncout,"region_is_in_sahara",&int_record);
+    for (unsigned int i=0; i<numberOfRegions; i++) int_record[i]=populations[i].Region()->ContId();
+    gnc_write_record(ncout,"region_continent",&int_record);
  
-  int* int_neigh_record=new int[numberOfRegions*maxneighbours];
-  for (unsigned int i=0; i<numberOfRegions; i++) {
-  GeographicalNeighbour* gn=populations[i].Region()->Neighbour();
-	for (unsigned int j=0; j<maxneighbours; j++) {
-	  if (gn) {
-	    int_neigh_record[numberOfRegions*j+i]=gn->Region()->Id(); 
-  	    gn=gn->Next();
-  	  }
-	  else int_neigh_record[numberOfRegions*j+i]=-1;
-	}
-  }
-  NcVar* var=ncout.get_var("region_neighbour");
-  var->put(int_neigh_record,maxneighbours,numberOfRegions);
+    int* int_neigh_record=new int[numberOfRegions*maxneighbours];
+    for (unsigned int i=0; i<numberOfRegions; i++) {
+      GeographicalNeighbour* gn=populations[i].Region()->Neighbour();
+	    for (unsigned int j=0; j<maxneighbours; j++) {
+	      if (gn) {
+	        int_neigh_record[numberOfRegions*j+i]=gn->Region()->Id(); 
+  	      gn=gn->Next();
+  	    }
+	      else int_neigh_record[numberOfRegions*j+i]=-1;
+	    }
+    }
+    NcVar* var=ncout.get_var("region_neighbour");
+    var->put(int_neigh_record,maxneighbours,numberOfRegions);
   }
 #endif
-
-
 
 
   for (t=restart_index; t<=tmax; t++) {
   
     // Check whether climate needs to be update and perform necessary updates
 	// @todo throw exceptions
-	while (t*ts > tu ) {
-	  if (!pastclimate.Update(tu)) return -1;
-	  tu=tu+ClimUpdateTimes[0];
-	  if (!futureclimate.Update(tu)) return -1;
+	  while (t*ts > tu ) {
+	    if (!pastclimate.Update(tu)) return -1;
+	    tu=tu+ClimUpdateTimes[0];
+	    if (!futureclimate.Update(tu)) return -1;
     }
-       
-	
+      
 
-      mean_pastclimate_npp=0; mean_region_npp=0; mean_futureclimate_npp=0;
-      mean_sahara_npp=0;
+    mean_pastclimate_npp=0; mean_region_npp=0; mean_futureclimate_npp=0;
+    mean_sahara_npp=0;
 
     // Prefill fluctuation vector
     std::vector<double> fluctuation;
@@ -591,37 +589,33 @@ double simulation() {
  
  /** Add a new time record to netdf file */
  #ifdef HAVE_NETCDF_H
-
-	if (ncout.is_valid()) { 
+	  if (ncout.is_valid()) { 
       NcVar* var=ncout.get_var("time");
       double time[1];
       time[0]=t*ts+TimeStart;
       var->put_rec(time,t);
-	}
-    
+	  }
 #endif
-
-
 
     // Iterate over all regions
     for (unsigned int i=0; i<numberOfRegions; i++) {
 
-	  fluctuation.at(i)=1.0;
+	    fluctuation.at(i)=1.0;
 	  
 
-     // Update climate information from an interpolation of past and future climates
-     regions[i].InterpolateClimate(t*ts,pastclimate.Timestamp(),futureclimate.Timestamp(),
+      // Update climate information from an interpolation of past and future climates
+      regions[i].InterpolateClimate(t*ts,pastclimate.Timestamp(),futureclimate.Timestamp(),
 				    pastclimate.Climate(i),futureclimate.Climate(i));
-	 mean_region_npp += regions[i].Npp();
-	 mean_pastclimate_npp += pastclimate.Climate(i).Npp();
-	 mean_futureclimate_npp += futureclimate.Climate(i).Npp();
-	 if (regions[i].Sahara()) {
-	    mean_sahara_npp += regions[i].Npp();
-	    numberOfSaharanRegions ++;
-	 }
+	    mean_region_npp += regions[i].Npp();
+	    mean_pastclimate_npp += pastclimate.Climate(i).Npp();
+	    mean_futureclimate_npp += futureclimate.Climate(i).Npp();
+	    if (regions[i].Sahara()) {
+	      mean_sahara_npp += regions[i].Npp();
+	      numberOfSaharanRegions ++;
+	    }
 
  
-    /**
+      /**
        Artificial desertification of the Sahare at 5.5 kyr BP
        is controlled by the parameter Sisi::SaharaDesert and works via
        a reduction of FEP with factor 0.9 each year over a period of 100 years
@@ -629,8 +623,8 @@ double simulation() {
     */
 
       if (SaharaDesert && t>=t_desert && t<=t_desert+20 && regions[i].Sahara()) {
-	  double rnpp=regions[i].Npp();
-	  regions[i].Npp(rnpp*pow(0.9,t_desert-t+1.0));
+	      double rnpp=regions[i].Npp();
+	      regions[i].Npp(rnpp*pow(0.9,t_desert-t+1.0));
       }
 
      /**
@@ -644,8 +638,8 @@ double simulation() {
       if (!sync && flucampl>0) {
      // For old Events implementation (backward)
 	   
-	   double t_old = 1950-(*(EventRegTime+i*MaxEvent+EventRegInd[i])) * 1;
-	   double t_new = 1950-(*(EventRegTime+i*MaxEvent+EventRegInd[i]+1)) * 1;
+	      double t_old = 1950-(*(EventRegTime+i*MaxEvent+EventRegInd[i])) * 1;
+	      double t_new = 1950-(*(EventRegTime+i*MaxEvent+EventRegInd[i]+1)) * 1;
 	   
 	   
 	   /** 
@@ -653,10 +647,10 @@ double simulation() {
 	     Then calculate time difference to event (as variable omt) and
 	     relax this with exp function and breadth flucperiod 
 	   */
-	   if (((t_old + t_new) < (TimeStart+t*ts)*2) ) EventRegInd[i]++;
+	      if (((t_old + t_new) < (TimeStart+t*ts)*2) ) EventRegInd[i]++;
     
-	   omt=(1950-(*(EventRegTime+i*MaxEvent+EventRegInd[i]))-(TimeStart+t*ts))/flucperiod;
-	   fluctuation.at(i)=1-flucampl*exp(-omt*omt);
+	      omt=(1950-(*(EventRegTime+i*MaxEvent+EventRegInd[i]))-(TimeStart+t*ts))/flucperiod;
+	      fluctuation.at(i)=1-flucampl*exp(-omt*omt);
 	   
 	   if (0&i==124)  cout << i << " "<< t*ts << " " << TimeStart+t*ts << " " << EventRegInd[i]
 	  		<< " flucampl=" << flucampl << " fluc=" << fluctuation.at(i) << " om=" << omt << " tr=" << t_old << "-" << t_new << std::endl; 
@@ -687,52 +681,48 @@ double simulation() {
       */
       tot_pop_t+=populations[i].Size();
 
-      /**
-	 Evolution of functional traits and population growth
-      */
-      //if (regions[i].Npp()>MIN_NPP) {
-	retval=populations[i].Develop(TimeStep);
-	if (retval) printf("pop %d out of range:\tP=%1.1f T=%1.1f ND=%1.1f\nexit ...\n",i,populations[i].Density(),
-			   populations[i].Technology(),populations[i].Ndomesticated());
-	//t=tmax;
-	//}
 
-      /**
-	 Check whether we reach high development stage
-      */
-      c_i=populations[i].CultIndex();
-      if(c_i>CultIndex && regions[i].CivStart()<1) {
-	CivNum+=regions[i].CivStart((long int)(t*ts));
-	if(CivNum>=MaxCivNum) {
-	  t=tmax;
-	  if(!VarActive)
-	    printf("Maximal number of Civs (%d) reached !\n..exit...\n",CivNum);
-	}
+// ******************** End of diagnostics ***********************************
+  
+      // Calculate prognostic variables only for timesteps > 0
+      //if (t>restart_index)	{
+        retval=populations[i].Develop(TimeStep);
+	      if (retval) printf("pop %d out of range:\tP=%1.1f T=%1.1f ND=%1.1f\nexit ...\n",i,populations[i].Density(),
+	      populations[i].Technology(),populations[i].Ndomesticated());
+	      //t=tmax;
+
+        // Check whether we reach high development stage
+        c_i=populations[i].CultIndex();
+        if(c_i>CultIndex && regions[i].CivStart()<1) {
+	        CivNum+=regions[i].CivStart((long int)(t*ts));
+	        if(CivNum>=MaxCivNum) {
+	          t=tmax;
+	          if(!VarActive) printf("Maximal number of Civs (%d) reached !\n..exit...\n",CivNum);
+	        }
+        }
+        //    actualfertility+=regions[i].NatFertility(fluc)*regions[i].Area();
+        actualfertility+=populations[i].NatFert()*populations[i].Tlim()*regions[i].Area();
       }
-      //    actualfertility+=regions[i].NatFertility(fluc)*regions[i].Area();
-      actualfertility+=populations[i].NatFert()*populations[i].Tlim()*regions[i].Area();
-    }
 
     tot_pop+=tot_pop_t;
 
-    /**
-       Diffusion between regions is controlled by parameter
-       param::LocalSpread
-    */
-    if (LocalSpread>0)	{
+// ** Spread ********************************************************************
+// Diffusion between regions is controlled by parameter
+// param::LocalSpread
+ 
+    if (LocalSpread)  {
       tot_spr_t = spread_all(t*ts-TimeStart);
       tot_spr += tot_spr_t;
       if( !exchange() ) t=tmax;
       fer=populations[KeyFCrescent].ActFert();
       fer=actualfertility/tarea;
       if(t%3==0 &0 && !VarActive )
-	fprintf(sprt,"%1.2f %1.2f %1.2f %1.4f\n",TimeStep*t,tot_spr_t,tot_pop_t,fer);
-      //       fprintf(sprt,"%1.2f %1.2f %1.2f %1.2f\n",TimeStep*t,tot_spr_t,tot_pop_t,actualfertility/tarea);
-
+	    fprintf(sprt,"%1.2f %1.2f %1.2f %1.4f\n",TimeStep*t,tot_spr_t,tot_pop_t,fer);
     }
     //      if(fabs(t*TimeStep-9400)<TimeStep)
     //	double tdiff=populations[KeyCMexico].Technology()-populations[KeyFCrescent].Technology();
 
+// ********************** printf diagnostics *****************************************************
     if(t%200==0 &0) for(unsigned int ii=0;ii<4;ii++) {
       unsigned int i=ins[ii];
       printf("%ld %d:\t",t,i);
@@ -741,13 +731,8 @@ double simulation() {
       printf("over=%1.2f ",overexp*populations[i].Density()*populations[i].Technology());
       printf("cult=%1.2f\n",populations[i].CultIndex());
     }
-    /*for (i=0; i<numberOfRegions; i++)
-      { printf("%d %d:",t,i);
-      for (n=4; n<N_POPVARS-1; n++) printf("%1.3f ",sprd[i*N_POPVARS+n]*1E3);
-      cout<<endl;} */
-    /*
-      output information  for evaluation
-    */
+
+// ********************** output ************************************
     if ( !VarActive && !(t%OutStep) )  // && t*TimeStep > 7000
       {
 	SiSi::logFile.progress(t,tmax);
