@@ -432,15 +432,7 @@ double simulation() {
     if(!VarActive) cout << _("resetting time step to ") << ts << endl;
   }
   else ts=TimeStep;
-  tmax=(long)((TimeEnd-TimeStart)/ts);
-  OutStep=(int)(OutputStep/ts);
-
-
-  //t_desert=(long)((SimInit-5500)/ts); Old time definition
-  /** Desert occurs at 5500 BP */
-  t_desert=(long)((-5500-TimeStart)/ts); // new time
-  if (t_desert<0) t_desert=0;
-
+  
   unsigned long restart_index=0;
 #ifdef HAVE_NETCDF_H
   double * double_record = new double[numberOfRegions];
@@ -453,7 +445,7 @@ double simulation() {
       time_diff=abs(TimeStart - nc_time[i]);
       restart_index=i;
     }
-    std::cerr << " Restarting from index " << restart_index << endl;
+    std::cout << "Restarting from index " << restart_index << " at t="  << nc_time[restart_index]<< endl;
     NcFile ncout(ncfilename.c_str(),NcFile::ReadOnly);
     gnc_read_record(ncout,"technology",&float_record,restart_index);
     for (unsigned int i=0; i< numberOfRegions; i++) populations[i].Technology(float_record[i]);
@@ -465,10 +457,30 @@ double simulation() {
     for (unsigned int i=0; i< numberOfRegions; i++) populations[i].Ndomesticated(float_record[i]);
     gnc_read_record(ncout,"population_density",&float_record,restart_index);
     for (unsigned int i=0; i< numberOfRegions; i++) populations[i].Density(float_record[i]);
+    
+    // Reset to time start from netCDF file to have consistent time steps, desert and
+    // climate updates
+    NcAtt* att = ncout.get_att("param_TimeStart");
+    TimeStart=att->as_float(0); 
+    att = ncout.get_att("param_TimeEnd");
+    if (att->as_float(0)!=TimeEnd )
+      std::cerr << "Different TimeEnd not implemented yet" << endl; 
+    
     ncout.close();
   }  
 
 #endif
+
+  
+  tmax=(long)((TimeEnd-TimeStart)/ts);
+  OutStep=(int)(OutputStep/ts);
+
+
+  //t_desert=(long)((SimInit-5500)/ts); Old time definition
+  /** Desert occurs at 5500 BP */
+  t_desert=(long)((-5500-TimeStart)/ts); // new time
+  if (t_desert<0) t_desert=0;
+
 
   /**
      Open  files analysis of spread
@@ -497,7 +509,8 @@ double simulation() {
 
   if (! is_restart) {
 
-  /** Write the record for all non time-dependent variables */
+  // Write the records for 
+  // all non time-dependent variables
   for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=populations[i].Region()->Longitude();
   gnc_write_record(ncout,"longitude",&float_record);
   for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=populations[i].Region()->Latitude();
@@ -535,7 +548,7 @@ double simulation() {
   }
 #endif
 
-  for (t=restart_index; t<tmax; t++) {
+  for (t=restart_index; t<=tmax; t++) {
 
       mean_pastclimate_npp=0; mean_region_npp=0; mean_futureclimate_npp=0;
       mean_sahara_npp=0;
@@ -556,7 +569,7 @@ double simulation() {
       Check whether we need to update climate information, if so
       perform the update
     */
-    if (t*ts > tu ) {
+    while (t*ts > tu ) {
 	  if (!pastclimate.Update(tu)) return -1;
 	  tu=tu+ClimUpdateTimes[0];
 	  if (!futureclimate.Update(tu)) return -1;
