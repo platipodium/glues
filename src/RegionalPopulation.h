@@ -96,7 +96,7 @@ class RegionalPopulation {
 
   double RatesOfChange(double*);
   double Grow(void);
-  double RelativeGrowthrate(void);
+  double RelativeGrowthrate();
   int    Develop(double);
   double drdQ(void);
   double drdN(void);

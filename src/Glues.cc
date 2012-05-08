@@ -22,7 +22,7 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
    @author Kai Wirtz <kai.wirtz@hzg.de>
-   @date   2012-02-21
+   @date   2012-05-08
    @file   Glues.cc
    @brief  Main driver for GLUES simulations
 */
@@ -548,12 +548,28 @@ double simulation() {
   }
 #endif
 
+
+
+
   for (t=restart_index; t<=tmax; t++) {
+  
+    // Check whether climate needs to be update and perform necessary updates
+	// @todo throw exceptions
+	while (t*ts > tu ) {
+	  if (!pastclimate.Update(tu)) return -1;
+	  tu=tu+ClimUpdateTimes[0];
+	  if (!futureclimate.Update(tu)) return -1;
+    }
+       
+	
 
       mean_pastclimate_npp=0; mean_region_npp=0; mean_futureclimate_npp=0;
       mean_sahara_npp=0;
 
-    t_glac = (t_glac_end-TimeStart-t*ts)/ (t_glac_end-TimeStart);
+    // Prefill fluctuation vector
+    std::vector<double> fluctuation;
+    for (unsigned int i=0; i<numberOfRegions; i++) fluctuation.push_back(1.0);
+
 
   /** @todo make this reappear based on TimeStart not SimInit, synchronous global fluctuations
     for all regions*/
@@ -561,20 +577,10 @@ double simulation() {
 /*    if(sync) {
       if (SimInit-event_time[event_i]-t*ts<t*ts-SimInit+event_time[event_i+1]) event_i++;
       omt=(SimInit-event_time[event_i]-t*ts)/flucperiod;
-      fluc=1-flucampl*exp(-omt*omt);
-      //      fprintf(stdout,"Sync Ev_i=%d Ev_t=%f omt=%f fluc=%f\n",event_i,SimInit-event_time[event_i]-t*ts,omt,fluc);
+      fluctuation.at(i)=1-flucampl*exp(-omt*omt);
+      //      fprintf(stdout,"Sync Ev_i=%d Ev_t=%f omt=%f fluc=%f\n",event_i,SimInit-event_time[event_i]-t*ts,omt,fluctuation.at(i));
     }
 */
-    /*
-      Check whether we need to update climate information, if so
-      perform the update
-    */
-    while (t*ts > tu ) {
-	  if (!pastclimate.Update(tu)) return -1;
-	  tu=tu+ClimUpdateTimes[0];
-	  if (!futureclimate.Update(tu)) return -1;
-    }
-    ice_fac=1;
     /*
          Loop over all regions
     */
@@ -595,27 +601,26 @@ double simulation() {
     
 #endif
 
- 
-   /**
-       Iterate over all regions
-    */
+
+
+    // Iterate over all regions
     for (unsigned int i=0; i<numberOfRegions; i++) {
 
+	  fluctuation.at(i)=1.0;
+	  
 
-	mean_region_npp += regions[i].Npp();
-	mean_pastclimate_npp += pastclimate.Climate(i).Npp();
-	mean_futureclimate_npp += futureclimate.Climate(i).Npp();
-	if (regions[i].Sahara()) {
+     // Update climate information from an interpolation of past and future climates
+     regions[i].InterpolateClimate(t*ts,pastclimate.Timestamp(),futureclimate.Timestamp(),
+				    pastclimate.Climate(i),futureclimate.Climate(i));
+	 mean_region_npp += regions[i].Npp();
+	 mean_pastclimate_npp += pastclimate.Climate(i).Npp();
+	 mean_futureclimate_npp += futureclimate.Climate(i).Npp();
+	 if (regions[i].Sahara()) {
 	    mean_sahara_npp += regions[i].Npp();
 	    numberOfSaharanRegions ++;
-	}
+	 }
 
-      /**
-	 Update climate information from an interpolation of past and future climates
-      */
-      regions[i].InterpolateClimate(t*ts,pastclimate.Timestamp(),futureclimate.Timestamp(),
-				    pastclimate.Climate(i),futureclimate.Climate(i));
-
+ 
     /**
        Artificial desertification of the Sahare at 5.5 kyr BP
        is controlled by the parameter Sisi::SaharaDesert and works via
@@ -634,10 +639,9 @@ double simulation() {
        and fluctuation intensity is greater than zero (SISI parameter flucampl)
      */
       //cout << "No proxy events. TODO: Initialize.cc ll.312 " << endl;
-     if (!sync) fluc=1;
-
+     
  
-      if (1 &!sync && flucampl>0) {
+      if (!sync && flucampl>0) {
      // For old Events implementation (backward)
 	   
 	   double t_old = 1950-(*(EventRegTime+i*MaxEvent+EventRegInd[i])) * 1;
@@ -652,23 +656,31 @@ double simulation() {
 	   if (((t_old + t_new) < (TimeStart+t*ts)*2) ) EventRegInd[i]++;
     
 	   omt=(1950-(*(EventRegTime+i*MaxEvent+EventRegInd[i]))-(TimeStart+t*ts))/flucperiod;
-	   fluc=1-flucampl*exp(-omt*omt);
+	   fluctuation.at(i)=1-flucampl*exp(-omt*omt);
 	   
 	   if (0&i==124)  cout << i << " "<< t*ts << " " << TimeStart+t*ts << " " << EventRegInd[i]
-	  		<< " flucampl=" << flucampl << " fluc=" << fluc << " om=" << omt << " tr=" << t_old << "-" << t_new << std::endl; 
+	  		<< " flucampl=" << flucampl << " fluc=" << fluctuation.at(i) << " om=" << omt << " tr=" << t_old << "-" << t_new << std::endl; 
      }
  
-      /**
-	   Emulation of climate transition after LGM in Northern Hemisphere controlled with
-	   parameter param::LGMHoloTrans
-      */
-      if(t_glac >0 && LGMHoloTrans ) {
-	    float lat=regions[i].Latitude();
-	    float icef=IceFac(regions[i].Latitude(),regions[i].Longitude());
-	//if(i%100==-50 & t%10==0)
-	//printf("%1.0f reg %d lat=%1.2f\t%1.2f\tif=%1.1f tg=%1.1f\tfac=%1.2f\n",t*ts,i,lat,fluc,icef,t_glac,icef+(1-icef)*(1-t_glac));
-	    fluc*= icef+(1-icef)*(1-t_glac);
+
+      // Check whether glaciated NH needs to be considered, this
+	  // is controlled with SISI:LGMHoloTrans parameter and
+	  // reduces the climate parameter fluc
+	  //
+	  // @todo replace by Peltier ICE-5G model
+	  if (LGMHoloTrans) {
+        double t_glac = (t_glac_end-TimeStart-t*ts)/ (t_glac_end-TimeStart);
+        if(t_glac >0) {
+	      float icef=IceFac(regions[i].Latitude(),regions[i].Longitude());
+	      if (icef<1)
+	        //fluc *= icef+(1-icef)*(1-t_glac);
+	        fluctuation.at(i) *= icef+(1-icef)*(1-t_glac);
+	        //float lat=regions[i].Latitude();
+	        //printf("%1.0f reg %d lat=%1.2f\t%1.2f\tif=%1.1f tg=%1.1f\tfac=%1.2f\n",t*ts,i,lat,fluc,icef,t_glac,icef+(1-icef)*(1-t_glac));}
+        }
       }
+
+      regions[i].Fluctuation(fluctuation.at(i));
 
       /**
 	  Add local population to world population

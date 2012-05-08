@@ -27,6 +27,7 @@ VegetatedRegion::VegetatedRegion(std::istream& is)
     climate.Tlim(0);
     climate.Lai(0);
     continent=0;
+    fluctuation=1.0;
 }  
 
 VegetatedRegion::VegetatedRegion(const std::string& line ) 
@@ -35,6 +36,7 @@ VegetatedRegion::VegetatedRegion(const std::string& line )
   climate.Tlim(0);
   climate.Lai(0);
   continent=0;
+    fluctuation=1.0;
 }  
 
 VegetatedRegion::VegetatedRegion(double npp,double tlim,double lai,
@@ -43,6 +45,7 @@ VegetatedRegion::VegetatedRegion(double npp,double tlim,double lai,
   climate.Npp(npp);
   climate.Tlim(tlim);
   climate.Lai(lai);  
+    fluctuation=1.0;
 }
 
 VegetatedRegion::VegetatedRegion(const VegetatedRegion& vr) 
@@ -52,6 +55,7 @@ VegetatedRegion::VegetatedRegion(const VegetatedRegion& vr)
     contndommax=vr.contndommax;
     exploit=vr.exploit;
     icefraction=vr.icefraction;
+    fluctuation=vr.fluctuation;
 }  
 
 VegetatedRegion::~VegetatedRegion() {

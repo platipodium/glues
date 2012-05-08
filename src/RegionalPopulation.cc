@@ -23,7 +23,7 @@
    @author Kai Wirtz <kai.wirtz@hzg.de>
    @file  RegionalPopulation.cc
    @brief  Definition of regional population
-   @date 2012-02-29
+   @date 2012-05-08
    
 */
 
@@ -248,15 +248,15 @@ double RegionalPopulation::RelativeGrowthrate() {
   */
   
   expo=(gdd_opt-tlim)/(0.5*gdd_opt);
-  tlim= fluc*exp(-expo*expo);
+  tlim= region->Fluctuation()*exp(-expo*expo);
   
   /**
      actual fertility accounts for cropland conversion
      exploitation history
   */
-  ///naturalfertility  = region->NatFertility(fluc);
- naturalfertility  = region->NatFertility(fluc);
-  cropfertility = region->NatFertility(fluc*kappa/(1+region->Npp()));
+  ///naturalfertility  = region->NatFertility(fluctuation);
+  naturalfertility  = region->NatFertility(region->Fluctuation());
+  cropfertility = region->NatFertility(region->Fluctuation()*kappa/(1+region->Npp()));
   farmfert      = naturalfertility+0*(cropfertility-naturalfertility)*qfarming*tlim*nrat;
   
   /** 

@@ -32,6 +32,7 @@ class VegetatedRegion: public GeographicalRegion {
     double contndommax;
     double exploit;
     double icefraction;
+    double fluctuation; // other external impacts
     glues::Continent* continent;
 public:
 
@@ -52,6 +53,7 @@ public:
 	double Npp()	const		{return climate.Npp();}
 	int    Tlim(double tl)		{climate.Tlim(tl); return 0;}
 	double Tlim() const      	{return climate.Tlim();}
+	double Fluctuation() const {return fluctuation;}
 	double ContNdommax() const	{return contndommax;}
 	int    ContNdommax(double cn)	{contndommax=cn; return 0;}
 	double NatFertility(double) const;
@@ -59,6 +61,8 @@ public:
 	double SuitableTemp() const;
         double IceFraction() const      {return icefraction;}
         int    IceFraction(double i)    {icefraction = i; return 0;}
+        
+    int Fluctuation(double f) {fluctuation = f; return 0;}
 
 	glues::RegionalClimate Climate() const { return climate; }
 	int  Climate(glues::RegionalClimate rc) {climate=rc; return 0;}

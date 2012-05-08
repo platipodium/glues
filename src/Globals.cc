@@ -2,7 +2,7 @@
    This file is part of
    the Global Land Use and technological Evolution Simulator
    
-   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011
+   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012
    Carsten Lemmen <carsten.lemmen@hzg.de>
    Kai W. Wirtz <kai.wirtz@hzg.de>
 
@@ -24,7 +24,7 @@
 
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
    @author Kai W. Wirtz <kai.wirtz@hzg.de>
-   @date 2011-02-10
+   @date 2012-05-08
    @file Globals.cc
    @brief Global declaration and definitions 
    @todo recursive method if change>RelChange
@@ -52,7 +52,7 @@ double minval[N_POPVARS]={0, EPS,EPS,EPS  ,EPS*4 ,0.02};
 // 7 	Malaysia
 // 8	New Guinea
 // 9	Smaller islands 
-double cropfertility,s_error,GlobDev,fluc=1.0,*EventTime,*EventRegTime;
+double cropfertility,s_error,GlobDev,*EventTime,*EventRegTime;
 char resultstring[156]="";
 char climatestring[156]="",varrespath[156]="",spreadstring[156]="";
 int  inspectid=0,GlobDevNum,MaxEvent,MaxProxyReg,numberOfSites;
