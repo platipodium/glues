@@ -27,8 +27,11 @@ for i=1:a.length
   end
 end
 
-
-[ireg,nreg,loli,lali]=find_region_numbers(reg);
+if all(isinf(lonlim)+isinf(latlim))
+  [ireg,nreg,loli,lali]=find_region_numbers(reg);
+else
+  [ireg,nreg,loli,lali]=find_region_numbers('latlim',latlim,'lonlim',lonlim);
+end
 lonlim(isinf(lonlim))=loli(isinf(lonlim));
 latlim(isinf(latlim))=lali(isinf(latlim));
 
