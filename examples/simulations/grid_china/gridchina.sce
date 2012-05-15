@@ -2,9 +2,9 @@
 comment Scenario specific numbers and file names
 int	CoastRegNo	0
 comment Dateipfad fuer Eingabe
-string	datapath	"/Users/lemmen/devel/glues/examples/setup/gridchina/"
+string	datapath	"/Users/lemmen/devel/glues/examples/setup/grid_china/"
 comment Dateiname fuer Eingabe
-string	regiondata	"regions_grid_0.5_china.tsv"
+string	regiondata	"regions_0.5_grid_china.tsv"
 string	mappingdata	""
 comment Dateinamen fuer Ausgabe
 string	resultfilename	"results.out"
@@ -14,11 +14,12 @@ comment Region numbers to inspect
 array	ins
 	\d region index to inspect (<N_INSPECT)85
 	typeOfArray	int
-	dimension 0	
+	dimension 1	
 data
+	1
 end
 comment Cimate updates 
-string	climatefile	"regionnpp_grid_0.5_china.tsv"
+string	climatefile	"regionnpp_0.5_grid_china.tsv"
 array	ClimUpdateTimes
 	\d 1:TimeStep  2:NumberOfUpdates
 	typeOfArray	int
