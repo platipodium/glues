@@ -1,0 +1,40 @@
+# Parameter file written by XSiSi 2.0
+# Last modified at Fri Jun 01 09:55:17 CEST 2001
+comment Data for emergence of civilizations during the Neolithikum
+comment Start of agriculture (BP) in seperated regions (Smith 1997,p.12-13)
+comment Fertile Crescent/Central Mexico/South China/North China/
+comment South Central Andes/Eastern United States/Sub-Saharan Africa
+comment Start_BP lowerLongitude higherLongitude lowerLatitude higherLatitude
+comment [ky longl longr latd latu]
+array	data_agri_start_old
+	typeOfArray	float
+	dimension	7 5
+data
+	9.5	37.0	50.0	31.0	38.0
+	9.0	-106.0	-95.0	15.0	24.0
+	8.5	107.0	122.0	28.0	33.0
+	7.8	106.0	113.0	35.0	40.0
+	7.0	-80.0	-68.0	-18.0	-10.0
+	4.5	-93.0	-83.0	32.0	40.0
+	4.0	-14.0	40.0	11.0	18.0
+end
+comment Fertile Crescent/Central Mexico/South China/
+comment North China/South Central Andes/
+array	data_agri_start
+	typeOfArray	float
+	dimension	5 5
+data
+	-7.0	33.0	51.0	32.0	38.0
+	-7.2	-108.0	-95.0	17.0	27.0
+	-6.0	105.0	122.0	28.0	33.0
+	-6.6	105.0	114.0	37.0	41.0
+	-3.0	-79.0	-67.0	-17.0	-7.0
+end
+comment global surface temperature records fluctuations ->
+comment prolonged drought in many continental regions (deMenocal2001)
+comment At flucampl 1.0
+float	flucampl 1.0
+	\d amplitude of relative fertility loss (<1) 0.4
+float	flucperiod	175.0
+	\u yr
+	\d time period of unfavorable conditions 175.0
