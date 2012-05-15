@@ -1,7 +1,7 @@
-# Main Makefile for GLUES.
+# Makefile for GLUES.
 
-# Copyright (C) 2007,2009,2009,2010,2011,2012
-# Carsten Lemmen, Helmholtz-Zentrum Geesthacht
+# Copyright (C) 2012 Carsten Lemmen
+# Helmholtz-Zentrum Geesthacht
 
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -18,4 +18,10 @@
 ## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 ## 02110-1301, USA.
 
-SUBDIRS = 685 938 939 62483 plasim grid_china
+EXTRA_DIST = \
+  RegionEventTimes.tsv \
+  regiongdd_0.5_grid_china.tsv \
+  regionnpp_0.5_grid_china.tsv \ 
+  regions_0.5_grid_china.tsv
+  
+  
