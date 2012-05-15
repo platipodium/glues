@@ -399,6 +399,8 @@ AC_CONFIG_FILES([Makefile
   examples/setup/938/Makefile
   examples/setup/939/Makefile
   examples/setup/685/Makefile
+  examples/setup/grid_china/Makefile
+  examples/simulations/grid_china/Makefile
   examples/setup/plasim/Makefile
   examples/setup/62483/Makefile
   examples/results/Makefile
