@@ -1,16 +1,41 @@
-function cl_create_regions(filename);
+function cl_create_regions(varargin)
+% cl_create_regions(varargin
+%   keywords latlim, lonlim, res
+%   depends on read_gluesclimate
+%   requires cl_register_functino, clp_arguments, clp_valuestring
 
-cl_register_function();
+cl_register_function;
 
-[lon,lat,npp,gdd]=read_gluesclimate;
+arguments = {...
+  {'latlim',[-60 70]},...
+  {'lonlim',[-180 180]},...
+  {'res',0.5},...
+};
 
-n=length(lon);
-res=0.5;
+[args,rargs]=clp_arguments(varargin,arguments);
+for i=1:args.length   
+  eval([ args.name{i} ' = ' clp_valuestring(args.value{i}) ';']); 
+end
+
+
+%[lon,lat,npp,gdd]=read_gluesclimate;
+
+
+
+
+ivalid=find(lon>=lonlim(1) & lon<=lonlim(2) & lat>=latlim(1) & lat<=latlim(2));
+if isempty(ivalid) 
+  error('No values found in lat/lon range');
+end
+
+n=length(ivalid);
+lon=lon(ivalid);
+lat=lat(ivalid);
 
 % Choose a year on which to calculate region distribution
 iyear=11;
-npp=npp(:,11);
-gdd=gdd(:,11);
+npp=npp(ivalid,iyear);
+gdd=gdd(ivalid,iyear);
 
 c=npp; % center
 ww=zeros(n,1)+NaN;
@@ -21,14 +46,26 @@ minlon=min(lon);
 maxlon=max(lon);
 minlat=min(lat);
 maxlat=max(lat);
-eps=0.1;
+eps=res/10;
 
-if exist('cellneighbours.mat','file')
-    load 'cellneighbours';
+
+
+figure(1); clf reset;
+m_proj('miller','lon',lonlim,'lat',latlim);
+m_plot(lon,lat,'k.','MarkerSize',1);
+m_coast;
+hold on;
+
+
+gridfile=sprintf('cellneighbours_%.0f_%.0f_%0.f_%0.f.mat',minlon,maxlon,minlat,maxlat);
+
+if 0==1 & exist(gridfile,'file')
+    load(gridfile);
 else
     for i=1:n
         jn=find(abs(lat-lat(i))<=res+eps & abs(lon-lon(i))<=res+eps);
         if isempty(jn) continue; end;
+        if length(jn)>1 error('Cell found multiple times'); end
         
         j=jn(find(abs(lat(jn)-lat(i))<eps & abs(lon(jn)-lon(i)+res)<eps));
         if  ~isempty(j) 
@@ -54,10 +91,11 @@ else
             ss(j)=i;
         end
         
+      
         if (mod(i,1000)==0) fprintf('.'); end
     end
      % treat edges here
-    save('cellneighbours.mat','nn','ne','ee','se','ss','sw','ww','nw');
+    save(gridfile,'nn','ne','ee','se','ss','sw','ww','nw');
 end
    
 %neigh=[ww,nw,nn,ne,ee,se,ss,sw];
@@ -69,12 +107,6 @@ regions(:,1)=[1:n];
 nregions=ones(n,1);
 sel=[1:n]+NaN;
 
-clf reset;
-%m_proj('miller','lon',[minlon,maxlon],'lat',[minlat,maxlat]);
-m_proj('miller','lon',[-10,40],'lat',[25,60]);
-m_plot(lon,lat,'k.','MarkerSize',1);
-m_coast;
-hold on;
 
 
 for k=1:100
