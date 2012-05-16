@@ -22,7 +22,7 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
    @author Kai Wirtz <kai.wirtz@hzg.de>
-   @date   2012-05-08
+   @date   2012-05-16
    @file   Glues.cc
    @brief  Main driver for GLUES simulations
 */
@@ -267,7 +267,7 @@ int main(int argc, char* argv[])
   }
 
   /** This is a hack: fill EventRegTime[nreg x MaxEvent] from matlab calculation*/
-  read_EventRegTime();
+  if (flucampl>0) read_EventRegTime();
 
 
   /**
@@ -294,7 +294,7 @@ int main(int argc, char* argv[])
    
   if(RunVarInd>0) set_parvector(RunVarInd,1);
 
-  dump_events();
+  if (flucampl>0) dump_events();
 
   /*std::vector<RegionalPopulation> population;
   std::vector<RegionalPopulation>::iterator p_iter;
@@ -398,7 +398,7 @@ double simulation() {
 
   // Reverse timing if Time is counted in BC/AD
   if (TimeStart<0) {
-      for (unsigned int i=0; i<12; i++) event_time[i]=1950-event_time[i];
+      if (flucampl>0) for (unsigned int i=0; i<12; i++) event_time[i]=1950-event_time[i];
       t_glac_end=1950-t_glac_end;
   }
 

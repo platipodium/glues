@@ -20,7 +20,7 @@
 
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
    @author Kai W Wirtz <kai.wirtz@hzg.de
-   @date   2012-02-14
+   @date   2012-05-16
    @file Input.cc 
    @brief Input/output routines 
 */
@@ -577,9 +577,10 @@ int read_neighbours() {
 
     // Read id, skip four fields and read number of neighbours
     ifs >> selfid;  
-    for (unsigned int j=0; j<5; j++) ifs >> numneigh;
-    
-    //std::cerr << i << " " << numneigh; 
+    for (unsigned int j=0; j<5; j++) {
+      ifs >> numneigh;
+      //std::cerr << i << " " << numneigh << std::endl; 
+    }
     
     // For all numneighbours add them
     for (unsigned int j=0; j<numneigh; j++) {
@@ -594,6 +595,7 @@ int read_neighbours() {
       if ( neighid>=0 ) {
         //unsigned int in=idmap[neighid]; // some bug here, TODO
         unsigned int in=neighid;
+        //if (i==selfid-1) in=in-1;
         regions[i].AddNeighbour(&regions[in],neigh_boundary,1);
         if (in < i) regions[in].AddNeighbour(&regions[i],
 						     neigh_boundary,1);

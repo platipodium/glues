@@ -22,7 +22,7 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
    @author Kai W Wirtz <kai.wirtz@hzg.de
-   @date   2012-02-14
+   @date   2012-05-16
    @file Initialization.cc
    @brief Initialize all data
 */
@@ -437,31 +437,31 @@ int read_data() {
   //for (unsigned int i; i<numberOfRegions; i++) cerr << regions[i] << endl; 
 
   
-  if (!read_proxyevents()) return 1;  //  
+  if (flucampl>0) {
+    if (!read_proxyevents()) return 1; 
+    //cout << "No proxy events. TODO: Initialize.cc ll297 " << endl;
+    if (flucampl>0) if (!read_SiteRegfile()) return 1;  //  
 
-  //cout << "No proxy events. TODO: Initialize.cc ll297 " << endl;
-  if (!read_SiteRegfile()) return 1;  //  
+    char fname[199], *radn;
 
-  char fname[199], *radn;
+    strcpy(fname,datapath);
+    strcat(fname,SiteRegfile);
 
-  strcpy(fname,datapath);
-  strcat(fname,SiteRegfile);
+    radn=strstr(fname,"Reg");
+    if (radn != NULL) {
+      strcpy(radn,"Rad.dat");
+    }
+    else {
+      // temporary fix for new name of file
+      radn=strstr(fname,"events.tsv");
+      strcpy(radn,"eventradius.tsv");
+    }
 
-  radn=strstr(fname,"Reg");
-  if (radn != NULL) {
-    strcpy(radn,"Rad.dat");
+    //if (!read_SiteRadfile()) return 1;  //  
+    for (unsigned int j=0; j<(unsigned int)MaxProxyReg; j++) RegSiteRad[j]=(int *)(malloc(numberOfRegions*sizeof(int)));
+
+    if (read_region_eventradius(std::string(fname),RegSiteRad)==0) return 1;
   }
-  else {
-    // temporary fix for new name of file
-    radn=strstr(fname,"events.tsv");
-    strcpy(radn,"eventradius.tsv");
-  }
-
-  //if (!read_SiteRadfile()) return 1;  //  
-  for (unsigned int j=0; j<(unsigned int)MaxProxyReg; j++) RegSiteRad[j]=(int *)(malloc(numberOfRegions*sizeof(int)));
-
-  if (read_region_eventradius(std::string(fname),RegSiteRad)==0) return 1;
-  
   /* --------------------------------------------------------------- */
   /* if environmental conditions change, update region information
      and population maximal traits: currently only at t=0 !!        */
@@ -474,7 +474,7 @@ int read_data() {
  // out_vegetation();
  // out_boxes();
   //cout << "No proxy events. TODO: Initialize.cc ll.312 " << endl;
-  if (!set_events()) return 1;
+  if (flucampl>0) if (!set_events()) return 1;
  
   return 0;
 }
