@@ -47,7 +47,9 @@ id=netcdf.getVar(ncid,varid);
 nid=length(id);
 
 varname='time'; varid=netcdf.inqVarID(ncid,varname);
-time=netcdf.getVar(ncid,varid);
+time=netcdf.getVar(ncid,varid)/360;
+if sum(round(time)-time)>0 error('Something wrong with time: year/day conflict?'); end
+
 
 [ndim nvar natt udimid] = netcdf.inq(ncid); 
 if ~iscell(variables) 
@@ -67,7 +69,8 @@ end
 % Find time dimension
 tid=netcdf.inqVarID(ncid,netcdf.inqDim(ncid,udimid));
 tdim=udimid;
-time=netcdf.getVar(ncid,tid);
+time=netcdf.getVar(ncid,tid)/360;
+if sum(round(time)-time)>0 error('Something wrong with time: year/day conflict?'); end
 ntime=length(time);
 if numel(timelim)==1 timelim(1:2) = timelim(1); end
 if ntime>1
@@ -125,12 +128,17 @@ netcdf.putAtt(ncout,varid,'units','degrees_north');
 netcdf.putAtt(ncout,varid,'long_name','latitude');
 netcdf.putAtt(ncout,varid,'description','centered latitude of grid cell');
 netcdf.putAtt(ncout,varid,'coordinates','lat');
+netcdf.putAtt(ncout,varid,'axis','Y');
+netcdf.putAtt(ncout,varid,'grads_dim','Y');
 netcdf.putAtt(ncout,varid,'date_of_creation',datestr(now));
+
 varid=netcdf.inqVarID(ncout,'lon');
 netcdf.putAtt(ncout,varid,'units','degrees_east');
 netcdf.putAtt(ncout,varid,'long_name','longitude');
 netcdf.putAtt(ncout,varid,'description','centered longitude of grid cell');
 netcdf.putAtt(ncout,varid,'coordinates','lon');
+netcdf.putAtt(ncout,varid,'axis','X');
+netcdf.putAtt(ncout,varid,'grads_dim','X');
 netcdf.putAtt(ncout,varid,'date_of_creation',datestr(now));
 
 
@@ -221,7 +229,7 @@ end
 % Put new time records and lat/lon grid
 for i=1:length(time)
   ovarid=netcdf.inqVarID(ncout,'time');
-  netcdf.putVar(ncout,ovarid,i-1,double(time(i)));
+  netcdf.putVar(ncout,ovarid,i-1,double(time(i)*360));
 end
 ovarid=netcdf.inqVarID(ncout,'lon');
 netcdf.putVar(ncout,ovarid,longrid);

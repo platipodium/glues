@@ -298,7 +298,8 @@ ncid=netcdf.open(file,'NOWRITE');
   varid=netcdf.inqVarID(ncid,'region');
   id=netcdf.getVar(ncid,varid);
   varid=netcdf.inqVarID(ncid,'time');
-  time=netcdf.getVar(ncid,varid);
+  time=netcdf.getVar(ncid,varid)/360;
+  if (any(round(time)-time>0)) error('Got mixed up with years/days'); end
   itime=find(time>=timelim(1) & time<=timelim(2));
   varid=netcdf.inqVarID(ncid,'farming');
   farming=netcdf.getVar(ncid,varid);
@@ -822,8 +823,8 @@ if any(doplots==9)
   
   hreg=278;
   
-  %farm1=100*clp_nc_trajectory('file','../../euroclim_0.0.nc','timelim',[-inf inf],'reg',hreg,'var','farming');
-  %farm5=100*clp_nc_trajectory('file','../../euroclim_0.4.nc','timelim',[-inf inf],'reg',hreg,'var','farming');
+  farm1=100*clp_nc_trajectory('file','../../euroclim_0.0.nc','timelim',[-inf inf],'reg',hreg,'var','farming');
+  farm5=100*clp_nc_trajectory('file','../../euroclim_0.4.nc','timelim',[-inf inf],'reg',hreg,'var','farming');
   
   
   
@@ -893,9 +894,12 @@ if any(doplots==9)
 
   cl_print('name',sprintf('event_and_trajectory_%03d',hreg),'ext','pdf');
 
-  
+  % For pangaea
+  cl_glues2grid('variables',{'farming_timing','region','technology','farming','population_density'},'file','../../euroclim_0.4.nc')  
   
 end
+
+
 
 
 
