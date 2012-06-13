@@ -382,7 +382,7 @@ double simulation() {
      nc_time_len = dim->size();
      nc_time = new double[nc_time_len];
      var->get(nc_time,nc_time_len);
-     nc_time=nc_time/360;  // convert from days to years
+     for (unsigned long int inc=0; inc<nc_time_len; inc++) nc_time[inc]=nc_time[inc]/360;  // convert from days to years
      /** @todo: correct to n-1 (currently there are missing values at this position, fix elsewhere) */
      //cerr << " " << nc_time_len << " " <<  nc_time[0] << " " << nc_time[nc_time_len-2] << endl;
      //cerr << " " << TimeStart << " " <<  TimeStep << " " << TimeEnd << endl;
@@ -597,8 +597,8 @@ double simulation() {
 	  if (ncout.is_valid()) { 
       NcVar* var=ncout.get_var("time");
       double time[1];
-      time[0]=t*ts+TimeStart;
-      var->put_rec(time*360,t);
+      time[0]=(t*ts+TimeStart)*360;
+      var->put_rec(time,t);
 	  }
 #endif
 
