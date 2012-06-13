@@ -8,7 +8,7 @@ arguments = {...
   {'colpath','k'},...
   {'drawmode','optimal'},...
   {'reg','all'},...
-  {'filename','regionpath_685'}...
+  {'rpath','regionpath_685'}...
 };
 
 [args,rargs]=clp_arguments(varargin,arguments);
@@ -17,12 +17,12 @@ for i=1:args.length
 end
 
 if all(isfinite([latlim lonlim]))
-  [iselect,nfound,loli,lali]=find_region_numbers('lat',latlim,'lon',lonlim,'file',filename);
+  [iselect,nfound,loli,lali]=cl_select_regions('lat',latlim,'lon',lonlim,'rpath',rpath);
 else
-  [iselect,nfound,lonlim,latlim]=find_region_numbers(reg,'file',filename);%[216, 279, 315, 170];
+  [iselect,nfound,lonlim,latlim]=cl_select_regions('reg',reg,'rpath',rpath);%[216, 279, 315, 170];
 end
 
-load(filename);
+load(sprintf('%s.mat',rpath));
 
 
 if exist('region','var') & isstruct(region) 

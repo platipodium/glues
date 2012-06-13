@@ -22,7 +22,7 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
    @author Kai Wirtz <kai.wirtz@hzg.de>
-   @date   2012-05-16
+   @date   2012-05-21
    @file   Glues.cc
    @brief  Main driver for GLUES simulations
 */
@@ -266,6 +266,8 @@ int main(int argc, char* argv[])
       return 1;
   }
 
+
+
   /** This is a hack: fill EventRegTime[nreg x MaxEvent] from matlab calculation*/
   if (flucampl>0) read_EventRegTime();
 
@@ -380,7 +382,7 @@ double simulation() {
      nc_time_len = dim->size();
      nc_time = new double[nc_time_len];
      var->get(nc_time,nc_time_len);
-     
+     nc_time=nc_time/360;  // convert from days to years
      /** @todo: correct to n-1 (currently there are missing values at this position, fix elsewhere) */
      //cerr << " " << nc_time_len << " " <<  nc_time[0] << " " << nc_time[nc_time_len-2] << endl;
      //cerr << " " << TimeStart << " " <<  TimeStep << " " << TimeEnd << endl;
@@ -510,6 +512,9 @@ double simulation() {
 
   if (!is_restart) {
 
+    //for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=populations[i].Region()->Longitude();
+
+
     // Write the records for 
     // all non time-dependent variables
     for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=populations[i].Region()->Longitude();
@@ -518,13 +523,13 @@ double simulation() {
     gnc_write_record(ncout,"latitude",&float_record);
     for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=populations[i].Region()->Id();
     gnc_write_record(ncout,"region",&float_record);
-    for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=0;
+    for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=InitTechnology;
     gnc_write_record(ncout,"technology_init",&float_record);
-    for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=0;
+    for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=InitQfarm;
     gnc_write_record(ncout,"farming_init",&float_record);
-    for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=0;
+    for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=InitNdomast;
     gnc_write_record(ncout,"economies_init",&float_record);
-    for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=0;
+    for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=InitDensity;
     gnc_write_record(ncout,"population_density_init",&float_record);
     for (unsigned int i=0; i<numberOfRegions; i++) float_record[i]=populations[i].Region()->Area();
     gnc_write_record(ncout,"area",&float_record);
@@ -593,7 +598,7 @@ double simulation() {
       NcVar* var=ncout.get_var("time");
       double time[1];
       time[0]=t*ts+TimeStart;
-      var->put_rec(time,t);
+      var->put_rec(time*360,t);
 	  }
 #endif
 

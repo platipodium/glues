@@ -779,6 +779,8 @@ int initialize_populations(double var) {
     populations[i]=RegionalPopulation(InitDensity,
 				      InitQfarm,InitTechnology,nd,
 				      InitGerms,InitGerms*0.5,biond,nf,tl,&(regions[i]));
+				      
+	
     // do the reverse population to region link
     regions[i].Population(&(populations[i]));
     regions[i].ResetCivStart();
