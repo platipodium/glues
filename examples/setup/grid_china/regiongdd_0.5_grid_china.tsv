@@ -1,7 +1,7 @@
 # ASCII data info: columns
 # 1. region id 2. number of climates,
 # 3..n gdd
-# Version info: 7.13.0.31 (R2011b) lemmen@ MACI64 L  16-May-2012 12:47:56 /Users/lemmen/devel/glues/visual/matlab_new  cl_create_regions_from_grid.m cl_create_regions_from_grid 16-Mai-2012 12:47:53 (c)2012 lemmen
+# Version info: 7.13.0.31 (R2011b) lemmen@ MACI64 L  21-May-2012 12:25:21 /Users/lemmen/devel/glues/visual/matlab_new  cl_create_regions_from_grid.m cl_create_regions_from_grid 21-Mai-2012 12:25:19 (c)2012 lemmen
 0000 001    2
 0003 004    5
 0006 007    8

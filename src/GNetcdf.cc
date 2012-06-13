@@ -20,7 +20,7 @@
 */
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
-   @date   2012-04-03
+   @date   2012-06-13
    @file   GNetcdf.cc
 */
 
@@ -89,9 +89,11 @@ int gnc_write_definitions(NcFile& ncfile, int nreg, int nneigh, int ncont) {
   NcVar *var;
 
   if (!(var   = ncfile.add_var("time", ncFloat, timedim))) return 1;
-  var->add_att("units","years since 01-01-01");
+  var->add_att("units","days since 01-01-01 00:00:00");
   var->add_att("calendar","360_day");
   var->add_att("coordinates","time");
+  var->add_att("axis","T");
+  var->add_att("grads_dim","T");
   var->add_att("comment","No adjustement has been made for the shift of the calendar away from present day");
   var->add_att("date_of_creation",timestring.c_str());
 
@@ -112,6 +114,8 @@ int gnc_write_definitions(NcFile& ncfile, int nreg, int nneigh, int ncont) {
   var->add_att("cell_method","geographical mean of region latitudinal extent");
   var->add_att("description","Latitude of region center");
   var->add_att("coordinates","lon lat");
+  var->add_att("axis","Y");
+  var->add_att("grads_dim","Y");
   var->add_att("date_of_creation",timestring.c_str());
   
   var = ncfile.add_var("longitude",ncFloat, regdim);
@@ -120,6 +124,8 @@ int gnc_write_definitions(NcFile& ncfile, int nreg, int nneigh, int ncont) {
   var->add_att("long_name","center_longitude");
   var->add_att("description","Longitude of region center");
   var->add_att("coordinates","lon lat");
+  var->add_att("axis","X");
+  var->add_att("grads_dim","X");
   var->add_att("date_of_creation",timestring.c_str());
     
   var = ncfile.add_var("area",ncFloat, regdim);
@@ -673,16 +679,6 @@ int gnc_read_record(NcFile& ncfile, const std::string& varname, int** data, cons
  
   return 0;
 }
-
-
-
-
-
-
-
-
-
-
 
 
 

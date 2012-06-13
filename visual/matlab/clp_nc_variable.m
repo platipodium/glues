@@ -45,6 +45,7 @@ arguments = {...
   {'scenario',''},...
   {'noprint',0}...
   {'cmap',NaN},...
+  {'rpath','regionpath_685'},...
 };
 
 cl_register_function;
@@ -59,14 +60,16 @@ end
 % Choose 'emea' or 'China' or 'World'
 if all(isinf([lonlim latlim]))
   if ischar(reg)
-    [ireg,nreg,loli,lali]=find_region_numbers(reg);
+    %[ireg,nreg,loli,lali]=find_region_numbers(reg);
+     [ireg,nreg,loli,lali]=cl_select_regions('reg',reg,'rpath',rpath);
   else
     ireg=reg;
     nreg=length(ireg);
   end
 else
   if ischar(reg)
-    [ireg,nreg,loli,lali]=find_region_numbers('lat',latlim,'lon',lonlim);
+    %[ireg,nreg,loli,lali]=find_region_numbers('lat',latlim,'lon',lonlim);
+    [ireg,nreg,loli,lali]=cl_select_regions('lat',latlim,'lon',lonlim,'rpath',rpath);
   else
      ireg=reg;
      nreg=length(ireg);
@@ -280,7 +283,15 @@ if isinf(latlim(2)) latlim(2)=80; end
       npatch=length(ipatch);
       if npatch>0
         if npatch==1  iwhite=find(sum(get(c(ipatch),'FaceColor'),2)==3); 
-        else iwhite=find(sum(cell2mat(get(c(ipatch),'FaceColor')),2)==3);
+        else
+          iwhite=[];
+          try
+            iwhite=find(sum(cell2mat(get(c(ipatch),'FaceColor')),2)==3);
+          catch
+            for k=1:npatch
+               if (sum(get(c(ipatch(k)),'FaceColor'))==3) iwhite=[iwhite;k]; end
+            end
+          end
         end
         if ~isempty(iwhite) 
           set(c(ipatch(iwhite)),'FaceColor',seacolor);
@@ -294,8 +305,10 @@ if isinf(latlim(2)) latlim(2)=80; end
 ncol=length(colormap);
 
   %% Invisible plotting of all regions
-  %[hp,loli,lali,lon,lat]=clp_regionpath('lat',latlim,'lon',lonlim,'draw','patch','col',landcolor,'reg',reg);  
-  [hp,loli,lali,lon,lat]=clp_regionpath('lat',latlim,'lon',lonlim,'draw','patch','col',landcolor);  
+  %[hp,loli,lali,lon,lat]=clp_regionpath('lat',latlim,'lon',lonlim,'draw','patch','col',landcolor,'reg',reg);
+  
+  
+  [hp,loli,lali,lon,lat]=clp_regionpath('lat',latlim,'lon',lonlim,'draw','patch','col',landcolor,'rpath',rpath);  
   ival=find(hp>0);
   if transparency alpha(hp(ival),0); end
   
@@ -425,7 +438,7 @@ for it=1:ntime
   if length(scenario)>0 bname=[bname '_' scenario]; end
   
   if exist('time','var') if (ntime>1 || showtime>0) bname = [bname '_' num2str(time(it))]; end; end
-  if ~noprint plot_multi_format(gcf,fullfile(fdir,bname)); end
+  if ~noprint cl_print('name',fullfile(fdir,bname),'ext',{'pdf','png'}); end
   %pause(0.05);
 end
 
