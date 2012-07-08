@@ -382,7 +382,8 @@ double simulation() {
      nc_time_len = dim->size();
      nc_time = new double[nc_time_len];
      var->get(nc_time,nc_time_len);
-     for (unsigned long int inc=0; inc<nc_time_len; inc++) nc_time[inc]=nc_time[inc]/360;  // convert from days to years
+     // convert from days to years and from year 2000 to year AD
+     for (unsigned long int inc=0; inc<nc_time_len; inc++) nc_time[inc]=nc_time[inc]/360+2000;  
      /** @todo: correct to n-1 (currently there are missing values at this position, fix elsewhere) */
      //cerr << " " << nc_time_len << " " <<  nc_time[0] << " " << nc_time[nc_time_len-2] << endl;
      //cerr << " " << TimeStart << " " <<  TimeStep << " " << TimeEnd << endl;
@@ -597,7 +598,7 @@ double simulation() {
 	  if (ncout.is_valid()) { 
       NcVar* var=ncout.get_var("time");
       double time[1];
-      time[0]=(t*ts+TimeStart)*360;
+      time[0]=(t*ts+TimeStart-2000)*360;
       var->put_rec(time,t);
 	  }
 #endif
@@ -782,7 +783,7 @@ double simulation() {
 	  gnc_write_record(ncout,"natural_fertility",&float_record,t);
 	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Region()->Npp();
 	  gnc_write_record(ncout,"npp",&float_record,t);
-	  /*for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprdm[i];
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprdm[i];
 	  gnc_write_record(ncout,"migration_density",&float_record,t);
 	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprd[i*N_POPVARS+0];
 	  gnc_write_record(ncout,"technology_spread",&float_record,t);
@@ -790,13 +791,12 @@ double simulation() {
 	  gnc_write_record(ncout,"technology_spread_by_people",&float_record,t);
 	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprd_i[i*N_POPVARS+0];
 	  gnc_write_record(ncout,"technology_spread_by_information",&float_record,t);
-      for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprd_p[i*N_POPVARS+1];
+    for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprd_p[i*N_POPVARS+1];
 	  gnc_write_record(ncout,"economies_spread_by_people",&float_record,t);
 	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprd_i[i*N_POPVARS+1];
 	  gnc_write_record(ncout,"economies_spread_by_information",&float_record,t);
-	  */for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprd_p[i*N_POPVARS+2];
+	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=sprd_p[i*N_POPVARS+2];
 	  gnc_write_record(ncout,"farming_spread_by_people",&float_record,t);
-	  
 	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Region()->SuitableTemp();
 	  gnc_write_record(ncout,"suitable_temperature",&float_record,t);
 	  for (unsigned int i=0; i< numberOfRegions; i++) float_record[i]=populations[i].Region()->SuitableSpecies();
