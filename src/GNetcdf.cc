@@ -89,12 +89,12 @@ int gnc_write_definitions(NcFile& ncfile, int nreg, int nneigh, int ncont) {
   NcVar *var;
 
   if (!(var   = ncfile.add_var("time", ncFloat, timedim))) return 1;
-  var->add_att("units","days since 01-01-01 00:00:00");
+  var->add_att("units","days since 2000-01-01 00:00:00");
   var->add_att("calendar","360_day");
   var->add_att("coordinates","time");
   var->add_att("axis","T");
   var->add_att("grads_dim","T");
-  var->add_att("comment","No adjustement has been made for the shift of the calendar away from present day");
+  var->add_att("comment","No adjustment has been made for the shift of the calendar away from present day");
   var->add_att("date_of_creation",timestring.c_str());
 
   if (!(var = ncfile.add_var("region", ncInt, regdim))) return 1;
@@ -290,41 +290,41 @@ int gnc_write_definitions(NcFile& ncfile, int nreg, int nneigh, int ncont) {
   var->add_att("coordinates","lon lat");  
   var->add_att("date_of_creation",timestring.c_str());
 
-//   var = ncfile.add_var("technology_spread_by_people",ncFloat, timedim, regdim);
-//   var->add_att("units","a^{-1}");
-//   var->add_att("long_name","technology_spread_by_people");
-//   var->add_att("description","Net exchange of technology by migrants");
-//   var->add_att("coordinates","time lon lat");  
-//   var->add_att("date_of_creation",timestring.c_str());
-// 
-//   var = ncfile.add_var("technology_spread_by_information",ncFloat, timedim, regdim);
-//   var->add_att("units","a^{-1}");
-//   var->add_att("long_name","technology_spread_by_information");
-//   var->add_att("description","Net exchange of technology by information");
-//   var->add_att("coordinates","time lon lat");  
-//   var->add_att("date_of_creation",timestring.c_str());
-// 
-//   var = ncfile.add_var("technology_spread",ncFloat, timedim, regdim);
-//   var->add_att("units","a^{-1}");
-//   var->add_att("long_name","technology_spread");
-//   var->add_att("description","Net exchange of technology");
-//   var->add_att("coordinates","time lon lat");  
-//   var->add_att("date_of_creation",timestring.c_str());
-// 
-//   var = ncfile.add_var("economies_spread_by_people",ncFloat, timedim, regdim);
-//   var->add_att("units","a^{-1}");
-//   var->add_att("long_name","economies_spread_by_people");
-//   var->add_att("description","Net exchange of economies by migrants");
-//   var->add_att("coordinates","time lon lat");  
-//   var->add_att("date_of_creation",timestring.c_str());
-// 
-//   var = ncfile.add_var("economies_spread_by_information",ncFloat, timedim, regdim);
-//   var->add_att("units","a^{-1}");
-//   var->add_att("long_name","economies_spread_by_information");
-//   var->add_att("description","Net exchange of economies by information");
-//   var->add_att("coordinates","time lon lat");  
-//   var->add_att("date_of_creation",timestring.c_str());
-// 
+  var = ncfile.add_var("technology_spread_by_people",ncFloat, timedim, regdim);
+  var->add_att("units","a^{-1}");
+  var->add_att("long_name","technology_spread_by_people");
+  var->add_att("description","Net exchange of technology by migrants");
+  var->add_att("coordinates","time lon lat");  
+  var->add_att("date_of_creation",timestring.c_str());
+
+  var = ncfile.add_var("technology_spread_by_information",ncFloat, timedim, regdim);
+  var->add_att("units","a^{-1}");
+  var->add_att("long_name","technology_spread_by_information");
+  var->add_att("description","Net exchange of technology by information");
+  var->add_att("coordinates","time lon lat");  
+  var->add_att("date_of_creation",timestring.c_str());
+
+  var = ncfile.add_var("technology_spread",ncFloat, timedim, regdim);
+  var->add_att("units","a^{-1}");
+  var->add_att("long_name","technology_spread");
+  var->add_att("description","Net exchange of technology");
+  var->add_att("coordinates","time lon lat");  
+  var->add_att("date_of_creation",timestring.c_str());
+
+  var = ncfile.add_var("economies_spread_by_people",ncFloat, timedim, regdim);
+  var->add_att("units","a^{-1}");
+  var->add_att("long_name","economies_spread_by_people");
+  var->add_att("description","Net exchange of economies by migrants");
+  var->add_att("coordinates","time lon lat");  
+  var->add_att("date_of_creation",timestring.c_str());
+
+  var = ncfile.add_var("economies_spread_by_information",ncFloat, timedim, regdim);
+  var->add_att("units","a^{-1}");
+  var->add_att("long_name","economies_spread_by_information");
+  var->add_att("description","Net exchange of economies by information");
+  var->add_att("coordinates","time lon lat");  
+  var->add_att("date_of_creation",timestring.c_str());
+
    var = ncfile.add_var("farming_spread_by_people",ncFloat, timedim, regdim);
    var->add_att("units","a^{-1}");
    var->add_att("long_name","farming_spread_by_people");

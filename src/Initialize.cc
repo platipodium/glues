@@ -145,9 +145,10 @@ int set_events() {
 	    /* count events for each regional series */
 	    for (pe=0; *(EventTime+pe+(n-1)*MaxEvent)>0 && pe<MaxEvent;pe++);  
 		
-	    if (0 & pe<=0) {
+	    if (pe<=0) {
 		  std::cout << "WARNING. Number of events is zero. Check events file (E" 
 		            << n << "/R" << i << "/I" << j <<  ")" << endl;
+		 std::cerr << "TODO: factor in no-events regions (done in manual fix already)\n"; 
 		  continue;
 	    }
 		    
@@ -163,7 +164,7 @@ int set_events() {
 	    sermax+=EventSerMax[n-1]*RecWeight[j];
 	    sermin+=EventSerMin[n-1]*RecWeight[j];
 	   
-	    if (0) {
+	    if (1) {
 		cout << i << "/" << j << ": " << pe << " " << n << " " << RecWeight[j] << " " 
 		     << num_ev << " " << num_prox << " " 
 		     << EventSerMax[n-1] << "-" << EventSerMin[n-1] 
@@ -442,25 +443,17 @@ int read_data() {
     //cout << "No proxy events. TODO: Initialize.cc ll297 " << endl;
     if (flucampl>0) if (!read_SiteRegfile()) return 1;  //  
 
-    char fname[199], *radn;
 
-    strcpy(fname,datapath);
-    strcat(fname,SiteRegfile);
-
-    radn=strstr(fname,"Reg");
-    if (radn != NULL) {
-      strcpy(radn,"Rad.dat");
-    }
-    else {
-      // temporary fix for new name of file
-      radn=strstr(fname,"events.tsv");
-      strcpy(radn,"eventradius.tsv");
-    }
+    std::string filename(datapath);
+    filename.append(SiteRegfile);
+    size_t pos=filename.find("Reg");
+    filename.replace(pos,3,"Rad");
+    
 
     //if (!read_SiteRadfile()) return 1;  //  
     for (unsigned int j=0; j<(unsigned int)MaxProxyReg; j++) RegSiteRad[j]=(int *)(malloc(numberOfRegions*sizeof(int)));
 
-    if (read_region_eventradius(std::string(fname),RegSiteRad)==0) return 1;
+    if (read_region_eventradius(filename,RegSiteRad)==0) return 1;
   }
   /* --------------------------------------------------------------- */
   /* if environmental conditions change, update region information
