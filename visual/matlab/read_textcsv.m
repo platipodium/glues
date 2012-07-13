@@ -2,7 +2,9 @@ function data=read_textcsv(filename, delim, textdelim)
 
 cl_register_function();
 
-if ~exist('filename') filename='redfit_all.tsv'; end
+if ~exist('filename') filename='/h/lemmen/projects/glues/tex/2012/jarcsclim/proxydescription_265_135.csv'; end
+
+%if ~exist('filename') filename='redfit_all.tsv'; end
 %if ~exist('filename') filename='/h/lemmen/projects/glues/m/holocene/redfit/data/output/total/taylordome_d18O_tot.dat.red'; end;
 if ~exist('delim') delim=' '; end;
 if ~exist('textdelim') textdelim='"'; end;
@@ -73,6 +75,7 @@ while 1
             eval(['data.' fnames{ntok} '{' num2str(nl) '} = tok;']);
         else          
 	      tok = strrep(tok,',','.');
+          %if isempty(str2num(tok)) tok=sprintf('''%s''',tok); end
           %fprintf('%s',tok);
           eval(['data.' fnames{ntok} ' = [data.' fnames{ntok} ' ' tok '];']);
         end

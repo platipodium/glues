@@ -19,6 +19,7 @@ arguments = {...
 for i=1:a.length eval([a.name{i} '=' clp_valuestring(a.value{i}) ';']); end
 
 dirs.total='~/projects/glues/m/holocene/redfit/data/eleven';
+dirs.total='~/projects/glues/tex/2012/jarcsclim/data';
 
 % Default values
 if ~exist('timeseries','var') timeseries=1; end
@@ -94,5 +95,10 @@ data.ts=ts;
 data.m50=m50;
 data.m2000=m2000;
 data.ut=ut;
+
+if ~isstruct(data) 
+    error('Data not found');;
+end
+
 
 return;

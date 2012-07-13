@@ -5,7 +5,7 @@ float	deltat	0.15
 	\d Specific adaptation constant for technology exploitation
 	\v 
 comment Spreading and trait exchange
-float	spreadv 0.002
+float	spreadv 0.0015
 	\u km/y
 	\d Population migration velocity 0.006
 	\v 
@@ -23,8 +23,8 @@ float	gdd_opt	0.7
 float	omega	0.04
 	\d Specific decrease in food productivity due to artisans
 	\v 
-comment gammab 0.00403
-float	gammab 0.00403
+comment gammab 0.0040
+float	gammab 0.0040
 	\u 1/y
 	\d Specific population growth rate, This should be corrected with the 0.929875 fluc factor
 	\v 

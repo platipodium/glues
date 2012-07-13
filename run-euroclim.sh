@@ -49,19 +49,16 @@ $SED -i '/eventfile/s/eventfile.*$/eventfile "EventSeries_134.tsv"/' $SCE
 
 
 # changed from eurolbk
-$SED -i '/spreadv/s/spreadv.*$/spreadv 0.002/' $PAR
-#$SED -i '/gammab/s/gammab.*$/gammab 0.00418/' $PAR
-
 $SED -i '/KnowledgeLoss/s/KnowledgeLoss.*$/KnowledgeLoss 0.8/' $PAR
+$SED -i '/spreadv/s/spreadv.*$/spreadv 0.0015/' $PAR
 
 # Loop over parameters for this scenario
-for (( i=1 ; i<10; i=i+1 )) ; do
-#for (( i=4 ; i<5; i=i+1 )) ; do
+#for (( i=1 ; i<-10; i=i+1 )) ; do
+for (( i=4 ; i<5; i=i+1 )) ; do
 #for (( i=4 ; i<5; i=i+1 )) ; do
   SCE=0.$i
 
   $SED -i '/flucampl/s/flucampl.*$/flucampl '$SCE'/' $DAT
-  $SED -i '/gammab/s/gammab.*$/gammab 0.00403/' $PAR
   LOG=${B}_${SCE}.log 
   NCIN=${SIM%%.sim}.nc
   NC=${LOG%%.log}.nc
@@ -73,7 +70,23 @@ for (( i=1 ; i<10; i=i+1 )) ; do
   test -f ${LOG} && $SED -i '/[A-d]/d' ${LOG}
 done
 
+exit
+#for .33 scenario
+  SCE=0.3
 
+  $SED -i '/flucampl/s/flucampl.*$/flucampl '0.33'/' $DAT
+  LOG=${B}_${SCE}.log 
+  NCIN=${SIM%%.sim}.nc
+  NC=${LOG%%.log}.nc
+  echo Running: $X $SIM 
+  echo File output: $NCIN ' -> '$NC >> $L
+  $X $SIM 2> ${LOG} && \
+  mv $NCIN $NC
+  #ncks -O -v time,region_neighbour,natural_fertility,temperature_limitation,population_size,population_density,technology,economies,farming,region,latitude,longitude,area,migration_density ${NCIN} ${NC}
+  test -f ${LOG} && $SED -i '/[A-d]/d' ${LOG}
+
+
+exit
 # Last scenario with most complete information
 SCE=1.0
 $SED -i '/flucampl/s/flucampl.*$/flucampl '$SCE'/' $DAT
