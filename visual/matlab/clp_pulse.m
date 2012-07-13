@@ -1,15 +1,25 @@
-function handle=clp_pulse(lon,lat)
-% handle=clp_pulse(lon,lat)
+function handle=clp_pulse(lon,lat,varargin)
+% handle=clp_pulse(lon,lat,varargin)
 
-ms=15;
-r=100:60:500;
+cl_register_function;
 
-h=m_range_ring(lon,lat,r);
-set(h,'Color','r');
+arguments = {...
+  {'col','r'},...
+  {'rings',100:60:500},...
+  {'MarkerSize',15},...
+};
+
+[args,rargs]=clp_arguments(varargin,arguments);
+for i=1:args.length   
+  eval([ args.name{i} ' = ' clp_valuestring(args.value{i}) ';']); 
+end
+
+h=m_range_ring(lon,lat,rings);
+set(h,'Color',col);
 nh=length(h);
 
-h(nh+1)=m_plot(lon,lat,'ro','MarkerSize',ms);
-set(h(nh+1),'MarkerFaceColor','y','LineWidth',2);
+h(nh+1)=m_plot(lon,lat,'ro','MarkerSize',MarkerSize);
+set(h(nh+1),'MarkerFaceColor','w','LineWidth',2,'MarkerEdgeColor',col);
 
 if nargout>0 handle=h; end
 

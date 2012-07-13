@@ -12,6 +12,7 @@ arguments = {...
   {'projection','equidistant'}...
   {'nogrid',0},...
   {'noaxes',0}...
+  {'axiscolor',[0.5 0.5 .5]},...
 };
 
 [args,rargs]=clp_arguments(varargin,arguments);
@@ -34,7 +35,7 @@ figure(gcf);
 if ~ishold(gcf) clf reset; end
 
 set(gcf,'userdata',cl_get_version);
-set(gca,'color','none');
+set(gca,'color','none','XColor',axiscolor,'YColor',axiscolor);
 
 %if (nogrid==0) m_grid; end%('backcolor',color_sea);
 if (nogrid==0)

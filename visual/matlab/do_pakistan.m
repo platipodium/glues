@@ -164,7 +164,7 @@ ncid=netcdf.open(file,'NOWRITE');
 varid=netcdf.inqVarID(ncid,'region'); region=netcdf.getVar(ncid,varid);
 varid=netcdf.inqVarID(ncid,'longitude'); longitude=netcdf.getVar(ncid,varid);
 varid=netcdf.inqVarID(ncid,'latitude'); latitude=netcdf.getVar(ncid,varid);
-varid=netcdf.inqVarID(ncid,'time'); time=netcdf.getVar(ncid,varid)/360;
+varid=netcdf.inqVarID(ncid,'time'); time=netcdf.getVar(ncid,varid)/360+2000;
 varid=netcdf.inqVarID(ncid,'area'); area=netcdf.getVar(ncid,varid);
 varid=netcdf.inqVarID(ncid,'population_density'); pdensity=netcdf.getVar(ncid,varid);
 varid=netcdf.inqVarID(ncid,'technology'); technology=netcdf.getVar(ncid,varid);

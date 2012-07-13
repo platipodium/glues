@@ -6,7 +6,7 @@ function cl_nc_deforestation(varargin)
 cl_register_function;
 
 arguments = {...
-  {'file','../../plasim_k550.nc'},...
+  {'file','../../euroclim_0.3.nc'},...
   {'climate','../../data/plasim_11k_vecode_685.nc'},...
 };
 
@@ -17,7 +17,10 @@ end
 
 %% Read variables from glues result file
 ncid=netcdf.open(file,'NC_NOWRITE');
-time=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'time'));
+varid=netcdf.inqVarID(ncid,'time');
+time=netcdf.getVar(ncid,varid);
+timeunit=netcdf.getAtt(ncid,varid,'units');
+time=cl_time2yearAD(time,timeunit);
 region=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'region'));
 farming=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'farming'));
 population_density=netcdf.getVar(ncid,netcdf.inqVarID(ncid,'population_density'));

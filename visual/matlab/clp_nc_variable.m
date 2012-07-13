@@ -19,7 +19,7 @@ arguments = {...
   {'figoffset',0},...
   {'timeunit','BP'},...
   {'timestep',1},...
-  {'marble',2},...
+  {'marble',0},...
   {'seacolor',0.7*ones(1,3)},...
   {'landcolor',.8*ones(1,3)},...
   {'transparency',0},...
@@ -29,13 +29,15 @@ arguments = {...
   {'div',1},...
   {'sub',0},...
   {'add',0},...
-  {'file','../../eurolbk_base.nc'},...%  {'retdata',NaN},...
+  {'file','../../euroclim_0.4.nc'},...%  {'retdata',NaN},...
   {'basename','variable'},...
   {'nocolor',0},...
   {'ncol',19},...
   {'nogrid',0},...
+  {'nocbar',0},...
   {'nocoast',0},...
   {'noaxes',0},...
+  {'axiscolor',[.5 .5 .5]},...
   {'notitle',0},...
   {'threshold',NaN},...
   {'flip',0},...
@@ -75,8 +77,6 @@ else
      nreg=length(ireg);
   end
 end
-
-
 
 if ~exist(file,'file')
     error('File does not exist');
@@ -162,6 +162,8 @@ if numel(data)>length(data)
   idimid=find(udimid==dimids);
   tid=netcdf.inqVarID(ncid,netcdf.inqDim(ncid,udimid));
   time=netcdf.getVar(ncid,tid);
+  timeunit=netcdf.getAtt(ncid,tid,'units');
+  time=cl_time2yearAD(time,timeunit);
   itime=find(time>=timelim(1) & time<=timelim(2));
   if isempty(itime)
       error('Not data in specified time range')
@@ -266,13 +268,16 @@ if isinf(latlim(2)) latlim(2)=80; end
   set(figid,'DoubleBuffer','on');    
   set(figid,'PaperType','A4');
   hold on;
-  if (marble<2) pb=clp_basemap('lon',lonlim,'lat',latlim,'nogrid',nogrid,'nocoast',nocoast); end
+  if (marble<2) pb=clp_basemap('lon',lonlim,'lat',latlim,'nogrid',nogrid,'nocoast',nocoast,'axiscolor',axiscolor); end
   if (marble==1)
     pm=clp_marble('lon',lonlim,'lat',latlim);
     if pm>0 alpha(pm,marble); end
   elseif (marble==2)
-    pb=clp_basemap('lon',lonlim,'lat',latlim,'nogrid',nogrid,'nocoast',1,'noaxes',noaxes);
+    pb=clp_basemap('lon',lonlim,'lat',latlim,'nogrid',nogrid,'nocoast',1,'noaxes',noaxes,'axiscolor',axiscolor);
     pm=clp_relief;
+  elseif (marble==3)
+    pb=clp_basemap('lon',lonlim,'lat',latlim,'nogrid',nogrid,'nocoast',1,'noaxes',noaxes,'axiscolor',axiscolor);
+    pm=clp_naturalearth('lon',lonlim,'lat',latlim);
   else
     if ~nocoast 
       m_coast('patch',landcolor);
@@ -301,14 +306,18 @@ if isinf(latlim(2)) latlim(2)=80; end
     
   
   end
+  
+set(gca,'YColor',axiscolor,'XColor',axiscolor);
 
-ncol=length(colormap);
+% DELETE: ncol=length(colormap);
 
   %% Invisible plotting of all regions
   %[hp,loli,lali,lon,lat]=clp_regionpath('lat',latlim,'lon',lonlim,'draw','patch','col',landcolor,'reg',reg);
+  %m_grid('backcolor','none','color','k');
+  %axes;
   
-  
-  [hp,loli,lali,lon,lat]=clp_regionpath('lat',latlim,'lon',lonlim,'draw','patch','col',landcolor,'rpath',rpath);  
+%  [hp,loli,lali,lon,lat]=clp_regionpath('lat',latlim,'lon',lonlim,'draw','patch','col',landcolor,'rpath',rpath);  
+   [hp,loli,lali,lon,lat]=clp_regionpath('reg',reg,'draw','patch','col',landcolor,'rpath',rpath);  
   ival=find(hp>0);
   if transparency alpha(hp(ival),0); end
   
@@ -337,7 +346,7 @@ for it=1:ntime
   
   titletext=description;
   if (ntime>1) titletext=[titletext ' ' num2str(time(it))]; end
-  if ~notitle ht=title(titletext,'interpreter','none'); end
+  if ~notitle ht=title(titletext,'interpreter','none','color',axiscolor); end
 
  
   %m_plot(lon,lat,'rs','MarkerSize',0.1);
@@ -389,8 +398,9 @@ for it=1:ntime
     fdir=fullfile(d.plot,'variable',varname);
     if ~exist('fdir','dir') system(['mkdir -p ' fdir]); end
   end
-  if (it==1) % && ~transparency
+  if (it==1) && ~nocbar% && ~transparency
     cb=colorbar('FontSize',15,'tag','colorbar');
+    %colormap(cmap);
     if length(units)>0 title(cb,units); end
     if minmax(2)>minmax(1)
       yt=get(cb,'YTick');

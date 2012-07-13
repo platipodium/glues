@@ -89,7 +89,7 @@ while iarg<=nargin
       latlim=[31,53];
    case 'eur'
       lonlim=[-10,40];
-      latlim=[36,66];
+      latlim=[36,56];
       
     case 'ind'
       lonlim=[65,91];latlim=[6,32];

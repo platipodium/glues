@@ -47,7 +47,7 @@ id=netcdf.getVar(ncid,varid);
 nid=length(id);
 
 varname='time'; varid=netcdf.inqVarID(ncid,varname);
-time=netcdf.getVar(ncid,varid)/360;
+time=netcdf.getVar(ncid,varid)/360+2000;
 if sum(round(time)-time)>0 error('Something wrong with time: year/day conflict?'); end
 
 
@@ -229,7 +229,7 @@ end
 % Put new time records and lat/lon grid
 for i=1:length(time)
   ovarid=netcdf.inqVarID(ncout,'time');
-  netcdf.putVar(ncout,ovarid,i-1,double(time(i)*360));
+  netcdf.putVar(ncout,ovarid,i-1,double((time(i)-2000)*360));
 end
 ovarid=netcdf.inqVarID(ncout,'lon');
 netcdf.putVar(ncout,ovarid,longrid);

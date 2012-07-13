@@ -2,11 +2,12 @@ function cl_eventdensity(varargin)
 
 arguments = {...
   {'nreg',685},... 
-  {'np',128},... 
+  {'np',134},... 
   {'flucperiod',175},...
-  {'timelim',[0 11]},... % in ka BP
+  {'timelim',[0 12]},... % in ka BP
   {'nofig',0},...
   {'noprint',0},...
+  {'threshold','adaptive'},...
 };
 
 cl_register_function;
@@ -23,20 +24,28 @@ for i=1:a.length
   end
 end
 
-evseriesfile=sprintf('EventSeries_%03d.tsv',np);
-evregionfile=sprintf('EventInReg_%03d_%03d.tsv',np,nreg);
+
+if ~isnumeric(threshold)
+  infix='.';
+else
+  infix=sprintf('_%03.1f.',threshold);
+end
+evseriesfile=sprintf('EventSeries_%03d%stsv',np,infix);
+evregionfile=sprintf('EventInReg_%03d_%03d%stsv',np,nreg,infix);
 %evradiusfile=sprintf('EventInRad_%03d_%03d.tsv',np,nreg);
-evdistfile=sprintf('EventInRad_%03d_%03d.tsv',np,nreg);
+evdistfile=sprintf('EventInRad_%03d_%03d%stsv',np,nreg,infix);
+evinfofile=sprintf('proxydescription_265_%3d%smat',np,infix);
 
 eventinreg=load(evregionfile,'-ascii');
 %eventinrad=load(evradiusfile,'-ascii');
 eventindist=load(evdistfile,'-ascii');
 evseries=load(evseriesfile,'-ascii');
+load(evinfofile); % into struct evinfo
 
 emax=size(evseries,2)-2;
 regionevents=zeros(nreg,emax)-1;
 
-reg='lbk'; [ireg,nreg,loli,lali]=find_region_numbers(reg);
+reg='all'; [ireg,nreg,loli,lali]=find_region_numbers(reg);
 lonlim=loli; latlim=lali;
 
 ireg=236; nreg=1;
@@ -64,11 +73,16 @@ for j=1:nreg
   
   wmax=max(max(eventindist(ir,1:nip)));
   %wp=wmax+1-squeeze(eventinrad(ir,1:nip));
-  wp=eventindist(ir,1:nip);
+  wp=exp(-eventindist(ir,1:nip)/2);
   if all(wp==0) wp(1:nip)=1; end
   for ip=1:nip
     %plot(evseries(p(ip),1:emax),wp(ip),'kd');
-    it=find(time>=evseries(p(ip),emax+1) & time<=evseries(p(ip),emax+2));
+    % weight by number of events
+    %it=find(time>=evseries(p(ip),emax+1) & time<=evseries(p(ip),emax+2));
+    
+    % weight by length of time series
+    it=find(time>=evinfo.t_min(p(ip)) & time<=evinfo.t_max(p(ip)));
+    
     wtime(it)=wtime(it)+1;
   end
   if ~nofig hk=plot(time,wtime,'k--','linewidth',3); end
@@ -90,7 +104,8 @@ for j=1:nreg
       %[mt,it]=min(abs(ev-time));
       %evalue=time;
       %evalue(it)=wp(ip)/wtime(it);
-      evalue=exp(-0.5*(ev-time).^2/(flucperiod/1000).^2)*wp(ipsort(ip))*mwtime/max(wp);
+      %evalue=exp(-0.5*(ev-time).^2/(flucperiod/1000).^2)*wp(ipsort(ip))*mwtime/max(wp);
+      evalue=5*exp(-0.5*(ev-time).^2/(flucperiod/1000).^2)*wp(ipsort(ip));
       mevalue=max([mevalue evalue]);
       value=value+evalue;
       %plot(time,evalue,'k-');
@@ -108,10 +123,15 @@ for j=1:nreg
   value(valid)=value(valid)./wtime(valid);
   %plot(time,value,'k-');
   [ut value]=movavg(time,value,flucperiod/1000);
+  %[ut value]=movavg(time,value,0.05);
   %
   
   value=cl_normalize(value);
-  [pvalue,ipeak]=findpeaks(value);
+  %[pvalue,ipeak]=findpeaks(value); % dsp toolbox
+  [pvalue,ipeak]=cl_findpeaks_new(value);
+  % todo: if no dsp toolbox
+  %[ipeak]=cl_findpeaks(value,-0.5);
+  %pvalue=value(ipeak);
   ipos=find(pvalue>0);
   ipeak=ipeak(ipos);
   pvalue=pvalue(ipos);
@@ -158,7 +178,7 @@ for j=1:nreg
   
   hp=patch([time,fliplr(time)],[evalue,0*evalue],'w','FaceColor',repmat(0.4,3,1),'FaceAlpha',0.9);
   uistack(hp,'down');
-  hst=plot(time,value*0-minval,'k:','color','w','LineWidth',2);
+  %hst=plot(time,value*0-minval,'k:','color','w','LineWidth',2);
  
   
   ylimit=get(gca,'ylim');
@@ -177,32 +197,49 @@ for j=1:nreg
   ineg=strmatch('-',ytl);
   ytl(ineg,:)=' ';
   set(gca,'YTickLabel',ytl);
-  ylabel('Relative intensity / number of series');
+  ylabel('Relative event intensity (A.U.)');
   set(gca,'XMinorTick','on'); set(gca,'yMinorTick','on');
   
-  %valid=find(he>0);
+  text(5.3,1,'Weighted sum','color','w','FontSize',14,'FontName','Times');
+  text(8,4,'Identified peaks','color',repmat(0.4,3,1),'FontSize',14,'FontName','Times');
+  text(10,-3,'Individual events from each time series','color','k','FontSize',14,'FontName','Times');
+
+  text(10.3,6.8,'Number of time series','color','k','FontSize',14,'FontName','Times');
+
   
-  legends{1}='No. of series';
+  %valid=find(he>0);
+  if (1==2)
+    legends{1}='No. of series';
   %for i=1:nip
   %  legends{i+3}=sprintf('Proxy %d',p(i));
   %end
-  legends{3}='Weighted sum';
-  legends{2}='Identified peaks';  
+    legends{3}='Weighted sum';
+    legends{2}='Identified peaks';  
   
-  pl=legend([hk hp hs],legends);
-  set(pl,'color','w','box','on','location','westoutside','fontSize',12);
-  pos=get(ax0,'pos');
-
+    pl=legend([hk hp hs],legends);
+    set(pl,'color','w','box','on','location','westoutside','fontSize',12);
+    pos=get(ax0,'pos');
+  end
+  
   cl_xticktitle('ka BP');
   
   if noprint continue; end
-  cl_print(1,'name',sprintf('eventdensity_%03d',ir),'ext','eps');
-  
+  if isnumeric(threshold)
+    cl_print(1,'name',sprintf('eventdensity_%03d_%03.1f',ir,threshold),'ext','pdf');
+  else
+  cl_print(1,'name',sprintf('eventdensity_%03d',ir),'ext','pdf');
+  end    
 end
 
 npeak=ceil(sum(sum(regionevents>0))/nreg);
 
-format=repmat('%.2f ',1,emax);
+save(sprintf('RegionEventTimes_%03d_%03d_%02d.mat',np,nreg,npeak),'np','nreg','npeak','emax','regionevents');
+
+regionevents=round(regionevents*1000);
+regionevents(regionevents<0)=-9999;
+regionevents=sort(regionevents,2,'descend');
+
+format=repmat('%05d ',1,emax);
 file=sprintf('RegionEventTimes_%03d_%03d_%02d.tsv',np,nreg,npeak);
 fid=fopen(file,'w');
 fprintf(fid,sprintf('%s\n',format),regionevents');
