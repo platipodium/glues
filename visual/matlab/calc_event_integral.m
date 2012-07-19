@@ -18,7 +18,9 @@ tmin=siminit;
 nr=685;
 nt=floor(abs(tmax-tmin*1.0)/timestep+1);
 regionfluc=zeros(nt,nr);
-time=1950-(tmax-[0:nt-1]*timestep);
+
+%
+time=1950-(([0:nt-1]*timestep)+tmin);
 
 for flucampl=0.0:0.1:1.0
 for it=1:nt

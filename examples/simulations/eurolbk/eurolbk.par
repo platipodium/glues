@@ -5,7 +5,7 @@ float	deltat	0.15
 	\d Specific adaptation constant for technology exploitation
 	\v 
 comment Spreading and trait exchange
-float	spreadv 0.0015
+float	spreadv 0.0005
 	\u km/y
 	\d Population migration velocity 0.006
 	\v 
