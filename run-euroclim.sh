@@ -50,12 +50,12 @@ $SED -i '/eventfile/s/eventfile.*$/eventfile "EventSeries_134.tsv"/' $SCE
 
 # changed from eurolbk
 $SED -i '/KnowledgeLoss/s/KnowledgeLoss.*$/KnowledgeLoss 0.8/' $PAR
-$SED -i '/spreadv/s/spreadv.*$/spreadv 0.0015/' $PAR
+$SED -i '/spreadv/s/spreadv.*$/spreadv 0.0005/' $PAR
 
 # Loop over parameters for this scenario
 #for (( i=1 ; i<-10; i=i+1 )) ; do
+#for (( i=0 ; i<1; i=i+1 )) ; do
 for (( i=4 ; i<5; i=i+1 )) ; do
-#for (( i=4 ; i<5; i=i+1 )) ; do
   SCE=0.$i
 
   $SED -i '/flucampl/s/flucampl.*$/flucampl '$SCE'/' $DAT
