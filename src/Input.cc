@@ -971,15 +971,20 @@ int read_EventRegTime() {
   unsigned int n=glues::IO<double>::read_ascii_table(ifs,data);
   ifs.close();
 
+  std::size_t numberOfEvents=data.at(1).size();
+
+
   assert(data.size() == numberOfRegions);
-  assert(data.at(1).size() == MaxEvent);
+  assert(numberOfEvents <= MaxEvent);
 
   std::cout << " " << data.size() << " regions x " << data.at(1).size() << " events"; 
 
   for (unsigned int i=0; i<numberOfRegions; i++) {
     for (unsigned int j=0; j<(unsigned int)MaxEvent; j++) {
-        //EventRegTime[i][j]=data.at(i).at(j);
-        *(EventRegTime+i*MaxEvent+j)=data.at(i).at(j);
+        if (j < numberOfEvents) 
+          *(EventRegTime+i*MaxEvent+j)=data.at(i).at(j);
+        else 
+          *(EventRegTime+i*MaxEvent+j)=-9999;
   }}
   std::cout << " OK" << std::endl;
 

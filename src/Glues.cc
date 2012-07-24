@@ -250,7 +250,7 @@ struct ParStringElem parSlist[14]={{"SimulationName",&SimulationName},{"ModelNam
   }
 
   /** This is a hack: fill EventRegTime[nreg x MaxEvent] from matlab calculation*/
-  read_EventRegTime();
+  if (flucampl>0) read_EventRegTime();
 
 
   /**
@@ -277,7 +277,7 @@ struct ParStringElem parSlist[14]={{"SimulationName",&SimulationName},{"ModelNam
    
   if(RunVarInd>0) set_parvector(RunVarInd,1);
 
-  dump_events();
+  if (flucampl>0) dump_events();
 
   /*std::vector<RegionalPopulation> population;
   std::vector<RegionalPopulation>::iterator p_iter;
