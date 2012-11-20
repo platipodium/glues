@@ -1,4 +1,4 @@
-function hdl = clp_ivc_period(varargin)
+function hdl = clp_ivc_indusreview(varargin)
 
 
 %% Load country boundaries
@@ -22,6 +22,8 @@ data=load('../../data/randall_ivc_data');
 latlim=[20 38];
 lonlim(2)=79.5;
 
+mg=repmat(0.6,1,3);
+
 close all
 clw=1;
 figure(1);
@@ -42,8 +44,9 @@ if ~ishold(gca); clf reset;
   mb=m_patch(plon,plat,'y','FaceAlpha',1.,'EdgeColor',repmat(0.6,1,3),'EdgeAlpha',1,'LineStyle','--','LineWidth',clw);
   mira=mira(mira>0);mafg=mafg(mafg>0);mind=mind(mind>0);%mtaj=mtaj(mtaj>0);
   mb=mb(mb>0);
-  set([mb;mafg;mira;mind],'FaceColor','none');
+  set([mb;mafg;mira;mind],'FaceColor','none','visible','off');
   m_grid; hold on;
+  m_coast('line','color',mg,'Linestyle','-');
 
   
   %old=imread('/Users/lemmen/projects/glues/tex/2012/indusreview/grafik/schwartzberg_old_river_channels.png');
@@ -55,7 +58,7 @@ m_plot([69.5,77.5,77.5,69.5,69.5],[28.5 28.5 35.4 35.4 28.5],'k.-','color',repma
   
 cities = {'Mehrgarh','Harappa','Kili Ghul Mohammad','Togau','Kechi Beg','Koldihwa','Mahagara','Sheri Khan Tarakai'}; % for Chapman paper
 cities = {'Mehrgarh','Amri','Kot Diji','Harappa','Mohenjo-Daro','Lothal','Dholavira',...
-    'Kalibangan','Ganweriwala'};
+    'Kalibangan','Ganweriwala','Pirak','Nausharu','Surat'};%,'Bahawalpur','Multan'};
 
 %  latcorr=[-0.2 -0.5 +0.4 0 0.4 0 0.3];
 for i=1:length(cities)
@@ -69,8 +72,13 @@ end
 % Additional cities
 pc(i+1)=m_plot(67.799,29.315,'ko','MarkerFaceColor',repmat(0.5,1,3),...
     'MarkerSize',7,'tag','Pirak');
-%pc(i+2)=m_plot(71.467,30.208,'ko','MarkerFaceColor',repmat(0.5,1,3),...
-%    'MarkerSize',7,'tag','Multan');?,'Bahawalpur','Multan'
+pc(i+2)=m_plot(71.467,30.208,'ko','MarkerFaceColor',repmat(0.5,1,3),...
+    'MarkerSize',7,'tag','Multan');
+pc(i+3)=m_plot(71.736603,29.796559,'ko','MarkerFaceColor',repmat(0.5,1,3),...
+    'MarkerSize',7,'tag','Dunyapur');
+pc(i+4)=m_plot(72.820129,21.199777,'ko','MarkerFaceColor',repmat(0.5,1,3),...
+    'MarkerSize',7,'tag','Surat');
+
 
 % Lakes
 pl(1)=m_plot(74.575,27.430,'ks','MarkerFaceColor',repmat(0.8,1,3),...
@@ -86,7 +94,7 @@ pcore=m_plot( 65.916800,24.833300,'kh','MarkerFaceColor',repmat(0.8,1,3),...
 
 % Passes
 pp(1)=m_text(71.144,34.093,'=','Vertical','middle','horiz','center','color','k',...
-    'tag','Khyber Pass','FontSize',14,'angle',30);
+    'tag','Khyber Pass','FontSize',14,'visible','off');
 
 
 % Some markers
@@ -104,7 +112,8 @@ for i=1:length(rivers)
     if strcmp('Indus',rivers(i).NAME) | strcmp('Ravi',rivers(i).NAME) ...
             | strcmp('Sutlej',rivers(i).NAME) | strcmp('Beas',rivers(i).NAME) ...
             | strcmp('Chenab',rivers(i).NAME)  | strcmp('Jhelum',rivers(i).NAME) ...
-            | strcmp('Yamuna',rivers(i).NAME)  | strcmp('Ganges',rivers(i).NAME)
+            | strcmp('Yamuna',rivers(i).NAME)  | strcmp('Ganges',rivers(i).NAME) ...
+            | strcmp('Kabul',rivers(i).NAME)  | strcmp('Swat',rivers(i).NAME) ...
       x=rivers(i).X;
       y=rivers(i).Y;
     %if any(x>lonlim(1)) & any(x<lonlim(2)) & any(y>latlim(1)) & any(y<latlim(2))

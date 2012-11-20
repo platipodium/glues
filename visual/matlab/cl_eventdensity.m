@@ -4,7 +4,7 @@ arguments = {...
   {'nreg',685},... 
   {'np',134},... 
   {'flucperiod',175},...
-  {'timelim',[0 12]},... % in ka BP
+  {'timelim',[3 11]},... % in ka BP
   {'nofig',0},...
   {'noprint',0},...
   {'threshold','adaptive'},...
@@ -51,6 +51,13 @@ lonlim=loli; latlim=lali;
 ireg=236; nreg=1;
 
 
+evcolors=jet(8);
+evcolors=0.5*evcolors;
+hsv=rgb2hsv(evcolors);
+hsv(:,2)=0.06;
+hsv(:,3)=1;
+brightcolors=hsv2rgb(hsv);
+
 for j=1:nreg
 
   ir=ireg(j);
@@ -67,7 +74,7 @@ for j=1:nreg
   p=eventinreg(ir,:);
   p=p(p>0);
   nip=length(p);
-  c=0.5*jet(nip);
+  %c=0.5*jet(nip);
   
   eventinrad=exp(-eventindist);
   
@@ -85,7 +92,7 @@ for j=1:nreg
     
     wtime(it)=wtime(it)+1;
   end
-  if ~nofig hk=plot(time,wtime,'k--','linewidth',3); end
+  if ~nofig hk=plot(time,-wtime,'k--','linewidth',3); end
   
   valid=find(wtime>0);
   mwtime=max(wtime);
@@ -110,11 +117,11 @@ for j=1:nreg
       value=value+evalue;
       %plot(time,evalue,'k-');
       if ~nofig
-        he(ip)=patch([time,fliplr(time)],[-evalue,0*evalue],'w','FaceColor',c(ip,:),'FaceAlpha',0.5);
+        he(ip)=patch([time,fliplr(time)],[evalue,0*evalue],'w','FaceColor',brightcolors(ip,:),'EdgeColor',evcolors(ip,:),'FaceAlpha',1.);
       end
      end
     if ne==0 & ~nofig
-      he(ip)=patch([time,fliplr(time)],[-value,0*value],'w','FaceColor',c(ip,:),'FaceAlpha',0.5,'visible','off');
+      he(ip)=patch([time,fliplr(time)],[value,0*value],'w','FaceColor',brightcolors(ip,:),'EdgeColor',evcolors(ip,:),'FaceAlpha',1.,'visible','off');
     end
   end
   
@@ -153,7 +160,7 @@ for j=1:nreg
   mg=repmat(0.5,1,3);
   
   if ~nofig
-    hs=patch([time,fliplr(time)],[value 0*value],'w','FaceColor',repmat(0.7,1,3),'FaceAlpha',0.9);
+    hs=patch([time,fliplr(time)],[-value 0*value],'w','FaceColor',repmat(0.7,1,3),'FaceAlpha',0.9);
   end
   
   %pvalue=value(ipeak);
@@ -176,13 +183,13 @@ for j=1:nreg
   end
   evalue=evalue*max(value)/max(evalue)*1.1;
   
-  hp=patch([time,fliplr(time)],[evalue,0*evalue],'w','FaceColor',repmat(0.4,3,1),'FaceAlpha',0.9);
+  hp=patch([time,fliplr(time)],[-evalue,0*evalue],'w','FaceColor',repmat(0.4,3,1),'FaceAlpha',1,'visible','off');
   uistack(hp,'down');
   %hst=plot(time,value*0-minval,'k:','color','w','LineWidth',2);
  
   
   ylimit=get(gca,'ylim');
-  set(gca,'ylim',[ -mevalue*1.1 max([evalue wtime])*1.1],'FontSize',15,'FontName','Times');
+  set(gca,'ylim',[min([-evalue -wtime])*1.1 mevalue*1.1 ],'FontSize',15,'FontName','Times');
   ax0=gca;
   
   itime=find(wtime==mwtime);
@@ -194,17 +201,20 @@ for j=1:nreg
   set(gcf,'pos',[pos(1:2) 700 340]);
   set(gca,'XDir','reverse','FontName','Times','FontSize',14);
   ytl=get(gca,'YTickLabel');
+  irem=[5:7];
+  ytl(irem,:)=' ';
   ineg=strmatch('-',ytl);
-  ytl(ineg,:)=' ';
+  ytl(ineg,1)=' ';
   set(gca,'YTickLabel',ytl);
   ylabel('Relative event intensity (A.U.)');
   set(gca,'XMinorTick','on'); set(gca,'yMinorTick','on');
   
-  text(5.3,1,'Weighted sum','color','w','FontSize',14,'FontName','Times');
-  text(8,4,'Identified peaks','color',repmat(0.4,3,1),'FontSize',14,'FontName','Times');
-  text(10,-3,'Individual events from each time series','color','k','FontSize',14,'FontName','Times');
-
-  text(10.3,6.8,'Number of time series','color','k','FontSize',14,'FontName','Times');
+  %text(5.3,-1,'Weighted sum','color','w','FontSize',14,'FontName','Times');
+  %text(8,-4,'Identified peaks','color',repmat(0.4,3,1),'FontSize',14,'FontName','Times');
+  text(10,3,'Individual events from each time series','color','k','FontSize',14,'FontName','Times');
+  text(10,-3,'Weighted sum with identified peaks','color',repmat(0.4,3,1),'FontSize',14,'FontName','Times');
+  
+  text(10.3,-6.8,'Number of time series','color','k','FontSize',14,'FontName','Times');
 
   
   %valid=find(he>0);

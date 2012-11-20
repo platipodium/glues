@@ -46,6 +46,13 @@ end
   
 evcolors=jet(8);
 evcolors=0.5*evcolors;
+    hsv=rgb2hsv(evcolors);
+    %brightcolors=brighten(evcolors,0.99);
+    hsv(:,2)=0.06;
+    hsv(:,3)=1;
+    brightcolors=hsv2rgb(hsv);
+
+
 evseries=evseries(:,1:end-2);
 
 reg='lbk'; [ireg,nreg,loli,lali]=find_region_numbers(reg);
@@ -107,7 +114,7 @@ for ir=39:1:39%length(ireg)
     %ps(ie)=m_plot([evinfo.Longitude(evids(ie)) rlon],[evinfo.Latitude(evids(ie)) rlat],...
     %    'k--','Color',dg,'LineWidth',2);
     pl(ie)=m_plot([evinfo.Longitude(evids(ie))],[evinfo.Latitude(evids(ie))],'rv','MarkerSize',...
-        11,'MarkerFaceColor',evcolors(ie,:),'MarkerEdgeColor',fw);
+        11,'MarkerFaceColor',brightcolors(ie,:),'MarkerEdgeColor',evcolors(ie,:));
     xpos(ie)=get(pl(ie),'XData');
     ypos(ie)=get(pl(ie),'YData');
   end
@@ -176,15 +183,10 @@ for ir=39:1:39%length(ireg)
     plot(data.ut(peakindex),data.norm(peakindex),'rv');
     figure(2); 
 
-    ax(ie)=axes('Position',[pos0(1) 0.03+pos0(2)+height*(ie-1.0) pos0(3) height],...
+    ax(ie)=axes('Position',[pos0(1) 0.03+pos0(2)+height*(8.0-ie) pos0(3) height],...
         'XDir','reverse','Xlim',timelim);
     hold on;
   
-    hsv=rgb2hsv(evcolors);
-    %brightcolors=brighten(evcolors,0.99);
-    hsv(:,2)=0.06;
-    hsv(:,3)=1;
-    brightcolors=hsv2rgb(hsv);
     
     patch([timelim,fliplr(timelim)],2*thresh*[1 1 -1 -1],'r','EdgeColor','none',...
         'FaceColor',brightcolors(ie,:));
@@ -230,14 +232,14 @@ for ir=39:1:39%length(ireg)
   
   % Manual tweaking for region 236
   if ireg(ir)==236
-     set(ax(1),'Position',get(ax(1),'Position')+[0 -0.02 0 0]);
-     set(ax(2),'Position',get(ax(2),'Position')+[0 -0.01 0 0]);
-     set(ax(3),'Position',get(ax(3),'Position')+[0 -0.02 0 0]);
-     set(ax(4),'Position',get(ax(4),'Position')+[0 -0.01 0 0]);
-     set(ax(5),'Position',get(ax(5),'Position')+[0 -0.01 0 0]);
-     set(ax(6),'Position',get(ax(6),'Position')+[0 -0.005 0 0]);
-     set(ax(7),'Position',get(ax(7),'Position')+[0 +0.005 0 0]);
-     set(ax(8),'Position',get(ax(8),'Position')+[0 +0.01 0 0]);
+     set(ax(1),'Position',get(ax(1),'Position')+[0 +0.075 0 0]);
+     set(ax(2),'Position',get(ax(2),'Position')+[0 +0.07 0 0]);
+     set(ax(3),'Position',get(ax(3),'Position')+[0 +0.05 0 0]);
+     set(ax(4),'Position',get(ax(4),'Position')+[0 +0.040 0 0]);
+     set(ax(5),'Position',get(ax(5),'Position')+[0 +0.020 0 0]);
+     set(ax(6),'Position',get(ax(6),'Position')+[0 +0.010 0 0]);
+     set(ax(7),'Position',get(ax(7),'Position')+[0 -0.0 0 0]);
+     set(ax(8),'Position',get(ax(8),'Position')+[0 -0.015 0 0]);
      set(ptt(8),'Position',[ 7.2304   -4.5997   17.3205]);
      set(ptt(7),'Position',[ 7.7650    2.0842   17.3205]);
      set(ptt(6),'Position',[ 5.5899    2.7725   17.3205]);

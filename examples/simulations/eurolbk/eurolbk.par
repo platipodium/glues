@@ -48,6 +48,6 @@ comment knowledge loss under stress
 float	LiterateTechnology	12.0
 	\v 
 	\d technology corresponding to literacy and decreased knowledge loss in crises
-float	KnowledgeLoss 0.8
+float	KnowledgeLoss 0.3
 	\d knowledge loss in tech and ndom relative to RGR (RGR<0: crises)
 	\v 

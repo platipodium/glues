@@ -48,17 +48,23 @@ RegionalPopulation::RegionalPopulation() {
   ndommax = 0;
   biondommax = 1;
   region = 0;
-  actualfertility=0;
+  actualfertility=tlim=0;
   germs=1;
   resist=0;
   size=0;
 }
 
 
-double RegionalPopulation::Tlim() {return region->Tlim();}
+double RegionalPopulation::Tlim() {
+  //
+  //return tlim;
+  region->Tlim();
+  }
 
-double RegionalPopulation::SubsistenceIntensity() {return sqrt(technology)*(1-qfarming)+
-    (region->Tlim()*technology)*ndomesticated*qfarming; }
+double RegionalPopulation::SubsistenceIntensity() {
+	//return sqrt(technology)*(1-qfarming)+(region->Tlim()*technology)*ndomesticated*qfarming; 
+	return sqrt(technology)*(1-qfarming)+(tlim*technology)*ndomesticated*qfarming; 
+}
 
 
 RegionalPopulation::RegionalPopulation(double s, double f,
@@ -74,6 +80,7 @@ RegionalPopulation::RegionalPopulation(double s, double f,
   region = r;
   actualfertility=0;
   germs=ge;
+  tlim=tlim0=tl;
   resist=re;
   naturalfertility=nf;
   size=region->Area()*density;
@@ -237,7 +244,7 @@ double RegionalPopulation::RelativeGrowthrate() {
 
   double literacy;
   double expo;
-  double tlim = region->Tlim();
+  //double tlim = region->Tlim();
   
   nrat = ndomesticated/(ndomesticated+1);
   art  = max(EPS,1-omega*technology);
@@ -313,7 +320,8 @@ double RegionalPopulation::drdT() {
   double dydT,dpdT,dmdT; 
   
   dydT=-0.5*actexploit/technology;
-  dpdT=art*((1-qfarming)*0.5/sqrt(teff)+region->Tlim()*qfarming*ndomesticated);
+  //dpdT=art*((1-qfarming)*0.5/sqrt(teff)+region->Tlim()*qfarming*ndomesticated);
+  dpdT=art*((1-qfarming)*0.5/sqrt(teff)+tlim*qfarming*ndomesticated);
   dpdT-=omega*product/art;
  // dmdT=1.0*disease/teff;
   //  dmdT=disease*1./(LiterateTechnology);
@@ -333,6 +341,7 @@ inline double RegionalPopulation::drdQ() {
   dydQ=0;
   
   dpdQ=-sqrt(teff)+(region->Tlim()*technology)*ndomesticated;
+  dpdQ=-sqrt(teff)+(tlim*technology)*ndomesticated;
   return gammab*(dydQ*product+actualfertility*art*dpdQ)+dmdQ;
 }
 
@@ -340,8 +349,11 @@ inline double RegionalPopulation::drdN() {
     double dydN=0,dpdN,dmdN=0;
   /*double nratd=ndomesticated+1;
     dydN=0.5*(cropfertility-naturalfertility)*region->Tlim()*qfarming/(nratd*nratd); */
-    dpdN=(region->Tlim()*technology)*qfarming*art;
-    return gammab*(dydN*product+actualfertility*dpdN)+dmdN;
+    dpdN=(tlim*technology)*qfarming*art;
+    //dpdN=(region->Tlim()*technology)*qfarming*art;
+    //std::cerr << region->Tlim() << " " << tlim << std::endl;
+    dpdN=(tlim*technology)*qfarming*art; // TODO for testing against 547
+    return gammab*(dydN*product+actualfertility*dpdN)+dmdN; 
 }
 
 inline double RegionalPopulation::drdR() {

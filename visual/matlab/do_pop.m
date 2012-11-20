@@ -3,7 +3,7 @@
 cl_register_function;
 
 %% Read results file
-file='lkk11_0.4_20110413.nc';
+file='../matlab/lkk11_0.4_20110413.nc';
 if ~exist(file,'file') error('File does not exist'); end
 ncid=netcdf.open(file,'NC_NOWRITE');
 

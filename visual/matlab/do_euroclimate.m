@@ -10,7 +10,7 @@ datastring=datastrings{1};
 proxyfile='proxydescription_265_134.csv';
 
 % Define regional and temporal limitation
-reg='ecl'; [ireg,nreg,loli,lali]=find_region_numbers(reg);
+reg='cam'; [ireg,nreg,loli,lali]=find_region_numbers(reg);
 
 lonlim=loli; latlim=lali;
 timelim=[-7000 -3000];
@@ -21,9 +21,6 @@ basesce='eurolbk';
 
 %--------------------------------------------------------------------------------
 %% preparatory color, symbol and file handling 
-
-letters='ABCDEFGHIJKLMNOPQRSTUVW';
-letters=letters(1:nhreg);
 
 sites=cl_read_neolithic(datastring,[-12000 0],lonlim,latlim);
 matfile=strrep(proxyfile,'.csv','.mat');
@@ -112,40 +109,89 @@ end
 
 
 %% Print latex table of Events affecting certain regions
-if (1==-1)
+% Table 1 of manuscript
+valid=find(evinfo.No(ev)~=80);
+if (1==1)
   c=0;
-  for iev=1:nev
-    evtimes=1050-evseries(ev(iev),:)*1000;
+  for iev=1:ceil(length(valid)/2)
+    evtimes=1050-evseries(ev(valid(iev)),:)*1000;
     j=find(evtimes>=-9500 & evtimes<=timelim(2));
     evtimes=round(abs(evtimes));
-    if any(evinfo.No(ev(iev))==[80]); continue; end
-    fprintf('%d & %s & %s &',evinfo.No(ev(iev)),evinfo.Plotname{ev(iev)},evinfo.Proxy{ev(iev)});
+    fprintf('%d & %s & %s &',evinfo.No(ev(valid(iev))),evinfo.Plotname{ev(valid(iev))},evinfo.Proxy{ev(valid(iev))});
     if isempty(j) fprintf(' none '); else
     fprintf(' %d',evtimes(j(end)));
     if length(j)>1 fprintf('/%d',fliplr(evtimes(j(1:end-1)))); end
     end
-    fprintf(' & \\citealt{%s}',evinfo.Source{ev(iev)});
-    c=c+1;
-    if mod(c,2)==0 fprintf('\\\\ \n');  
+    fprintf(' & \\citealt{%s}',evinfo.Source{ev(valid(iev))});
+    
+    jev=iev+ceil(length(valid)/2);
+    if jev>length(valid)  fprintf(' & & & &\\\\ \n');
     else
-      fprintf(' & '); 
-      if (iev==nev) fprintf(' & & & &\\\\ \n'); 
+      evtimes=1050-evseries(ev(valid(jev)),:)*1000;
+      j=find(evtimes>=-9500 & evtimes<=timelim(2));
+      evtimes=round(abs(evtimes));
+      fprintf(' & %d & %s & %s &',evinfo.No(ev(valid(jev))),evinfo.Plotname{ev(valid(jev))},evinfo.Proxy{ev(valid(jev))});
+      if isempty(j) fprintf(' none '); else
+      fprintf(' %d',evtimes(j(end)));
+      if length(j)>1 fprintf('/%d',fliplr(evtimes(j(1:end-1)))); end
       end
+      fprintf(' & \\citealt{%s}\\\\\n',evinfo.Source{ev(valid(jev))});
     end
-  end  
+  end
   
   for iev=1:nev
      fprintf('%s,',evinfo.Source{ev(iev)});
   end
+  fprintf('\n\n');  
+end
+
+%% Print latex table of Events affecting certain regions
+% Table S1 of manuscript
+valid=find(evinfo.No~=80);
+if (1==1)
+  c=0;
+  for iev=1:ceil(length(valid)/2)
+    evtimes=1050-evseries(valid(iev),:)*1000;
+    j=find(evtimes>=-9500 & evtimes<=timelim(2));
+    evtimes=round(abs(evtimes));
+    fprintf('%d & %s & %s &',evinfo.No(valid(iev)),evinfo.Plotname{valid(iev)},evinfo.Proxy{valid(iev)});
+    if isempty(j) fprintf(' none '); else
+    fprintf(' %d',evtimes(j(end)));
+    if length(j)>1 fprintf('/%d',fliplr(evtimes(j(1:end-1)))); end
+    end
+    fprintf(' & \\citealt{%s}',evinfo.Source{valid(iev)});
+    
+    jev=iev+ceil(length(valid)/2);
+    if jev>length(valid)  fprintf(' & & & &\\\\ \n');
+    else
+      evtimes=1050-evseries(valid(jev),:)*1000;
+      j=find(evtimes>=-9500 & evtimes<=timelim(2));
+      evtimes=round(abs(evtimes));
+      fprintf(' & %d & %s & %s &',evinfo.No(valid(jev)),evinfo.Plotname{valid(jev)},evinfo.Proxy{valid(jev)});
+      if isempty(j) fprintf(' none '); else
+      fprintf(' %d',evtimes(j(end)));
+      if length(j)>1 fprintf('/%d',fliplr(evtimes(j(1:end-1)))); end
+      end
+      fprintf(' & \\citealt{%s}\\\\\n',evinfo.Source{valid(jev)});
+    end
+  end
+  
+  for iev=1:nev
+     fprintf('%s,',evinfo.Source{ev(iev)});
+  end
+  fprintf('\n\n');  
  
 end
+
+ 
+
 
 
 %% Print latex table of Regions
 if (1==-11)
   for ireg=1:size(evinreg,2)
 
-    for iev=1:length(evinfo.No)
+    for iev=1:length(evinfo.No) 
       evtimes=1050-evseries(iev,1:end-2)*1000;
       j=find(evtimes>=-9500 & evtimes<=timelim(2));
       evtimes=round(abs(evtimes));
@@ -176,7 +222,7 @@ dg=repmat(0.3,1,3);
 % Decide which plots to make
 % 1: proxy location, region, and sites map
 doplots=[4,8,9];
-
+doplots=33;
 %--------------------------------------------------------------------------
 %% Figure 2 from clP_event and cl_eventdensity.m
 
@@ -236,13 +282,16 @@ if any(doplots==-3)
 end
 if any(doplots==33) 
   movtime=-8500:10:-2500;
-  movtime=-7500:10:-3000;
+  movtime=-5500:10:1000;
   nmovtime=length(movtime);
   sce='0.4';
   for it=1:nmovtime
-    [d,b]=clp_nc_variable('var','farming','reg','lbk','marble',3,'transparency',1,'nocolor',0,...
+      
+    file=fullfile('../..',sprintf('%s_%s.nc',basesce,sce));
+
+    [d,b]=clp_nc_variable('var','farming','reg',reg,'marble',0,'transparency',1,'nocolor',0,...
       'showstat',0,'lim',[0 1],'timelim',movtime(it),'nocbar',1,...
-      'file',[basesce '_' sce '.nc'],'figoffset',0,'sce',[sce '_' sprintf('%03d_%05d',it,movtime(it))],'noprint',1);
+      'file',file,'figoffset',0,'sce',[sce '_' sprintf('%03d_%05d',it,movtime(it))],'noprint',1);
     m_coast('color','k');
     m_grid('box','fancy','linestyle','none');
     peaki=find(abs(peakinfo(:,1)-movtime(it))<=175);
@@ -256,7 +305,7 @@ if any(doplots==33)
     end
 
     sitei=find(sites.time<movtime(it));
-    if ~isempty(sitei) 
+    if ~isempty(sitei)
       m_plot(sites.longitude(sitei),sites.latitude(sitei),'k^');
     end
 
@@ -270,7 +319,17 @@ if any(doplots==33)
 %     cm=findobj(cm,'-property','CData');
 %     cmap=get(cm,'CData');
 %   
-    cl_print('name',b,'ext','png','res',100);
+  
+       [fp,fn,fe]=fileparts(b);
+       fn=[fn fe];
+       findstr(sce,fn);
+       avidir=fullfile(fp,fn(1:findstr(sce,fn)+length(sce)-1));
+    if (it==1)
+        if ~exist(avidir,'file') mkdir(avidir); end 
+       delete(fullfile(avidir,'*'));
+    end
+
+    cl_print('name',fullfile(avidir,fn),'ext','png','res',300);
   end
   % Command line postprocessing
   %mencoder mf://farming_lbk_66_0.3_*.png  -mf w=800:h=600:fps=5:type=png -ovc lavc -lavcopts vcodec=mpeg4:mbd=2:trell -oac copy -o output.avi
@@ -297,7 +356,7 @@ ncid=netcdf.open(file,'NOWRITE');
   lon=double(netcdf.getVar(ncid,varid)); % need to be corrected
   varid=netcdf.inqVarID(ncid,'area');
   area=double(netcdf.getVar(ncid,varid));
-%  ncks -A -v region_neighbour euroclim_0.4.nc basesce_0.4.nc
+%  ncks -A -v region_neighbour euroclim_0.4.nc eurolbk_0.4.nc
   varid=netcdf.inqVarID(ncid,'region_neighbour');
   neigh=netcdf.getVar(ncid,varid);
   netcdf.close(ncid);
@@ -326,7 +385,7 @@ end
 % Process the output file with inkscape to smoothen lines
 
 if any(doplots==4)
-  for isce=1:nsce
+  for isce=nsce:-1:1
     figure(30+isce); clf reset;
     sce=sprintf('%3.1f',sces(isce));
     file=fullfile('../..',sprintf('%s_%s.nc',basesce,sce));
@@ -342,16 +401,23 @@ if any(doplots==4)
     dtimeedges=[[500 inf];];
     dlws=[.5 2 4 6 8 10];
     dlws=[4 6];
+    clear pst;
     for i=1:length(ireg)
       ir=ireg(i);
       for in=1:length(find(neigh(ir,:)>0))
          jr=neigh(ir,in)+1;
          if ~any(jr==ireg) continue; end         
-         dtime=abs(timing(ir,isce)-timing(jr,isce));
+         if all(isnan([timing(ir,isce) timing(jr,isce)])) dtime=0;
+         elseif any(isnan([timing(ir,isce) timing(jr,isce)])) dtime=inf;
+         else dtime=abs(timing(ir,isce)-timing(jr,isce));
+         end
          dtiming(ir,jr)=dtime;
          mindtime=dtimeedges(1,1);
          if dtime<mindtime continue; end
-         ilws=find(dtime>=dtimeedges(:,1) & dtime<dtimeedges(:,2));
+         ilws=find(dtime>=dtimeedges(:,1) & dtime<=dtimeedges(:,2));
+         if isempty(ilws)
+             warning('Please adjust d time edges');
+         end
          jpath=find(regionpath(ir,:,3)==jr);
          jlon=regionpath(ir,jpath,1);
          jlat=regionpath(ir,jpath,2);
@@ -360,19 +426,21 @@ if any(doplots==4)
          pst(i)=m_plot(jlonlat(:,1),jlonlat(:,2),'k-','LineWidth',dlws(ilws));
        end
     end
-    pst=pst(ishandle(pst));
+    if ~exist('pst','var') continue; end
+      pst=pst(ishandle(pst));
      
-    clear ltext;
-    lobj=[];
-    for i=1:size(dtimeedges,1);
-      iobj=findobj(pst,'LineWidth',dlws(i));
-      lobj(i)=iobj(1);
-      ltext{i}=sprintf('%4d-%4d a',dtimeedges(i,1),dtimeedges(i,2));
-      if i==size(dtimeedges,1)
-        ltext{i}=sprintf('> %4d a',dtimeedges(i,1));
+      clear ltext;
+      lobj=[];
+      for i=1:size(dtimeedges,1);
+        iobj=findobj(pst,'LineWidth',dlws(i));
+        lobj(i)=iobj(1);
+        ltext{i}=sprintf('%4d-%4d a',dtimeedges(i,1),dtimeedges(i,2));
+        if i==size(dtimeedges,1)
+          ltext{i}=sprintf('> %4d a',dtimeedges(i,1));
+        end
       end
-    end
-    legend(lobj,ltext,'location','BestOutside');
+      cl=legend(lobj,ltext);
+      set(cl,'location','BestOutside');
     
     plotname=fullfile('../plots/variable/farming',sprintf('timing_stagnation_%s_%s_%s_%d',basesce,strrep(sce,'.',''),reg,length(ireg)));
     cl_print('name',plotname,'ext','pdf');
@@ -401,15 +469,14 @@ if any(doplots==4)
       'noprint',1,'notitle',1,'ncol',ncol,'cmap','cl_gyrm'); 
 
     hdf=findobj(gcf,'-property','EdgeColor','-and','-property','FaceColor');
+    hdfn=findobj(hdf,'FaceColor','none'); % Black Sea
     hdf=findobj(hdf,'-not','FaceColor','none');
-    nh=length(hdf);
-    fcc=get(hdf,'FaceColor');
-    fc=zeros(nh,3)*1.0;
-
-    for ih=1:nh
-      fc(ih,:)=double(fcc{ih});
-    end
-    hdf=hdf(find(sum(fc)>0));
+    fc=cell2mat(get(hdf,'FaceColor'));
+    
+    seacolor=[0.7 0.7 1.0];
+    [hs,ihs]=min(hdf); % minimum handle is the background sea
+    set([hdfn;hs],'FaceColor',seacolor);
+    hdf=hdf([1:ihs-1 ihs+1:end]);
     
     set(hdf,'Edgecolor','none')
     cm=get(gcf,'colormap');
@@ -464,17 +531,102 @@ if any(doplots==4)
     ct=findobj(gcf,'-property','FontName');
     set(ct,'FontSize',14,'FontName','Times','FontWeight','normal');
         
-    for ir=1:-nhreg
-        m_text(lon(hreg(ir)+1),lat(hreg(ir)+1),letters(ir),'background','w',...
-            'Horizontal','center','Vertical','middle');
-    end
-    m_coast('color','k');
+     m_coast('color','k');
     m_grid('box','on','linestyle','none');
     
     plotname=fullfile('../plots/variable/farming',sprintf('timing_%s_%s_%s_%d',basesce,strrep(sce,'.',''),reg,length(ireg)));
     cl_print('name',plotname,'ext',{'pdf','png'},'res',600);
   
+     
+  end % of for loop
+end
+
+
+%% Nice gray maps of farming timing
+if any(doplots==4)
+  %% plot farming timing for all scenarios 
+  ncol=10;
+  %cmap=flipud(vivid(ncol));
+  cmap=flipud(cl_gyrm(ncol));
+  iscol=floor((sites.time-min(timelim))./(timelim(2)-timelim(1))*ncol)+1;
+  iscol(iscol<1)=1;
+  viscol=find(iscol<=ncol);
+
+  for s=[0.0 0.4]
+    figure(2); clf;
+    sce=sprintf('%3.1f',s);
+    file=['../../' basesce '_' sce '.nc'];
+    [data,basename]=clp_nc_variable('var','farming','threshold',0.5,'reg','ecl','marble',0,'transparency',1,'nocolor',1,...
+      'showstat',0,'timelim',[-7500 -3500],'showtime',0,'flip',1,'showvalue',0,...
+      'file',file,'figoffset',0,'sce',sce,'nohatch',0,...
+      'noprint',1,'notitle',1,'ncol',ncol); 
+
+    hdf=findobj(gcf,'-property','EdgeColor','-and','-property','FaceColor');
+    hdfn=findobj(hdf,'FaceColor','none'); % Black Sea
+    hdf=findobj(hdf,'-not','FaceColor','none');
+    fc=cell2mat(get(hdf,'FaceColor'));
+    
+    fc=get(gcf,'Children');
+    ax1=min(fc);
+    
+    seacolor='none';
+    [hs,ihs]=min(hdf); % minimum handle is the background sea
+    set([hdfn;hs],'FaceColor',seacolor);
+    hdf=hdf([1:ihs-1 ihs+1:end]);
+    
+    bluobj=findobj('Color','b');
+    set(bluobj,'Color','k');
+    
+    %set(hdf,'Edgecolor','none')
+    cm=get(gcf,'colormap');
+    
+    cb=findobj(gcf,'tag','AddedColorbar');
+    cbc=get(cb,'Children');
+
+    set(cb,'Ticklength',[0 0],'box','off');
+    
+    
+    pos=get(cb,'Position');
+    %set(cb,'Position',pos.*[1+pos(3) 1 2.0 1]
+    ytl=get(cb,'YTickLabel');
+    if iscell(ytl) ytl=char(ytl{1}); end
+    ytl(:,1)=' ';
+    set(cb,'YTickLabel',ytl);
+    ytt=get(cb,'Title');
+    if iscell(ytt) ytt=ytt{1}; end
+    set(ytt,'String','Year BC','FontSize',14,'FontName','Times','FontWeight','normal');
+    hatchinfo=get(cb,'Userdata');
+    hatchstyles=hatchinfo{1};
+    hatchdensities=hatchinfo{2};
+    axes(ax1);
+    ps=0;
+    for i=1:length(viscol)
+        ic=iscol(viscol(i));
+        [xlon,xlat]=m_ll2xy(sites.longitude(viscol(i)),sites.latitude(viscol(i)));
+        mr=m_range_ring(sites.longitude(viscol(i)),sites.latitude(viscol(i)),50,4,'color','k');       
+        
+        xp=get(mr,'XData');
+        yp=get(mr,'YData');
+        greyval=repmat(0.5,1,3);
+        cl_hatch(xp,yp,hatchstyles{ncol+1-ic},0,hatchdensities(ncol+1-ic),'color',greyval,'linewidth',.5);
+        
+        %ps(i)=
+        %m_plot(sites.longitude(viscol(i)),sites.latitude(viscol(i)),'k^','MarkerFaceColor',mcolor,...
+        %    'MarkerEdgeColor',cmap(iscol(viscol(i)),:),'MarkerSize',5);
+        %plot(ax1,xlon,xlat,'k^','MarkerFaceColor',mcolor,...
+        %    'MarkerEdgeColor',cmap(iscol(viscol(i)),:),'MarkerSize',5);
+    end
+    
+    ct=findobj(gcf,'-property','FontName');
+    set(ct,'FontSize',14,'FontName','Times','FontWeight','normal');
+        
+      m_coast('color','k');
+    m_grid('box','on','linestyle','none');
+    
+    plotname=fullfile('../plots/variable/farming',sprintf('timing_%s_%s_%s_%d_bw',basesce,strrep(sce,'.',''),reg,length(ireg)));
+    cl_print('name',plotname,'ext',{'pdf','png'},'res',600);
   
+     
   end % of for loop
 end
 
@@ -799,7 +951,7 @@ if any(doplots==8)
       ylabel('Data: Reconstructed duration (years)');
       limit=[100 1400];
       valid1=find(isfinite(stranstime(:,1)) & isfinite(transtime(:,1)) & transtime(:,1)<1500);
-      valid5=find(isfinite(stranstime(:,isce)) & isfinite(transtime(:,isce))& transtime(:,isce)<1500);
+      valid5=find(isfinite(stranstime(:,isce)) & isfinite(transtime(:,isce)) & transtime(:,isce)<1500);
       limit1=cl_minmax(transtime(valid1,1));
       limit5=cl_minmax(transtime(valid5,isce));
       p2(1)=plot(limit,limit,'k--','color',lg,'LineWidth',2,'visible','on');
@@ -826,11 +978,22 @@ if any(doplots==8)
       
       legend([p2(3) p2(2) p2(5)],'with events','without','lin. regression','location','northeastoutside');
       cl_print('name','transition_duration','ext','pdf');
+      
+      
+      [r,p]=corrcoef(transtime(valid1,1),transtime(valid5,isce));
+      fprintf('Duration 1/5 R^2=%.2f n=%d p=%.3f\n',r(2,1).^2,length(valid1),p(2,1));
+  
+     
+      dtranstime=transtime(valid1,1)-transtime(valid5,isce);
+      fprintf('Difference min/max/median %d--%d, %d\n',cl_minmax(dtranstime),round(median(dtranstime)));
+      fprintf('Difference mean+-std %d+-%d\n',round(mean(dtranstime)),round(std(dtranstime)));
+ 
+      
     end
     
     
     
-    timelim=[-8000 3500]
+    timelim=[-8000 3500];
     dt=2*radius;
    %ivalid=find(isfinite(stiming) & stiming<timelim(2)+dt & stiming>timelim(1)-dt...
    %    & timing < timelim(2)+dt & timing >timelim(1)-dt   ... %;%...       
@@ -896,9 +1059,25 @@ if any(doplots==8)
       p2(5)=plot(limit5,limit5*b2(1)+b2(2),'k-','color','k','visible','on','lineWidth',4);
  
       [r,p]=corrcoef(timing(ireg(valid1),1),stiming(valid1));
+      dtiming=timing(ireg(valid1),1)-stiming(valid1);
       fprintf('Onset 1 R^2=%.2f n=%d p=%.3f\n',r(2,1).^2,length(valid1),p(2,1));
+      fprintf('Difference min/max/median %d--%d, %d\n',cl_minmax(dtiming),round(median(dtiming)));
+      fprintf('Difference mean+-std %d+-%d\n',round(mean(dtiming)),round(std(dtiming)));
+ 
+      
       [r,p]=corrcoef(timing(ireg(valid5),isce),stiming(valid5));
+      dtiming=timing(ireg(valid5),isce)-stiming(valid5);
       fprintf('Onset 5 R^2=%.2f n=%d p=%.3f\n',r(2,1).^2,length(valid5),p(2,1));
+      fprintf('Difference min/max/median %d--%d, %d\n',cl_minmax(dtiming),round(median(dtiming)));
+      fprintf('Difference mean+-std %d+-%d\n',round(mean(dtiming)),round(std(dtiming)));
+      
+      [r,p]=corrcoef(timing(ireg(valid5),isce),timing(ireg(valid1),1));
+      fprintf('Onset 1/5 R^2=%.2f n=%d p=%.3f\n',r(2,1).^2,length(valid1),p(2,1));
+      dtiming=timing(ireg(valid5),isce)-timing(ireg(valid1),1);
+      fprintf('Difference min/max/median %d--%d, %d\n',cl_minmax(dtiming),round(median(dtiming)));
+      fprintf('Difference mean+-std %d+-%d\n',round(mean(dtiming)),round(std(dtiming)));
+    
+      %fprintf('Difference quantiles %d %d %d %d %d\n',quantile(dtiming,[5 25 50 75 95]/100));
       
       
       valid=find(isfinite(timing(ireg,isce)) & isfinite(stiming) & isfinite(transtime(:,isce))...
@@ -957,10 +1136,13 @@ if any(doplots==9)
   a=[dtranstime dtiming timing(ireg,nsce) timing(ireg,1) ireg];
   %fprintf('%4d %4d %5d %5d %3d\n',a(itransreg,:)');
   
-  hreg=278;
-  ir=find(abs(timing(ireg,1)+6200)<100);
-  hreg=ireg(ir(1));
+  hreg=179;
+  %ir=find(abs(timing(ireg,1)+6200)<100);
+  %hreg=ireg(ir(1));
   % for eurolbk, very nice hreg=199
+  %for ir=6:length(ireg)
+  %    hreg=ireg(ir);
+  
   
   farm1=100*clp_nc_trajectory('file',['../../' basesce '_0.0.nc'],'timelim',[-inf inf],'reg',hreg,'var','farming');
   farm5=100*clp_nc_trajectory('file',['../../' basesce '_0.4.nc'],'timelim',[-inf inf],'reg',hreg,'var','farming');
@@ -1008,10 +1190,14 @@ if any(doplots==9)
   i1=find(farm1>4.1 & farm1<=95);
   i5=find(farm5>4.1 & farm5<=95);
   
+  if isempty(i5) continue; end
+  
   p9(3)=plot(time(i1),repmat(2,numel(i1),1),'r-','color',mg,'LineWidth',5);
   p9(4)=plot(time(i5),repmat(1,numel(i5),1),'r-','color','k','LineWidth',5);
   
-  text(-5815,0.9,'Transition duration','FontSize',9,'Horizontalalignment',...
+%  text(mean(time(i5)),0.9,'Transition duration','FontSize',9,'Horizontalalignment',...
+ %     'center','vertical','top','fontName','Times');
+  text(-6270,0.9,'Transition duration','FontSize',11,'Horizontalalignment',...
       'center','vertical','top','fontName','Times');
   
   xlabel('Time (cal BC)');
@@ -1036,7 +1222,7 @@ if any(doplots==9)
 
   % For pangaea
   %cl_glues2grid('variables',{'farming_timing','region','technology','farming','population_density'},'file','../../basesce_0.3.nc')  
-  
+  %end
 end
 
 

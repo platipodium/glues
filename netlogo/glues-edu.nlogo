@@ -73,15 +73,15 @@ to setup
   update-view
   reset-ticks
   set time time-start
-  movie-start "glues-edu.mov" 
+  ;; movie-start "glues-edu.mov" 
 end
 
 to make-movie
   setup 
-  movie-start "glues-edu.mov" repeat 5000 [
-    movie-grab-view go
-  ]
-  movie-close
+  ;;movie-start "glues-edu.mov" repeat 5000 [
+  ;;  movie-grab-view go
+  ;;]
+  ;;movie-close
 end
 
 to go
@@ -471,7 +471,6 @@ to read-events
     print "Could not read file"
   ]
 end
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 199
@@ -525,7 +524,7 @@ CHOOSER
 View
 View
 "Region" "Natural fertility" "Actual fertility" "Farming" "Technology" "Economies" "Timing" "Density" "Migration rate"
-7
+8
 
 BUTTON
 81
