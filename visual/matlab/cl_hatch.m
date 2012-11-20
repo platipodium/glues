@@ -1,21 +1,68 @@
-function hdl=cl_hatch(hdl,varargin)
+function [xi,yi,x,y]=cl_hatch(x,y,varargin);
+% CL_HATCH Draws hatched or speckled interiors to a patch
+%       
+%    CL_HATCH(X,Y,STYL,ANGLE,STEP,...line parameters);
+%
+% INPUTS:
+%     X,Y - vectors of points.
+%     STYL - style of fill
+%     ANGLE,STEP - parameters for style
+%
+%     E.g.
+%                 
+%      'single',45,5  - single cross-hatch, 45 degrees,  5 points apart 
+%      'cross',40,6   - double cross-hatch at 40 and 90+40, 6 points apart
+%      'speckle',7,1  - speckled (inside) boundary of width 7 points, density 1
+%                               (density >0, .1 dense 1 OK, 5 sparse)
+%      'outspeckle',7,1 - speckled (outside) boundary of width 7 points, density 1
+%                               (density >0, .1 dense 1 OK, 5 sparse)
+%
+%     
+%      H=CL_HATCH(...) returns handles to hatches/speckles.
+%
+%      [XI,YI,X,Y]=CL_HATCH(...) does not draw lines - instead it returns
+%      vectors XI,YI of the hatch/speckle info, and X,Y of the original
+%      outline modified so the first point==last point (if necessary).
+%
+%     Note that inside and outside speckling are done quite differently
+%     and 'outside' speckling on large coastlines can be very slow.
+
 %
 % Hatch Algorithm originally by K. Pankratov, with a bit stolen from 
 % Iram Weinsteins 'fancification'. Speckle modifications by R. Pawlowicz.
 %
+% R Pawlowicz 15/Dec/2005
+%
+% modified by C. Lemmen to fill regular patches
 
-styl='single';
+styl='speckle';
 angle=7;
 step=1/2;
 
-
-for ihdl=1:length(hdl)
-  if hdl(ihdl)==0 continue; end  
-    
-
-x=get(hdl(ihdl),'XData');
-y=get(hdl(ihdl),'YData');
+if length(varargin)>0 & ischar(varargin{1}),
+  styl=varargin{1};
+  varargin(1)=[];  
+end;
+if length(varargin)>0 & ~ischar(varargin{1}),
+  angle=varargin{1};
+  varargin(1)=[];  
+end;
+if length(varargin)>0 & ~ischar(varargin{1}),
+  step=varargin{1};
+  varargin(1)=[];
+end;
+   
   
+if x(end)~=x(1) & y(end)~=y(1),
+  x=x([1:end 1]);
+  y=y([1:end 1]);
+  I=I([1:end 1]);
+end;
+
+if strcmp(styl,'speckle') | strcmp(styl,'outspeckle'),
+  angle=angle;%*(1-I);
+end;
+
 if size(x,1)~=1,
  x=x(:)';
  angle=angle(:)';
@@ -77,7 +124,6 @@ switch lower(styl),
     end;    
   end; 
     
-end;
 end;
 
 

@@ -37,6 +37,7 @@ arguments = {...
   {'nocbar',0},...
   {'nocoast',0},...
   {'noaxes',0},...
+  {'nohatch',1},...
   {'axiscolor',[.5 .5 .5]},...
   {'notitle',0},...
   {'threshold',NaN},...
@@ -322,6 +323,27 @@ set(gca,'YColor',axiscolor,'XColor',axiscolor);
   if transparency alpha(hp(ival),0); end
   
 
+  
+  if ~nohatch
+         for isty=1:ceil(ncol/3) hatchstyles{isty}='cross'; end
+        for isty=ceil(ncol/3)+1:ceil(ncol*2/3) hatchstyles{isty}='single'; end
+        for isty=ceil(ncol*2/3)+1:ncol hatchstyles{isty}='speckle'; end
+        ihspeckle=strmatch('speckle',hatchstyles);
+        ihsingle=strmatch('single',hatchstyles);
+        ihcross=strmatch('cross',hatchstyles);
+        hatchdensities=zeros(ncol,1);
+        hatchdensities(ihspeckle)=linspace(.2,1,length(ihspeckle));
+        hatchdensities(ihsingle)=linspace(3,6,length(ihsingle));
+        hatchdensities(ihcross)=linspace(1,5,length(ihcross));
+        hatchwidths=zeros(ncol,1);
+        hatchwidths(ihspeckle)=linspace(1,9,length(ihspeckle));
+        hatchwidths(ihsingle)=linspace(1,9,length(ihsingle))/10;
+        hatchwidths(ihcross)=linspace(1,9,length(ihcross))/10;
+       
+  end
+
+  
+  
 %% Time loop
 
 for it=1:ntime
@@ -371,7 +393,7 @@ for it=1:ntime
       end
       if ~nocolor
         set(h,'FaceColor',cmap(i,:),'tag','region_patch','EdgeColor',cmap(min(ncol,i+1),:),'EdgeAlpha',greyval)
-      else
+      elseif nohatch
         greyval=repmat(0.5,1,3);
         if i<ncol/3 continue; end
         density=7-4.0*i/ncol;
@@ -379,7 +401,16 @@ for it=1:ntime
         [xlon,xlat]=m_xy2ll(xp,yp);
         if (exist('hh','var') && j(ij)<=length(hh) && (hh(j(ij))>0)) delete hh(j(ij)); end
         hh(j(ij))=m_hatch(xlon,xlat,'cross',30,density,'color',greyval,'linewidth',0.1);
-        set(h,'EdgeColor',greyval,'EdgeAlpha',0.3,'FaceAlpha',0)       
+        set(h,'EdgeColor',greyval,'EdgeAlpha',0.3,'FaceAlpha',0)
+      else % hatched part
+         greyval=repmat(0.5,1,3);
+        density=7-4.0*i/ncol;
+        xp=get(h,'XData'); yp=get(h,'YData');
+        [xlon,xlat]=m_xy2ll(xp,yp);
+        if (exist('hh','var') && j(ij)<=length(hh) && (hh(j(ij))>0)) delete hh(j(ij)); end
+        %hh(j(ij))=
+        m_hatch(xlon,xlat,hatchstyles{i},30,hatchdensities(i),'color',greyval,'linewidth',.5);
+        set(h,'EdgeColor',greyval,'EdgeAlpha',1,'FaceAlpha',1)
       end
     end
   end
@@ -411,6 +442,35 @@ for it=1:ntime
     else
       cb=colorbar('FontSize',15,'Ytick',minmax(1));
     end
+  end
+  
+  if ~nohatch % Manipulate color bar
+    ax=gca;
+    cb=cl_colorbar('value',0:ncol);
+    yt=get(cb,'YTick');
+    ytlim=get(cb,'YLim');
+    yr=minmax(2)-minmax(1);
+    ytl=scale_precision((yt-ytlim(1))*yr/(ytlim(2)-ytlim(1))+minmax(1),4)';
+    set(cb,'YTickLabel',num2str(ytl));
+    cbp=get(cb,'Children');
+    cbp=findobj(cbp,'-property','FaceColor');
+    greyval=repmat(0.5,1,3);
+
+    for i=1:ncol
+      cbpp=findobj(cbp,'FaceColor',cmap(i,:));
+      set(cbpp,'FaceColor','none');
+      axes(cb);
+      hatchdata={hatchstyles,hatchdensities};
+      set(cb,'UserData',hatchdata);
+      for icbp=1:length(cbpp)
+         xp=get(cbpp(icbp),'XData');
+         yp=get(cbpp(icbp),'YData');
+         xp=xp([4 1:3]);
+         yp=yp([2:4 1]);
+         cl_hatch(xp,yp,hatchstyles{ncol+1-i},30,hatchdensities(ncol+1-i),'color',greyval,'linewidth',.5);
+      end
+    end
+    axes(ax);
   end
     
   set(gcf,'UserData',cl_get_version);

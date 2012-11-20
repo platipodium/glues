@@ -32,8 +32,8 @@ data
 end
 comment global surface temperature records fluctuations ->
 comment prolonged drought in many continental regions (deMenocal2001)
-comment At flucampl 0.0
-float	flucampl 0.0
+comment At flucampl 0.4
+float	flucampl 0.4
 	\d amplitude of relative fertility loss (<1) 0.4
 float	flucperiod	175.0
 	\u yr
