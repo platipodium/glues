@@ -1,7 +1,8 @@
 /* GLUES input/output routines; this file is part of
    the Global Land Use and technological Evolution Simulator
    
-   Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012
+   Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2007,2008,2009
+                 2010,2011,2012,2013
    Carsten Lemmen <carsten.lemmen@hzg.de>, Kai Wirtz <kai.wirtz@hzg.de>
 
    This program is free software; you can redistribute it and/or modify it
@@ -20,7 +21,7 @@
 
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
    @author Kai W Wirtz <kai.wirtz@hzg.de
-   @date   2012-07-08
+   @date   2013-03-27
    @file Input.cc 
    @brief Input/output routines 
 */
@@ -282,6 +283,8 @@ unsigned int read_SiteRegfile()
     ifstream ifs;
     unsigned int n,j;
 
+//		std::cerr << "DEBUG " << filename << " " << numberOfRegions << std::endl;
+
     std::cout << "Read " << filename;
 
     ifs.open(filename.c_str(),ios::in);
@@ -304,8 +307,10 @@ unsigned int read_SiteRegfile()
     }
 
     std::vector< std::vector<int> > data;
-	n=glues::IO<int>::read_ascii_table(ifs,data);
+	  n=glues::IO<int>::read_ascii_table(ifs,data);
     ifs.close();
+
+		std::cerr << "DEBUG " << data.size() << " " << numberOfRegions << std::endl;
 
     assert(data.size() == numberOfRegions);
     assert(data.at(1).size() == MaxProxyReg);
@@ -372,7 +377,7 @@ unsigned int read_proxyevents()
     filename += eventfile;
 
     std::cout << "Read " << filename << " ";
-    
+
     ifs.open(filename.c_str(),ios::in);
     assert(ifs.is_open());
     
@@ -380,12 +385,14 @@ unsigned int read_proxyevents()
     numberOfSites=glues::IO<void>::count_ascii_rows(ifs);
     std::cout << numberOfSites << " sites x " << MaxEvent << " events";
 
-	std::vector< std::vector<double> > data;
-	glues::IO<double>::read_ascii_table(ifs,data);
+  	std::vector< std::vector<double> > data;
+	  glues::IO<double>::read_ascii_table(ifs,data);
 	
+    std::cerr << data.size() << " == " << numberOfSites << std::endl;
+    std::cerr << data.at(1).size()-2 << " == " << MaxEvent << std::endl;
+
     assert(data.size()==numberOfSites);
     assert(data.at(1).size()==MaxEvent+2);
-    //std::cout << data.size() << " sites x " << data.at(1).size()-2 << " events";
 
     EventTime= (double *)(malloc(numberOfSites*MaxEvent*sizeof(double)));
     EventSerMax = (double *)(malloc(numberOfSites*sizeof(double)));
@@ -972,6 +979,10 @@ int read_EventRegTime() {
   std::vector< std::vector<double> > data;
   unsigned int n=glues::IO<double>::read_ascii_table(ifs,data);
   ifs.close();
+
+//	std::cerr << "DEBUG " << data.size() << " " << numberOfRegions << std::endl; 
+//	std::cerr << "DEBUG " << data.at(1).size() << " " << MaxEvent << std::endl;
+
 
   assert(data.size() == numberOfRegions);
   assert(data.at(1).size() == MaxEvent);

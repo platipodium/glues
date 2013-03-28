@@ -1,7 +1,7 @@
 /* GLUES IO; this file is part of
    the Global Land Use and technological Evolution Simulator
 
-   Copyright (C) 2009,2010,2011,2012
+   Copyright (C) 2009,2010,2011,2012,2013
    Carsten Lemmen <carsten.lemmen@hzg.de>
 
    This program is free software; you can redistribute it and/or modify it
@@ -21,7 +21,7 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
    @author Caleb K Taylor <calebt@users.sourceforge.org>, contributions released for public domain
-   @date   2012-02-14
+   @date   2013-03-27
    @file   IO.h
 */
 
@@ -214,7 +214,7 @@ namespace glues
 		is.seekg(0);
 		fv.clear();
 
-		// std::cerr  << line << std::endl;
+//		std::cerr  << line << std::endl; // DEBUG
 		while (is.good() && std::getline(is, line))
 		{
 			if( is_comment_line(line) )

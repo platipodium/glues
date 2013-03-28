@@ -2,7 +2,7 @@
    the Global Land Use and technological Evolution Simulator
 
    Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008,2009,2010
-                 2011,2012
+                 2011,2012,2013
    Carsten Lemmen <carsten.lemmen@hzg.de>, Kai Wirtz <kai.wirtz@hzg.de>
 
    This program is free software; you can redistribute it and/or modify it
@@ -22,7 +22,7 @@
 /**
    @author Carsten Lemmen <carsten.lemmen@hzg.de>
    @author Kai Wirtz <kai.wirtz@hzg.de>
-   @date   2012-05-21
+   @date   2013-03-26
    @file   Glues.cc
    @brief  Main driver for GLUES simulations
 */
@@ -116,7 +116,6 @@ int main(int argc, char* argv[])
   @todo There should be in the future an alternative configuration which
   does not rely on SiSi.  This could be achieved with a converter from SiSi 
   to Namelist and vice versa, or with a parallel development */
-  
   if (!ext.compare("sim")) {
     if (!SiSi::parseSimulation(argc, argv) ) {
       std::cerr << "Could not parse SiSi simulation file " << configfilename << "." << std::endl;
@@ -223,7 +222,7 @@ int main(int argc, char* argv[])
       std::cerr << "Extensions .sim or .nc required." << std::endl, glues::Messages::Error();
     return 1;
   }
-
+  
 #ifdef HAVE_MPI_H
   if (mpi_rank==0)
 #endif

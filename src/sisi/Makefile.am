@@ -103,9 +103,12 @@ include/twowaylist/TwoWayListIntElement.hh \
 include/twowaylist/TwoWayListStringElement.hh \
 include/Version.hh
 
-lib_LTLIBRARIES = lib/libSiSi.la
-lib_libSiSi_la_LIBADD =
-lib_libSiSi_la_LDFLAGS = -rpath '$(libdir)' -version-info 2:0:0 -no-undefined
-lib_libSiSi_la_CPPFLAGS = -I./include
-lib_libSiSi_la_SOURCES = $(LIBOBJECTS) include/datastructures/ParameterType.hh
+#lib_LTLIBRARIES = lib/libSiSi.la
+#lib_libSiSi_la_LIBADD =
+#lib_libSiSi_la_LDFLAGS = -rpath '$(libdir)' -version-info 2:0:0 -no-undefined
+#lib_libSiSi_la_CPPFLAGS = -I./include
+#lib_libSiSi_la_SOURCES = $(LIBOBJECTS) include/datastructures/ParameterType.hh
+lib_LIBRARIES=libSiSi.a
+libSiSi_a_SOURCES=$(LIBOBJECTS) include/datastructures/ParameterType.hh
+libSiSi_a_CPPFLAGS = -I./include
 include_HEADERS = $(INCOBJECTS)

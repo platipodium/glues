@@ -40,6 +40,8 @@ unsigned long int glues::Events()
   
     std::cout << "Read " << eventfilename << " ";
     
+ //   std::cerr << "DEBUG " << eventfilename << " " << numberOfRegions << std::endl;
+    
     ifs.open(eventfilename.c_str(),ios::in);
     
     numberOfEvents=io.count_ascii_columns(ifs)-2;

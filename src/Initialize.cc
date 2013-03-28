@@ -2,7 +2,7 @@
    the Global Land Use and technological Evolution Simulator
    
    Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008,2009,2010
-   				 2011,2012
+   				 2011,2012,2013
    Carsten Lemmen <carsten.lemmen@hzg.de>, Kai Wirtz <kai.wirtz@hzg.de>
 
    This program is free software; you can redistribute it and/or modify it
@@ -442,7 +442,6 @@ int read_data() {
     if (!read_proxyevents()) return 1; 
     //cout << "No proxy events. TODO: Initialize.cc ll297 " << endl;
     if (flucampl>0) if (!read_SiteRegfile()) return 1;  //  
-
 
     std::string filename(datapath);
     filename.append(SiteRegfile);
