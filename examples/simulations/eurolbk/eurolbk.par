@@ -1,7 +1,7 @@
 # Parameter file written by XSiSi 2.0
 comment Model parameter values
 comment specific adaptation constants
-float	deltat	0.15
+float	deltat 0.15
 	\d Specific adaptation constant for technology exploitation
 	\v 
 comment Spreading and trait exchange

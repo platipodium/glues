@@ -2,7 +2,7 @@
 # TODO why does the regular sed not accept this?
 
 V=eurolbk
-B=euroclim
+B=eurotsi
 L=${0%%.sh}.log
 
 for SED in gsed sed; do  
@@ -42,8 +42,8 @@ $SED -i '/deltan/s/deltan.*$/deltan 1.0/' $OPAR
 $SED -i '/deltaq/s/deltaq.*$/deltaq 1.0/' $OPAR
 $SED -i '/deltat/s/deltat.*$/deltat 0.15/' $OPAR
 $SED -i '/gammab/s/gammab.*$/gammab 0.0040/' $PAR
-$SED -i '/SiteRegfile/s/SiteRegfile.*$/SiteRegfile "EventInReg_134_685.tsv"/' $SCE
-$SED -i '/eventfile/s/eventfile.*$/eventfile "EventSeries_134.tsv"/' $SCE
+$SED -i '/SiteRegfile/s/SiteRegfile.*$/SiteRegfile "EventInReg_001_685.tsv"/' $SCE
+$SED -i '/eventfile/s/eventfile.*$/eventfile "EventSeries_001.tsv"/' $SCE
 $SED -i '/KnowledgeLoss/s/KnowledgeLoss.*$/KnowledgeLoss 0.3/' $PAR
 
 

@@ -1,6 +1,6 @@
 comment Initial values of population variables
-float	InitTechnology	1.0
+float	InitTechnology 1.0
 float	InitNdomast	0.25
-float	InitQfarm	0.04
-float	InitDensity	0.03
+float	InitQfarm 0.04
+float	InitDensity 0.03
 float	InitGerms	0.05
