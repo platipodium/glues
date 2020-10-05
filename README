@@ -1,12 +1,11 @@
-README file for the Global Land Use and technological Evolution Simulator (GLUES)
+# Global Land Use and technological Evolution Simulator (GLUES)
 
-= Installation =
+## Installation =
 
 Glues is set up for building on many platforms.  To facilitate cross-platform compatibility, the
 GNU autotools are used.
 
-
-== Quick install ==
+### Quick install
 
 From the .tgz distribution archive, run the file ./configure, then make
 
@@ -14,7 +13,7 @@ From the .tgz distribution archive, run the file ./configure, then make
 
 You should (but you can) not install GLUES in your system, rather use the provided example scripts run*.sh do execute glues.
 
-== More detailed installation ==
+### More detailed installation ==
 
  1. If you downloaded the developer's version via mercurial CVS, you don't have a ./configure script.  You can
     create this with the ./bootstrap shell script. 
@@ -31,8 +30,7 @@ You should (but you can) not install GLUES in your system, rather use the provid
  4. Run make (preferably gnu make) to build the glues system,  you should end up with an executable glues in 
     the directory src.
 
-
-== Warnings and errors during installation ==
+### Warnings and errors during installation ==
 
  1. WARNING: no configuration information is in src/sisi  
     There is no ./configure in the subdirectory sisi; this is only needed if you don't have the sisi library
@@ -58,7 +56,7 @@ You should (but you can) not install GLUES in your system, rather use the provid
 
  4. Makefile.in not created: please upgrade your version of libtool
 
-== What do do if you don't get sisi to build or run ==
+### What do do if you don't get sisi to build or run ==
 
  1. Download the sisi package from the sourceforge site
     https://sourceforge.net/projects/glues/files/sisi/SiSi2.2.tgz/download
